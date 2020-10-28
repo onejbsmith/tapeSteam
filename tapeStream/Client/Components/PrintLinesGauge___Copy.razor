@@ -1,0 +1,110 @@
+﻿@*<h3>PrintLinesGauge___Copy</h3>*@
+
+@using tapeStream.Client.Data;
+@*//@using Blazorise.Charts;*@
+
+<style>
+    .chart {
+        display: block;
+        zoom: 0.5;
+        margin-right: 30px;
+    }
+</style>
+
+<table class="chart">
+    <tr>
+        <td>
+            @*<LineChart OptionsJsonString="" @ref="lineChart" TItem="double" />**@
+            <RadzenChart Style="width:1400px">
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@rawGaugesCombined"
+                                  CategoryProperty="Date" Title="Raw"
+                                  LineType="Radzen.Blazor.LineType.Solid"
+                                  StrokeWidth="4"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@average10min"
+                                  CategoryProperty="Date" Title="10 min"
+                                  LineType="Radzen.Blazor.LineType.Dashed"
+                                  StrokeWidth="8"
+                                  ValueProperty="Revenue">
+
+                    <TooltipTemplate Context="data">
+                        <span>@data.Date</span>
+                    </TooltipTemplate>
+                </RadzenLineSeries>
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@movingAverage30sec"
+                                  CategoryProperty="Date" Title="30 sec"
+                                  LineType="Radzen.Blazor.LineType.Solid"
+                                  StrokeWidth="4"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@movingAverage5min"
+                                  CategoryProperty="Date" Title="5 min"
+                                  LineType="Radzen.Blazor.LineType.Solid"
+                                  StrokeWidth="4"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@staticValue7"
+                                  CategoryProperty="Date" Title="7"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+                <RadzenLineSeries Smooth="true"
+                                  Data="@staticValue0"
+                                  CategoryProperty="Date" Title="0"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+
+
+                <RadzenLineSeries Smooth="true"
+                                  Data="@staticValueMinus7"
+                                  CategoryProperty="Date" Title="-7"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+                <RadzenCategoryAxis Visible="false" />
+                <RadzenLegend Visible="true" />
+                <RadzenValueAxis Min="-7" Max="7">
+                    <RadzenGridLines Visible="false" />
+                    <RadzenAxisTitle Text="" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </td>
+    </tr>
+</table>
+
+@code{
+
+    [Parameter]
+    public string symbol { get; set; }
+
+    [Parameter]
+    public float weight { get; set; } = 1.0f;
+
+    [Parameter]
+    public int moduloPrints { get; set; }
+
+    //[Parameter]
+    //public DataItem[] rawGaugesCombined { get; set; }
+
+
+}
+
+
+

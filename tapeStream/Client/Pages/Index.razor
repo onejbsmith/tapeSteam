@@ -1,0 +1,97 @@
+﻿@page "/"
+@using tapeStream.Client.Components
+@code {
+
+    string symbol = "QQQ";
+
+}
+<style>
+    body {
+        zoom: 0.75;
+    }
+
+    th {
+        text-align: center;
+        padding: 5px;
+    }
+
+    .flex-container {
+        display: flex; /* or inline-flex */
+        flex-
+    }
+
+    article {
+        flex: 0 1 auto;
+        margin-top: 50px;
+        border: solid 1px green;
+    }
+</style>
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-row-gap: 15px;
+        grid-column-gap: 5px;
+        /*        grid-template-columns: auto auto ;
+    */
+    }
+    .shrink
+    {
+        zoom:0.8;
+    }
+</style>
+
+<div class="grid-container">
+    <div>
+        <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+    </div>
+
+    <div class="flex-container">
+        <div>
+            <PrintLinesGauge___Copy symbol="@symbol" weight="1" gaugeValues="@gaugeValues" />
+        </div>
+        <PrintArcGaugeChart symbol="@symbol" weight="1" value="@lastCombinedRedGreenValue" />
+    </div>
+    <div>
+        <Badge Class="badge-dark">Print Speed:&nbsp;&nbsp; @moduloPrints</Badge>
+        <RadzenSlider @bind-Value="moduloPrints" TValue="int" Min="1" Max="100" />
+    </div>
+    <div class="flex-container shrink">
+        @foreach (int secs in tapeStream.Shared.CONSTANTS.printSeconds.OrderByDescending(t => t))
+        {
+            <PrintPieGauge isPrintsSize="true" seconds="@secs" symbol="@symbol" moduloPrints="@moduloPrints" printsData="@printsData[secs]" />
+        }
+    </div>
+    <div>
+        <RadzenSlider @bind-Value="moduloBook" TValue="int" Min="1" Max="100" />
+        <Badge Class="badge-primary">@moduloBook</Badge>
+    </div>
+    <div class="flex-container shrink">
+        @foreach (int secs in tapeStream.Shared.CONSTANTS.printSeconds.OrderByDescending(t => t))
+        {
+            <BookPieChart seconds="@secs" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookDataDict[secs]" />
+        }
+        <BookGaugeChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookData" />
+    </div>
+    <div class="grid-item shrink" style="width:50%">
+        <BookColumnsChart isPrintsSize="false" seconds="5" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookColData"/>
+    </div>-->
+</div>
+
+
+@*<BookPieChart seconds="120" symbol="@symbol" moduloBook="@moduloBook" />
+    <BookPieChart seconds="60" symbol="@symbol" moduloBook="@moduloBook" />
+
+    <BookPieChart seconds="30" symbol="@symbol" moduloBook="@moduloBook" />
+    <BookPieChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" />
+    <BookPieChart seconds="2" symbol="@symbol" moduloBook="@moduloBook" />*@
+
+@*<BookGaugeChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" />*@
+<!--</div>
+
+
+@*<div class="grid-item">
+        <SyncfusionStackedColumnChart seconds="15" symbol="@symbol" />
+    </div>*@
+
+

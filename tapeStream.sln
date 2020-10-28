@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Client", "tapeStream\Client\tapeStream.Client.csproj", "{99904DE7-B222-4347-AA13-32B352E70372}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Shared", "tapeStream\Shared\tapeStream.Shared.csproj", "{B75BD078-5687-45E7-8EE1-179DE9A14E29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdaStreamHub", "..\..\Server Projects\BlazorTrader\tdaStreamHub.csproj", "{0FAC57BE-043B-4258-AA6E-273CDFDF0ED4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTrader", "..\..\BlazorTrader\BlazorTrader.csproj", "{96E965F6-F973-4D9A-9674-FBC4E9B926DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99904DE7-B222-4347-AA13-32B352E70372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99904DE7-B222-4347-AA13-32B352E70372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75BD078-5687-45E7-8EE1-179DE9A14E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75BD078-5687-45E7-8EE1-179DE9A14E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75BD078-5687-45E7-8EE1-179DE9A14E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75BD078-5687-45E7-8EE1-179DE9A14E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAC57BE-043B-4258-AA6E-273CDFDF0ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAC57BE-043B-4258-AA6E-273CDFDF0ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAC57BE-043B-4258-AA6E-273CDFDF0ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAC57BE-043B-4258-AA6E-273CDFDF0ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E965F6-F973-4D9A-9674-FBC4E9B926DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E965F6-F973-4D9A-9674-FBC4E9B926DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E965F6-F973-4D9A-9674-FBC4E9B926DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E965F6-F973-4D9A-9674-FBC4E9B926DF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A220A0AC-CF9E-4F32-AD31-C7EBAD6EE228}
+	EndGlobalSection
+EndGlobal

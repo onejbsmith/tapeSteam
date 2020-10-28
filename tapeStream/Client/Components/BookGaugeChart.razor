@@ -1,0 +1,68 @@
+﻿@*<h3>BookGaugeChart</h3>*@
+@using tapeStream.Client.Data
+@using Radzen
+<table>
+    <tr>
+        @*<td>
+                <h3><RadzenLabel Text='@bids' class="@badgeClass" /></h3>
+            </td>*@
+        @*<h3><RadzenLabel Text='@bids' class="@badgeClass" /></h3>*@
+        <td style="text-align:center;zoom:.8">
+            <b class="btn btn-circle " style="width:100%">@bids</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+
+            <RadzenChart Style="width:100px; height:70px;position:relative;left:10px;">
+                <RadzenPieSeries Data="@bookData" CategoryProperty="Price" Radius="30"
+                                 Title="@(seconds.ToString())"
+                                 Fills="@(new List<string>() {  "green","red"})"
+                                 ValueProperty="Size" />
+
+                <RadzenChartTooltipOptions Visible="false" />
+                <RadzenLegend Visible="false" />
+            </RadzenChart>
+
+        </td>
+    </tr>
+    <tr>
+
+        <td style="text-align:center;zoom:.8">
+            <b class="btn btn-circle btn-dark" style="width:100%">@(seconds.ToString())</b>
+        </td>
+
+    </tr>
+</table>
+@*<RadzenLabel Text="@(bookData[0].Size.ToString())"></RadzenLabel>
+    <RadzenLabel Text="@(bookData[1].Size.ToString())"></RadzenLabel>*@
+<style>
+
+    .article {
+        flex: 1 0 auto;
+        border: solid 2px green;
+        max-height: 40px;
+    }
+</style>
+
+@code {
+
+    string badgeClass = "btn";
+    string bids;
+    string asks;
+
+    [Parameter]
+    public string symbol { get; set; }
+
+    [Parameter]
+    public int seconds { get; set; }
+
+    [Parameter]
+    public bool isPrintsSize { get; set; }
+
+    [Parameter]
+    public int moduloBook { get; set; }
+
+
+
+}
