@@ -1,0 +1,25 @@
+﻿@*<h3>HubMonitor</h3>*@
+
+@using System.Timers;
+
+<RadzenCheckBox @bind-Value="@logHub" TValue="bool" Change="@(args => logHubChange(args, ""))" />
+<RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;" Component="CheckBox4" />
+<Badge IsPill="true" class="alert-dark" title="Time of last data received">@clock</Badge>
+@foreach (var name in valuesName.Skip(1))
+{
+    <Badge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[name].ToString("n0")' title="@name" /></Badge>
+}
+<RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
+
+@code {
+    [Parameter]
+    public bool logHub { get; set; }
+    [Parameter]
+    public string clock { get; set; }
+    [Parameter]
+    public Dictionary<string, int> dictTopicCounts { get; set; } = new Dictionary<string, int>();
+
+    [Parameter]
+    public string logTopics { get; set; } = "";
+
+}

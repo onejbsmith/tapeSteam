@@ -1,13 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
-using BlazorSignalRApp.Server.Hubs;
+using tdaStreamHub.Data;
+using BlazorStrap;
+using Syncfusion.Blazor;
+// other usings
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
+using tdaStreamHub.Hubs;
 
-namespace tapeStream.Server
+using Microsoft.EntityFrameworkCore;
+
+namespace tdaStreamHub
 {
     public class Startup
     {
@@ -22,14 +35,29 @@ namespace tapeStream.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<tdaStreamHub.Data.BrowserService>(); // scoped service
+            services.AddTransient<tdaStreamHub.Data.BlazorTimer>();
+
+            services.AddBlazorise(options =>
+           { options.ChangeTextOnKeyPress = true; }).AddBootstrapProviders().AddFontAwesomeIcons();
+            // other services           
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+
+            services.AddTransient<TDAApiService>();
+
             services.AddSignalR();
-            services.AddControllersWithViews();
             services.AddResponseCompression(opts =>
             {
-                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                opts.MimeTypes = Microsoft.AspNetCore.ResponseCompression.ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
-            services.AddRazorPages();
+
+            services.AddScoped<Radzen.DialogService>();
+            services.AddBootstrapCss();
+
+            services.AddCors();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,25 +68,34 @@ namespace tapeStream.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
             }
             else
             {
                 app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
-            app.UseBlazorFrameworkFiles();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            // Make sure the CORS middleware is ahead of SignalR.
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:53911")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "HEAD", "POST")
+                    .AllowCredentials();
+            });
 
+            app.UseRouting();
+            app.ApplicationServices.UseBootstrapProviders().UseFontAwesomeIcons();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers(); 
+                endpoints.MapBlazorHub();
                 endpoints.MapHub<ChatHub>("/chathub");
-                endpoints.MapHub<TDAStreamerHub>("/tdahub");
-                endpoints.MapFallbackToFile("index.html");
+                endpoints.MapHub<TDAHub>("/tdahub");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
