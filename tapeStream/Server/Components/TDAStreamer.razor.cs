@@ -53,7 +53,7 @@ namespace tdaStreamHub.Components
 
         double strike = 0;
 
-        IEnumerable<int> values = new int[] { 1, 2, 3, 4, 5 };
+        IEnumerable<int> values = new int[] { 1, 2, 3 };
         readonly string[] valuesName = CONSTANTS.valuesName;
         int[] valuesCounts = new int[] { 999, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -271,25 +271,25 @@ namespace tdaStreamHub.Components
         }
 
         Dictionary<int, DataItem[]> dictPies = new Dictionary<int, DataItem[]>();
-        void sendPrintsData()
-        {
-            //if (moduloPrints ==0 || TDAStreamerData.timeSales[symbol].Count() % moduloPrints != 0) return;
+        //void sendPrintsData()
+        //{
+        //    //if (moduloPrints ==0 || TDAStreamerData.timeSales[symbol].Count() % moduloPrints != 0) return;
 
-            // Only summarize once every new 2 time and sales
-            if (TDAStreamerData.timeSales[symbol].Count % 2 != 0) return;
+        //    // Only summarize once every new 2 time and sales
+        //    if (TDAStreamerData.timeSales[symbol].Count % 2 != 0) return;
 
-            value = TDAPrints.GetPrintsGaugeScore(symbol, ref dictPies);
-            KeyValuePair<DateTime, double> pair = new KeyValuePair<DateTime, double>(DateTime.Now, value);
+        //    value = TDAPrints.GetPrintsGaugeScore(symbol, ref dictPies);
+        //    KeyValuePair<DateTime, double> pair = new KeyValuePair<DateTime, double>(DateTime.Now, value);
 
-            Send("GaugeScore", JsonSerializer.Serialize<KeyValuePair<DateTime, double>>(pair));
-            Send("PrintsPies", JsonSerializer.Serialize<Dictionary<int, DataItem[]>>(dictPies));
+        //    Send("GaugeScore", JsonSerializer.Serialize<KeyValuePair<DateTime, double>>(pair));
+        //    Send("PrintsPies", JsonSerializer.Serialize<Dictionary<int, DataItem[]>>(dictPies));
 
 
-            //TDAStreamerData.gaugeValues.Add(DateTime.Now, value);
-            //TDAStreamerData.gaugeValues.RemoveAll((key, val) => key < DateTime.Now.AddSeconds(-printSeconds.Max()));
+        //    //TDAStreamerData.gaugeValues.Add(DateTime.Now, value);
+        //    //TDAStreamerData.gaugeValues.RemoveAll((key, val) => key < DateTime.Now.AddSeconds(-printSeconds.Max()));
 
-            StateHasChanged();
-        }
+        //    StateHasChanged();
+        //}
 
 
 

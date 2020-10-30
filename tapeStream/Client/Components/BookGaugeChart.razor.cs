@@ -34,7 +34,7 @@ namespace tapeStream.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
-            TDAStreamerData.OnStatusesChanged += getBookData;
+            //TDAStreamerData.OnStatusesChanged += getBookData;
             StateHasChanged();
             await Task.CompletedTask;
         }

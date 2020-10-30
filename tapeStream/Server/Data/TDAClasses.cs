@@ -881,32 +881,40 @@ namespace tdaStreamHub.Data
         public long time { get; set; }
         public float price { get; set; }
         public float size { get; set; }
-        public int sequence { get; set; }
+        public int sequence { get; set; 
+        }
+        public long bookTime { get; set; }
+
         public float bid { get; set; }
         public float ask { get; set; }
-        public float last { get; set; }
+        //public float last { get; set; }
+
         public int bidSize { get; set; }
         public int askSize { get; set; }
-        public int lastSize { get; set; }
-        public long quoteTime { get; set; }
-        public long tradeTime { get; set; }
+        //public int lastSize { get; set; }
+
+        //public long quoteTime { get; set; }
+        //public long tradeTime { get; set; }
+
         public int level { get; set; }
+
         public float bidIncr { get; set; }
         public float askIncr { get; set; }
+        public float priceIncr { get; set; }
 
         public DateTime TimeDate
         {
             get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(time).AddHours(-4); }
         }
-        public DateTime TradeDate
-        {
-            get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(tradeTime); }
-        }
+        //public DateTime TradeDate
+        //{
+        //    get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(tradeTime); }
+        //}
 
-        public DateTime QuoteDate
-        {
-            get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(quoteTime); }
-        }
+        //public DateTime QuoteDate
+        //{
+        //    get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(quoteTime); }
+        //}
         public object this[string propertyName]
         {
             get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }

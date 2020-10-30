@@ -82,7 +82,8 @@ namespace tapeStream.Client.Pages
         private string messageInput;
 
         public DataItem[] rawGaugesCombined { get; set; }
-        public static Dictionary<DateTime, double> gaugeValues { get; set; } = new Dictionary<DateTime, double>();
+        public static Dictionary<DateTime, double> gaugeValues { get; set; } 
+            = new Dictionary<DateTime, double>();
 
         int lstTimeSales = 0;
         #endregion
@@ -91,43 +92,49 @@ namespace tapeStream.Client.Pages
         #region Page Methods
         protected override async Task OnInitializedAsync()
         {
-
-
-
-
+            /// Init parameters so don't get "null" error
+           /// For the Hub Monitor
             dictTopicCounts = new Dictionary<string, int>();
             foreach (var x in CONSTANTS.valuesName)
                 dictTopicCounts.Add(x, 0);
 
+            /// For T&S Pies by seconds
             TDAPrints.dictPies = new Dictionary<int, DataItem[]>();
             foreach (var i in CONSTANTS.printSeconds)
                 TDAPrints.dictPies.Add(i, TDAPrints.newData);
 
             printsData = TDAPrints.dictPies;
 
+            /// For the Book Pies
             bookDataDict = new Dictionary<int, BookDataItem[]>();
             foreach (var i in CONSTANTS.printSeconds)
                 bookDataDict.Add(i, new BookDataItem[]
                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
                     });
 
-            bookData = new BookDataItem[]
+             /// For the Book Agg Pie
+           bookData = new BookDataItem[]
                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
                     };
 
-
+            /// For the Book Columns
             bookColData = new Dictionary<string, BookDataItem[]>()
             { { "bids", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }},
               { "asks", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }}
             };
 
+            /// Init the SignalR Hub
             hubConnection = new HubConnectionBuilder()
                  .WithUrl("https://localhost:44367/tdahub")
                  .Build();
 
-            await SetupHub();
+            /// Set up Hub Subscriptions -- Don't really need any anymore
+            /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
+            /// await SetupHub();
 
             await hubConnection.StartAsync();
+
+            /// Show Hub Status in lamp color
             var color = IsConnected ? "green" : "red";
             TDAStreamerData.hubStatus = $"./images/{color}.gif";
         }
@@ -168,6 +175,8 @@ namespace tapeStream.Client.Pages
            }));
 
         }
+
+        #region old hub subs
         /// Setup a hub Url
         /// 
 
@@ -239,7 +248,7 @@ namespace tapeStream.Client.Pages
         //    StateHasChanged();
         //}));
 
-
+        #endregion
 
 #if IncludeAllTDA_Feeds
             hubConnection.On("NASDAQ_BOOK", (Action<string, string>)(async (topic, message) =>

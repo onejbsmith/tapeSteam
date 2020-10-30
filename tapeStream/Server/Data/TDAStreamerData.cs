@@ -663,7 +663,7 @@ namespace tdaStreamHub.Data
                 switch (svcName)
                 {
                     case "TIMESALE_EQUITY":
-                        await Decode_TimeSales(svcName, content, symbol);
+                        await TDAPrints.Decode(svcName, content, symbol);
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);
@@ -672,7 +672,7 @@ namespace tdaStreamHub.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        await Decode_Book(content);
+                        await TDABook.Decode(symbol, content);
                         break;
 
                     case "CHART_EQUITY":
@@ -812,70 +812,70 @@ namespace tdaStreamHub.Data
         //static double sumBidSize = 0d;
         //static double sumAskSize = 0d;
 
-        private static async Task Decode_Book(string content)
-        {
-            var all = JObject.Parse(content);
-            var bids = all["2"];
-            var asks = all["3"];
-            lstBids.Clear();
-            lstAsks.Clear();
+        //private static async Task Decode_Book(string content)
+        //{
+        //    var all = JObject.Parse(content);
+        //    var bids = all["2"];
+        //    var asks = all["3"];
+        //    lstBids.Clear();
+        //    lstAsks.Clear();
 
 
-            /// Grab all raw bids
-            /// Cosolidate into three bid groups
-            /// do same for asks
-            /// Add bids then asks to display set
-            /// 
-            var n = bids.Count();
+        //    /// Grab all raw bids
+        //    /// Cosolidate into three bid groups
+        //    /// do same for asks
+        //    /// Add bids then asks to display set
+        //    /// 
+        //    var n = bids.Count();
 
-            if (n == 0) return;
-            long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
-            var basePrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
-            for (int i = 0; i < n; i++)
-            {
-                var price = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[i]["0"]).Value);
-                var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)bids[i]["1"]).Value);
+        //    if (n == 0) return;
+        //    long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+        //    var basePrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        var price = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[i]["0"]).Value);
+        //        var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)bids[i]["1"]).Value);
 
-                if (Math.Abs(price - basePrice) < 0.30m)
-                {
-                    var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
-                    lstBids.Add(bid);
-                    lstAllBids.Add(bid);
-                    //sumBidSize += size;
-                }
-            }
-            //lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
+        //        if (Math.Abs(price - basePrice) < 0.30m)
+        //        {
+        //            var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
+        //            lstBids.Add(bid);
+        //            lstAllBids.Add(bid);
+        //            //sumBidSize += size;
+        //        }
+        //    }
+        //    //lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
-            n = asks.Count();
-            if (n == 0) return;
-            var baseAskPrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)asks[0]["0"]).Value);
-            for (int i = 0; i < n; i++)
-            {
-                var price = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)asks[i]["0"]).Value);
-                var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)asks[i]["1"]).Value);
-                if (Math.Abs(price - baseAskPrice) < 0.30m)
-                {
-                    var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
-                    lstAsks.Add(ask);
-                    lstAllAsks.Add(ask);
-                    //sumAskSize += size;
-                }
-            }
-            //lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
+        //    n = asks.Count();
+        //    if (n == 0) return;
+        //    var baseAskPrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)asks[0]["0"]).Value);
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        var price = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)asks[i]["0"]).Value);
+        //        var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)asks[i]["1"]).Value);
+        //        if (Math.Abs(price - baseAskPrice) < 0.30m)
+        //        {
+        //            var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
+        //            lstAsks.Add(ask);
+        //            lstAllAsks.Add(ask);
+        //            //sumAskSize += size;
+        //        }
+        //    }
+        //    //lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
-            //lstAllBids.Add(new BookDataItem() { Price = baseAskPrice, Size = sumAskSize });
-            //lstAllBids.Add(new BookDataItem() { Price = basePrice, Size = sumBidSize });
+        //    //lstAllBids.Add(new BookDataItem() { Price = baseAskPrice, Size = sumAskSize });
+        //    //lstAllBids.Add(new BookDataItem() { Price = basePrice, Size = sumBidSize });
 
-            var bookData = TDABook.getBookColumnsData();
+        //    var bookData = TDABook.getBookColumnsData();
 
-            string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookData);
-            await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
+        //    string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookData);
+        //    await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
 
-            BookStatusChanged();
+        //    BookStatusChanged();
 
 
-            await Task.CompletedTask;
-        }
+        //    await Task.CompletedTask;
+        //}
 
         private static async Task Decode_Chart(string content, string symbol)
         {
