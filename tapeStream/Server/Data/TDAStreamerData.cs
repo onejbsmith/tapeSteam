@@ -29,10 +29,12 @@ namespace tdaStreamHub.Data
         static public event Action OnActiveStatusChanged;
         static public event Action OnTimeSalesStatusChanged;
         static public event Action OnHubStatusChanged;
+        static public event Action OnBookStatusChanged;
         private static void StatusChanged() => OnStatusesChanged?.Invoke();
         private static void ActiveStatusChanged() => OnActiveStatusChanged?.Invoke();
         private static void TimeSalesStatusChanged() => OnTimeSalesStatusChanged?.Invoke();
         private static void HubStatusChanged() => OnHubStatusChanged?.Invoke();
+        private static void BookStatusChanged() => OnBookStatusChanged?.Invoke();
         static private string _hubStatus = "./images/yellow.gif";
 
         static public string hubStatus
@@ -661,7 +663,7 @@ namespace tdaStreamHub.Data
                 switch (svcName)
                 {
                     case "TIMESALE_EQUITY":
-                        Decode_TimeSales(svcName, content, symbol);
+                        await Decode_TimeSales(svcName, content, symbol);
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);
@@ -670,17 +672,17 @@ namespace tdaStreamHub.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        Decode_Book(content);
+                        await Decode_Book(content);
                         break;
 
                     case "CHART_EQUITY":
-                        Decode_Chart(content, symbol);
+                        await Decode_Chart(content, symbol);
                         break;
 
                     case "ACTIVES_NASDAQ":
                     case "ACTIVES_NYSE":
                     case "ACTIVES_OPTIONS":
-                        Decode_Actives(content);
+                        await Decode_Actives(content);
                         break;
 
 
@@ -692,7 +694,7 @@ namespace tdaStreamHub.Data
             StatusChanged();
         }
 
-        private static void Decode_Actives(string content)
+        private static async Task Decode_Actives(string content)
         {
             ////var words =
             ////    from word in "57510;0;00:00:00;15:58:30;6;0:0:0;1:0:0;2:0:0;3:0:0;4:10:5234081:AAPL:230692:4.41:SYMC:87008:1.66:LVLT:86452:1.65:GOOG:79025:1.51:INTC:75896:1.45:QQQQ:73049:1.4:ATYT:71554:1.37:BRCM:68573:1.31:CSCO:59819:1.14:VPHM:58947:1.13;5:10:2096769681:QQQQ:112137833:5.35:LVLT:101695066:4.85:SUNW:68187431:3.25:INTC:65462262:3.12:JDSU:55355659:2.64:CSCO:50843090:2.42:MSFT:49805550:2.38:AAPL:48921314:2.33:ORCL:47951340:2.29:SIRI:35386791:1.69;"
@@ -796,6 +798,8 @@ namespace tdaStreamHub.Data
                 //    
             }
             ActiveStatusChanged();
+
+            await Task.CompletedTask;
         }
         //public static void RemoveAll<TKey, TValue>(this IDictionary<TKey, TValue> idict, Func<KeyValuePair<TKey, TValue>, bool> predicate)
         //{
@@ -808,7 +812,7 @@ namespace tdaStreamHub.Data
         //static double sumBidSize = 0d;
         //static double sumAskSize = 0d;
 
-        private static void Decode_Book(string content)
+        private static async Task Decode_Book(string content)
         {
             var all = JObject.Parse(content);
             var bids = all["2"];
@@ -825,6 +829,7 @@ namespace tdaStreamHub.Data
             var n = bids.Count();
 
             if (n == 0) return;
+            long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
             var basePrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
             for (int i = 0; i < n; i++)
             {
@@ -833,13 +838,13 @@ namespace tdaStreamHub.Data
 
                 if (Math.Abs(price - basePrice) < 0.30m)
                 {
-                    var bid = new BookDataItem() { Price = price, Size = size, time = DateTime.Now };
+                    var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
                     lstBids.Add(bid);
                     lstAllBids.Add(bid);
                     //sumBidSize += size;
                 }
             }
-            //lstAllBids.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
+            //lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
             n = asks.Count();
             if (n == 0) return;
@@ -850,20 +855,29 @@ namespace tdaStreamHub.Data
                 var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)asks[i]["1"]).Value);
                 if (Math.Abs(price - baseAskPrice) < 0.30m)
                 {
-                    var ask = new BookDataItem() { Price = price, Size = size, time = DateTime.Now };
+                    var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
                     lstAsks.Add(ask);
                     lstAllAsks.Add(ask);
                     //sumAskSize += size;
                 }
             }
-            //lstAllAsks.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
+            //lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
             //lstAllBids.Add(new BookDataItem() { Price = baseAskPrice, Size = sumAskSize });
             //lstAllBids.Add(new BookDataItem() { Price = basePrice, Size = sumBidSize });
 
+            var bookData = TDABook.getBookColumnsData();
+
+            string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookData);
+            await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
+
+            BookStatusChanged();
+
+
+            await Task.CompletedTask;
         }
 
-        private static void Decode_Chart(string content, string symbol)
+        private static async Task Decode_Chart(string content, string symbol)
         {
             var chart = JsonSerializer.Deserialize<Chart_Content>(content);
 
@@ -874,6 +888,8 @@ namespace tdaStreamHub.Data
                 TDAStreamerData.chart[symbol][chart.sequence] = chart;
             else
                 TDAStreamerData.chart[symbol].Add(chart.sequence, chart);
+
+            await Task.CompletedTask;
         }
 
         private static Dictionary<string, OptionQuote_Response> dictOptions = new Dictionary<string, OptionQuote_Response>();
@@ -890,6 +906,8 @@ namespace tdaStreamHub.Data
 
             lstOptions.Clear();
             lstOptions = new List<OptionQuote_Response>(dictOptions.Values);
+
+            await Task.CompletedTask;
 
         }
 
@@ -919,6 +937,7 @@ namespace tdaStreamHub.Data
 
             }
 
+            await Task.CompletedTask;
 
         }
 
@@ -951,7 +970,7 @@ namespace tdaStreamHub.Data
             return qt;
         }
 
-        private static void Decode_TimeSales(string svcName, string content, string symbol)
+        private static async Task Decode_TimeSales(string svcName, string content, string symbol)
         {
             if (dictQuotes.Count == 0) return;
 
@@ -973,11 +992,46 @@ namespace tdaStreamHub.Data
             /// t.Key is Quote date and time, we want last quote before t&s time
             /// 
             timeOfTimeAndSales = timeAndSales.TimeDate;
-            Quote_BidAskLast qt = dictQuotes.Where(t => t.Key < timeOfTimeAndSales).Last().Value;
 
+            try
+            {
+
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                Quote_BidAskLast qt = dictQuotes.Where(t => t.Key < timeOfTimeAndSales).Last().Value;
+
+            }
+            catch
+            {
+
+            }
             // Debug.Print($"Time in phase? {staticQuote.quoteTime}<{timeAndSales.time} = {staticQuote.quoteTime < timeAndSales.time}");
-            timeAndSales.bid = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.bidPrice != 0).Last().Value.bidPrice;
-            timeAndSales.ask = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.askPrice != 0).Last().Value.askPrice;
+            try
+            {
+                timeAndSales.bid = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.bidPrice != 0).Last().Value.bidPrice;
+
+            }
+            catch
+            {
+
+            }
+
+
+            try
+            {
+                timeAndSales.ask = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.askPrice != 0).Last().Value.askPrice;
+
+            }
+            catch
+            {
+
+            }
             //timeAndSales.askSize = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.askSize != 0).Last().Value.askSize;
             //timeAndSales.bidSize = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.bidSize != 0).Last().Value.bidSize;
             //timeAndSales.last = dictQuotes.Where(t => t.Key < timeOfTimeAndSales && t.Value.lastPrice != 0).Last().Value.lastPrice;
@@ -1031,7 +1085,12 @@ namespace tdaStreamHub.Data
             //    System.IO.File.AppendAllText(fileName, record);
             //}
 
+            string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
+            await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
+
             TimeSalesStatusChanged();
+
+            await Task.CompletedTask;
 
         }
 
@@ -1050,13 +1109,13 @@ namespace tdaStreamHub.Data
             bookData = new BookDataItem[2];
             //bookData = lstAllBids.ToArray();
 
-            lstAllBids.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
-            //lstAllAsks.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
+            lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
+            //lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
             if (lstAllBids.Count == 0 || lstAllAsks.Count == 0) return;
 
-            double bidSize = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
-            double askSize = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
+            double bidSize = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
+            double askSize = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
 
             var allBids = new BookDataItem() { Price = lstAllBids[0].Price, Size = bidSize };
             var allAsks = new BookDataItem() { Price = lstAllAsks[0].Price, Size = askSize };
@@ -1070,14 +1129,14 @@ namespace tdaStreamHub.Data
             if (lstAllAsks.Count == 0) return;
             bookData = new BookDataItem[2];
 
-            double bidSize2 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double askSize2 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double bidSize10 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double askSize10 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double bidSize30 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double askSize30 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double bidSize60 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
-            double askSize60 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double bidSize2 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double askSize2 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double bidSize10 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double askSize10 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double bidSize30 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double askSize30 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double bidSize60 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double askSize60 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
 
             var allBids = new BookDataItem() { Price = lstAllBids[0].Price, Size = bidSize2 + bidSize10 + bidSize30 + bidSize60 };
             var allAsks = new BookDataItem() { Price = lstAllAsks[0].Price, Size = askSize2 + askSize10 + askSize30 + askSize60 };
@@ -1244,7 +1303,8 @@ namespace tdaStreamHub.Data
     {
         public decimal Price { get; set; }
         public double Size { get; set; }
-        public DateTime time { get; set; }
+        public long time { get; set; }
+        public DateTime dateTime { get; set; }
     }
 
     //public static class DictionaryExtensions

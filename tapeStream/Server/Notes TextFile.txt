@@ -8,3 +8,23 @@ Plan is to generate that data on the server (possibly in BackgroundService Worke
 and send it to the client using SignalR
 
 
+Problem is data needs to be processed which takes time which slows tda
+
+So, writing all to files to be used for a message Q
+
+Need to write services to pull from Q and create data for charts and push t SignalR
+
+One for T&S 
+One for NASDAQ_BOOK
+
+They push but also write to files
+
+They need to be turned into services so always running, same for the tdaStreamer
+
+Once done, the client should be happy and run smoothly
+
+Nice to see how far behind we get...
+
+Hopefully approaches real-time
+
+

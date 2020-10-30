@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <ApplicationIcon></ApplicationIcon>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
     <PackageId>tdaStreamHub</PackageId>
@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Clock.razor.cs" />
     <Compile Remove="Components\GoogleStackedColumnChart.razor.cs" />
     <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
     <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
@@ -59,6 +60,7 @@
     <Content Remove="Components\BookPieChart.razor" />
     <Content Remove="Components\CheckboxOverlay.razor" />
     <Content Remove="Components\ChildComponent.razor" />
+    <Content Remove="Components\Clock.razor" />
     <Content Remove="Components\Component.razor" />
     <Content Remove="Components\CustomTextbox.razor" />
     <Content Remove="Components\CustomTextboxParentComponent.razor" />
@@ -108,7 +110,7 @@
   <ItemGroup>
     <Content Include="bin\Debug\TDAAuth.json" />
     <Content Include="bin\Debug\TDAUserPrincipalAuth.json" />
-    <Content Include="favicon.ico">
+    <Content Include="Xfavicon.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -160,10 +162,18 @@
     <Folder Include="Files\Charts\" />
     <Folder Include="Files\Quotes\" />
     <Folder Include="Files\Prints\" />
+    <Folder Include="MessageQ\CHART_EQUITY\" />
+    <Folder Include="MessageQ\OPTION\" />
+    <Folder Include="MessageQ\QUOTE\" />
+    <Folder Include="MessageQ\TIMESALE_EQUITY\" />
+    <Folder Include="MessageQ\ACTIVES_OPTIONS\" />
+    <Folder Include="MessageQ\ACTIVES_NASDAQ\" />
+    <Folder Include="MessageQ\ACTIVES_NYSE\" />
+    <Folder Include="MessageQ\NASDAQ_BOOK\" />
   </ItemGroup>
     
   <ItemGroup>
-    <ProjectReference Include="..\..\WASM Projects\tapeStream\tapeStream\Shared\tapeStream.Shared.csproj" />
+    <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>
     
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="https://json.schemastore.org/mtaext" /></VisualStudio></ProjectExtensions>

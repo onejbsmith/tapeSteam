@@ -53,7 +53,7 @@ namespace tdaStreamHub.Components
 
         double strike = 0;
 
-        IEnumerable<int> values = new int[] { 1, 2, 4, 5 };
+        IEnumerable<int> values = new int[] { 1, 2, 3, 4, 5 };
         readonly string[] valuesName = CONSTANTS.valuesName;
         int[] valuesCounts = new int[] { 999, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -66,9 +66,11 @@ namespace tdaStreamHub.Components
         private string dateTimeNow = DateTime.Now.ToString(dateFormat);
 
         bool? logStreamer = false;
-        bool logHub = false;
+        bool logHub;
+
         string sinceLastData = "0";
         string elapsed = "0";
+
         DateTime startedTime = DateTime.Now;
         Timer timer = new Timer(1000);
 
@@ -113,8 +115,10 @@ namespace tdaStreamHub.Components
 
             await Init();
 
-            TDAStreamerData.OnTimeSalesStatusChanged += sendTimeSalesData;
 
+            /// This is fired by Decode_TimeSales
+            TDAStreamerData.OnTimeSalesStatusChanged += sendTimeSalesData;
+            TDAStreamerData.OnBookStatusChanged += TDAStreamerData_OnBookStatusChanged;
 
         }
 
@@ -209,11 +213,61 @@ namespace tdaStreamHub.Components
         #endregion
 
         #region External Event Handlers
+        private void TDAStreamerData_OnBookStatusChanged()
+        {
+            /// Get Book Columns Data
+            /// 
+            try
+            {
+                //var bookColsData = TDABook.getBookColumnsData();
+                //Send("BookColsData", JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookColsData));
+                dictTopicCounts["BookColsData"] += 1;
+                StateHasChanged();
+            }
+            catch { }
+
+
+
+            ///// Get Book Pies Data
+            ///// 
+            //try
+            //{
+            //    var dictBookPiesData = new Dictionary<int, BookDataItem[]>();
+            //    foreach (var secs in CONSTANTS.printSeconds)
+            //    {
+            //        var bookPiesData = TDABook.getBookPieData(secs);
+            //        dictBookPiesData.Add(secs, bookPiesData);
+
+            //    }
+            //    Send("BookPiesData", JsonSerializer.Serialize<Dictionary<int, BookDataItem[]>>(dictBookPiesData));
+
+            //}
+            //catch
+            //{
+
+            //}
+            ///// Get Book Summary Pie Data
+            ///// 
+            //try
+            //{
+            //    var bookData = TDABook.getBookCompositePieData();
+            //    Send("BookBigPieData", JsonSerializer.Serialize<BookDataItem[]>(bookData));
+
+            //}
+            //catch
+            //{
+
+            //}
+        }
 
         private void sendTimeSalesData()
         {
-            // Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
-            sendPrintsData();
+            //Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
+            //sendPrintsData();
+            dictTopicCounts["TimeAndSales"] += 1;
+
+            StateHasChanged();
+
         }
 
         Dictionary<int, DataItem[]> dictPies = new Dictionary<int, DataItem[]>();
@@ -255,7 +309,7 @@ namespace tdaStreamHub.Components
             if (logStreamer == false) return;
 
             logTextsb.Insert(0, "\n" + text);
-            logText = string.Join('\n', logTextsb.ToString().Split('\n').Take(10));
+            logText = string.Join('\n', logTextsb.ToString().Split('\n').Take(100));
 
             StateHasChanged();
         }
@@ -339,13 +393,18 @@ namespace tdaStreamHub.Components
                 LogText("DECODED: " + svcFieldedJson);
 
                 var svcJsonObjectDecoded = JObject.Parse(svcFieldedJson);
-                var contents = svcJsonObjectDecoded["content"];
+                var contents = svcJsonObjectDecoded["content"].ToString();
 
                 /// Send to connected hub
                 /// 
                 await TDAStreamerData.captureTdaServiceData(svcFieldedJson);
-                await Send(svcName, svcFieldedJson);
 
+                /// Send to message queue
+                /// 
+                dictTopicCounts[svcName] += 1;
+                //await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
+                //await Send(svcName, svcFieldedJson);
+                StateHasChanged();
             }
         }
 
@@ -402,7 +461,13 @@ namespace tdaStreamHub.Components
                 Receive(user, message);
             }));
 
-            hubConnection.On("NASDAQ_BOOK", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+            //foreach (var name in valuesName.Skip(1))
+            //    hubConnection.On(name, (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+
+            hubConnection.On("NASDAQ_BOOK", (Action<string, string>)((topic, message) =>
+            {
+                Receive(topic, message);
+            }));
             hubConnection.On("TIMESALE_EQUITY", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("CHART_EQUITY", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("OPTION", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
@@ -412,6 +477,9 @@ namespace tdaStreamHub.Components
             hubConnection.On("ACTIVES_OPTIONS", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("TimeAndSales", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("GaugeScore", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+            hubConnection.On("BookColsData", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+            hubConnection.On("BookPiesData", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+            hubConnection.On("BookBigPieData", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
 
 
             /// Start a Connection to the hub

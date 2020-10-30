@@ -11,6 +11,10 @@ using Microsoft.Extensions.Logging;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using tapeStream.Data;
+using tapeStream.Client.Services;
+using MatBlazor;
+
 
 namespace tapeStream.Client
 {
@@ -32,6 +36,22 @@ namespace tapeStream.Client
             {
                 BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
             });
+
+            builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddSingleton<NasdaqBookService>();
+            builder.Services.AddSingleton<TimeSalesService>();
+
+            builder.Services.AddMatToaster(config =>
+            {
+                config.Position = MatToastPosition.BottomRight;
+                config.PreventDuplicates = true;
+                config.NewestOnTop = true;
+                config.ShowCloseButton = true;
+                config.MaximumOpacity = 95;
+                config.VisibleStateDuration = 3000;
+            });
+
+
 
             builder.RootComponents.Add<App>("app");
             var host = builder.Build();

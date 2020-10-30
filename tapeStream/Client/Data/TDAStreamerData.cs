@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
+using tapeStream.Client.Services;
 
 namespace tapeStream.Client.Data
 {

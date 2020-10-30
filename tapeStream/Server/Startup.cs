@@ -19,6 +19,7 @@ using Blazorise.Icons.FontAwesome;
 using tdaStreamHub.Hubs;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace tdaStreamHub
 {
@@ -40,7 +41,8 @@ namespace tdaStreamHub
 
             services.AddBlazorise(options =>
            { options.ChangeTextOnKeyPress = true; }).AddBootstrapProviders().AddFontAwesomeIcons();
-            // other services           
+            // other services      
+            services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -56,7 +58,25 @@ namespace tdaStreamHub
             services.AddScoped<Radzen.DialogService>();
             services.AddBootstrapCss();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    );
+
+                options.AddPolicy("signalr",
+                    builder => builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(hostName => true));
+            });
+
+
 
         }
 
@@ -86,10 +106,16 @@ namespace tdaStreamHub
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();
+
+                builder.WithOrigins("http://localhost:53911/fetchdata")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "HEAD", "POST")
+                    .AllowCredentials();
             });
 
             app.UseRouting();
             app.ApplicationServices.UseBootstrapProviders().UseFontAwesomeIcons();
+            app.UseMvcWithDefaultRoute();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();

@@ -13,6 +13,10 @@ namespace tdaStreamHub.Components
         static string clockFormat = CONSTANTS.clockFormat;
         readonly string[] valuesName = CONSTANTS.valuesName;
 
+        protected override async Task OnInitializedAsync()
+        {
+            logHub = logHub0;
+        }
 
         void logHubChange(bool? arg, string comment)
         {

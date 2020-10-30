@@ -37,10 +37,60 @@ namespace tdaStreamHub.Data
             var printsData = new DataItem[5];
             var timeSales = TDAStreamerData.timeSales[symbol];
 
-            printsData[0].Revenue = timeSales.Where(t => t.level == 1 && t.time >= thisManySecondsAgo).Sum(t => t.size);
-            printsData[1].Revenue = timeSales.Where(t => t.level == 2 && t.time >= thisManySecondsAgo).Sum(t => t.size);
-            printsData[2].Revenue = timeSales.Where(t => t.level == 3 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+            try
+            {
+                printsData[0].Revenue = timeSales.Where(t => t.level == 1 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+
+            }
+            catch 
+            {
+
+                throw;
+            }
+            try
+            {
+                printsData[1].Revenue = timeSales.Where(t => t.level == 2 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+
+            }
+            catch 
+            {
+
+                throw;
+            }
+
+
+            try
+            {
+                printsData[2].Revenue = timeSales.Where(t => t.level == 3 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+
+            }
+            catch 
+            {
+
+                throw;
+            }
+
+            try
+            {
+
+            }
+            catch 
+            {
+
+                throw;
+            }
             printsData[3].Revenue = timeSales.Where(t => t.level == 4 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+
+
+            try
+            {
+
+            }
+            catch 
+            {
+
+                throw;
+            }
             printsData[4].Revenue = timeSales.Where(t => t.level == 5 && t.time >= thisManySecondsAgo).Sum(t => t.size);
 
             return printsData;

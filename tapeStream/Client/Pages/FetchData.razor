@@ -1,46 +1,249 @@
 @page "/fetchdata"
 @using tapeStream.Shared
+@using System.Net.Http.Headers
+@using MatBlazor
+
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-
-@code {
-    private WeatherForecast[] forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+<style>
+    p.tiny {
+        padding-top: 20px;
+        font-size: xx-small;
     }
+
+    tr.mdc-table-footer-row, tr.mdc-table-row {
+        height: 2px;
+    }
+
+    .mdc-table td {
+        border: 1px solid rgba(0,0,0,.1);
+        padding: 2px 12px 2px 12px;
+        font-size: xx-small;
+    }
+
+    .mdc-table th {
+        line-height: 20px;
+        font-weight: 400;
+        letter-spacing: .04em;
+        text-decoration: inherit;
+        text-transform: inherit;
+        background-color: rgba(0,0,0,.08);
+        font-size: x-small;
+        font-weight: 500;
+        color: #202124;
+        text-align: left;
+        border: 1px solid rgba(0,0,0,.1);
+        padding: 0px 0px 0px 12px;
+    }
+    .mdc-table-header-row {
+        height: 6px;
+        text-align: left;
+        font-weight: 500;
+    }
+    .mdc-table, .mdc-table--striped {
+        width: 100%;
+        max-width: 100%;
+        background-color: transparent;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: inline-block;
+        overflow-x: auto;
+        margin: 8px 0 0px;
+        border: 1px solid rgba(0,0,0,.1);
+    }
+    .mdc-text-field__input {
+        width: 80px;
+    }
+</style>
+
+<MatAccordion>
+    <MatExpansionPanel @bind-Expanded="@panelOpenState">
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Weather forecast Demo</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                <p class="tiny">This component demonstrates fetching data from the server. Panel is @(panelOpenState ? "open" : "closed")</p>
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <div>
+                <MatButton OnClick="@RefreshWeather" Icon="refresh">  Refresh</MatButton>
+
+                <!--@if (forecasts == null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Temp. (C)</th>
+                                <th>Temp. (F)</th>
+                                <th>Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var forecast in forecasts)
+                            {
+                                <tr>
+                                    <td>@forecast.Date.ToShortDateString()</td>
+                                    <td>@forecast.TemperatureC</td>
+                                    <td>@forecast.TemperatureF</td>
+                                    <td>@forecast.Summary</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>-->
+                    @*@it*@
+                <!--}-->
+            </div>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    @* ============================================================================================================== *@
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Time &amp; Sales</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                <p class="tiny">Template description</p>
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <div>
+                <MatButton Icon="refresh" OnClick="@RefreshTimeSales">  Refresh</MatButton>
+                <MatButton Icon="refresh" OnClick="@RefreshTimeSalesValue">  Send Value:</MatButton>
+                <MatNumericUpDownField @bind-Value="@sendValue" On />
+                               
+                @timeSalesValue
+                <MatTable Items="@values" class="mat-elevation-z5 tiny">
+                    <MatTableHeader>
+                        <th>Words</th>
+                    </MatTableHeader>
+                    <MatTableRow>
+                        <td>@context</td>
+                    </MatTableRow>
+                </MatTable>
+            </div>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    @* ============================================================================================================== *@
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Nasdaq Book</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                <p class="tiny">Template description</p>
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <div>
+                <MatButton Icon="refresh">  Refresh</MatButton>
+                <MatTable Items="@cars" class="mat-elevation-z5">
+                    <MatTableHeader>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Horsepower</th>
+                    </MatTableHeader>
+                    <MatTableRow>
+                        <td>@context.Name</td>
+                        <td>@String.Format("${0:f2}", @context.Price)</td>
+                        <td>@context.Horsepower</td>
+                    </MatTableRow>
+                </MatTable>
+            </div>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    @* ============================================================================================================== *@
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Template Header</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                <p class="tiny">Template description</p>
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <div>
+                <MatButton Icon="refresh">  Refresh</MatButton>
+                <MatTable Items="@cars" class="mat-elevation-z5">
+                    <MatTableHeader>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Horsepower</th>
+                    </MatTableHeader>
+                    <MatTableRow>
+                        <td>@context.Name</td>
+                        <td>@String.Format("${0:f2}", @context.Price)</td>
+                        <td>@context.Horsepower</td>
+                    </MatTableRow>
+                </MatTable>
+            </div>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    @* ============================================================================================================== *@
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Template Header</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                <p class="tiny">Template description</p>
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <div>
+                <MatButton Icon="refresh">  Refresh</MatButton>
+                <MatTable Items="@cars" class="mat-elevation-z5">
+                    <MatTableHeader>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Horsepower</th>
+                    </MatTableHeader>
+                    <MatTableRow>
+                        <td>@context.Name</td>
+                        <td>@String.Format("${0:f2}", @context.Price)</td>
+                        <td>@context.Horsepower</td>
+                    </MatTableRow>
+                </MatTable>
+            </div>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+    @* ============================================================================================================== *@
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Personal data</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>Type your name and age</MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <MatStringField Label="First name"></MatStringField>
+            <MatStringField Label="Age"></MatStringField>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+
+</MatAccordion>
+@code
+        {
+    bool panelOpenState;
+
+    public class Car
+    {
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public int Horsepower { get; set; }
+
+        public Car(string name, double price, int horsepower)
+        {
+            Name = name;
+            Price = price;
+            Horsepower = horsepower;
+        }
+    }
+
+    Car[] cars = new[]
+    {
+                new Car("Volkswagen Golf", 10000, 220),
+                new Car("Volkswagen Passat", 11000, 240),
+                new Car("Volkswagen Polo", 12000, 110),
+                new Car("Ford Focus", 13000, 200),
+                new Car("Ford Fiesta", 14000, 160),
+                new Car("Ford Fusion", 15000, 260),
+                new Car("Ford Mondeo", 16000, 120),
+            };
 
 }

@@ -1,0 +1,83 @@
+﻿@page "/"
+@using MatBlazor
+
+<MatButton Icon="start" OnClick="@RunOnClick" Label="Start"></MatButton>
+<MatButton Icon="new" Disabled="@FilesInDestFolder()" OnClick="@ResetArchive" Label="Reset Archive"></MatButton>
+
+<MatChip Label="@Count.ToString()"></MatChip>
+
+<MatSnackbar @bind-IsOpen="@snackBarIsOpen">
+    <MatSnackbarContent>@msg</MatSnackbarContent>
+    <MatSnackbarActions>
+        <MatButton Raised="true">Cancel</MatButton>
+    </MatSnackbarActions>
+</MatSnackbar>
+
+
+@*<MatChipSet Filter="true" @bind-SelectedChips="selectedChips">
+        <MatChip Label="Wedges" IsCheckable="true"></MatChip>
+        <MatChip Label="Fries" IsCheckable="true"></MatChip>
+        <MatChip Label="Baby carrots" IsCheckable="true"></MatChip>
+        <MatChip Label="Roasted veggies" IsCheckable="true"></MatChip>
+        <MatChip Label="Salad" IsCheckable="true"></MatChip>
+        <MatChip Label="Cheese" IsCheckable="true"></MatChip>
+    </MatChipSet>
+    <p>
+        You selected:
+        @foreach (var chip in selectedChips ?? new MatChip[0])
+        {
+            <span>@(chip.Label)&nbsp;</span>
+        }
+    </p>
+    <MatSlider @bind-Value="@Val2" ValueMin="-10" ValueMax="20"></MatSlider>
+
+    @code
+            {
+        MatChip selectedChip = null;
+        MatChip[] selectedChips = null;
+    }
+
+    <h4 class="mt-3">Adding Removable Chips</h4>
+
+    <MatChipSet @ref="chipset" @bind-SelectedChip="selectedChip">
+        <MatButton class="mr-2" @onclick="OnAddOption">Add a chip</MatButton>
+        @foreach (var option in labels)
+        {
+            <MatChip class="mt-1" Label=@option TrailingIcon="clear" TrailingIconClick="OnTrailingIconClick"></MatChip>
+        }
+    </MatChipSet>*@
+
+@code
+        {
+    MatChipSet chipset = null;
+    int counter = 1;
+    List<string> labels = new List<string>();
+
+    private void OnAddOption()
+    {
+        labels.Add($"Chip {counter++}");
+    }
+
+    private void OnTrailingIconClick(MatChip chip)
+    {
+        labels.Remove(chip.Label);
+        chipset?.UnregisterChip(chip); // <-- to avoid memleak
+    }
+}
+
+
+@code
+        {
+
+    public decimal Val2
+    {
+        get => _val2;
+        set
+        {
+            _val2 = value;
+            this.StateHasChanged();
+        }
+    }
+
+    private decimal _val2 = 0;
+}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public static class DictionaryExtensions
 {
-    public static void RemoveAll<TKey, TValue>(this IDictionary<TKey, TValue> dic,
+    public static void RemoveAll1<TKey, TValue>(this IDictionary<TKey, TValue> dic,
         Func<TKey, TValue, bool> predicate)
     {
         var keys = dic.Keys.Where(k => predicate(k, dic[k])).ToList();

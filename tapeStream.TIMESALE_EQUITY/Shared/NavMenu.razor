@@ -1,0 +1,60 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">tapeStream.TIMESALE_EQUITY</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="material">
+                <span class="oi oi-plus" aria-hidden="true"></span> Material
+            </NavLink>
+        </li>
+
+    </ul>
+</div>
+
+@*<p>
+    <MatButton Label="Menu" OnClick="@OnClick2" @ref="Button2"></MatButton>
+    <MatMenu @ref="Menu2">
+        <MatList>
+            <MatListItem>Item 1</MatListItem>
+            <MatListItem>Item 2</MatListItem>
+            <MatListItem>Item 3</MatListItem>
+            <MatListItem>Item 4</MatListItem>
+            <MatListItem>Item 5</MatListItem>
+        </MatList>
+    </MatMenu>
+</p>*@
+
+@code
+        {
+    BaseMatButton Button2;
+    BaseMatMenu Menu2;
+
+    public void OnClick2(MouseEventArgs e)
+    {
+        this.Menu2.OpenAsync(Button2.Ref);
+    }
+
+}
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+
+

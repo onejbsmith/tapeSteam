@@ -7,8 +7,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Client.Data;
 
-namespace tapeStream.Client.Data
+namespace tapeStream.Client.Services
 {
     public class TDAApiService
     {

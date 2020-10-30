@@ -24,18 +24,18 @@ namespace tdaStreamHub.Data
         {
             var bookData = new BookDataItem[2];
 
-            TDAStreamerData.lstAllBids.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-600));
-            TDAStreamerData.lstAllAsks.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-600));
+            TDAStreamerData.lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+            TDAStreamerData.lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
 
             if (TDAStreamerData.lstAllBids.Count == 0 || TDAStreamerData.lstAllAsks.Count == 0) 
                 return bookData;
 
             double bidSize =  TDAStreamerData.lstAllBids
-                .Where(t => t.time >= DateTime.Now.AddSeconds(-seconds))
+                .Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds))
                 .Sum(t => t.Size);
 
             double askSize =  TDAStreamerData.lstAllAsks
-                .Where(t => t.time >= DateTime.Now.AddSeconds(-seconds))
+                .Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds))
                 .Sum(t => t.Size);
 
             var allBids = new BookDataItem() 
@@ -56,14 +56,14 @@ namespace tdaStreamHub.Data
             if ( TDAStreamerData.lstAllAsks.Count == 0) 
                 return bookData;
 
-            double bidSize2 =  TDAStreamerData.lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double askSize2 =  TDAStreamerData.lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double bidSize10 =  TDAStreamerData.lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double askSize10 =  TDAStreamerData.lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double bidSize30 =  TDAStreamerData.lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double askSize30 =  TDAStreamerData.lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double bidSize60 =  TDAStreamerData.lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
-            double askSize60 =  TDAStreamerData.lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double bidSize2 =  TDAStreamerData.lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double askSize2 =  TDAStreamerData.lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double bidSize10 =  TDAStreamerData.lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double askSize10 =  TDAStreamerData.lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double bidSize30 =  TDAStreamerData.lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double askSize30 =  TDAStreamerData.lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double bidSize60 =  TDAStreamerData.lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double askSize60 =  TDAStreamerData.lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
 
             var allBids = new BookDataItem() 
             { 

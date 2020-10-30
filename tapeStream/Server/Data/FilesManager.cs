@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.ComponentModel.Design;
 using System.IO;
+using tapeStream.Shared;
+
 namespace tdaStreamHub.Data
 {
     /// <summary>
@@ -61,6 +63,19 @@ namespace tdaStreamHub.Data
 
             }
 
+        }
+
+        internal static async Task SendToMessageQueue(string svcName, DateTime svcDateTime, string svcFieldedJson)
+        {
+            string fileName = svcName + svcDateTime.ToString(".yyMMdd.HHmm.ss.ff");
+            string filePath = $"D:\\MessageQs\\Inputs\\{svcName}\\{fileName}.json";
+            System.IO.File.WriteAllText(filePath, svcFieldedJson);
+            //if (svcName == "QUOTE")
+            //{
+            //    filePath = filePath = $"D:\\MessageQs\\Inputs\\{CONSTANTS.TIMESALE_EQUITY}\\{fileName}.json";
+            //    System.IO.File.WriteAllText(filePath, svcFieldedJson);
+            //}
+            await Task.CompletedTask;
         }
     }
 

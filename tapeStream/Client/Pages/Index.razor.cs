@@ -92,6 +92,9 @@ namespace tapeStream.Client.Pages
         protected override async Task OnInitializedAsync()
         {
 
+
+
+
             dictTopicCounts = new Dictionary<string, int>();
             foreach (var x in CONSTANTS.valuesName)
                 dictTopicCounts.Add(x, 0);
@@ -111,74 +114,134 @@ namespace tapeStream.Client.Pages
             bookData = new BookDataItem[]
                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
                     };
-          
+
 
             bookColData = new Dictionary<string, BookDataItem[]>()
             { { "bids", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }},
               { "asks", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }}
             };
 
-            await SetupHub();
-        }
-
-        private async Task SetupHub()
-        {
-            /// Setup a hub Url
-            /// 
             hubConnection = new HubConnectionBuilder()
                  .WithUrl("https://localhost:44367/tdahub")
                  .Build();
 
-            /// Setup a callback for Receiving messages from hub
-            /// "NASDAQ_BOOK", "TIMESALE_EQUITY", "CHART_EQUITY", "OPTION", "QUOTE","ACTIVES"
-            /// 
-            hubConnection.On("PrintsPies", (Action<string, string>)(async (topic, message) =>
-            {
-                Receive(topic, message);
-                /// The data for this feed is kept on the server and updated from the server
-                /// so we update the components with data directly from the server
-                /// 
-                printsData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<int, DataItem[]>>(message);
+            await SetupHub();
 
-                StateHasChanged();
-            }));
-
-            hubConnection.On("GaugeScore", (Action<string, string>)(async (topic, message) =>
-            {
-                Receive(topic, message);
-                /// The data for this feed is kept on the client and added to from the server
-                /// so we update the components from data in TDAStreamerData
-                /// 
-                /// Get one X,Y pair from the server
-                KeyValuePair<DateTime, double> pair
-                    = System.Text.Json.JsonSerializer.Deserialize<KeyValuePair<DateTime, double>>(message);
-                /// Remove all stale X,Y values and add new pair
-                TDAStreamerData.gaugeValues.RemoveAll((key, val) => key < DateTime.Now.AddSeconds(-600));
-                TDAStreamerData.gaugeValues.Add(pair.Key, pair.Value);
-                /// Pass the last pair to the Arc Gauge 
-                lastCombinedRedGreenValue = (int)pair.Value;
-                /// Pass the list of X,Y values to the Line Chart
-                gaugeValues = TDAStreamerData.gaugeValues;
-
-                /// Do we need to do this now ?
-                //TDAStreamerData.TimeSalesStatusChanged();
-
-                StateHasChanged();
-            }));
+            await hubConnection.StartAsync();
+            var color = IsConnected ? "green" : "red";
+            TDAStreamerData.hubStatus = $"./images/{color}.gif";
         }
-#if IncludeAllTDA_Feeds
+
+        private async Task SetupHub()
+        {
             hubConnection.On("TimeAndSales", (Action<string, string>)(async (topic, message) =>
             {
-                dictTopicCounts[topic] += 1;
-                var timeAndSales = System.Text.Json.JsonSerializer.Deserialize<TimeSales_Content>(message);
-                DateTime retention = DateTime.Now.AddSeconds(-600);
-                TDAStreamerData.timeSales[symbol].RemoveAll(t => t.TimeDate < retention);
-                TDAStreamerData.timeSales[symbol].Add(timeAndSales);
-                lstTimeSales = TDAStreamerData.timeSales[symbol].Count; //  TDAStreamerData.timeSales[symbol];
-                                                                        //printsData = TDAStreamerData.getPrintsData(symbol,5);
 
-        }));
+                Receive(topic, message);
+                //var timeAndSales = System.Text.Json.JsonSerializer.Deserialize<TimeSales_Content>(message);
+                //DateTime retention = DateTime.Now.AddSeconds(-600);
+                //TDAStreamerData.timeSales[symbol].RemoveAll(t => t.TimeDate < retention);
+                //TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+                //lstTimeSales = TDAStreamerData.timeSales[symbol].Count;
 
+                //await Task.Yield();
+                //if (lstTimeSales % 10 == 0)
+                //{
+                //    lastCombinedRedGreenValue = (int)TDAPrints.GetPrintsGaugeScore(symbol);
+                //    //printsData = TDAPrints.dictPies;
+                //}
+                StateHasChanged();
+
+                await Task.CompletedTask;
+            }));
+
+
+            hubConnection.On("BookColsData", (Action<string, string>)(async (topic, message) =>
+           {
+               Receive(topic, message);
+               ///// The data for this feed is kept on the server and updated from the server
+               ///// so we update the components with data directly from the server
+               ///// 
+               //bookColData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, BookDataItem[]>>(message);
+               //StateHasChanged();
+               await Task.CompletedTask;
+           }));
+
+        }
+        /// Setup a hub Url
+        /// 
+
+        /// Setup a callback for Receiving messages from hub
+        /// "NASDAQ_BOOK", "TIMESALE_EQUITY", "CHART_EQUITY", "OPTION", "QUOTE","ACTIVES"
+        /// 
+
+        //hubConnection.On("BookColsData", (Action<string, string>)(async (topic, message) =>
+        //{
+        //    Receive(topic, message);
+        //    /// The data for this feed is kept on the server and updated from the server
+        //    /// so we update the components with data directly from the server
+        //    /// 
+        //    bookColData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, BookDataItem[]>>(message);
+        //    StateHasChanged();
+        //}));
+
+        //hubConnection.On("BookPiesData", (Action<string, string>)(async (topic, message) =>
+        //{
+        //    Receive(topic, message);
+        //    /// The data for this feed is kept on the server and updated from the server
+        //    /// so we update the components with data directly from the server
+        //    /// 
+
+        //    StateHasChanged();
+        //}));
+
+        //hubConnection.On("BookBigPieData", (Action<string, string>)(async (topic, message) =>
+        //{
+        //    Receive(topic, message);
+        //    /// The data for this feed is kept on the server and updated from the server
+        //    /// so we update the components with data directly from the server
+        //    /// 
+
+        //    StateHasChanged();
+        //}));
+
+        //hubConnection.On("PrintsPies", (Action<string, string>)(async (topic, message) =>
+        //{
+        //    Receive(topic, message);
+        //    ///// The data for this feed is kept on the server and updated from the server
+        //    ///// so we update the components with data directly from the server
+        //    ///// 
+        //    //printsData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<int, DataItem[]>>(message);
+
+        //    StateHasChanged();
+        //}));
+
+        //hubConnection.On("GaugeScore", (Action<string, string>)(async (topic, message) =>
+        //{
+        //    Receive(topic, message);
+        //    ///// The data for this feed is kept on the client and added to from the server
+        //    ///// so we update the components from data in TDAStreamerData
+        //    ///// 
+        //    ///// Get one X,Y pair from the server
+        //    //KeyValuePair<DateTime, double> pair
+        //    //    = System.Text.Json.JsonSerializer.Deserialize<KeyValuePair<DateTime, double>>(message);
+        //    ///// Remove all stale X,Y values and add new pair
+        //    //TDAStreamerData.gaugeValues.RemoveAll((key, val) => key < DateTime.Now.AddSeconds(-600));
+        //    //TDAStreamerData.gaugeValues.Add(pair.Key, pair.Value);
+        //    ///// Pass the last pair to the Arc Gauge 
+        //    //lastCombinedRedGreenValue = (int)pair.Value;
+        //    ///// Pass the list of X,Y values to the Line Chart
+        //    //gaugeValues = TDAStreamerData.gaugeValues;
+
+        //    ///// Do we need to do this now ?
+        //    ////TDAStreamerData.TimeSalesStatusChanged();
+
+        //    StateHasChanged();
+        //}));
+
+
+
+#if IncludeAllTDA_Feeds
             hubConnection.On("NASDAQ_BOOK", (Action<string, string>)(async (topic, message) =>
             {
                 Receive(topic, message);
@@ -228,7 +291,6 @@ namespace tapeStream.Client.Pages
             }));
             /// Start a Connection to the hub
             /// 
-            await hubConnection.StartAsync();
        
 #endif
 
@@ -268,11 +330,13 @@ namespace tapeStream.Client.Pages
             // Update topic's Stats count
             dictTopicCounts[topic] += 1;
 
-            var svcJsonObject = JObject.Parse(content);
-            var svcName = svcJsonObject["service"].ToString();
-            var contents = svcJsonObject["content"];
-            //var timeStamp = Convert.ToInt64(svcJsonObject["timestamp"]);
-            GetServiceTime(svcJsonObject);
+            //var svcJsonObject = JObject.Parse(content);
+            //var svcName = svcJsonObject["service"].ToString();
+            //var contents = svcJsonObject["content"];
+            ////var timeStamp = Convert.ToInt64(svcJsonObject["timestamp"]);
+            //GetServiceTime(svcJsonObject);
+
+            clock = DateTime.Now.ToString(clockFormat);
 
             StateHasChanged();
         }
@@ -288,8 +352,10 @@ namespace tapeStream.Client.Pages
         /// Method to test if hub connection is alive
         /// </summary>
         /// 
+
         public bool IsConnected =>
-            hubConnection.State == HubConnectionState.Connected;
+            hubConnection != null
+            && hubConnection.State == HubConnectionState.Connected;
 
         /// <summary>
         /// Method that will shut down hub if this page is closed
