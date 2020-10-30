@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using System.Net.Http.Json;
 using System.Net.Http;
 using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
 
-namespace tapeStream.Client.Services
+namespace tapeStream.Shared.Services
 {
-    public class TimeSalesService
+    public class PrintsLineChartService
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
+
+        string controllerUrll = "https://localhost:44367/api/BookBarChart/";
         public async Task<string[]> GetValues()
         {
-            var values = await Http.GetFromJsonAsync<string[]>("https://localhost:44367/api/TimeSales");
+            var values = await Http.GetFromJsonAsync<string[]>(controllerUrll);
             return values;
         }
 
         public async Task<string> GetValue(int input)
         {
-            var value= await Http.GetStringAsync($"https://localhost:44367/api/TimeSales/" + input.ToString()) ;
+            var value = await Http.GetStringAsync(controllerUrll + input.ToString());
             return value;
         }
-
 
     }
 }

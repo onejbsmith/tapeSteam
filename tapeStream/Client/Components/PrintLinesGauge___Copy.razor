@@ -17,19 +17,53 @@
             @*<LineChart OptionsJsonString="" @ref="lineChart" TItem="double" />**@
             <RadzenChart Style="width:1400px">
 
-                <RadzenLineSeries Smooth="true"
-                                  Data="@rawGaugesCombined"
+                <RadzenLineSeries Data="@dictAllLinePoints["rawGaugesCombined"]"
                                   CategoryProperty="Date" Title="Raw"
                                   LineType="Radzen.Blazor.LineType.Solid"
+                                  Smooth="true"
                                   StrokeWidth="4"
                                   ValueProperty="Revenue">
                 </RadzenLineSeries>
 
-                <RadzenLineSeries Smooth="true"
-                                  Data="@average10min"
+                <RadzenLineSeries Data="@dictAllLinePoints["staticValueMinus7"]"
+                                  CategoryProperty="Date" Title="-7"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+                <RadzenLineSeries Data="@dictAllLinePoints["staticValue0"]"
+                                  CategoryProperty="Date" Title="0"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+                <RadzenLineSeries Data="@dictAllLinePoints["staticValue7"]"
+                                  CategoryProperty="Date" Title="7"
+                                  LineType="Radzen.Blazor.LineType.Dotted"
+                                  StrokeWidth="2"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+
+
+
+                <RadzenLineSeries Data="@dictAllLinePoints["movingAverage30sec"]"
+                                  CategoryProperty="Date" Title="30 sec"
+                                  LineType="Radzen.Blazor.LineType.Solid"
+                                  Smooth="true"
+                                  StrokeWidth="4"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+                <RadzenLineSeries Data="@dictAllLinePoints["movingAverage5min"]"
+                                  CategoryProperty="Date" Title="5 min"
+                                  LineType="Radzen.Blazor.LineType.Solid"
+                                  Smooth="true"
+                                  StrokeWidth="8"
+                                  ValueProperty="Revenue">
+                </RadzenLineSeries>
+                <RadzenLineSeries Data="@dictAllLinePoints["average10min"]"
                                   CategoryProperty="Date" Title="10 min"
                                   LineType="Radzen.Blazor.LineType.Dashed"
-                                  StrokeWidth="8"
+                                  StrokeWidth="12"
                                   ValueProperty="Revenue">
 
                     <TooltipTemplate Context="data">
@@ -37,46 +71,7 @@
                     </TooltipTemplate>
                 </RadzenLineSeries>
 
-                <RadzenLineSeries Smooth="true"
-                                  Data="@movingAverage30sec"
-                                  CategoryProperty="Date" Title="30 sec"
-                                  LineType="Radzen.Blazor.LineType.Solid"
-                                  StrokeWidth="4"
-                                  ValueProperty="Revenue">
-                </RadzenLineSeries>
 
-                <RadzenLineSeries Smooth="true"
-                                  Data="@movingAverage5min"
-                                  CategoryProperty="Date" Title="5 min"
-                                  LineType="Radzen.Blazor.LineType.Solid"
-                                  StrokeWidth="4"
-                                  ValueProperty="Revenue">
-                </RadzenLineSeries>
-
-                <RadzenLineSeries Smooth="true"
-                                  Data="@staticValue7"
-                                  CategoryProperty="Date" Title="7"
-                                  LineType="Radzen.Blazor.LineType.Dotted"
-                                  StrokeWidth="2"
-                                  ValueProperty="Revenue">
-                </RadzenLineSeries>
-                <RadzenLineSeries Smooth="true"
-                                  Data="@staticValue0"
-                                  CategoryProperty="Date" Title="0"
-                                  LineType="Radzen.Blazor.LineType.Dotted"
-                                  StrokeWidth="2"
-                                  ValueProperty="Revenue">
-                </RadzenLineSeries>
-
-
-
-                <RadzenLineSeries Smooth="true"
-                                  Data="@staticValueMinus7"
-                                  CategoryProperty="Date" Title="-7"
-                                  LineType="Radzen.Blazor.LineType.Dotted"
-                                  StrokeWidth="2"
-                                  ValueProperty="Revenue">
-                </RadzenLineSeries>
 
                 <RadzenCategoryAxis Visible="false" />
                 <RadzenLegend Visible="true" />

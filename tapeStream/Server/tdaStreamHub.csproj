@@ -32,6 +32,8 @@
     <Compile Remove="Components\PrintPieGauge.razor.cs" />
     <Compile Remove="Components\PrintsGroupedStackedColumnCart.razor.cs" />
     <Compile Remove="Components\SyncfusionStackedColumnChart.razor.cs" />
+    <Compile Remove="Controllers\BookBarChartController.cs" />
+    <Compile Remove="Controllers\NasdaqBookController.cs" />
     <Compile Remove="Data\classes\CONSTANTS.cs" />
     <Compile Remove="Data\classes\FixedSizedQueue.cs" />
     <Compile Remove="Data\classes\RhAutoProcs.cs" />

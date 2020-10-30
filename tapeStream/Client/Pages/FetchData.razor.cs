@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components;
 using tapeStream.Data;
 using Newtonsoft.Json.Linq;
 using tapeStream.Client.Services;
+using tapeStream.Shared.Services;
 
 namespace tapeStream.Client.Pages
 {
@@ -31,11 +32,9 @@ namespace tapeStream.Client.Pages
 
 
 
-        [Inject]
-        WeatherForecastService ForecastService { get; set; }
+        [Inject] WeatherForecastService ForecastService { get; set; }
 
-        [Inject]
-        TimeSalesService timeSalesService { get; set; }
+        [Inject] TimeSalesService timeSalesService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

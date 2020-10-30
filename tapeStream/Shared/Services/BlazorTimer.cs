@@ -2,7 +2,7 @@
 using System;
 using System.Timers;
 
-namespace tdaStreamHub.Data
+namespace tapeStream.Shared
 {
     public class BlazorTimer
     {

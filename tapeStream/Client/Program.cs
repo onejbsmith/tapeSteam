@@ -14,7 +14,7 @@ using Blazorise.Icons.FontAwesome;
 using tapeStream.Data;
 using tapeStream.Client.Services;
 using MatBlazor;
-
+using tapeStream.Shared.Services;
 
 namespace tapeStream.Client
 {
@@ -38,7 +38,13 @@ namespace tapeStream.Client
             });
 
             builder.Services.AddSingleton<WeatherForecastService>();
-            builder.Services.AddSingleton<NasdaqBookService>();
+
+            builder.Services.AddSingleton<BookColumnsService>();
+            builder.Services.AddSingleton<BookPieChartsService>();
+
+            builder.Services.AddSingleton<PrintsLineChartService>();
+            builder.Services.AddSingleton<PrintsPieChartService>();
+
             builder.Services.AddSingleton<TimeSalesService>();
 
             builder.Services.AddMatToaster(config =>

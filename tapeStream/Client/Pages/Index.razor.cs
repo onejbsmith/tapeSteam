@@ -10,11 +10,25 @@ using System.Threading.Tasks;
 using tapeStream.Client.Data;
 using tapeStream.Data;
 using tapeStream.Shared;
+using System.Timers;
+using Microsoft.AspNetCore.Components;
+using tapeStream.Shared.Services;
 
 namespace tapeStream.Client.Pages
 {
     public partial class Index
     {
+        [Inject] BlazorTimer Timer { get; set; }
+        [Inject] BookColumnsService bookColumnsService { get; set; }
+        [Inject] BookPieChartsService bookPieChartsService { get; set; }
+        [Inject] PrintsLineChartService printsLineChartService { get; set; }
+        [Inject] PrintsPieChartService printsPieChartService { get; set; }
+
+
+        Timer timerBookPieCharts = new Timer(1000);
+        Timer timerPrintsPieCharts = new Timer(1000);
+        Timer timerBookColumnsCharts = new Timer(1000);
+        Timer timerPrintsLineCharts = new Timer(1000);
 
         #region Variables
         public Dictionary<string, BookDataItem[]> bookColData
@@ -137,6 +151,37 @@ namespace tapeStream.Client.Pages
             /// Show Hub Status in lamp color
             var color = IsConnected ? "green" : "red";
             TDAStreamerData.hubStatus = $"./images/{color}.gif";
+
+            //timer.Elapsed += async (sender, e) => await Timer_ElapsedAsync();
+            timerBookPieCharts.Elapsed += async (sender,e) => await TimerBookPieCharts_Elapsed(sender,e);
+            timerPrintsPieCharts.Elapsed += async (sender, e) => await TimerPrintsPieCharts_Elapsed(sender,e);
+            timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender,e);
+            timerPrintsLineCharts.Elapsed += async (sender, e) => await TimerPrintsLineCharts_Elapsed(sender,e);
+
+            timerBookPieCharts.Start();
+            timerPrintsPieCharts.Start();
+            timerBookColumnsCharts.Start();
+            timerPrintsLineCharts.Start();
+        }
+
+        private async Task TimerPrintsLineCharts_Elapsed(object sender, ElapsedEventArgs e)
+        {
+
+        }
+
+        private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
+        {
+
+        }
+
+        private async Task TimerPrintsPieCharts_Elapsed(object sender, ElapsedEventArgs e)
+        {
+
+        }
+
+        private async Task TimerBookPieCharts_Elapsed(object sender, ElapsedEventArgs e)
+        {
+
         }
 
         private async Task SetupHub()

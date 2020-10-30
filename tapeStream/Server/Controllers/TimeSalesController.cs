@@ -10,12 +10,11 @@ namespace tdaStreamHub.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Produces("application/json")]
     public class TimeSalesController : ControllerBase
     {
         // GET: api/<TimeSalesController>
         [HttpOptions]
-        [Produces("application/json")]
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -23,7 +22,7 @@ namespace tdaStreamHub.Controllers
         }
 
         // GET api/<TimeSalesController>/5
-        [Produces("application/json")]
+        //[Produces("application/json")]
         [HttpGet("{id}")]
         [Route("api/[controller]/id")]
         public string Get(int id)

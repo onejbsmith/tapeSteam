@@ -6,6 +6,17 @@ namespace tapeStream.Shared
 {
     public class CONSTANTS
     {
+        public static readonly List<string> lineNames = new List<string>()
+        {
+            "rawGaugesCombined",
+            "staticValueMinus7",
+            "staticValue0",
+            "staticValue7",
+            "movingAverage30sec",
+            "movingAverage5min",
+            "average10min"
+        };
+
 
         public static string clockFormat = "h:mm:ss MMM d, yyyy";
         public static string messageQinputFolder = @"D:\MessageQs\Inputs\";

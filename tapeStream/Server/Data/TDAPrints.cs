@@ -146,7 +146,6 @@ namespace tdaStreamHub.Data
 
         }
 
-
         private static DataItem[] GetPieSlices(string symbol, int seconds)
         {
             long thisManySecondsAgo = (long)(DateTime.Now.ToUniversalTime().AddSeconds(-seconds) - new DateTime(1970, 1, 1)).TotalMilliseconds;

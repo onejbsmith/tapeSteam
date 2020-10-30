@@ -20,6 +20,7 @@ using tdaStreamHub.Hubs;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using tapeStream.Shared;
 
 namespace tdaStreamHub
 {
@@ -37,7 +38,7 @@ namespace tdaStreamHub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<tdaStreamHub.Data.BrowserService>(); // scoped service
-            services.AddTransient<tdaStreamHub.Data.BlazorTimer>();
+            services.AddTransient<BlazorTimer>();
 
             services.AddBlazorise(options =>
            { options.ChangeTextOnKeyPress = true; }).AddBootstrapProviders().AddFontAwesomeIcons();
