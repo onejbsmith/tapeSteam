@@ -1,13 +1,10 @@
+using MatBlazor;
+using Microsoft.AspNetCore.Components;
 using System;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
-using System.Net.Http.Json;
-using System.Net.Http;
-using Microsoft.AspNetCore.Components;
-using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
-using MatBlazor;
 
 namespace tapeStream.Client.Services
 {
@@ -23,7 +20,7 @@ namespace tapeStream.Client.Services
                 var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44367/WeatherForecast");
                 return forecasts;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var method = System.Reflection.MethodBase.GetCurrentMethod().Name;
                 Toaster.Add(ex.ToString(), MatToastType.Primary, method);

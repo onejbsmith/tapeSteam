@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
-using tapeStream.Shared;
-using Microsoft.AspNetCore.Components;
-using tapeStream.Data;
-using Newtonsoft.Json.Linq;
 using tapeStream.Client.Services;
+using tapeStream.Shared;
 using tapeStream.Shared.Services;
 
 namespace tapeStream.Client.Pages

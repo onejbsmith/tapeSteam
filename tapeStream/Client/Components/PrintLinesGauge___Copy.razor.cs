@@ -1,11 +1,7 @@
-﻿
-using tapeStream.Client.Data;
+﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 using tapeStream.Shared;
 
 namespace tapeStream.Client.Components
@@ -44,14 +40,14 @@ namespace tapeStream.Client.Components
             //TDAStreamerData.OnTimeSalesStatusChanged += getPrintsData;
 
             foreach (var name in CONSTANTS.lineNames)
-                dictAllLinePoints.Add(name,new DataItem[]{ newDataItem});
+                dictAllLinePoints.Add(name, new DataItem[] { newDataItem });
 
-        await Task.CompletedTask;
+            await Task.CompletedTask;
+        }
+
+
+
     }
-
-
-
-}
 
 
 }

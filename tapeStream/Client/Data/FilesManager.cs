@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.ComponentModel.Design;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 namespace tapeStream.Client.Data
 {
     /// <summary>

@@ -1,9 +1,7 @@
-﻿using tapeStream.Client.Data;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
+using tapeStream.Client.Data;
 using tapeStream.Shared;
 
 namespace tapeStream.Client.Components
@@ -45,7 +43,7 @@ namespace tapeStream.Client.Components
         public void getPrintsData()
         {
             if (moduloPrints == 0 || TDAStreamerData.timeSales[symbol].Count() % moduloPrints != 0) return;
-           
+
             if (printsData == null) return;
 
             total = printsData.Sum(t => t.Revenue).ToString("n0");

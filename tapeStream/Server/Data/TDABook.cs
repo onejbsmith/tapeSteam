@@ -165,7 +165,7 @@ namespace tdaStreamHub.Data
                 var bidEntry = lstBids.Where(bid => bid.Price == maxBid).First();
 
                 var minAsk = lstAsks.Min(asks => asks.Price);
-                var askEntry = lstAsks.Where(ask=>ask.Price == minAsk).First();
+                var askEntry = lstAsks.Where(ask => ask.Price == minAsk).First();
                 var lastTime = 0d;
                 try
                 {
@@ -184,7 +184,7 @@ namespace tdaStreamHub.Data
                         printsSizes[level] = (int)prints.Where(pr => pr.level == level).Sum(ts => ts.size);
                     }
                     catch { }
-                }                
+                }
 
                 lstBookEntry.Add(
                       new BookEntry()

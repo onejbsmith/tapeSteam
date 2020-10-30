@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using tapeStream.Client.Data;
 using tapeStream.Shared;
-using static tapeStream.Shared.CONSTANTS;
 
 namespace tapeStream.Data
 {
@@ -70,7 +66,7 @@ namespace tapeStream.Data
 
             try
             {
-            printsData[4].Revenue = timeSales.Where(t => t.level == 5 && t.time >= thisManySecondsAgo).Sum(t => t.size);
+                printsData[4].Revenue = timeSales.Where(t => t.level == 5 && t.time >= thisManySecondsAgo).Sum(t => t.size);
 
             }
             catch

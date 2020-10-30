@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading.Tasks;
 /// <summary>
 /// TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Get Source Control functioning
 /// </summary>
@@ -881,7 +879,9 @@ namespace tdaStreamHub.Data
         public long time { get; set; }
         public float price { get; set; }
         public float size { get; set; }
-        public int sequence { get; set; 
+        public int sequence
+        {
+            get; set;
         }
         public long bookTime { get; set; }
 

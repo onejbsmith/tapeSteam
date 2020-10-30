@@ -1,7 +1,5 @@
-﻿using tdaStreamHub.Data;
-using tapeStream.Shared;
-
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
 using Radzen.Blazor;
@@ -10,11 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
-
-using System.Text.Json;
-using static tapeStream.Shared.CONSTANTS;
 using System.Timers;
+using tapeStream.Shared;
+using tdaStreamHub.Data;
 
 namespace tdaStreamHub.Components
 {

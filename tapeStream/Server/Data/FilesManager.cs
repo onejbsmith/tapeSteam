@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.ComponentModel.Design;
 using System.IO;
-using tapeStream.Shared;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace tdaStreamHub.Data
 {

@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using tapeStream.Client.Data;
 using tapeStream.Data;
 using tapeStream.Shared;
-using System.Timers;
-using Microsoft.AspNetCore.Components;
 using tapeStream.Shared.Services;
 
 namespace tapeStream.Client.Pages
@@ -96,7 +94,7 @@ namespace tapeStream.Client.Pages
         private string messageInput;
 
         public DataItem[] rawGaugesCombined { get; set; }
-        public static Dictionary<DateTime, double> gaugeValues { get; set; } 
+        public static Dictionary<DateTime, double> gaugeValues { get; set; }
             = new Dictionary<DateTime, double>();
 
         int lstTimeSales = 0;
@@ -107,7 +105,7 @@ namespace tapeStream.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             /// Init parameters so don't get "null" error
-           /// For the Hub Monitor
+            /// For the Hub Monitor
             dictTopicCounts = new Dictionary<string, int>();
             foreach (var x in CONSTANTS.valuesName)
                 dictTopicCounts.Add(x, 0);
@@ -126,10 +124,10 @@ namespace tapeStream.Client.Pages
                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
                     });
 
-             /// For the Book Agg Pie
-           bookData = new BookDataItem[]
-                    {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
-                    };
+            /// For the Book Agg Pie
+            bookData = new BookDataItem[]
+                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
+                     };
 
             /// For the Book Columns
             bookColData = new Dictionary<string, BookDataItem[]>()
@@ -153,10 +151,10 @@ namespace tapeStream.Client.Pages
             TDAStreamerData.hubStatus = $"./images/{color}.gif";
 
             //timer.Elapsed += async (sender, e) => await Timer_ElapsedAsync();
-            timerBookPieCharts.Elapsed += async (sender,e) => await TimerBookPieCharts_Elapsed(sender,e);
-            timerPrintsPieCharts.Elapsed += async (sender, e) => await TimerPrintsPieCharts_Elapsed(sender,e);
-            timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender,e);
-            timerPrintsLineCharts.Elapsed += async (sender, e) => await TimerPrintsLineCharts_Elapsed(sender,e);
+            timerBookPieCharts.Elapsed += async (sender, e) => await TimerBookPieCharts_Elapsed(sender, e);
+            timerPrintsPieCharts.Elapsed += async (sender, e) => await TimerPrintsPieCharts_Elapsed(sender, e);
+            timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender, e);
+            timerPrintsLineCharts.Elapsed += async (sender, e) => await TimerPrintsLineCharts_Elapsed(sender, e);
 
             timerBookPieCharts.Start();
             timerPrintsPieCharts.Start();

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http;
-using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace tapeStream.Shared.Services
 {
@@ -19,7 +16,7 @@ namespace tapeStream.Shared.Services
 
         public async Task<string> GetValue(int input)
         {
-            var value= await Http.GetStringAsync($"https://localhost:44367/api/TimeSales/" + input.ToString()) ;
+            var value = await Http.GetStringAsync($"https://localhost:44367/api/TimeSales/" + input.ToString());
             return value;
         }
 

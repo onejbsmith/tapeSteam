@@ -1,16 +1,14 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 //using System.Security.Policy;
 using System.Text.Json;
 using System.Threading.Tasks;
-using tapeStream.Shared;
 using tapeStream.Client.Services;
+using tapeStream.Shared;
 
 namespace tapeStream.Client.Data
 {

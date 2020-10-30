@@ -1,19 +1,14 @@
-using System;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 // other usings
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
-using tapeStream.Data;
-using tapeStream.Client.Services;
 using MatBlazor;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using tapeStream.Client.Services;
 using tapeStream.Shared.Services;
 
 namespace tapeStream.Client

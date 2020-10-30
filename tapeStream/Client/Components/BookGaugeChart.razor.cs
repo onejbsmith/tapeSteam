@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using tapeStream.Client.Data;
 
@@ -44,7 +42,7 @@ namespace tapeStream.Client.Components
 
             var isBookDataNotThere = bookData == null || bookData.Length < 2 || bookData[0] == null;
             if (isBookDataNotThere) return;
-            
+
             try
             {
                 bids = (100 * (bookData[1].Size / bookData[0].Size - 1)).ToString("n0");

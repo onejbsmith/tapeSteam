@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -89,8 +86,8 @@ namespace tdaStreamHub.Data
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
-                    TDANotifications.errorMessage = ex.ToString();
-             
+                TDANotifications.errorMessage = ex.ToString();
+
                 return null;
             }
             finally
@@ -136,7 +133,7 @@ namespace tdaStreamHub.Data
             }
         }
 
-        public  async Task<TDAStockQuote> GetStaticQuote(string sSymbol)
+        public async Task<TDAStockQuote> GetStaticQuote(string sSymbol)
         {
             /// TODO: TDA Streaming quotes vs using Thread.Sleep 2000.
             /// TODO: Save option quotes with spreads or spreads to files for sparkline?

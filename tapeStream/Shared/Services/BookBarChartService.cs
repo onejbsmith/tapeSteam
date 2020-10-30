@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http;
-using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 
 namespace tapeStream.Shared.Services

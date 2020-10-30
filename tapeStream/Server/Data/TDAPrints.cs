@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
-using static tapeStream.Shared.CONSTANTS;
 
 namespace tdaStreamHub.Data
 {
@@ -122,7 +120,7 @@ namespace tdaStreamHub.Data
                 var bid = timeAndSales.bid;
                 var ask = timeAndSales.ask;
                 var price = timeAndSales.price;
-               
+
                 timeAndSales.level = bid == 0 || ask == 0 || price == 0 ? 0 :
                  price < bid ? 1
                  : price == bid ? 2

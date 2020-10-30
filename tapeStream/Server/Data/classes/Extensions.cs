@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-public static class DictionaryExtensions
+﻿public static class DictionaryExtensions
 {
     //public static void RemoveAll<TKey, TValue>(this IDictionary<TKey, TValue> dic,
     //    Func<TKey, TValue, bool> predicate)
