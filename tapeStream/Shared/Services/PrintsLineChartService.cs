@@ -11,10 +11,10 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        string controllerUrll = "https://localhost:44367/api/PrintsLineChart/";
+        string controllerUrl = "https://localhost:44367/api/PrintsLineChart/";
         public async Task<string[]> GetValues()
         {
-            var values = await Http.GetFromJsonAsync<string[]>(controllerUrll);
+            var values = await Http.GetFromJsonAsync<string[]>(controllerUrl);
             return values;
         }
 
@@ -25,7 +25,7 @@ namespace tapeStream.Shared.Services
         /// <returns></returns>
         public async Task<Dictionary<string, DataItem[]>> getPrintsLineChartData(int input)
         {
-            var value = await Http.GetFromJsonAsync<Dictionary<string, DataItem[]>>(controllerUrll + input.ToString());
+            var value = await Http.GetFromJsonAsync<Dictionary<string, DataItem[]>>(controllerUrl + input.ToString());
             return value;
         }
 

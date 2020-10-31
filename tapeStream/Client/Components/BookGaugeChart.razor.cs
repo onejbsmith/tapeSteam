@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Threading.Tasks;
-using tapeStream.Client.Data;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Components
 {

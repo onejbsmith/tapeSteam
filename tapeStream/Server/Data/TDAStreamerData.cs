@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
+using tapeStream.Shared.Data;
 
 namespace tdaStreamHub.Data
 {
@@ -1293,13 +1294,6 @@ namespace tdaStreamHub.Data
 
     }
 
-    public class BookDataItem
-    {
-        public decimal Price { get; set; }
-        public double Size { get; set; }
-        public long time { get; set; }
-        public DateTime dateTime { get; set; }
-    }
 
     //public static class DictionaryExtensions
     //{

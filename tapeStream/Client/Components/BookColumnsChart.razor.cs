@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using tapeStream.Client.Data;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Components
 {

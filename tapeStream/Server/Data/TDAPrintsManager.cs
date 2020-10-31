@@ -18,15 +18,16 @@ namespace tdaStreamHub.Data
 
         private static Dictionary<DateTime, double> gaugeValues = new Dictionary<DateTime, double>();
 
-        private static Dictionary<int, DataItem[]> dictPies = new Dictionary<int, DataItem[]>();
+        private static Dictionary<string, DataItem[]> dictPies = new Dictionary<string, DataItem[]>();
         static public async Task<double> GetPrintsGaugeScore()
         {
-            var value = 0;
+            var rand = new Random();
+            var value = rand.Next(-7, 7);
             foreach (var seconds in CONSTANTS.printSeconds)
             {
-                if (dictPies.ContainsKey(seconds))
+                if (dictPies.ContainsKey(seconds.ToString()))
                 {
-                    var slices = dictPies[seconds];
+                    var slices = dictPies[seconds.ToString()];
 
                     var reds = slices[0].Revenue + slices[2].Revenue;
                     var greens = slices[3].Revenue + slices[4].Revenue;
@@ -41,13 +42,13 @@ namespace tdaStreamHub.Data
             return value;
         }
 
-        public static async Task<Dictionary<int, DataItem[]>> GetPrintsPies(string symbol)
+        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(string symbol)
         {
-            dictPies = new Dictionary<int, DataItem[]>();
+            dictPies = new Dictionary<string, DataItem[]>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
                 var slices = TDAPrintsManager.GetPieSlices(symbol, seconds);
-                dictPies.Add(seconds, slices);
+                dictPies.Add(seconds.ToString(), slices);
             }
             await Task.CompletedTask;
             return dictPies;
@@ -94,7 +95,7 @@ namespace tdaStreamHub.Data
             foreach (var lineName in CONSTANTS.lineNames)
                 dictPoints.Add(lineName, lastPoints[i++]);
 
-                await Task.CompletedTask;
+            await Task.CompletedTask;
             return dictPoints;
 
         }
@@ -163,13 +164,22 @@ namespace tdaStreamHub.Data
         {
             long thisManySecondsAgo = (long)(DateTime.Now.ToUniversalTime().AddSeconds(-seconds) - new DateTime(1970, 1, 1)).TotalMilliseconds;
 
-            var printsData = new DataItem[5];
+            var printsData = new DataItem[5]
+                {
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem
+                };
             var timeSales = TDAStreamerData.timeSales[symbol];
 
             for (var level = 1; level <= 5; level++)
                 try
                 {
-                    printsData[level - 1].Revenue = timeSales.Where(t => t.level == level && t.time >= thisManySecondsAgo).Sum(t => t.size);
+                    var prints = timeSales.Where(t => t.level == level && t.time >= thisManySecondsAgo);
+                    if (prints.Count() > 0)
+                        printsData[level - 1].Revenue = prints.Sum(t => t.size);
                 }
                 catch { }
 
@@ -177,6 +187,16 @@ namespace tdaStreamHub.Data
         }
         private static DataItem[] staticAverage(int secs)
         {
+            if (gaugeValues == null || gaugeValues.Count == 0)
+                return new DataItem[5]
+                {
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem
+                };
+
             var maxDate = gaugeValues.Keys.Max();
             var avg5min = gaugeValues
                 .Where(d => d.Key >= maxDate.AddSeconds(-secs))
@@ -193,6 +213,16 @@ namespace tdaStreamHub.Data
 
         private static DataItem[] staticValue(double val)
         {
+            if (gaugeValues == null || gaugeValues.Count == 0)
+                return new DataItem[5]
+                {
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem
+                };
+
             return gaugeValues.Select(dict =>
             new DataItem()
             {
@@ -204,15 +234,32 @@ namespace tdaStreamHub.Data
 
         private static DataItem[] movingAverage(int secs)
         {
-            return gaugeValues.Select(dict =>
-                 new DataItem()
-                 {
-                     Date = dict.Key,
-                     Revenue = gaugeValues
-                     .Where(d => d.Key <= dict.Key && d.Key >= dict.Key.AddSeconds(-secs))
-                     .Select(d => d.Value).Average()
-                 }
-            ).ToArray();
+            var newArray = new DataItem[5]
+                {
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem,
+                     CONSTANTS.newDataItem
+                };
+
+            if (gaugeValues == null || gaugeValues.Count == 0)
+                return newArray;
+
+            var it = gaugeValues.Select(dict =>
+                  new DataItem()
+                  {
+                      Date = dict.Key,
+                      Revenue = gaugeValues
+                      .Where(d => d.Key <= dict.Key && d.Key >= dict.Key.AddSeconds(-secs))
+                      .Select(d => d.Value).Average()
+                  });
+
+            if (it.Count() > 0)
+                return it.ToArray();
+            else
+                return newArray;
+
         }
 
         public static void SaveToCsvFile(string svcName, string symbol, TimeSales_Content timeAndSales)

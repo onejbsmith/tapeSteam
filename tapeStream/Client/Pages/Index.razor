@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using tapeStream.Client.Components
+@using tapeStream.Shared.Data;
+
 @code {
 
     string symbol = "QQQ";
@@ -35,10 +37,32 @@
         /*        grid-template-columns: auto auto ;
     */
     }
-    .shrink
-    {
-        zoom:0.8;
+
+    .shrink {
+        zoom: 0.8;
     }
+/*    .ui-slider-horizontal {
+        height: 5px;
+        width: 100%;
+    }
+    .ui-slider-handle {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        margin-left: -0.5rem;
+        background-color: #479cc8;
+        border-radius: 20px;
+        width: 12px;
+        height: 12px;
+    }
+        .ui-slider-handle:before {
+            display: inline-block;
+            color: #ffffff;
+            transform: rotate(90deg);
+            vertical-align: middle;
+            font-family: 'Material Icons';
+            content: 'drag_handle';
+        }*/
 </style>
 
 <div class="grid-container">
@@ -50,11 +74,14 @@
         <div>
             <PrintLinesGauge___Copy symbol="@symbol" weight="1" dictAllLinePoints="@dictAllLinePoints" />
         </div>
-        <PrintArcGaugeChart symbol="@symbol" weight="1" value="@lastCombinedRedGreenValue" />
+        <div>
+            <PrintArcGaugeChart symbol="@symbol" weight="1" value="@lastCombinedRedGreenValue" />
+            @*<RadzenSlider @bind-Value="@Val4" TValue="int" Min="1" Max="10" />*@            
+        </div>
     </div>
     <div>
         <Badge Class="badge-dark">Print Speed:&nbsp;&nbsp; @moduloPrints</Badge>
-        <RadzenSlider @bind-Value="moduloPrints" TValue="int" Min="1" Max="100" />
+        
     </div>
     <div class="flex-container shrink">
         @foreach (int secs in tapeStream.Shared.CONSTANTS.printSeconds.OrderByDescending(t => t))
@@ -74,7 +101,7 @@
         <BookGaugeChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookData" />
     </div>
     <div class="grid-item shrink" style="width:50%">
-        <BookColumnsChart isPrintsSize="false" seconds="5" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookColData"/>
+        <BookColumnsChart isPrintsSize="false" seconds="5" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookColData" />
     </div>
 </div>
 

@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Client.Services;
 using tapeStream.Shared;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Data
 {
@@ -822,6 +823,7 @@ namespace tapeStream.Client.Data
             var n = bids.Count();
 
             if (n == 0) return;
+            long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
             var basePrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
             for (int i = 0; i < n; i++)
             {
@@ -830,7 +832,7 @@ namespace tapeStream.Client.Data
 
                 if (Math.Abs(price - basePrice) < 0.30m)
                 {
-                    var bid = new BookDataItem() { Price = price, Size = size, time = DateTime.Now };
+                    var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
                     lstBids.Add(bid);
                     lstAllBids.Add(bid);
                     //sumBidSize += size;
@@ -847,7 +849,7 @@ namespace tapeStream.Client.Data
                 var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)asks[i]["1"]).Value);
                 if (Math.Abs(price - baseAskPrice) < 0.30m)
                 {
-                    var ask = new BookDataItem() { Price = price, Size = size, time = DateTime.Now };
+                    var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
                     lstAsks.Add(ask);
                     lstAllAsks.Add(ask);
                     //sumAskSize += size;
@@ -920,34 +922,34 @@ namespace tapeStream.Client.Data
 
         }
 
-        private static async Task<TDAStockQuote> GetStatic_Quote(string symbol)
-        {
-            var qt = await TDAApiService.GetQuote(symbol);
-            if (!TDAParameters.staticQuote.ContainsKey(symbol))
-            {
-                TDAParameters.staticQuote.Add(symbol, new Quote_Content() { key = symbol });
-                TDAParameters.staticQuote.RemoveAll((key, val) => val.QuoteDate < DateTime.Now.AddSeconds(-300));
+        //private static async Task<TDAStockQuote> GetStatic_Quote(string symbol)
+        //{
+        //    var qt = await TDAApiService.GetQuote(symbol);
+        //    if (!TDAParameters.staticQuote.ContainsKey(symbol))
+        //    {
+        //        TDAParameters.staticQuote.Add(symbol, new Quote_Content() { key = symbol });
+        //        TDAParameters.staticQuote.RemoveAll((key, val) => val.QuoteDate < DateTime.Now.AddSeconds(-300));
 
 
-            }
-            var staticQuoteToUpdate = TDAParameters.staticQuote[symbol];
-            staticQuoteToUpdate.askPrice = qt.askPrice;
-            staticQuoteToUpdate.bidPrice = qt.bidPrice;
-            staticQuoteToUpdate.askSize = qt.askSize;
-            staticQuoteToUpdate.askPrice = qt.askPrice;
-            staticQuoteToUpdate.bidSize = qt.bidSize;
-            staticQuoteToUpdate.lastPrice = qt.lastPrice;
-            staticQuoteToUpdate.lastSize = qt.lastSize;
-            staticQuoteToUpdate.quoteTime = qt.quoteTimeInLong;
-            staticQuoteToUpdate.tradeTime = qt.tradeTimeInLong;
+        //    }
+        //    var staticQuoteToUpdate = TDAParameters.staticQuote[symbol];
+        //    staticQuoteToUpdate.askPrice = qt.askPrice;
+        //    staticQuoteToUpdate.bidPrice = qt.bidPrice;
+        //    staticQuoteToUpdate.askSize = qt.askSize;
+        //    staticQuoteToUpdate.askPrice = qt.askPrice;
+        //    staticQuoteToUpdate.bidSize = qt.bidSize;
+        //    staticQuoteToUpdate.lastPrice = qt.lastPrice;
+        //    staticQuoteToUpdate.lastSize = qt.lastSize;
+        //    staticQuoteToUpdate.quoteTime = qt.quoteTimeInLong;
+        //    staticQuoteToUpdate.tradeTime = qt.tradeTimeInLong;
 
-            if (qt.bidPrice > 0)
-                bidPrice = qt.bidPrice.ToString("n2");
-            if (qt.askPrice > 0)
-                askPrice = qt.askPrice.ToString("n2");
+        //    if (qt.bidPrice > 0)
+        //        bidPrice = qt.bidPrice.ToString("n2");
+        //    if (qt.askPrice > 0)
+        //        askPrice = qt.askPrice.ToString("n2");
 
-            return qt;
-        }
+        //    return qt;
+        //}
 
         public static void Decode_TimeSales(string svcName, string content, int moduloPrints = 2, string symbol = "QQQ")
         {
@@ -1056,13 +1058,13 @@ namespace tapeStream.Client.Data
             bookData = new BookDataItem[2];
             //bookData = lstAllBids.ToArray();
 
-            lstAllBids.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
-            //lstAllAsks.RemoveAll(t => t.time < DateTime.Now.AddSeconds(-300));
+            lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
+            //lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-300));
 
             if (lstAllBids.Count == 0 || lstAllAsks.Count == 0) return;
 
-            double bidSize = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
-            double askSize = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
+            double bidSize = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
+            double askSize = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).Sum(t => t.Size);
 
             var allBids = new BookDataItem() { Price = lstAllBids[0].Price, Size = bidSize };
             var allAsks = new BookDataItem() { Price = lstAllAsks[0].Price, Size = askSize };
@@ -1076,14 +1078,14 @@ namespace tapeStream.Client.Data
             if (lstAllAsks.Count == 0) return;
             bookData = new BookDataItem[2];
 
-            double bidSize2 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double askSize2 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
-            double bidSize10 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double askSize10 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
-            double bidSize30 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double askSize30 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
-            double bidSize60 = lstAllBids.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
-            double askSize60 = lstAllAsks.Where(t => t.time >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double bidSize2 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double askSize2 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-2)).Sum(t => t.Size) * 8;
+            double bidSize10 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double askSize10 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-10)).Sum(t => t.Size) * 4;
+            double bidSize30 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double askSize30 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-30)).Sum(t => t.Size) * 2;
+            double bidSize60 = lstAllBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
+            double askSize60 = lstAllAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-60)).Sum(t => t.Size);
 
             var allBids = new BookDataItem() { Price = lstAllBids[0].Price, Size = bidSize2 + bidSize10 + bidSize30 + bidSize60 };
             var allAsks = new BookDataItem() { Price = lstAllAsks[0].Price, Size = askSize2 + askSize10 + askSize30 + askSize60 };
@@ -1260,12 +1262,12 @@ namespace tapeStream.Client.Data
 
     }
 
-    public class BookDataItem
-    {
-        public decimal Price { get; set; }
-        public double Size { get; set; }
-        public DateTime time { get; set; }
-    }
+    //public class BookDataItem
+    //{
+    //    public decimal Price { get; set; }
+    //    public double Size { get; set; }
+    //    public DateTime time { get; set; }
+    //}
 
     //public static class DictionaryExtensions
     //{

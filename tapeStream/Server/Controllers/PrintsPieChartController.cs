@@ -12,17 +12,17 @@ namespace tdaStreamHub.Controllers
     [ApiController]
     public class PrintsPieChartController : ControllerBase
     {
-        string symbol = "QQQ";
+        static string symbol = "QQQ";
         // GET: api/<PrintsPieChartController>
         [HttpGet]
-        public async Task<double> Get()
+        public async Task<double> GetPrintsGaugeScore()
         {
             return await TDAPrintsManager.GetPrintsGaugeScore();
         }
 
         // GET api/<PrintsPieChartController>/5
         [HttpGet("{id}")]
-        public async Task<Dictionary<int, DataItem[]>> Get(int id)
+        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
         {
             return await TDAPrintsManager.GetPrintsPies(symbol);
         }

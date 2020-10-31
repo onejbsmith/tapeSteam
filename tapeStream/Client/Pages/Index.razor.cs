@@ -28,13 +28,28 @@ namespace tapeStream.Client.Pages
 
         static int refreshPrintLineChartInSeconds = 2;
         static int refreshBookPieChartsInSeconds = 2;
-        static int refreshPrintsPieChartsInSeconds = 2;
+        static int refreshPrintsPieChartsInSeconds = 1;
         static int refreshBookColumnsChartsInSeconds = 2;
 
         Timer timerBookPieCharts = new Timer(1000 * refreshBookPieChartsInSeconds);
         Timer timerPrintsPieCharts = new Timer(1000 * refreshPrintsPieChartsInSeconds);
         Timer timerBookColumnsCharts = new Timer(1000 * refreshBookColumnsChartsInSeconds);
         Timer timerPrintsLineCharts = new Timer(1000 * refreshPrintLineChartInSeconds);
+
+        //public int Val4
+        //{
+        //    get => _val4;
+        //    set
+        //    {
+        //        _val4 = value;
+        //        //timerPrintsPieCharts.Stop();
+        //        timerPrintsPieCharts.Interval = (11 - value) * 1000;
+        //        //timerPrintsPieCharts.Start();
+        //        this.StateHasChanged();
+        //    }
+        //}
+
+        //private int _val4 = 11;
 
         #region Chart Data in order of appearance
         /// <summary>
@@ -55,7 +70,7 @@ namespace tapeStream.Client.Pages
         /// <summary>
         /// PrintArcGaugeChart
         /// </summary>
-        public static int lastCombinedRedGreenValue = -1;
+        public static double lastCombinedRedGreenValue = -1;
 
         /// <summary>
         /// PrintPieChart
@@ -156,20 +171,21 @@ namespace tapeStream.Client.Pages
 
             /// For the Book Pies
             bookDataDict = new Dictionary<int, BookDataItem[]>();
+            long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
             foreach (var i in CONSTANTS.printSeconds)
                 bookDataDict.Add(i, new BookDataItem[]
-                    {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
+                    {  new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now }
                     });
 
             /// For the Book Agg Pie
             bookData = new BookDataItem[]
-                     {  new BookDataItem { Price =0, Size=0, time=DateTime.Now }
+                     {  new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now }
                      };
 
             /// For the Book Columns
             bookColData = new Dictionary<string, BookDataItem[]>()
-            { { "bids", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }},
-              { "asks", new BookDataItem[] {new BookDataItem{ Price =0, Size=0, time=DateTime.Now } }}
+            { { "bids", new BookDataItem[] {new BookDataItem{ Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }},
+              { "asks", new BookDataItem[] {new BookDataItem{ Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }}
             };
 
             /// Init the SignalR Hub
@@ -193,6 +209,8 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender, e);
             timerPrintsLineCharts.Elapsed += async (sender, e) => await TimerPrintsLineCharts_Elapsed(sender, e);
 
+
+
             timerBookPieCharts.Start();
             timerPrintsPieCharts.Start();
             timerBookColumnsCharts.Start();
@@ -203,8 +221,9 @@ namespace tapeStream.Client.Pages
 
         private async Task AppendLineChartData()
         {
+            //timerBookPieCharts.Interval=         
             var dictNewLinePoints = await printsLineChartService.getPrintsLineChartData(600);
-            
+
             foreach (var name in CONSTANTS.lineNames)
             {
                 if (dictNewLinePoints.ContainsKey(name))
@@ -214,26 +233,29 @@ namespace tapeStream.Client.Pages
                     dictAllLinePoints[name] = points.ToArray();
                 }
             }
+            StateHasChanged();
         }
 
         private async Task TimerPrintsLineCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-
+            await Task.Yield();
         }
 
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-
+            await Task.Yield();
         }
 
         private async Task TimerPrintsPieCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-
+            await Task.Yield();
+            lastCombinedRedGreenValue = await printsPieChartService.GetPrintsGaugeScore();
+            StateHasChanged();
         }
 
         private async Task TimerBookPieCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-
+            await Task.Yield();
         }
 
         private async Task SetupHub()

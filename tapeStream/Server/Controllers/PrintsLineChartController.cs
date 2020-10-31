@@ -30,7 +30,7 @@ namespace tdaStreamHub.Controllers
         /// </param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public  async Task<Dictionary<string, DataItem[]>> Get(int id)
+        public  async Task<Dictionary<string, DataItem[]>> getPrintsLineChartData(int id)
         {
             return await TDAPrintsManager.getPrintsLineChartData(id);
         }

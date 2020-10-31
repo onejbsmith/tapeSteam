@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
+using tapeStream.Shared.Data;
 
 namespace tdaStreamHub.Data
 {
@@ -24,13 +25,31 @@ namespace tdaStreamHub.Data
             { { "asks", asksData }, { "bids", bidsData } };
         }
 
-        public static async Task<Dictionary<int, List<BookDataItem>>> getBookPiesData()
+        public static async Task<Dictionary<string, List<BookDataItem>>> getBookPiesData()
         {
-            Dictionary<int, List<BookDataItem>> dictBookPies = new Dictionary<int, List<BookDataItem>>();
+            Dictionary<string, List<BookDataItem>> dictBookPies = new Dictionary<string, List<BookDataItem>>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
                 var newItem = await getBookPieData(seconds);
-                dictBookPies.Add(seconds, newItem.ToList());
+                if (newItem[0] == null)
+                    newItem = new BookDataItem[2]
+                    {
+                        new BookDataItem() {
+                            dateTime=DateTime.Now,
+                            Price = 0,
+                            Size = 0,
+                            time = 0
+                        },
+                        new BookDataItem()
+                        {
+                            dateTime = DateTime.Now,
+                            Price = 0,
+                            Size = 0,
+                            time = 0
+                        }
+                    };
+
+                dictBookPies.Add(seconds.ToString(), newItem.ToList());
             }
             await Task.CompletedTask;
             return dictBookPies;

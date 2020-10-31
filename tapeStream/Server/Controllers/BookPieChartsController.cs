@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using tdaStreamHub.Data;
+using tapeStream.Shared.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,7 +16,7 @@ namespace tdaStreamHub.Controllers
         // GET: api/<BookPieChartsController>
         [HttpOptions]
         [HttpGet]
-        public async Task<Dictionary<int, List<BookDataItem>>> Get()
+        public async Task<Dictionary<string, List<BookDataItem>>> getBookPiesData()
         {
             return await TDABookManager.getBookPiesData();
         }
@@ -27,7 +28,7 @@ namespace tdaStreamHub.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<BookDataItem[]> Get(int id)
+        public async Task<BookDataItem[]> getBookCompositePieData(int id)
         {
             return await TDABookManager.getBookCompositePieData();
         }
