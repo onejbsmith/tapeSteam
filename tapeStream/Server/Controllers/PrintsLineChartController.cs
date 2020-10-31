@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using tapeStream.Shared;
+using tdaStreamHub.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace tdaStreamHub.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class PrintsLineChartController : ControllerBase
     {
@@ -22,13 +26,13 @@ namespace tdaStreamHub.Controllers
         /// For the Arc Gauge single number
         /// </summary>
         /// <param name="id">
-        /// Use this to 
+        /// Called from service
         /// </param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public  async Task<Dictionary<string, DataItem[]>> Get(int id)
         {
-            return "value";
+            return await TDAPrintsManager.getPrintsLineChartData(id);
         }
 
         // POST api/<PrintsLineChartController>

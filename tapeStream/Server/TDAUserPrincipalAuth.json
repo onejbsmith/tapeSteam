@@ -2,16 +2,16 @@
   "userId": "smith4035",
   "userCdDomainId": "A000000007860194",
   "primaryAccountId": "870018425",
-  "lastLoginTime": "2020-10-29T18:08:29+0000",
-  "tokenExpirationTime": "2020-10-29T18:38:29+0000",
-  "loginTime": "2020-10-29T18:08:29+0000",
+  "lastLoginTime": "2020-10-30T21:16:15+0000",
+  "tokenExpirationTime": "2020-10-30T21:46:14+0000",
+  "loginTime": "2020-10-30T21:16:14+0000",
   "accessLevel": "CUS",
   "stalePassword": false,
   "streamerInfo": {
     "streamerBinaryUrl": "streamer-bin.tdameritrade.com",
     "streamerSocketUrl": "streamer-ws.tdameritrade.com",
-    "token": "0195ba7a9102b1f22a0d12c3a7909fa84601bb98",
-    "tokenTimestamp": "2020-10-29T18:08:33+0000",
+    "token": "6c1ca901ed36f4a420cd40c5d97870160a77e42f",
+    "tokenTimestamp": "2020-10-30T21:22:04+0000",
     "userGroup": "ACCT",
     "accessLevel": "ACCT",
     "acl": "AQBHBPC1DRDTESF7FUFXG1G3G5G7GKGLGRH1H3H5IPM1MAOSPNQSRFSDSVTBTETFTOTTUAWSXBXNXOD2D4D6D8E2E4E6E8F2F4F6H7I1",
@@ -30,14 +30,14 @@
   "streamerSubscriptionKeys": {
     "keys": [
       {
-        "key": "a520392285f4799f8737d81fe3e5aa805f9a6a7c1d7eded8faacb4df03ebdc518"
+        "key": "a1e01865f5ebac4703a52f4d05451ca91f9a6a7c1d7eded8faacb4df03ebdc518"
       }
     ]
   },
   "exchangeAgreements": {
-    "NASDAQ_EXCHANGE_AGREEMENT": "ACCEPTED",
     "NYSE_EXCHANGE_AGREEMENT": "ACCEPTED",
-    "OPRA_EXCHANGE_AGREEMENT": "ACCEPTED"
+    "OPRA_EXCHANGE_AGREEMENT": "ACCEPTED",
+    "NASDAQ_EXCHANGE_AGREEMENT": "ACCEPTED"
   },
   "accounts": [
     {

@@ -6,7 +6,7 @@ using tapeStream.Shared;
 
 namespace tapeStream.Data
 {
-    public class TDAPrints
+    public class TDAPrintsManager
     {
         public static DataItem[] newData = new DataItem[] {
             new DataItem { Quarter = "1", Revenue = 1 },
@@ -76,24 +76,24 @@ namespace tapeStream.Data
             return printsData;
         }
 
-        static public double GetPrintsGaugeScore(string symbol)
-        {
-            var value = 0;
-            dictPies = new Dictionary<int, DataItem[]>();
-            foreach (var seconds in CONSTANTS.printSeconds)
-            {
-                var slices = TDAPrints.GetPieSlices(symbol, seconds);
-                dictPies.Add(seconds, slices);
+        //static public double GetPrintsGaugeScore(string symbol)
+        //{
+        //    var value = 0;
+        //    dictPies = new Dictionary<int, DataItem[]>();
+        //    foreach (var seconds in CONSTANTS.printSeconds)
+        //    {
+        //        var slices = TDAPrintsManager.GetPieSlices(symbol, seconds);
+        //        dictPies.Add(seconds, slices);
 
-                var reds = slices[0].Revenue + slices[2].Revenue;
-                var greens = slices[3].Revenue + slices[4].Revenue;
+        //        var reds = slices[0].Revenue + slices[2].Revenue;
+        //        var greens = slices[3].Revenue + slices[4].Revenue;
 
-                value += reds > greens ? -1
-                        : greens > reds ? 1
-                        : 0;
-            }
-            return value;
-        }
+        //        value += reds > greens ? -1
+        //                : greens > reds ? 1
+        //                : 0;
+        //    }
+        //    return value;
+        //}
     }
 
 }

@@ -216,7 +216,7 @@ namespace tdaStreamHub.Components
             /// 
             try
             {
-                //var bookColsData = TDABook.getBookColumnsData();
+                //var bookColsData = TDAPrintsManager.getBookColumnsData();
                 //Send("BookColsData", JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookColsData));
                 dictTopicCounts["BookColsData"] += 1;
                 StateHasChanged();
@@ -232,7 +232,7 @@ namespace tdaStreamHub.Components
             //    var dictBookPiesData = new Dictionary<int, BookDataItem[]>();
             //    foreach (var secs in CONSTANTS.printSeconds)
             //    {
-            //        var bookPiesData = TDABook.getBookPieData(secs);
+            //        var bookPiesData = TDAPrintsManager.getBookPieData(secs);
             //        dictBookPiesData.Add(secs, bookPiesData);
 
             //    }
@@ -247,7 +247,7 @@ namespace tdaStreamHub.Components
             ///// 
             //try
             //{
-            //    var bookData = TDABook.getBookCompositePieData();
+            //    var bookData = TDAPrintsManager.getBookCompositePieData();
             //    Send("BookBigPieData", JsonSerializer.Serialize<BookDataItem[]>(bookData));
 
             //}
@@ -275,7 +275,7 @@ namespace tdaStreamHub.Components
         //    // Only summarize once every new 2 time and sales
         //    if (TDAStreamerData.timeSales[symbol].Count % 2 != 0) return;
 
-        //    value = TDAPrints.GetPrintsGaugeScore(symbol, ref dictPies);
+        //    value = TDAPrintsManager.GetPrintsGaugeScore(symbol, ref dictPies);
         //    KeyValuePair<DateTime, double> pair = new KeyValuePair<DateTime, double>(DateTime.Now, value);
 
         //    Send("GaugeScore", JsonSerializer.Serialize<KeyValuePair<DateTime, double>>(pair));

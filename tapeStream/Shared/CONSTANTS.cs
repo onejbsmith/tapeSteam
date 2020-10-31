@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace tapeStream.Shared
 {
@@ -15,6 +16,12 @@ namespace tapeStream.Shared
             "average10min"
         };
 
+        public static DataItem newDataItem =
+         new DataItem()
+         {
+             Date = DateTime.Parse("2019-12-01"),
+             Revenue = 6
+         };
 
         public static string clockFormat = "h:mm:ss MMM d, yyyy";
         public static string messageQinputFolder = @"D:\MessageQs\Inputs\";

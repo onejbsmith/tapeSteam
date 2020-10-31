@@ -8,7 +8,8 @@ using tapeStream.Shared;
 
 namespace tdaStreamHub.Data
 {
-    public class TDABook
+    public class TDABookManager
+
     {
         public static List<BookEntry> lstBookEntry = new List<BookEntry>();
         public static async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
@@ -23,12 +24,14 @@ namespace tdaStreamHub.Data
             { { "asks", asksData }, { "bids", bidsData } };
         }
 
-        public static async Task<Dictionary<int, BookDataItem[]>> getBookPiesData()
+        public static async Task<Dictionary<int, List<BookDataItem>>> getBookPiesData()
         {
-            Dictionary<int, BookDataItem[]> dictBookPies = new Dictionary<int, BookDataItem[]>();
+            Dictionary<int, List<BookDataItem>> dictBookPies = new Dictionary<int, List<BookDataItem>>();
             foreach (var seconds in CONSTANTS.printSeconds)
-                dictBookPies.Add(seconds, await getBookPieData(seconds));
-
+            {
+                var newItem = await getBookPieData(seconds);
+                dictBookPies.Add(seconds, newItem.ToList());
+            }
             await Task.CompletedTask;
             return dictBookPies;
         }
@@ -207,7 +210,7 @@ namespace tdaStreamHub.Data
             //lstAllBids.Add(new BookDataItem() { Price = baseAskPrice, Size = sumAskSize });
             //lstAllBids.Add(new BookDataItem() { Price = basePrice, Size = sumBidSize });
 
-            // var bookData = TDABook.getBookColumnsData();
+            // var bookData = TDAPrintsManager.getBookColumnsData();
 
             //string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookData);
             //await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);

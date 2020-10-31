@@ -17,14 +17,14 @@ namespace tdaStreamHub.Controllers
         [HttpGet]
         public async Task<double> Get()
         {
-            return await TDAPrints.GetPrintsGaugeScore();
+            return await TDAPrintsManager.GetPrintsGaugeScore();
         }
 
         // GET api/<PrintsPieChartController>/5
         [HttpGet("{id}")]
         public async Task<Dictionary<int, DataItem[]>> Get(int id)
         {
-            return await TDAPrints.GetPrintsPies(symbol);
+            return await TDAPrintsManager.GetPrintsPies(symbol);
         }
 
         // POST api/<PrintsPieChartController>

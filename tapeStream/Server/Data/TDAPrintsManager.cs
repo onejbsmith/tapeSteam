@@ -7,7 +7,7 @@ using tapeStream.Shared;
 
 namespace tdaStreamHub.Data
 {
-    public class TDAPrints
+    public class TDAPrintsManager
     {
         DataItem[] rawGaugesCombined = new DataItem[] {
             new DataItem
@@ -24,17 +24,20 @@ namespace tdaStreamHub.Data
             var value = 0;
             foreach (var seconds in CONSTANTS.printSeconds)
             {
-                var slices = dictPies[seconds];
+                if (dictPies.ContainsKey(seconds))
+                {
+                    var slices = dictPies[seconds];
 
-                var reds = slices[0].Revenue + slices[2].Revenue;
-                var greens = slices[3].Revenue + slices[4].Revenue;
+                    var reds = slices[0].Revenue + slices[2].Revenue;
+                    var greens = slices[3].Revenue + slices[4].Revenue;
 
-                value += reds > greens ? -1
-                        : greens > reds ? 1
-                        : 0;
+                    value += reds > greens ? -1
+                            : greens > reds ? 1
+                            : 0;
+                }
+                gaugeValues.Add(DateTime.Now, value);
             }
             await Task.CompletedTask;
-            gaugeValues.Add(DateTime.Now, value);
             return value;
         }
 
@@ -43,16 +46,22 @@ namespace tdaStreamHub.Data
             dictPies = new Dictionary<int, DataItem[]>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
-                var slices = TDAPrints.GetPieSlices(symbol, seconds);
+                var slices = TDAPrintsManager.GetPieSlices(symbol, seconds);
                 dictPies.Add(seconds, slices);
             }
             await Task.CompletedTask;
             return dictPies;
         }
 
-        public List<DataItem[]> getLastPrintsData(int nSeconds)
+        /// <summary>
+        /// Called from the Controller
+        /// </summary>
+        /// <param name="nSeconds"></param>
+        /// <returns></returns>
+        public static async Task<Dictionary<string, DataItem[]>> getPrintsLineChartData(int nSeconds)
         {
-            if (gaugeValues.Count() == 0) return new List<DataItem[]>();
+            if (gaugeValues.Count() == 0) return
+                    new Dictionary<string, DataItem[]>();
 
             var rawGaugesCombined = gaugeValues
                 .Where(dict => DateTime.Now.Subtract(dict.Key).Seconds > nSeconds)
@@ -80,13 +89,19 @@ namespace tdaStreamHub.Data
             var lastPoints = new List<DataItem[]>()
             { rawGaugesCombined, staticValueMinus7, staticValue0, staticValue7,movingAverage30sec,movingAverage5min,average10min };
 
-            return lastPoints;
+            int i = 0;
+            Dictionary<string, DataItem[]> dictPoints = new Dictionary<string, DataItem[]>();
+            foreach (var lineName in CONSTANTS.lineNames)
+                dictPoints.Add(lineName, lastPoints[i++]);
+
+                await Task.CompletedTask;
+            return dictPoints;
 
         }
 
-        public static async Task Decode(string svcName, string content, string symbol)
+        public static async Task Decode(string symbol, string content)
         {
-            if (TDABook.lstBookEntry.Count == 0) return;
+            if (TDABookManager.lstBookEntry.Count == 0) return;
 
             if (!TDAStreamerData.timeSales.ContainsKey(symbol))
                 TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
@@ -106,7 +121,7 @@ namespace tdaStreamHub.Data
             {
                 /// t.Key is Quote date and time, we want last quote before t&s time
                 ///                 
-                var book = TDABook.lstBookEntry.Where(be => be.time < timeAndSales.time).Last();
+                var book = TDABookManager.lstBookEntry.Where(be => be.time < timeAndSales.time).Last();
 
                 timeAndSales.bid = book.bid;
                 timeAndSales.ask = book.ask;
@@ -160,7 +175,7 @@ namespace tdaStreamHub.Data
 
             return printsData;
         }
-        private DataItem[] staticAverage(int secs)
+        private static DataItem[] staticAverage(int secs)
         {
             var maxDate = gaugeValues.Keys.Max();
             var avg5min = gaugeValues
@@ -176,7 +191,7 @@ namespace tdaStreamHub.Data
             ).ToArray();
         }
 
-        private DataItem[] staticValue(double val)
+        private static DataItem[] staticValue(double val)
         {
             return gaugeValues.Select(dict =>
             new DataItem()
@@ -187,7 +202,7 @@ namespace tdaStreamHub.Data
             ).ToArray();
         }
 
-        private DataItem[] movingAverage(int secs)
+        private static DataItem[] movingAverage(int secs)
         {
             return gaugeValues.Select(dict =>
                  new DataItem()

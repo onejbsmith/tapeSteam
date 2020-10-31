@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using tapeStream.Client.Data;
-using tapeStream.Data;
+using tapeStream.Shared.Data;
 using tapeStream.Shared;
 using tapeStream.Shared.Services;
 
@@ -19,53 +19,47 @@ namespace tapeStream.Client.Pages
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] BookPieChartsService bookPieChartsService { get; set; }
-        [Inject] PrintsLineChartService printsLineChartService { get; set; }
         [Inject] PrintsPieChartService printsPieChartService { get; set; }
+        [Inject] PrintsLineChartService printsLineChartService { get; set; }
 
 
-        Timer timerBookPieCharts = new Timer(1000);
-        Timer timerPrintsPieCharts = new Timer(1000);
-        Timer timerBookColumnsCharts = new Timer(1000);
-        Timer timerPrintsLineCharts = new Timer(1000);
 
         #region Variables
-        public Dictionary<string, BookDataItem[]> bookColData
-        {
-            get { return _bookColData; }
-            set
-            {
-                _bookColData = value;
-            }
-        }
 
-        Dictionary<string, BookDataItem[]> _bookColData;
+        static int refreshPrintLineChartInSeconds = 2;
+        static int refreshBookPieChartsInSeconds = 2;
+        static int refreshPrintsPieChartsInSeconds = 2;
+        static int refreshBookColumnsChartsInSeconds = 2;
 
-        private BookDataItem[] _bookData;
-        public BookDataItem[] bookData
-        {
-            get
-            {
-                return _bookData;
-            }
-            set
-            {
-                _bookData = value;
-            }
-        }
+        Timer timerBookPieCharts = new Timer(1000 * refreshBookPieChartsInSeconds);
+        Timer timerPrintsPieCharts = new Timer(1000 * refreshPrintsPieChartsInSeconds);
+        Timer timerBookColumnsCharts = new Timer(1000 * refreshBookColumnsChartsInSeconds);
+        Timer timerPrintsLineCharts = new Timer(1000 * refreshPrintLineChartInSeconds);
+
+        #region Chart Data in order of appearance
         /// <summary>
-        /// Used to hold bookData by seconds 
+        /// PrintLinesGauge___Copy
         /// </summary>
-        public Dictionary<int, BookDataItem[]> bookDataDict
-        {
-            get { return _bookDataDict; }
-            set
-            {
-                _bookDataDict = value;
-            }
-        }
-        private Dictionary<int, BookDataItem[]> _bookDataDict;
+        public static Dictionary<string, DataItem[]> dictAllLinePoints =
+                new Dictionary<string, DataItem[]>()
+                {
+                    { "rawGaugesCombined", new DataItem[0] } ,
+                    { "staticValueMinus7", new DataItem[0] } ,
+                    { "staticValue0", new DataItem[0] } ,
+                    { "staticValue7", new DataItem[0] } ,
+                    { "movingAverage30sec", new DataItem[0] } ,
+                    { "movingAverage5min", new DataItem[0] } ,
+                    { "average10min", new DataItem[0] }
+                };
 
+        /// <summary>
+        /// PrintArcGaugeChart
+        /// </summary>
+        public static int lastCombinedRedGreenValue = -1;
 
+        /// <summary>
+        /// PrintPieChart
+        /// </summary>
         public Dictionary<int, DataItem[]> printsData
         {
             get { return _printsData; }
@@ -77,9 +71,54 @@ namespace tapeStream.Client.Pages
         }
         private Dictionary<int, DataItem[]> _printsData;
 
+        /// <summary>
+        /// Used to hold bookData by seconds 
+        /// BookPieChart
+        /// </summary>
+        public Dictionary<int, BookDataItem[]> bookDataDict
+        {
+            get { return _bookDataDict; }
+            set
+            {
+                _bookDataDict = value;
+            }
+        }
+        private Dictionary<int, BookDataItem[]> _bookDataDict;
+
+        /// <summary>
+        /// BookGuageChart
+        /// </summary>
+        public BookDataItem[] bookData
+        {
+            get
+            {
+                return _bookData;
+            }
+            set
+            {
+                _bookData = value;
+            }
+        }
+        private BookDataItem[] _bookData;
+
+        /// <summary>
+        /// BookColumnsChart
+        /// </summary>
+        public Dictionary<string, BookDataItem[]> bookColData
+        {
+            get { return _bookColData; }
+            set
+            {
+                _bookColData = value;
+            }
+        }
+        Dictionary<string, BookDataItem[]> _bookColData;
+
+        #endregion
+
         static string clockFormat = "h:mm:ss MMM d, yyyy";
 
-        int lastCombinedRedGreenValue = -1;
+
         KeyValuePair<DateTime, double>[] latestGaugeValues;
         int moduloPrints = 1;
         int moduloBook = 1;
@@ -93,10 +132,6 @@ namespace tapeStream.Client.Pages
         private string topicInput;
         private string messageInput;
 
-        public DataItem[] rawGaugesCombined { get; set; }
-        public static Dictionary<DateTime, double> gaugeValues { get; set; }
-            = new Dictionary<DateTime, double>();
-
         int lstTimeSales = 0;
         #endregion
 
@@ -106,6 +141,8 @@ namespace tapeStream.Client.Pages
         {
             /// Init parameters so don't get "null" error
             /// For the Hub Monitor
+            /// 
+
             dictTopicCounts = new Dictionary<string, int>();
             foreach (var x in CONSTANTS.valuesName)
                 dictTopicCounts.Add(x, 0);
@@ -159,7 +196,24 @@ namespace tapeStream.Client.Pages
             timerBookPieCharts.Start();
             timerPrintsPieCharts.Start();
             timerBookColumnsCharts.Start();
+
+            await AppendLineChartData();
             timerPrintsLineCharts.Start();
+        }
+
+        private async Task AppendLineChartData()
+        {
+            var dictNewLinePoints = await printsLineChartService.getPrintsLineChartData(600);
+            
+            foreach (var name in CONSTANTS.lineNames)
+            {
+                if (dictNewLinePoints.ContainsKey(name))
+                {
+                    var points = dictAllLinePoints[name].ToList();
+                    points.AddRange(dictNewLinePoints[name]);
+                    dictAllLinePoints[name] = points.ToArray();
+                }
+            }
         }
 
         private async Task TimerPrintsLineCharts_Elapsed(object sender, ElapsedEventArgs e)

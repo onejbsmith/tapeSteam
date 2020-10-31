@@ -657,7 +657,7 @@ namespace tdaStreamHub.Data
                 switch (svcName)
                 {
                     case "TIMESALE_EQUITY":
-                        await TDAPrints.Decode(svcName, content, symbol);
+                        await TDAPrintsManager.Decode(symbol, content);
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);
@@ -666,7 +666,7 @@ namespace tdaStreamHub.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        await TDABook.Decode(symbol, content);
+                        await TDAPrintsManager.Decode(symbol, content);
                         break;
 
                     case "CHART_EQUITY":
@@ -860,7 +860,7 @@ namespace tdaStreamHub.Data
         //    //lstAllBids.Add(new BookDataItem() { Price = baseAskPrice, Size = sumAskSize });
         //    //lstAllBids.Add(new BookDataItem() { Price = basePrice, Size = sumBidSize });
 
-        //    var bookData = TDABook.getBookColumnsData();
+        //    var bookData = TDAPrintsManager.getBookColumnsData();
 
         //    string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookData);
         //    await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);

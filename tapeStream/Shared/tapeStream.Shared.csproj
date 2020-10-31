@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Data\TDABook.cs" />
-    <Compile Remove="Data\TDAPrints.cs" />
+    <Compile Remove="Data\TDAPrintsManager.cs" />
     <Compile Remove="Data\TDAStreamerData.cs" />
   </ItemGroup>
 

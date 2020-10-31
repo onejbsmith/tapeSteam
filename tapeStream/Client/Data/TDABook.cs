@@ -1,6 +1,6 @@
 ﻿namespace tapeStream.Client.Data
 {
-    public class TDABook
+    public class TDAPrintsManager
     {
     }
 }

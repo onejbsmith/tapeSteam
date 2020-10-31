@@ -6,50 +6,6 @@
 
 <RadzenTabs>
     <Tabs>
-        <RadzenTabsItem Text="TDA Authorization">
-            <RadzenSteps>
-                <Steps>
-                    <RadzenStepsItem Text="Authorization Token">
-                        <h3>Get Auth token  when Refresh Token expires (every 90 days) from the <RadzenLink Text="TDA API" Path="https://developer.tdameritrade.com/apis" />     </h3>
-                        <ol>
-                            <li>Press this <RadzenLink Text="link" Path="@TDAConstants._TDAAuthorizationUrl" target="_blank"></RadzenLink> to open the TDA Auth page.</li>
-                            <li>Then press the 'Login' and 'Allow' buttons.</li>
-                            <li>Finally, paste contents of the address bar after 'code=' into the textbox below.</li>
-                            <li>Go to Next screen</li>
-                        </ol>
-                        <hr />
-                        <h3>Url-Encoded Authorization Token</h3>
-                        <RadzenTextArea Name="txtTDARawAuthToken" Placeholder="Paste string after 'code=' here" Change="decodeAuthToken"
-                                        Style="width:100%;height:250px" @bind-Value="_TDAUrlEncodedAuthToken" />
-                    </RadzenStepsItem>
-                    <RadzenStepsItem Text="Authorization Token" Disabled="@(_TDAUrlEncodedAuthToken.Length == 0)">
-                        <h3>Decoded Authorization Token</h3>
-                        <br />
-                        <RadzenButton Name="btnGetAccessToken" Click="getAccessToken" Text="Get Access Token" />
-                        @if (TDANotifications.TDAAuthStatus == "OK")
-                        {<BSBadge Color="BlazorStrap.Color.Success">@TDANotifications.TDAAuthStatus</BSBadge> }
-                    else
-                    { <BSBadge Color="BlazorStrap.Color.Warning">@TDANotifications.TDAAuthStatus</BSBadge>}
-                        <br /><br />
-                        <RadzenTextArea Name="txtTDAAuthToken" Placeholder="" Style="width:100%;height:250px" @bind-Value="_TDAAuthToken" />
-                    </RadzenStepsItem>
-                    <RadzenStepsItem Text="Access & Refresh Tokens" Disabled="@(auth.access_token == null)">
-                        <h3>Access Token</h3>
-                        <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.access_token" />
-                        <h3>Refresh Token</h3>
-                        <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.refresh_token" />
-                    </RadzenStepsItem>
-                </Steps>
-
-            </RadzenSteps>
-
-        </RadzenTabsItem>
-        @*<RadzenTabsItem Text="TDAAuth.json file contents">
-                <h3>Access Token</h3>
-                <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.access_token" />
-                <h3>Refresh Token</h3>
-                <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.refresh_token" />
-            </RadzenTabsItem>*@
         <RadzenTabsItem Text="User Principal">
             <RadzenSteps>
                 <Steps>
@@ -100,7 +56,52 @@
 
                 </Steps>
             </RadzenSteps>
+        </RadzenTabsItem>        
+        <RadzenTabsItem Text="TDA Authorization">
+            <RadzenSteps>
+                <Steps>
+                    <RadzenStepsItem Text="Authorization Token">
+                        <h3>Get Auth token  when Refresh Token expires (every 90 days) from the <RadzenLink Text="TDA API" Path="https://developer.tdameritrade.com/apis" />     </h3>
+                        <ol>
+                            <li>Press this <RadzenLink Text="link" Path="@TDAConstants._TDAAuthorizationUrl" target="_blank"></RadzenLink> to open the TDA Auth page.</li>
+                            <li>Then press the 'Login' and 'Allow' buttons.</li>
+                            <li>Finally, paste contents of the address bar after 'code=' into the textbox below.</li>
+                            <li>Go to Next screen</li>
+                        </ol>
+                        <hr />
+                        <h3>Url-Encoded Authorization Token</h3>
+                        <RadzenTextArea Name="txtTDARawAuthToken" Placeholder="Paste string after 'code=' here" Change="decodeAuthToken"
+                                        Style="width:100%;height:250px" @bind-Value="_TDAUrlEncodedAuthToken" />
+                    </RadzenStepsItem>
+                    <RadzenStepsItem Text="Authorization Token" Disabled="@(_TDAUrlEncodedAuthToken.Length == 0)">
+                        <h3>Decoded Authorization Token</h3>
+                        <br />
+                        <RadzenButton Name="btnGetAccessToken" Click="getAccessToken" Text="Get Access Token" />
+                        @if (TDANotifications.TDAAuthStatus == "OK")
+                        {<BSBadge Color="BlazorStrap.Color.Success">@TDANotifications.TDAAuthStatus</BSBadge> }
+                    else
+                    { <BSBadge Color="BlazorStrap.Color.Warning">@TDANotifications.TDAAuthStatus</BSBadge>}
+                        <br /><br />
+                        <RadzenTextArea Name="txtTDAAuthToken" Placeholder="" Style="width:100%;height:250px" @bind-Value="_TDAAuthToken" />
+                    </RadzenStepsItem>
+                    <RadzenStepsItem Text="Access & Refresh Tokens" Disabled="@(auth.access_token == null)">
+                        <h3>Access Token</h3>
+                        <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.access_token" />
+                        <h3>Refresh Token</h3>
+                        <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.refresh_token" />
+                    </RadzenStepsItem>
+                </Steps>
+
+            </RadzenSteps>
+
         </RadzenTabsItem>
+        @*<RadzenTabsItem Text="TDAAuth.json file contents">
+            <h3>Access Token</h3>
+            <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.access_token" />
+            <h3>Refresh Token</h3>
+            <RadzenTextArea Placeholder="" Style="width:100%;height:250px" @bind-Value="auth.refresh_token" />
+        </RadzenTabsItem>*@
+
     </Tabs>
 </RadzenTabs>
 

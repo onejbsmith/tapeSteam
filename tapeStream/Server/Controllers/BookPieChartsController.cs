@@ -8,14 +8,16 @@ using tdaStreamHub.Data;
 namespace tdaStreamHub.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class BookPieChartsController : ControllerBase
     {
         // GET: api/<BookPieChartsController>
+        [HttpOptions]
         [HttpGet]
-        public async Task<Dictionary<int, BookDataItem[]>> Get()
+        public async Task<Dictionary<int, List<BookDataItem>>> Get()
         {
-            return await TDABook.getBookPiesData();
+            return await TDABookManager.getBookPiesData();
         }
 
         // GET api/<BookPieChartsController>/5
@@ -27,7 +29,7 @@ namespace tdaStreamHub.Controllers
         [HttpGet("{id}")]
         public async Task<BookDataItem[]> Get(int id)
         {
-            return await TDABook.getBookCompositePieData();
+            return await TDABookManager.getBookCompositePieData();
         }
 
         // POST api/<BookPieChartsController>

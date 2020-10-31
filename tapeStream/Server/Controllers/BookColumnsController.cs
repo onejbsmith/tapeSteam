@@ -16,7 +16,7 @@ namespace tdaStreamHub.Controllers
         [HttpGet]
         public async Task<Dictionary<string, BookDataItem[]>> Get()
         {
-            return await TDABook.getBookColumnsData();
+            return await TDABookManager.getBookColumnsData();
         }
 
         // GET api/<BookColumnsController>/5

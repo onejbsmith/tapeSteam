@@ -9,6 +9,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using tapeStream.Client.Services;
+using tapeStream.Shared;
 using tapeStream.Shared.Services;
 
 namespace tapeStream.Client
@@ -36,7 +37,7 @@ namespace tapeStream.Client
 
             builder.Services.AddSingleton<BookColumnsService>();
             builder.Services.AddSingleton<BookPieChartsService>();
-
+            builder.Services.AddTransient<BlazorTimer>();
             builder.Services.AddSingleton<PrintsLineChartService>();
             builder.Services.AddSingleton<PrintsPieChartService>();
 

@@ -23,6 +23,8 @@
     <Compile Remove="Data\classes\Tests.cs" />
     <Compile Remove="Data\classes\Trades.cs" />
     <Compile Remove="Data\DataItem.cs" />
+    <Compile Remove="Data\TDABook.cs" />
+    <Compile Remove="Data\TDAPrints.cs" />
     <Compile Remove="Pages\Chat.razor.cs" />
     <Compile Remove="Pages\Filer.razor.cs" />
     <Compile Remove="Pages\TDAclient.razor.cs" />
