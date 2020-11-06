@@ -110,7 +110,7 @@ namespace tdaStreamHub.Components
             timer.Elapsed += async (sender, e) => await Timer_ElapsedAsync();
             timer.Start();
 
-            await Init();
+            //await Init();
 
 
             /// This is fired by Decode_TimeSales
@@ -451,7 +451,7 @@ namespace tdaStreamHub.Components
 
         private async Task Init()
         {
-            hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:44367/tdahub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestream.com/tdahub").Build();
 
             hubConnection.On("ReceiveMessage", (Action<string, string>)((user, message) =>
             {

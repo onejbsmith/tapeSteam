@@ -11,7 +11,7 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        string controllerUrl = "https://localhost:44367/api/PrintsPieChart/";
+        string controllerUrl = "http://localhost:55540/api/PrintsPieChart/";
         public async Task<double> GetPrintsGaugeScore()
         {
             var values = await Http.GetFromJsonAsync<double>(controllerUrl);

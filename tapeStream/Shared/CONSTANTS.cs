@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Shared
 {
@@ -22,6 +23,8 @@ namespace tapeStream.Shared
              Date = DateTime.Parse("2019-12-01"),
              Revenue = 6
          };
+        public static BookDataItem newBookDataItem = new BookDataItem { Price = 350.11m, Size = 1000 };
+
 
         public static string clockFormat = "h:mm:ss MMM d, yyyy";
         public static string messageQinputFolder = @"D:\MessageQs\Inputs\";
@@ -39,9 +42,17 @@ namespace tapeStream.Shared
         public static string NASDAQ_BOOK = valuesName[1];
         public static string QUOTE = valuesName[5];
 
-        //public static readonly IEnumerable<object> printSeconds;
+        static long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+        public static Dictionary<string, BookDataItem[]> newBookColumnsData = new Dictionary<string, BookDataItem[]>()
+            { { "bids", new BookDataItem[] {new BookDataItem{ Price = 0, Size = 0, time = now, dateTime = DateTime.Now}}},
+              { "asks", new BookDataItem[] { new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }},
+              { "salesAtBid", new BookDataItem[] { new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }},
+              { "salesAtAsk", new BookDataItem[] { new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }}
+            };
 
-        static public int[]
+//public static readonly IEnumerable<object> printSeconds;
+
+static public int[]
         printSeconds
         { get; set; } = new int[] { 5, 10, 30, 60, 120, 240, 600 };
 

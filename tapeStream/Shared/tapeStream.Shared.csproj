@@ -7,7 +7,17 @@
   <ItemGroup>
     <Compile Remove="Data\TDAPrintsManager.cs" />
     <Compile Remove="Data\TDAStreamerData.cs" />
-    <Compile Remove="Services\BookBarChartService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DarkReader.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="css\DarkReader.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

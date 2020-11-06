@@ -14,7 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\BookGaugeChart.razor.cs" />
+    <Compile Remove="Components\BookPieChart.razor.cs" />
     <Compile Remove="Components\HubMonitorOld.razor.cs" />
+    <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
+    <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
+    <Compile Remove="Components\PrintPieGauge.razor.cs" />
     <Compile Remove="Data\classes\CONSTANTS.cs" />
     <Compile Remove="Data\classes\FixedSizedQueue.cs" />
     <Compile Remove="Data\classes\RhAutoProcs.cs" />
@@ -31,11 +36,32 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Components\BookGaugeChart.razor" />
+    <Content Remove="Components\BookPieChart.razor" />
     <Content Remove="Components\HubMonitorOld.razor" />
+    <Content Remove="Components\PrintArcGaugeChart.razor" />
+    <Content Remove="Components\PrintLinesGauge___Copy.razor" />
+    <Content Remove="Components\PrintPieGauge.razor" />
     <Content Remove="Pages\Chat.razor" />
     <Content Remove="Pages\Counter.razor" />
     <Content Remove="Pages\Filer.razor" />
     <Content Remove="Pages\TDAclient.razor" />
+    <Content Remove="wwwroot\appsettings.json" />
+    <Content Remove="wwwroot\js\JSInterop.js" />
+    <Content Remove="wwwroot\js\JSInterop.min.js" />
+    <Content Remove="wwwroot\js\StackedColumns3D.razor.js" />
+    <Content Remove="wwwroot\web.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\DarkReader.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\DarkReader.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 
@@ -80,7 +106,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\StackedColumns3D.razor.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\Index - Copy.razor.cs">
+      <DependentUpon>Index.razor.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

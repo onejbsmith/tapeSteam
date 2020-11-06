@@ -1,9 +1,10 @@
 ﻿
 @using tapeStream.Client.Data
+
 <div class="top-row pl-4 navbar navbar-dark">
     <img src="favicon.ico" style="width:16px;" />
     <a class="navbar-brand" href=""><i style="color:#009bec">tape</i>Stream</a>
-    <img src="@hubStatus" style="width:16px;" title="tapeStream Hub Connection Status" />
+    <img src="@hubStatus" style="display:none;width:16px;" title="tapeStream Hub Connection Status" />
 
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -17,26 +18,31 @@
                 <span class="oi oi-signal" aria-hidden="true"></span> Signals
             </NavLink>
         </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="chartest">
+                <span class="oi oi-plus" aria-hidden="true"></span> Chart Test
+            </NavLink>
+        </li>
         @*<<li class="nav-item px-3">
-            <NavLink class="nav-link" href="filer">
-                <span class="oi oi-plus" aria-hidden="true"></span> Filer
-            </NavLink>
-        </li>
-        li class="nav-item px-3">
-            <NavLink class="nav-link" href="chat">
-                <span class="oi oi-plus" aria-hidden="true"></span> Chat
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="tdaclient">
-                <span class="oi oi-plus" aria-hidden="true"></span> TDA
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>*@
+                <NavLink class="nav-link" href="filer">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Filer
+                </NavLink>
+            </li>
+            li class="nav-item px-3">
+                <NavLink class="nav-link" href="chat">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Chat
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="tdaclient">
+                    <span class="oi oi-plus" aria-hidden="true"></span> TDA
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Counter
+                </NavLink>
+            </li>*@
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data

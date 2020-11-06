@@ -10,13 +10,13 @@ namespace tapeStream.Shared.Services
         [Inject] HttpClient Http { get; set; } = new HttpClient();
         public async Task<string[]> GetValues()
         {
-            var values = await Http.GetFromJsonAsync<string[]>("https://localhost:44367/api/TimeSales");
+            var values = await Http.GetFromJsonAsync<string[]>("http://localhost:55540/api/TimeSales");
             return values;
         }
 
         public async Task<string> GetValue(int input)
         {
-            var value = await Http.GetStringAsync($"https://localhost:44367/api/TimeSales/" + input.ToString());
+            var value = await Http.GetStringAsync($"http://localhost:55540/api/TimeSales/" + input.ToString());
             return value;
         }
 

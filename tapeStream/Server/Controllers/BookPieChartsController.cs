@@ -16,7 +16,7 @@ namespace tdaStreamHub.Controllers
         // GET: api/<BookPieChartsController>
         [HttpOptions]
         [HttpGet]
-        public async Task<Dictionary<string, List<BookDataItem>>> getBookPiesData()
+        public async Task<Dictionary<string, BookDataItem[]>> getBookPiesData()
         {
             return await TDABookManager.getBookPiesData();
         }

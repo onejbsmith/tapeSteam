@@ -667,7 +667,7 @@ namespace tdaStreamHub.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        await TDAPrintsManager.Decode(symbol, content);
+                        await TDABookManager.Decode(symbol, content);
                         break;
 
                     case "CHART_EQUITY":
@@ -1080,8 +1080,8 @@ namespace tdaStreamHub.Data
             //    System.IO.File.AppendAllText(fileName, record);
             //}
 
-            string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
-            await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
+            //string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
+            //await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
 
             TimeSalesStatusChanged();
 

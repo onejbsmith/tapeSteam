@@ -17,7 +17,7 @@ namespace tapeStream.Client.Services
         {
             try
             {
-                var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44367/WeatherForecast");
+                var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("http://tapestream.com/WeatherForecast");
                 return forecasts;
             }
             catch (Exception ex)
@@ -32,7 +32,7 @@ namespace tapeStream.Client.Services
         //public async Task<WeatherForecast[]> Refresh()
         //{
         //    Http = new HttpClient();
-        //    var it = await Http.GetStringAsync("https://localhost:44367/WeatherForecast");
+        //    var it = await Http.GetStringAsync("http://tapestream.com/WeatherForecast");
         //    //var it = resp.Content.ToString();
         //    var x = JArray.Parse(it);
         //    var y = x.ToObject<WeatherForecast[]>();

@@ -29,6 +29,7 @@ namespace tdaStreamHub
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddScoped<tdaStreamHub.Data.BrowserService>(); // scoped service
             services.AddTransient<BlazorTimer>();
 
@@ -100,7 +101,7 @@ namespace tdaStreamHub
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();
 
-                builder.WithOrigins("http://localhost:53911/fetchdata")
+                builder.WithOrigins("http://tapestreamclient.com")
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();

@@ -26,6 +26,14 @@ app {
     align-items: center;
 }
 
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+.rz-chart {
+    height: 92vh;
+}
 .main {
     flex: 1;
 }
@@ -150,13 +158,13 @@ app {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     app {
         flex-direction: row;
     }
 
     .sidebar {
-        width: 150px;
+        width: 200px;
         height: 100vh;
         position: sticky;
         top: 0;

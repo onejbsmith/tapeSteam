@@ -11,7 +11,7 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        string controllerUrl = "https://localhost:44367/api/PrintsLineChart/";
+        string controllerUrl = "http://localhost:55540/api/PrintsLineChart/";
         public async Task<string[]> GetValues()
         {
             var values = await Http.GetFromJsonAsync<string[]>(controllerUrl);

@@ -2,23 +2,27 @@
 @using Radzen
 
 <table>
-    <tr>
+    @*<tr>
         <td style="text-align:center;zoom:.8">
             <b class="btn btn-primary" style="width:100%">@(weight.ToString())</b>
         </td>
-    </tr>
+    </tr>*@
     <tr>
         <td>
             <div class="btn">
-                <RadzenArcGauge Style="width: 400px; height: 200px; zoom: 0.4">
+                <RadzenArcGauge Style="width: 450px; height: 300px; zoom: 0.4">
                     <RadzenArcGaugeScale Step="1" Min="-7" Max="7" MinorStep="1" Radius="1.5" TickPosition=@tickPosition Y="0.9" Margin="0">
                         <RadzenArcGaugeScaleValue Value=@value ShowValue=true>
                             <Template Context="pointer">
 
                                 <h4 style="zoom:2.5;text-align:center;">
                                     <b>
-                                        @pointer.Value
-                                        <h1 style="position:relative;bottom:20px"><RadzenLabel Text="@elapsedTime" /></h1>
+                                        <div style="position:relative;top:20px">
+                                            @pointer.Value
+                                        </div>
+                                        <h1 style="font-weight:900"><RadzenLabel Text="@totalTime" /></h1>
+                                        <h1 style="position:relative;bottom:40px;display:block;"><RadzenLabel Text="@elapsedTime" /></h1>
+
                                     </b>
                                 </h4>
                             </Template>
@@ -30,10 +34,10 @@
     </tr>
     <tr>
         @*<div class="btn" style="width:100%;height:160px">
-            <td>
-                <PrintLinesGauge___Copy symbol="@symbol" weight="@weight" />
-            </td>
-        </div>*@
+                <td>
+                    <PrintLinesGauge___Copy symbol="@symbol" weight="@weight" />
+                </td>
+            </div>*@
     </tr>
 </table>
 
@@ -48,8 +52,8 @@
     [Parameter]
     public int moduloPrints { get; set; }
 
-    [Parameter]
-    public double value { get; set; }
+
+
 
     IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
     GaugeTickPosition tickPosition = GaugeTickPosition.Outside;

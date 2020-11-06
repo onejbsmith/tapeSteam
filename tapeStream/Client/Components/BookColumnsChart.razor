@@ -1,18 +1,59 @@
 ﻿@*<h3>BookColumnsChart</h3>*@
 @using tapeStream.Client.Data;
 
-<div style="margin-bottom:10px;font-weight:800">
+<div style="margin-bottom:10px;font-weight:800;height:78%">
     <span>@timeOfDay</span>
-    <RadzenChart @ref="myChart">
-        <RadzenColumnSeries Title="Bids" Data="@bidData" CategoryProperty="Price"
-                            ValueProperty="Size" />
-        <RadzenColumnSeries Title="Asks" Data="@askData" CategoryProperty="Price"
-                            ValueProperty="Size" />
-        <RadzenCategoryAxis FormatString="{0:n2}" StrokeWidth="4" />
-        @*<RadzenLegend Visible="false" />
 
-        <RadzenValueAxis  FormatString="{0:C} />*@
+    <div>
+
+        <RadzenAccordion Style="background-color:transparent;width:100%">
+            <Items>
+                <RadzenAccordionItem Text="@title" Icon="account_balance_wallet" Style="width:100%">
+
+                    <RadzenSlider Min="0" Max="60" @bind-Value=@seconds Style="width:80%"/> <label> &nbsp;@seconds &nbsp;Seconds</label>
+
+                </RadzenAccordionItem>
+            </Items>
+        </RadzenAccordion>
+
+
+
+        @*@code {
+            bool showValue = true;
+            double value = 100;
+            IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
+            GaugeTickPosition tickPosition = GaugeTickPosition.Inside;
+        }*@
+    </div>
+    <RadzenChart @ref="myChart">
+        <RadzenColumnSeries Title="Bidders&nbsp;&nbsp;" Data="@bidData" CategoryProperty="Price" LineType="LineType.Solid"
+                            ValueProperty="Size" />
+        <RadzenColumnSeries Title="Sellers&nbsp;&nbsp;" Data="@salesAtBidData" CategoryProperty="Price" Fill="crimson"
+                            ValueProperty="Size" />        <RadzenCategoryAxis FormatString="{0:n2}" StrokeWidth="6" />
+        <RadzenColumnSeries Title="Buyers&nbsp;&nbsp;" Data="@salesAtAskData" CategoryProperty="Price" Fill="limegreen"
+                            ValueProperty="Size" />        <RadzenCategoryAxis FormatString="{0:n2}" StrokeWidth="6" />
+        <RadzenColumnSeries Title="Askers" Data="@askData" CategoryProperty="Price"
+                            ValueProperty="Size" />
+
+
+        <RadzenLegend Visible="@true" Position="LegendPosition.Bottom" />
+        <RadzenValueAxis Max=5000>
+            <RadzenGridLines Visible="true" />
+        </RadzenValueAxis>
+        <RadzenCategoryAxis Min=0 Max=1000 Step="5" />
+
+
+        <RadzenValueAxis>
+            <RadzenAxisTitle Text="Size" />
+        </RadzenValueAxis>
+        <RadzenCategoryAxis>
+            <RadzenAxisTitle Text="Price" />
+        </RadzenCategoryAxis>
+        <RadzenValueAxis FormatString="{0:n0}" />
     </RadzenChart>
+
+
+
 </div>
 
 @*@if (!isPrintsSize)
@@ -28,21 +69,12 @@
 
 
 @code {
-    RadzenChart myChart;
-
-    public DateTime timeOfDay = DateTime.Now;
 
     [Parameter]
     public string symbol { get; set; }
 
-    [Parameter]
-    public int seconds { get; set; }
 
-    [Parameter]
-    public bool isPrintsSize { get; set; }
 
-    [Parameter]
-    public int moduloBook { get; set; }
 
 
 

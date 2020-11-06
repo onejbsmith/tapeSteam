@@ -22,7 +22,9 @@ namespace tdaStreamHub.Data
         static public async Task<double> GetPrintsGaugeScore()
         {
             var rand = new Random();
-            var value = rand.Next(-7, 7);
+            await GetPrintsPies(1);
+            //var value = gaugeValues.Last().Value;
+            var value = 0;
             foreach (var seconds in CONSTANTS.printSeconds)
             {
                 if (dictPies.ContainsKey(seconds.ToString()))
@@ -42,11 +44,13 @@ namespace tdaStreamHub.Data
             return value;
         }
 
-        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(string symbol)
+        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
         {
             dictPies = new Dictionary<string, DataItem[]>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
+                string symbol = "QQQ";
+
                 var slices = TDAPrintsManager.GetPieSlices(symbol, seconds);
                 dictPies.Add(seconds.ToString(), slices);
             }
@@ -65,7 +69,7 @@ namespace tdaStreamHub.Data
                     new Dictionary<string, DataItem[]>();
 
             var rawGaugesCombined = gaugeValues
-                .Where(dict => DateTime.Now.Subtract(dict.Key).Seconds > nSeconds)
+                .Where(dict => DateTime.Now.Subtract(dict.Key).Seconds < nSeconds)
                 .Select(dict =>
                 new DataItem()
                 {
@@ -74,15 +78,15 @@ namespace tdaStreamHub.Data
                 }
                 ).ToArray();
 
-            var staticValue0 = staticValue(0).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray();
-            var staticValue7 = staticValue(7).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray();
-            var staticValueMinus7 = staticValue(-7).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray();
+            var staticValue0 = staticValue(0).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray();
+            var staticValue7 = staticValue(7).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray();
+            var staticValueMinus7 = staticValue(-7).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray();
 
-            var movingAverage5min = movingAverage(300).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray();
+            var movingAverage5min = movingAverage(300).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray();
 
-            var average10min = staticAverage(600).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray();
+            var average10min = staticAverage(600).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray();
 
-            var movingAverage30sec = movingAverage(30).Where(t => DateTime.Now.Subtract(t.Date).Seconds > nSeconds).ToArray(); ;
+            var movingAverage30sec = movingAverage(30).Where(t => DateTime.Now.Subtract(t.Date).Seconds < nSeconds).ToArray(); ;
 
             /// This holds the value of one point for each line on the chart
             /// THe chart should maintain the prior points locally and add these
@@ -102,7 +106,7 @@ namespace tdaStreamHub.Data
 
         public static async Task Decode(string symbol, string content)
         {
-            if (TDABookManager.lstBookEntry.Count == 0) return;
+            //if (TDABookManager.lstBookEntry.Count == 0) return;
 
             if (!TDAStreamerData.timeSales.ContainsKey(symbol))
                 TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
@@ -148,14 +152,32 @@ namespace tdaStreamHub.Data
                  : price == ask ? 4
                  : price > ask ? 5
                  : 0;
-
-
-                TDAStreamerData.timeSales[symbol].Add(timeAndSales);
-
-                string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
-                await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
             }
             catch { }
+
+            TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+
+            string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
+            //await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
+
+            //int value=0;
+            //foreach (var seconds in CONSTANTS.printSeconds)
+            //{
+            //    if (dictPies.ContainsKey(seconds.ToString()))
+            //    {
+            //        var slices = dictPies[seconds.ToString()];
+
+            //        var reds = slices[0].Revenue + slices[2].Revenue;
+            //        var greens = slices[3].Revenue + slices[4].Revenue;
+
+            //        var it = reds > greens ? -1
+            //                : greens > reds ? 1
+            //                : 0;
+            //        value += it;
+            //    }
+            //    gaugeValues.Add(DateTime.Now, value);
+            //}
+
             await Task.CompletedTask;
 
         }
@@ -246,14 +268,21 @@ namespace tdaStreamHub.Data
             if (gaugeValues == null || gaugeValues.Count == 0)
                 return newArray;
 
-            var it = gaugeValues.Select(dict =>
-                  new DataItem()
+            DataItem[] it = newArray;
+            try
+            {
+                it = (DataItem[])(gaugeValues.Select(dict =>
+                  (new DataItem()
                   {
                       Date = dict.Key,
                       Revenue = gaugeValues
                       .Where(d => d.Key <= dict.Key && d.Key >= dict.Key.AddSeconds(-secs))
                       .Select(d => d.Value).Average()
-                  });
+                  })));
+            }
+            catch
+            {
+            }
 
             if (it.Count() > 0)
                 return it.ToArray();

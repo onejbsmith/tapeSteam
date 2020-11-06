@@ -10,11 +10,21 @@ namespace tapeStream.Client.Components
     {
 
 
-        [Parameter]
-        public Dictionary<string, DataItem[]> dictAllLinePoints { get; set; } =
-                new Dictionary<string, DataItem[]>();  /// need to be initted
+         private Dictionary<string, DataItem[]> _dictAllLinePoints =
+                new Dictionary<string, DataItem[]>();
 
-//        DataItem[] rawGaugesCombined = new DataItem[] { CONSTANTS.newDataItem };
+        [Parameter]
+        public  Dictionary<string, DataItem[]> dictAllLinePoints
+        {
+            get { return _dictAllLinePoints; }
+            set { _dictAllLinePoints = value;
+                rawGaugesCombined = dictAllLinePoints["rawGaugesCombined"];
+
+            }
+        }
+
+ 
+       DataItem[] rawGaugesCombined = new DataItem[] { CONSTANTS.newDataItem };
 
         ////protected override async Task OnInitializedAsync()
         //{

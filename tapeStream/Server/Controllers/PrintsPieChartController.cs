@@ -9,22 +9,25 @@ using tdaStreamHub.Data;
 namespace tdaStreamHub.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class PrintsPieChartController : ControllerBase
     {
-        static string symbol = "QQQ";
         // GET: api/<PrintsPieChartController>
         [HttpGet]
         public async Task<double> GetPrintsGaugeScore()
         {
-            return await TDAPrintsManager.GetPrintsGaugeScore();
+            double it = await TDAPrintsManager.GetPrintsGaugeScore();
+            return it;
         }
 
         // GET api/<PrintsPieChartController>/5
         [HttpGet("{id}")]
-        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
+        [Route("api/[controller]/id")]
+        public async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
         {
-            return await TDAPrintsManager.GetPrintsPies(symbol);
+            Dictionary<string, DataItem[]> it = await TDAPrintsManager.GetPrintsPies(id);
+            return it;
         }
 
         // POST api/<PrintsPieChartController>

@@ -11,10 +11,37 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        string controllerUrl = "https://localhost:44367/api/BookColumns/";
+        string controllerUrl = "http://localhost:55540/api/BookColumns/";
+        //string controllerUrl = "http://tapestream.com/api/BookColumns/";
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
-            var values = await Http.GetFromJsonAsync<Dictionary<string, BookDataItem[]>>(controllerUrl);
+            Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
+            try
+            {
+                values = await Http.GetFromJsonAsync<Dictionary<string, BookDataItem[]>>(controllerUrl);
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine(ex.ToString());
+            }
+            return values;
+        }
+
+
+        public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData(int seconds)
+        {
+            Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
+            try
+            {
+                if (seconds == 0)
+                    values = await Http.GetFromJsonAsync<Dictionary<string, BookDataItem[]>>(controllerUrl);
+                else
+                    values = await Http.GetFromJsonAsync<Dictionary<string, BookDataItem[]>>(controllerUrl + seconds.ToString());
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine(ex.ToString());
+            }
             return values;
         }
 

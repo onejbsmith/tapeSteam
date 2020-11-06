@@ -1,6 +1,9 @@
 ﻿//alert("Hi!");
 //var tdaStreamerWebSocket = new WebSocket("wss://" + userPrincipalsResponse.streamerInfo.streamerSocketUrl + "/ws");
 
+
+/// Array.from(document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
+
 var dotNetObject = {};
 //var requestLoginJson = "";
 var tdaStreamerWebSocket = {};

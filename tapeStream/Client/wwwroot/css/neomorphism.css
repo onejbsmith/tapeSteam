@@ -69,7 +69,7 @@
     --slack: #3aaf85;
     --breakpoint-xs: 0;
     --breakpoint-sm: 576px;
-    --breakpoint-md: 768px;
+    --breakpoint-md: 1600px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
     --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -659,7 +659,7 @@ pre code {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .container {
         max-width: 720px;
     }
@@ -1073,7 +1073,7 @@ pre code {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .col-md {
         flex-basis: 0;
         flex-grow: 1;
@@ -5074,7 +5074,7 @@ input[type="button"].btn-block {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .dropdown-menu-md-left {
         right: auto;
         left: 0;
@@ -6260,7 +6260,7 @@ input[type="button"].btn-block {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .navbar-expand-md {
         flex-flow: row nowrap;
         justify-content: flex-start;
@@ -7969,7 +7969,7 @@ a.badge-slack:focus, a.badge-slack.focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .list-group-horizontal-md {
         flex-direction: row;
     }
@@ -9941,7 +9941,7 @@ button.bg-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .d-md-none {
         display: none !important;
     }
@@ -10410,7 +10410,7 @@ button.bg-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .flex-md-row {
         flex-direction: row !important;
     }
@@ -10850,7 +10850,7 @@ button.bg-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .float-md-left {
         float: left !important;
     }
@@ -13228,7 +13228,7 @@ button.bg-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .m-md-0 {
         margin: 0 !important;
     }
@@ -16522,7 +16522,7 @@ button.bg-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .text-md-left {
         text-align: left !important;
     }
@@ -19818,7 +19818,7 @@ button.section-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .floating-md {
         animation: floating-md 3s ease infinite;
         will-change: transform;
@@ -21264,7 +21264,7 @@ button.section-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .row.row-grid > [class*="col-md-"] + [class*="col-md-"] {
         margin-top: 0;
     }
@@ -21932,7 +21932,7 @@ button.section-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .display-1-md {
         font-size: 5rem;
     }
@@ -22108,7 +22108,7 @@ button.section-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .text-md-left {
         text-align: left !important;
     }
@@ -25475,7 +25475,7 @@ button.section-slack:focus {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .section-hero {
         height: 100vh;
     }
@@ -25557,7 +25557,7 @@ button.section-slack:focus {
     max-height: 800px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
     .card-box .card-component.card-component-lg {
         max-height: 410px;
     }

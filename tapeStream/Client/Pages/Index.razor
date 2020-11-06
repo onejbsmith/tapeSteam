@@ -8,8 +8,13 @@
 
 }
 <style>
+    .rz-tick-text {
+        stroke: none;
+        fill: rgba(228, 228, 228, 0.5);
+    }
+
     body {
-        zoom: 0.75;
+        zoom: 1;
     }
 
     th {
@@ -18,8 +23,7 @@
     }
 
     .flex-container {
-        display: flex; /* or inline-flex */
-        flex-
+        display: none; /* or inline-flex */
     }
 
     article {
@@ -29,22 +33,23 @@
     }
 </style>
 <style>
+
     .grid-container {
         display: grid;
         grid-template-rows: auto auto;
-        grid-row-gap: 15px;
+        grid-row-gap: 10px;
         grid-column-gap: 5px;
         /*        grid-template-columns: auto auto ;
     */
     }
 
     .shrink {
-        zoom: 0.8;
+        zoom: 1;
     }
-/*    .ui-slider-horizontal {
-        height: 5px;
-        width: 100%;
-    }
+        .ui-slider-horizontal {
+        height: 2px;
+/*        width: 100%;
+*/    }
     .ui-slider-handle {
         position: absolute;
         transform: translateY(-50%);
@@ -56,69 +61,56 @@
         height: 12px;
     }
         .ui-slider-handle:before {
-            display: inline-block;
+            display: none;
             color: #ffffff;
             transform: rotate(90deg);
             vertical-align: middle;
             font-family: 'Material Icons';
             content: 'drag_handle';
-        }*/
+        }
+
+    .mdc-chip-set .mdc-chip {
+        margin: 2px;
+    }
+
+    .mdc-chip {
+        border-radius: 16px;
+        height: 16px;
+        padding: 6px;
+    }
+
+    .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
+        color: white;
+        background: #333;
+    }
+
+    .ui-accordion-content {
+        background-color: transparent;
+    }
+
+    .ui-accordion-header {
+        background-color: transparent;
+    }
+
 </style>
 
+
 <div class="grid-container">
+
+    <div class="grid-item shrink" style="width:100hw">
+        <BookColumnsChart symbol="@symbol" bookData="@bookColData"  />
+    </div>
     <div>
-        <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+        <tapeStream.Client.Components.HighCharts.StackedColumns3D bookData="@bookColData" />
+
+        @*<MatSlider TValue="int" bind-Value="@seconds" Discrete="true" Step="5" ValueMin="0" ValueMax="60" Label="Seconds:"></MatSlider>*@
+
     </div>
 
-    <div class="flex-container">
-        <div>
-            <PrintLinesGauge___Copy symbol="@symbol" weight="1" dictAllLinePoints="@dictAllLinePoints" />
-        </div>
-        <div>
-            <PrintArcGaugeChart symbol="@symbol" weight="1" value="@lastCombinedRedGreenValue" />
-            @*<RadzenSlider @bind-Value="@Val4" TValue="int" Min="1" Max="10" />*@            
-        </div>
-    </div>
-    <div>
-        <Badge Class="badge-dark">Print Speed:&nbsp;&nbsp; @moduloPrints</Badge>
-        
-    </div>
-    <div class="flex-container shrink">
-        @foreach (int secs in tapeStream.Shared.CONSTANTS.printSeconds.OrderByDescending(t => t))
-        {
-            <PrintPieGauge isPrintsSize="true" seconds="@secs" symbol="@symbol" moduloPrints="@moduloPrints" printsData="@printsData[secs]" />
-        }
-    </div>
-    <div>
-        <RadzenSlider @bind-Value="moduloBook" TValue="int" Min="1" Max="100" />
-        <Badge Class="badge-primary">@moduloBook</Badge>
-    </div>
-    <div class="flex-container shrink">
-        @foreach (int secs in tapeStream.Shared.CONSTANTS.printSeconds.OrderByDescending(t => t))
-        {
-            <BookPieChart seconds="@secs" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookDataDict[secs]" />
-        }
-        <BookGaugeChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookData" />
-    </div>
-    <div class="grid-item shrink" style="width:50%">
-        <BookColumnsChart isPrintsSize="false" seconds="5" symbol="@symbol" moduloBook="@moduloBook" bookData="@bookColData" />
-    </div>
+    @*<div>
+            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+        </div>*@
+
+
 </div>
-
-
-@*<BookPieChart seconds="120" symbol="@symbol" moduloBook="@moduloBook" />
-    <BookPieChart seconds="60" symbol="@symbol" moduloBook="@moduloBook" />
-
-    <BookPieChart seconds="30" symbol="@symbol" moduloBook="@moduloBook" />
-    <BookPieChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" />
-    <BookPieChart seconds="2" symbol="@symbol" moduloBook="@moduloBook" />*@
-
-@*<BookGaugeChart seconds="10" symbol="@symbol" moduloBook="@moduloBook" />*@
-<!--</div>
-
-
-@*<div class="grid-item">
-        <SyncfusionStackedColumnChart seconds="15" symbol="@symbol" />
-    </div>*@
-
 

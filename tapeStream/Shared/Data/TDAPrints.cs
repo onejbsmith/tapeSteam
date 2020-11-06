@@ -20,7 +20,7 @@ namespace tapeStream.Shared.Data
         };
 
 
-        public static Dictionary<int, DataItem[]> dictPies = new Dictionary<int, DataItem[]>();
+        public static Dictionary<string, DataItem[]> dictPies = new Dictionary<string, DataItem[]>();
         //static public async Task<double> GetPrintsGaugeScore()
         //{
         //    var value = 0;

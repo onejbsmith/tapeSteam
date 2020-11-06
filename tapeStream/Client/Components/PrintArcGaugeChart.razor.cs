@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using tapeStream.Client.Data;
@@ -9,16 +10,32 @@ namespace tapeStream.Client.Components
     {
         public int[] printSeconds { get; set; } = new int[] { 5, 10, 30, 60, 120, 240, 600 };
 
+        private double myVar;
+
+        [Parameter]
+        public double value
+        {
+            get { return myVar; }
+            set
+            {
+                myVar = value;
+                stopWatch.Stop();
+                 GetElapsedTime();
+           }
+        }
+
         Stopwatch stopWatch = new Stopwatch();
+        Stopwatch stopWatchTotal = new Stopwatch();
         string elapsedTime;
+        string totalTime;
 
         protected override async Task OnInitializedAsync()
         {
-            TDAStreamerData.OnTimeSalesStatusChanged += getPrintsData;
-            StateHasChanged();
-            await Task.CompletedTask;
+            //TDAStreamerData.OnTimeSalesStatusChanged += getPrintsData;
             stopWatch.Start();
-            GetElapsedTime();
+            stopWatchTotal.Start();
+            //GetElapsedTime();
+            await Task.CompletedTask;
         }
 
         void getPrintsData()
@@ -53,11 +70,15 @@ namespace tapeStream.Client.Components
         {
             // Get the elapsed time as a TimeSpan value.
             TimeSpan ts = stopWatch.Elapsed;
+            TimeSpan tsTotal = stopWatchTotal.Elapsed;
 
-            // Format and display the TimeSpan value.
-            elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
+            // Format and display the TimeSpan values.
+            elapsedTime = String.Format("{0:00}s {1:00}f",ts.Seconds, ts.Milliseconds / 10);
+            stopWatch.Restart();
+
+            totalTime = String.Format(" {0:00}h {1:00}m",tsTotal.Hours, tsTotal.Minutes, tsTotal.Seconds);
+
+            StateHasChanged();
         }
     }
 }

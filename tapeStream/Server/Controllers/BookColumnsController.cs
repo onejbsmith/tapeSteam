@@ -19,34 +19,11 @@ namespace tdaStreamHub.Controllers
             return await TDABookManager.getBookColumnsData();
         }
 
-        // GET api/<BookColumnsController>/5
-        /// <summary>
-        /// For the T&S Lines Chart
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<Dictionary<string, BookDataItem[]>> getPrintsLineChartData(int id)
         {
-            return "value";
+            return await TDABookManager.getBookColumnsData(id);
         }
 
-        // POST api/<BookColumnsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<BookColumnsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<BookColumnsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

@@ -11,6 +11,7 @@
     <Product>tapeStream</Product>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>Desktop.pfx</AssemblyOriginatorKeyFile>
+    <UserSecretsId>3916542e-f174-49d3-8e4f-10e2ccea7e35</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -107,6 +108,10 @@
     <Content Remove="FEED Oct 13 2020.json" />
     <Content Remove="FEED Oct 14 2020.json" />
     <Content Remove="FEED Sep 25 2020.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DarkReader.css" />
   </ItemGroup>
 
   <ItemGroup>
