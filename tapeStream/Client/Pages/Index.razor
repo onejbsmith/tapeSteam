@@ -7,10 +7,27 @@
     string symbol = "QQQ";
 
 }
+
+<div class="grid-container">
+    <div>
+        <tapeStream.Client.Components.HighCharts.StackedColumns3D bookData="@bookColData" />
+    </div>
+    <div class="grid-item shrink" style="width:100hw">
+            <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
+        </div>
+    @*<div>
+            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+        </div>*@
+</div>
+
 <style>
     .rz-tick-text {
         stroke: none;
         fill: rgba(228, 228, 228, 0.5);
+    }
+
+    .rz-chart {
+        height: 40vh;
     }
 
     body {
@@ -23,7 +40,7 @@
     }
 
     .flex-container {
-        display: none; /* or inline-flex */
+        /*display: none;*/ /* or inline-flex */
     }
 
     article {
@@ -34,83 +51,66 @@
 </style>
 <style>
 
-    .grid-container {
-        display: grid;
-        grid-template-rows: auto auto;
-        grid-row-gap: 10px;
-        grid-column-gap: 5px;
-        /*        grid-template-columns: auto auto ;
-    */
-    }
-
-    .shrink {
-        zoom: 1;
-    }
-        .ui-slider-horizontal {
-        height: 2px;
-/*        width: 100%;
-*/    }
-    .ui-slider-handle {
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        margin-left: -0.5rem;
-        background-color: #479cc8;
-        border-radius: 20px;
-        width: 12px;
-        height: 12px;
-    }
-        .ui-slider-handle:before {
-            display: none;
-            color: #ffffff;
-            transform: rotate(90deg);
-            vertical-align: middle;
-            font-family: 'Material Icons';
-            content: 'drag_handle';
+        .grid-container {
+            display: grid;
+            grid-template-rows: auto auto;
+            grid-row-gap: 10px;
+            grid-column-gap: 5px;
+            /*        grid-template-columns: auto auto ;
+        */
         }
 
-    .mdc-chip-set .mdc-chip {
-        margin: 2px;
-    }
+        .shrink {
+            zoom: 1;
+        }
 
-    .mdc-chip {
-        border-radius: 16px;
-        height: 16px;
-        padding: 6px;
-    }
+        .ui-slider-horizontal {
+            height: 2px;
+            /*        width: 100%;
+    */
+        }
 
-    .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
-        color: white;
-        background: #333;
-    }
+        .ui-slider-handle {
+            position: absolute;
+            transform: translateY(-50%);
+            top: 50%;
+            margin-left: -0.5rem;
+            background-color: #479cc8;
+            border-radius: 20px;
+            width: 12px;
+            height: 12px;
+        }
 
-    .ui-accordion-content {
-        background-color: transparent;
-    }
+            .ui-slider-handle:before {
+                display: none;
+                color: #ffffff;
+                transform: rotate(90deg);
+                vertical-align: middle;
+                font-family: 'Material Icons';
+                content: 'drag_handle';
+            }
 
-    .ui-accordion-header {
-        background-color: transparent;
-    }
+        .mdc-chip-set .mdc-chip {
+            margin: 2px;
+        }
 
+        .mdc-chip {
+            border-radius: 16px;
+            height: 16px;
+            padding: 6px;
+        }
+
+        .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
+            color: white;
+            background: #333;
+        }
+
+        .ui-accordion-content {
+            background-color: transparent;
+        }
+
+        .ui-accordion-header {
+            background-color: transparent;
+        }
 </style>
-
-
-<div class="grid-container">
-
-    <div class="grid-item shrink" style="width:100hw">
-        <BookColumnsChart symbol="@symbol" bookData="@bookColData"  />
-    </div>
-    <div>
-        <tapeStream.Client.Components.HighCharts.StackedColumns3D bookData="@bookColData" />
-
-        @*<MatSlider TValue="int" bind-Value="@seconds" Discrete="true" Step="5" ValueMin="0" ValueMax="60" Label="Seconds:"></MatSlider>*@
-
-    </div>
-
-    @*<div>
-            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
-        </div>*@
-
-
-</div>
 

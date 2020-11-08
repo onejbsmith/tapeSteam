@@ -235,7 +235,7 @@ namespace tapeStream.Client.Pages
 
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await GetBookColumnsData(BookColumnsChart.seconds);
+            await GetBookColumnsData(ChartConfigure.seconds);
         }
 
         private async Task GetBookColumnsData(int seconds)

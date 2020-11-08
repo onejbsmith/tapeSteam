@@ -36,10 +36,10 @@ function load3Dchart(n, t) {
                         function () {
                             waitForGlobal("Highcharts",
                                 function () {
-                                    //var i = looseJsonParse(t);
-                                    var i = window.chart3DObject;
-                                    var series = looseJsonParse(t);
-                                    i.series = series;
+                                    var i = looseJsonParse(t);
+                                    //var i = window.chart3DObject;
+                                    //var series = looseJsonParse(t);
+                                    //i.series = series;
                                     Highcharts.chart(n, i);
                                     SetLanguage()
                                 })
@@ -48,6 +48,14 @@ function load3Dchart(n, t) {
                 function () { })
         },
         function () { })
+}
+
+function setChart3Dseries( seriesJson, xAxisJson)
+{
+    var series = looseJsonParse(seriesJson);
+    var xAxis = looseJsonParse(xAxisJson);
+    window.chart3DObject.series = series;
+    window.chart3DObject.xAxis = xAxis;
 }
 
 function SetLanguage() {
@@ -101,6 +109,7 @@ function loadScript(n) {
 window.loadHighchart = loadHighchart;
 window.loadStockchart = loadStockchart;
 window.load3Dchart = load3Dchart;
+window.setChart3Dseries = setChart3Dseries;
 
 var waitForGlobal = function waitForGlobal(n, t) {
     window[n] ? t() : setTimeout(function () { waitForGlobal(n, t) }, 100)

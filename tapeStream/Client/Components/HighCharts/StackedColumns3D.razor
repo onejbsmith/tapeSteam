@@ -1,19 +1,30 @@
-﻿<h3>StackedColumns3D</h3>
+﻿@*<h3>StackedColumns3D</h3>*@
 
 <style>
     #container {
-        /*        height: 100vh;
-        min-width: 310px;
+        height: 80vh;
+        /*min-width: 310px;
         max-width: 100hw;*/
         margin: 0 auto;
     }
 </style>
 
-<h3>HighChart</h3>
+@*<h3>HighChart</h3>*@  
+  
+<div style="width:100%">
+    <ChartConfigure title="QQQ Supply/Demand" />
+</div>
+
+@* The chart HTML gets placed here by HighCharts *@
 <div id="container">
 
 </div>
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
-@name;
-<tapeStream.Client.Components.HighCharts.Base.HighChart3D Json="@chart3Djson" />
+@*@name;*@
+<div style="display:grid">
+    <div>
+        @* Injects the data and redraws the chart *@
+        <tapeStream.Client.Components.HighCharts.Base.HighChart3D Json="@chart3Djson" />
+    </div>
+</div>
