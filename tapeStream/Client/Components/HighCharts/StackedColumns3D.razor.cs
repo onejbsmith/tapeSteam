@@ -86,7 +86,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
 
-            Debug.WriteLine(jsonResponse); /// to capture the chart object's json from js
+            Console.WriteLine(jsonResponse); /// to capture the chart object's json from js
             await Task.Yield();
         }
 
