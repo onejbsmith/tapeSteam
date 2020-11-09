@@ -175,7 +175,7 @@ namespace tdaStreamHub.Data
             }
             catch (Exception ex)
             {
-                Console.Write(ex.Message);
+                Debug.Write(ex.Message);
             }
         }
 
@@ -1288,8 +1288,8 @@ namespace tdaStreamHub.Data
 
             //string sBuys = string.Join(',', buysData.Select(t => t.Revenue.ToString("n0")));
             //string sSells = string.Join(',', buysData.Select(t => t.Revenue.ToString("n0")));
-            //Console.WriteLine("Buys=" + sBuys);
-            //Console.WriteLine("Sells=" + sSells);
+            //Debug.WriteLine("Buys=" + sBuys);
+            //Debug.WriteLine("Sells=" + sSells);
         }
 
     }

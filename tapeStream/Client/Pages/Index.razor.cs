@@ -178,7 +178,7 @@ namespace tapeStream.Client.Pages
         //    Threader.ThreadPool.SetMaxThreads(workerThreads, 100);
 
         //    Threader.ThreadPool.GetMaxThreads(out workerThreads, out portThreads);
-        //    Console.WriteLine("\nMaximum worker threads: \t{0}" +
+        //    Debug.WriteLine("\nMaximum worker threads: \t{0}" +
         //        "\nMaximum completion port threads: {1}",
         //        workerThreads, portThreads);
         //}
@@ -244,7 +244,7 @@ namespace tapeStream.Client.Pages
             await Task.Yield();
             bookColData = await bookColumnsService.getBookColumnsData(seconds);
             await Task.Delay(100);
-            //Console.WriteLine("2. BookColumnsCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
+            //Debug.WriteLine("2. BookColumnsCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();
             timerBookColumnsCharts.Start();
             await Task.CompletedTask;
@@ -259,7 +259,7 @@ namespace tapeStream.Client.Pages
             await Task.Delay(100);
             printsData = await printsPieChartService.GetPrintsPies();
             await Task.Delay(100);
-            Console.WriteLine("1. PrintsPieCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
+            Debug.WriteLine("1. PrintsPieCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();
             timerPrintsPieCharts.Start();
             await Task.CompletedTask;
@@ -271,7 +271,7 @@ namespace tapeStream.Client.Pages
             await Task.Yield();
             await AppendLineChartData();
             await Task.Delay(100);
-            Console.WriteLine("3. PrintsLineCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
+            Debug.WriteLine("3. PrintsLineCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();
             timerPrintsLineCharts.Start();
             await Task.CompletedTask;
@@ -309,7 +309,7 @@ namespace tapeStream.Client.Pages
             await Task.Delay(100);
             bookData = await bookPieChartsService.getBookCompositePieData(1);
             await Task.Delay(100);
-            Console.WriteLine("4. BookPieCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
+            Debug.WriteLine("4. BookPieCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();
             timerBookPieCharts.Start();
             await Task.CompletedTask;
