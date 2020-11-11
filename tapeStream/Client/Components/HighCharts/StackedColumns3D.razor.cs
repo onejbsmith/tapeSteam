@@ -104,6 +104,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             try
             {
+                chart.yAxis.max = ChartConfigure.yAxisHigh;
 
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
                 /// Get the price range min and max over all items in the dictionary
@@ -112,8 +113,9 @@ namespace tapeStream.Client.Components.HighCharts
                 chart.xAxis.categories = categories;
 
                 /// 
-                Chart_AddSpreadPlotBand(bookDataItems);
+                Chart_AddSpreadPlotBand(bookDataItems, categories);
 
+                Chart_AddBollingerPlotLines(bookDataItems, categories);
                 /// Convert BookDataItem[] to Series1[]
                 var seriesList = new List<Series1>();
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
@@ -144,22 +146,61 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
-        private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems)
+        private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
-            var highBid = bookDataItems["bids"][0].Price;
-            var lowAsk = bookDataItems["asks"][0].Price;
+            var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
+            var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
+
             chart.xAxis.plotBands = new Plotband[]
             {
                     new Plotband()
                     { from=highBid,
                         to =lowAsk,
-                        color="#333",
-                        label= new Label()
-                        {
-                            text="Spread"
-                        }
+                        color="#888888",
+                        //label= new Label()
+                        //{
+                        //    text="Spread"
+                        //}
 
                     }
+            };
+        }
+        private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
+        {
+            var lowPrice = 288.93.ToString("n2") ;
+            var midPrice = 289.27.ToString("n2");
+            var highPrice = 289.65.ToString("n2");
+
+            //var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
+
+            var low = categories.ToList().IndexOf(lowPrice); ;
+            var mid = categories.ToList().IndexOf(midPrice); ;
+            var high = categories.ToList().IndexOf(highPrice);
+
+            var midCategory = categories.Length / 2;
+
+            chart.xAxis.plotLines = new Plotline[]
+            {
+                new Plotline()
+                {  value=low,
+                    color="purple",
+                    width=4
+                },
+                new Plotline()
+                {  value=mid,
+                    color="cyan",
+                    width=4
+                },
+                new Plotline()
+                {  value=high,
+                    color="red",
+                    width=4
+                },
+                new Plotline()
+                {  value=midCategory,
+                    color="#666666",
+                    width=6
+                },            
             };
         }
 
@@ -213,7 +254,7 @@ namespace tapeStream.Client.Components.HighCharts
             lstPrices.Sort();
 
             var midPrice = (minPrice + maxPrice) / 2;
-            var n = 75;
+            var n = ChartConfigure.xAxisMaxCategories;
             /// Cull the list of prices if it's more than 100
             if (lstPrices.Count > n)
             {
@@ -226,22 +267,6 @@ namespace tapeStream.Client.Components.HighCharts
                     lstPrices = lstPrices.ToArray().Skip(lstPrices.Count - n).ToList();
             }
             /// Picture the spread as two 0 points, one at high bid, one at low ask
-        }
-
-        private static void AddSpreadPointsToBookData(Dictionary<string, BookDataItem[]> bookDataItems)
-        {
-            /// Picture the spread one at high bid one at low ask
-
-
-            /// Create a series for spread with the two points above at 0 SIze
-            /// and add to bookDataItems that just came in
-            /// 
-            var spreadPoints = new BookDataItem[2]
-            {
-                    new BookDataItem() { Price=highBid, dateTime=DateTime.Now, Size=0 },
-                    new BookDataItem() { Price=lowAsk, dateTime=DateTime.Now, Size=0 },
-            };
-            bookDataItems.Add("spread", spreadPoints);
         }
 
         private static Dictionary<string, string> SetSeriesColors()

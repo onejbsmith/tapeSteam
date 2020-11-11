@@ -96,7 +96,7 @@ namespace tapeStream.Client.Components.HighCharts
     {
         public string color { get; set; }
         public string dashStyle { get; set; }
-        public int value { get; set; }
+        public decimal value { get; set; }
         public int width { get; set; }
     }
 

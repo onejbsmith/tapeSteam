@@ -67,9 +67,10 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                     console.log("window.getChartJson");
                                                     console.log(json);
                                                     window.getChartJson();
-                                                    return json;  
+                                                    return json;
                                                 }
-                                      
+
+                                            }
                                             )
                                         }, function () { })
                                 }, function () { })
@@ -82,6 +83,10 @@ window.loadHighchart = function (chartDivName, chartJson) {
 
 window.Initialize = function (dotNetObj) {
     this.dotNetObject = dotNetObj;
+
+    var darkCss = Array.from(window.document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
+    console.log("Darkreader css");
+    console.log(darkCss);
 };
 
 window.getChartSeriesJson = function (jsObject) {
