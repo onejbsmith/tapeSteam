@@ -37,6 +37,7 @@ function load3Dchart(n, t) {
                             waitForGlobal("Highcharts",
                                 function () {
                                     var i = looseJsonParse(t);
+                                    console.table(i);
                                     //var i = window.chart3DObject;
                                     //var series = looseJsonParse(t);
                                     //i.series = series;

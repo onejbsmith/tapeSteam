@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace tdaStreamHub.Data
+namespace tapeStream.Server.Data
 {
     /// <summary>
     /// Creates, appends and reads CSV files into new List<class>()

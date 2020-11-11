@@ -1,7 +1,7 @@
 ﻿@*<h3>ChartConfigure</h3>*@
 <RadzenAccordion Style="background-color:transparent">
     <Items>
-        <RadzenAccordionItem Text="@title" Icon="account_balance_wallet" Style="width:100%;display:inline-flex">
+        <RadzenAccordionItem Text="@showTitle" Icon="account_balance_wallet" Style="width:100%;display:inline-flex">
 
             <label style="width:90%"> <RadzenSlider Min="0" Max="60" @bind-Value=@seconds Style="width:80%" />&nbsp;@seconds&nbsp;seconds</label>
 
@@ -11,9 +11,25 @@
 
 @code {
     [Parameter]
-    public string title { get; set; }
+
+    public   string title
+    {
+        get { return _title1; }
+        set { _title1 = value;
+            title0 = value;
+            seconds = seconds + 1;
+            seconds = seconds - 1;
+        }
+    }
+    private string _title1;
+
+    public static string title1 { get; set; }
+
+
+    static string title0;
 
     private static string showTitle { get; set; }
+
 
     public static int seconds
     {
@@ -21,11 +37,12 @@
         set
         {
             _seconds = value;
-            
-            //if (_seconds == 0)
-            //   showTitle = ChartConfigure.title;
-            //else
-            //    showTitle = $"{ChartConfigure.title} Aggregated for {ChartConfigure.seconds} seconds";
+
+            if (_seconds == 0)
+                showTitle = title0;
+            else
+                showTitle = $"{title0} Aggregated for {seconds} seconds";
         }
     }
-    private static int _seconds;}
+    private static int _seconds = 0;
+    }

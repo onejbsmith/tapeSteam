@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace tdaStreamHub
+namespace tapeStream.Server
 {
     public class Program
     {

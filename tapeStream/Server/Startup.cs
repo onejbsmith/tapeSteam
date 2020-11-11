@@ -11,10 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using tapeStream.Shared;
-using tdaStreamHub.Data;
-using tdaStreamHub.Hubs;
+using tapeStream.Server.Data;
+using tapeStream.Server.Hubs;
 
-namespace tdaStreamHub
+namespace tapeStream.Server
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace tdaStreamHub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
-            services.AddScoped<tdaStreamHub.Data.BrowserService>(); // scoped service
+            services.AddScoped<tapeStream.Server.Data.BrowserService>(); // scoped service
             services.AddTransient<BlazorTimer>();
 
             services.AddBlazorise(options =>

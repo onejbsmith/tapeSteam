@@ -1,5 +1,5 @@
 ﻿@*<h3>HubMonitor</h3>*@
-@using tdaStreamHub.Data; 
+@using tapeStream.Server.Data;
 @using System.Timers;
 <RadzenCard>
     <div>
@@ -13,18 +13,18 @@
     </div>
     <RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
 </RadzenCard>
-    @code {
-        [Parameter]
-        public bool logHub0 { get; set; }
+@code {
+    [Parameter]
+    public bool logHub0 { get; set; }
 
-        public bool logHub { get; set; }
-        [Parameter]
-        public string clock { get; set; }
-        [Parameter]
-        public Dictionary<string, int> dictTopicCounts { get; set; } = new Dictionary<string, int>();
+    public bool logHub { get; set; }
+    [Parameter]
+    public string clock { get; set; }
+    [Parameter]
+    public Dictionary<string, int> dictTopicCounts { get; set; } = new Dictionary<string, int>();
 
-        [Parameter]
-        public string logTopics { get; set; } = "";
+    [Parameter]
+    public string logTopics { get; set; } = "";
 
-    }
+}
 

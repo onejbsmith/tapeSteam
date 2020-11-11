@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using tapeStream.Shared;
-using tdaStreamHub.Data;
+using tapeStream.Server.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace tdaStreamHub.Controllers
+namespace tapeStream.Server.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]

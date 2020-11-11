@@ -5,7 +5,7 @@ using System.Linq;
 /// <summary>
 /// TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Get Source Control functioning
 /// </summary>
-namespace tdaStreamHub.Data
+namespace tapeStream.Server.Data
 {
 
     public class TDAmertradeApiEndpoints

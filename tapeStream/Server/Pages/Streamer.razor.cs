@@ -3,9 +3,9 @@ using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using tdaStreamHub.Data;
+using tapeStream.Server.Data;
 
-namespace tdaStreamHub.Pages
+namespace tapeStream.Server.Pages
 {
     public partial class Streamer
     {

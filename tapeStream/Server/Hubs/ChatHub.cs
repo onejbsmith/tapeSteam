@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace tdaStreamHub.Hubs
+namespace tapeStream.Server.Hubs
 {
     public class ChatHub : Hub
     {

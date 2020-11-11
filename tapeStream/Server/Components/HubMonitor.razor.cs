@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using tapeStream.Shared;
 
-namespace tdaStreamHub.Components
+namespace tapeStream.Server.Components
 {
     /// TODO: 1. Make Hub a Shared Component
     public partial class HubMonitor

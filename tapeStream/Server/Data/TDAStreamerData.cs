@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
-namespace tdaStreamHub.Data
+namespace tapeStream.Server.Data
 {
     /// <summary>
     /// To hold realtime arrays of streamed data 

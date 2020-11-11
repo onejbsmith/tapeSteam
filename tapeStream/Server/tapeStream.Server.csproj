@@ -5,7 +5,7 @@
     <ApplicationIcon></ApplicationIcon>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
-    <PackageId>tdaStreamHub</PackageId>
+    <PackageId>tapeStream.Server</PackageId>
     <Authors>JBS Sr</Authors>
     <Company>Smith Family Legacy</Company>
     <Product>tapeStream</Product>

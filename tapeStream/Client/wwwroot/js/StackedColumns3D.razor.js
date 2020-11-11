@@ -7,10 +7,11 @@ window.chart3DObject = {
     chart: {
         type: 'column',
         zoomType: 'x',
+        backgroundColor: 'gainsboro',
         panning: true,
         panKey: 'shift',
         options3d: {
-            enabled: true,
+            enabled: false,
             alpha: 15,
             beta: 15,
             viewDistance: 25,
@@ -43,18 +44,59 @@ window.chart3DObject = {
             style: {
                 fontSize: '16px'
             }
-        }
+        },
+        plotBands:
+            [
+                { // mark the weekend
+                    color: '#FCFFC5',
+                    from: 0,                    /// Date.UTC(2010, 0, 2),
+                    to: 0,                      /// Date.UTC(2010, 0, 4),
+                    label:
+                    {
+                        text: 'I am a label',   // Content of the label. 
+                        align: 'left',          // Positioning of the label. 
+                        x: 0,
+                        y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
+                    }
+                }
+            ],
+        plotLines: [{
+            color: 'red', // Color value
+            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+            value: 3, // Value of where the line will appear
+            width: 0 // Width of the line    
+        }]
     },
 
     yAxis: {
         allowDecimals: false,
         min: 0,
-        max: 5000,
+        max: 10000,
         title: {
             text: 'Number of fruits',
             skew3d: true
-        }
-    },
+        },
+        plotBands:
+            [
+                {                               /// mark the weekend
+                    color: '#FCFFC5',
+                    from: 0,                    /// Date.UTC(2010, 0, 2),
+                    to: 0,                      /// Date.UTC(2010, 0, 4),
+                    label:
+                    {
+                        text: 'I am a label',   // Content of the label. 
+                        align: 'left',          // Positioning of the label. 
+                        x: +10,                  // Amount of pixels the label will be repositioned according to the alignment. 
+                        y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
+                   }
+                }
+            ],
+        plotLines: [{
+            color: 'red', // Color value
+            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+            value: 3, // Value of where the line will appear
+            width: 2 // Width of the line    
+        }] },
 
 
 
@@ -85,82 +127,7 @@ window.chart3DObject = {
             //color: 'limegreen',
             stack: 'female'
         },
-        {
-            name: 'Jane2',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane3',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane4',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane5',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane6',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane7',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane8',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane9',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane12',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane13',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane14',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane15',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane16',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane17',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }, {
-            name: 'Jane18',
-            data: [2, 5, 6, 2, 1],
-            //color: 'limegreen',
-            stack: 'female'
-        }]
+        ]
 }
 
 window.Initialize = function (dotNetObj) {
@@ -172,6 +139,10 @@ window.getChartSeriesJson = function (jsObject) {
 };
 
 window.getChartJson = function (jsObject) {
+    var json = JSON.stringify(window.chart3DObject);
+    console.log("window.getChartJson");
+    console.log(json);
+
     dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(window.chart3DObject));
 };
 

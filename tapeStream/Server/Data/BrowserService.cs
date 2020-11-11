@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace tdaStreamHub.Data
+namespace tapeStream.Server.Data
 {
     public class BrowserService
     {

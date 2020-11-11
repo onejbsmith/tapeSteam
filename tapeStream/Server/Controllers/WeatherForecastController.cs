@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using tapeStream.Shared;
 
-namespace tdaStreamHub.Controllers
+namespace tapeStream.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]

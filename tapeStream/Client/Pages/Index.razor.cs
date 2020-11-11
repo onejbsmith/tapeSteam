@@ -157,6 +157,7 @@ namespace tapeStream.Client.Pages
         #region Page Methods
         protected override async Task OnInitializedAsync()
         {
+
             /// Init parameters so don't get "null" error
             await InitializeData();
 

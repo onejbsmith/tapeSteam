@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using tapeStream.Shared;
-using tdaStreamHub.Data;
+using tapeStream.Server.Data;
 
-namespace tdaStreamHub.Components
+namespace tapeStream.Server.Components
 {
     public partial class TDAStreamer
     {

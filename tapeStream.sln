@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Client", "tapeSt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Shared", "tapeStream\Shared\tapeStream.Shared.csproj", "{B75BD078-5687-45E7-8EE1-179DE9A14E29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdaStreamHub", "tapeStream\Server\tdaStreamHub.csproj", "{476BFDC5-DE96-45ED-A7C6-FC627A00B000}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Server", "tapeStream\Server\tapeStream.Server.csproj", "{476BFDC5-DE96-45ED-A7C6-FC627A00B000}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighchartsUsingBlazor", "..\..\HighCharts\HighchartsUsingBlazor\HighchartsUsingBlazor.csproj", "{D559F4E9-011E-4BBA-AFED-85713D98FFB6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTrader", "..\..\BlazorTrader\BlazorTrader.csproj", "{834F17A9-F536-4272-BD63-293AEDAC22DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.HighCharts", "..\..\Libaries\HighCharts\Blazor.HighCharts\Blazor.HighCharts.csproj", "{2A52A773-8D90-42B1-9417-AC48577B0C5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.HighCharts", "..\..\Libaries\HighCharts\Blazor.HighCharts\Blazor.HighCharts.csproj", "{2A52A773-8D90-42B1-9417-AC48577B0C5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighCharts.Charts.Basic", "..\Components\HighCharts\HighCharts.Charts.Basic\HighCharts.Charts.Basic.csproj", "{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}"
 EndProject

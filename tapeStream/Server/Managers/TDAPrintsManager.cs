@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared;
 
-namespace tdaStreamHub.Data
+namespace tapeStream.Server.Data
 {
     public class TDAPrintsManager
     {

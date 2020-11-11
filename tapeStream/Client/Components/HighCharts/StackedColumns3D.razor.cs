@@ -16,6 +16,8 @@ namespace tapeStream.Client.Components.HighCharts
 {
     public partial class StackedColumns3D
     {
+        List<string> lstPrices = new List<string>();
+
 
         [Parameter]
         public Dictionary<string, BookDataItem[]> bookData
@@ -47,17 +49,21 @@ namespace tapeStream.Client.Components.HighCharts
             stack: 'female'
         }]";
 
+        public int seconds { get; set; }
+
         string name = "not set";
 
         static StackedColumns3DChart chart = new StackedColumns3DChart();
 
         static Dictionary<string, string> dictSeriesColor;
-        
+
         static TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         protected override async Task OnInitializedAsync()
         {
             dictSeriesColor = SetSeriesColors();
+            //ChartConfigure.seconds = 3;
+ 
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -76,13 +82,14 @@ namespace tapeStream.Client.Components.HighCharts
         public async Task getChartJson(string jsonResponse)
         {
             /// get the chart as a POCO 
+            Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
             chart = JsonSerializer.Deserialize<StackedColumns3DChart>(jsonResponse);
 
             /// We set some static chart Properties here and pass back to js
-            chart.title.text = ChartConfigure.seconds.ToString();
+            chart.title.text = "";
             chart.chart.options3d.enabled = true;
             chart.yAxis.title.text = "Size";
-            chart.plotOptions.series.pointWidth = 100;
+            //chart.plotOptions.series.pointWidth = 100;
 
             chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
 
@@ -99,15 +106,15 @@ namespace tapeStream.Client.Components.HighCharts
                 /// Get the price range min and max over all items in the dictionary
                 var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
                 var maxPrice = 0m; // bookDataItems.Max(items => items.Value.Max(item => item.Price));
-                var seriesOrder = new string[] { "bids", "salesAtBid", "spread", "salesAtAsk", "asks" };
+                var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
 
                 /// Set up the Categories list
-                var lstPrices = new List<string>();
+                //var lstPrices = new List<string>();
                 foreach (var name in seriesOrder)
                 {
                     foreach (var item in bookDataItems[name])
                     {
-                        if (!lstPrices.Contains(item.Price.ToString("n2"))) 
+                        if (!lstPrices.Contains(item.Price.ToString("n2")))
                             lstPrices.Add(item.Price.ToString("n2"));
 
                         minPrice = Math.Min(item.Price, minPrice);
@@ -115,19 +122,33 @@ namespace tapeStream.Client.Components.HighCharts
                     }
                 }
                 lstPrices.Sort();
-
+                var midPrice = (minPrice + maxPrice) / 2;
+                var n = 75;
+                /// Cull the list of prices if it's more than 100
+                if (lstPrices.Count > n)
+                {
+                    var avgPrice = (Convert.ToDecimal(lstPrices.First()) + Convert.ToDecimal(lstPrices.Last())) / 2;
+                    if (midPrice < avgPrice)
+                        /// Remove higher prices
+                        lstPrices = lstPrices.ToArray().Take(n).ToList();
+                    else
+                        /// Remove lower prices
+                        lstPrices = lstPrices.ToArray().Skip(lstPrices.Count - n).ToList();
+                }
                 /// Picture the spread as two 0 points, one at high bid, one at low ask
-                AddSpreadPointsToBookData(bookDataItems);
-                
+                //AddSpreadPointsToBookData(bookDataItems);
+
                 var categories = lstPrices;
 
-                /// Convert BookDataItem[] to Series[]
-                var seriesList = new List<Series>();
+                chart.xAxis.categories = categories.ToArray();
+              
+                /// Convert BookDataItem[] to Series1[]
+                var seriesList = new List<Series1>();
                 for (int i = 0; i < bookDataItems.Count; i++)
                 {
                     /// Create the series
                     var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
-                    var seriesItem = new Series()   /// Chart Series item
+                    var seriesItem = new Series1()   /// Chart Series1 item
                     {
                         name = (seriesName == "salesAtAsk") ? "Buys" : seriesName == "salesAtBid" ? "Sells" : textInfo.ToTitleCase(seriesName),
                         // This array needs to be the 100 slots and Size put in slot for Price
@@ -139,22 +160,22 @@ namespace tapeStream.Client.Components.HighCharts
                     /// Fill out the series data 
                     foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
                     {
-                        /// Place bookitem Sizes in Series data
+                        /// Place bookitem Sizes in Series1 data
                         var index = categories.IndexOf(item.Price.ToString("n2"));
 
                         seriesItem.data[index] = (int)item.Size;
                     }
-                    /// Add to chart Series
+                    /// Add to chart Series1
                     seriesList.Add(seriesItem);
-                    /// Set chart Series
-                    chart.series = seriesList.ToArray();
+                    /// Set chart Series1
                 }
+                chart.series = seriesList.ToArray();
 
                 /// Send the new data to the HighChart3D component
                 /// We should only send the series and the categories, not the whole chart
                 chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
 
-                //var chart3DseriesJson = JsonSerializer.Serialize<Series[]>(chart.series); ;
+                //var chart3DseriesJson = JsonSerializer.Serialize<Series1[]>(chart.series); ;
                 //var chart3DxAxisJson = JsonSerializer.Serialize<Xaxis>(chart.xAxis);
 
 
@@ -205,120 +226,4 @@ namespace tapeStream.Client.Components.HighCharts
             return dictSeriesColor;
         }
     }
-    #region HighChart Classes
-    public class StackedColumns3DChart
-    {
-        public Chart chart { get; set; }
-        public Title title { get; set; }
-        public Xaxis xAxis { get; set; }
-        public Yaxis yAxis { get; set; }
-        public Plotoptions plotOptions { get; set; }
-        public Exporting exporting { get; set; }
-        public Series[] series { get; set; }
-    }
-    public class Series
-    {
-        public string name { get; set; }
-        public int?[] data { get; set; }
-        public string stack { get; set; }
-        public string color { get; set; }
-    }
-
-    public class Chart
-    {
-        public string type { get; set; }
-        public Options3d options3d { get; set; }
-        public string zoomType { get; set; }
-        public bool panning { get; set; }
-        public string panKey { get; set; }
-    }
-    public class Plotoptions
-    {
-        public Column column { get; set; }
-        public Series1 series { get; set; }
-
-    }
-
-    public class Series1
-    {
-        public int pointWidth { get; set; }
-    }
-
-    public class Exporting
-    {
-        public Menuitemdefinitions menuItemDefinitions { get; set; }
-        public Buttons buttons { get; set; }
-    }
-    public class Options3d
-    {
-        public bool enabled { get; set; }
-        public int alpha { get; set; }
-        public int beta { get; set; }
-        public int viewDistance { get; set; }
-        public int depth { get; set; }
-    }
-
-    public class Title
-    {
-        public string text { get; set; }
-    }
-
-    public class Xaxis
-    {
-        public string[] categories { get; set; }
-        public Labels labels { get; set; }
-    }
-
-    public class Labels
-    {
-        public bool skew3d { get; set; }
-        public Style style { get; set; }
-    }
-
-    public class Style
-    {
-        public string fontSize { get; set; }
-    }
-
-    public class Yaxis
-    {
-        public bool allowDecimals { get; set; }
-        public int min { get; set; }
-        public Title1 title { get; set; }
-    }
-
-    public class Title1
-    {
-        public string text { get; set; }
-        public bool skew3d { get; set; }
-    }
-
-    public class Column
-    {
-        public string stacking { get; set; }
-        public int depth { get; set; }
-    }
-
-
-    public class Menuitemdefinitions
-    {
-        public Label label { get; set; }
-    }
-
-    public class Label
-    {
-        public string text { get; set; }
-    }
-
-    public class Buttons
-    {
-        public Contextbutton contextButton { get; set; }
-    }
-
-    public class Contextbutton
-    {
-        public string[] menuItems { get; set; }
-    }
-    #endregion
-
 }
