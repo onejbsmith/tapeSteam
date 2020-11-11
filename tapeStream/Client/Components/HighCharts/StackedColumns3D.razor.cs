@@ -59,11 +59,13 @@ namespace tapeStream.Client.Components.HighCharts
 
         static TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
+        string chartSeriesJson = "";
+
         protected override async Task OnInitializedAsync()
         {
             dictSeriesColor = SetSeriesColors();
             //ChartConfigure.seconds = 3;
- 
+
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -103,77 +105,29 @@ namespace tapeStream.Client.Components.HighCharts
             try
             {
 
-                /// Get the price range min and max over all items in the dictionary
-                var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
-                var maxPrice = 0m; // bookDataItems.Max(items => items.Value.Max(item => item.Price));
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
+                /// Get the price range min and max over all items in the dictionary
+                Chart_MaintainPriceAxis(bookDataItems, seriesOrder);                //AddSpreadPointsToBookData(bookDataItems);
+                var categories = lstPrices.ToArray();
+                chart.xAxis.categories = categories;
 
-                /// Set up the Categories list
-                //var lstPrices = new List<string>();
-                foreach (var name in seriesOrder)
-                {
-                    foreach (var item in bookDataItems[name])
-                    {
-                        if (!lstPrices.Contains(item.Price.ToString("n2")))
-                            lstPrices.Add(item.Price.ToString("n2"));
+                /// 
+                Chart_AddSpreadPlotBand(bookDataItems);
 
-                        minPrice = Math.Min(item.Price, minPrice);
-                        maxPrice = Math.Max(item.Price, maxPrice);
-                    }
-                }
-                lstPrices.Sort();
-                var midPrice = (minPrice + maxPrice) / 2;
-                var n = 75;
-                /// Cull the list of prices if it's more than 100
-                if (lstPrices.Count > n)
-                {
-                    var avgPrice = (Convert.ToDecimal(lstPrices.First()) + Convert.ToDecimal(lstPrices.Last())) / 2;
-                    if (midPrice < avgPrice)
-                        /// Remove higher prices
-                        lstPrices = lstPrices.ToArray().Take(n).ToList();
-                    else
-                        /// Remove lower prices
-                        lstPrices = lstPrices.ToArray().Skip(lstPrices.Count - n).ToList();
-                }
-                /// Picture the spread as two 0 points, one at high bid, one at low ask
-                //AddSpreadPointsToBookData(bookDataItems);
-
-                var categories = lstPrices;
-
-                chart.xAxis.categories = categories.ToArray();
-              
                 /// Convert BookDataItem[] to Series1[]
                 var seriesList = new List<Series1>();
-                for (int i = 0; i < bookDataItems.Count; i++)
-                {
-                    /// Create the series
-                    var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
-                    var seriesItem = new Series1()   /// Chart Series1 item
-                    {
-                        name = (seriesName == "salesAtAsk") ? "Buys" : seriesName == "salesAtBid" ? "Sells" : textInfo.ToTitleCase(seriesName),
-                        // This array needs to be the 100 slots and Size put in slot for Price
-                        data = new int?[categories.Count],
-                        color = dictSeriesColor[seriesName],
-                        stack = seriesName == "asks" || seriesName == "salesAtAsk" ? "Sell Demand" : "Buy Demand"
-                    };
-
-                    /// Fill out the series data 
-                    foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
-                    {
-                        /// Place bookitem Sizes in Series1 data
-                        var index = categories.IndexOf(item.Price.ToString("n2"));
-
-                        seriesItem.data[index] = (int)item.Size;
-                    }
-                    /// Add to chart Series1
-                    seriesList.Add(seriesItem);
-                    /// Set chart Series1
-                }
+                Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
                 chart.series = seriesList.ToArray();
 
-                /// Send the new data to the HighChart3D component
-                /// We should only send the series and the categories, not the whole chart
+                /// Send the new data and settings to the HighChart3D component
+
                 chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+                ///
+                /// We should only send the series and the categories, not the whole chart
+                /// But minor amouunt of config data involved in redraw
+                /// Shuld only send series i case of a rolling series, 
+                /// instead of sending the whole matrix of data, just send the new row.              /// chartSeriesJson = System.Text.Json.JsonSerializer.Serialize<Series1[]>(chart.series);
+
 
                 //var chart3DseriesJson = JsonSerializer.Serialize<Series1[]>(chart.series); ;
                 //var chart3DxAxisJson = JsonSerializer.Serialize<Xaxis>(chart.xAxis);
@@ -190,11 +144,94 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
+        private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems)
+        {
+            var highBid = bookDataItems["bids"][0].Price;
+            var lowAsk = bookDataItems["asks"][0].Price;
+            chart.xAxis.plotBands = new Plotband[]
+            {
+                    new Plotband()
+                    { from=highBid,
+                        to =lowAsk,
+                        color="#333",
+                        label= new Label()
+                        {
+                            text="Spread"
+                        }
+
+                    }
+            };
+        }
+
+        private static void Chart_BuildSeriesData(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder, string[] categories, List<Series1> seriesList)
+        {
+            for (int i = 0; i < bookDataItems.Count; i++)
+            {
+                /// Create the series
+                var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
+                var seriesItem = new Series1()   /// Chart Series1 item
+                {
+                    name = (seriesName == "salesAtAsk") ? "Buys" : seriesName == "salesAtBid" ? "Sells" : textInfo.ToTitleCase(seriesName),
+                    // This array needs to be the 100 slots and Size put in slot for Price
+                    data = new int?[categories.Length],
+                    color = dictSeriesColor[seriesName],
+                    stack = seriesName == "asks" || seriesName == "salesAtAsk" ? "Sell Demand" : "Buy Demand"
+                };
+
+                /// Fill out the series data 
+                foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
+                {
+                    /// Place bookitem Sizes in Series1 data
+                    var index = categories.ToList().IndexOf(item.Price.ToString("n2"));
+
+                    seriesItem.data[index] = (int)item.Size;
+                }
+                /// Add to chart Series1
+                seriesList.Add(seriesItem);
+                /// Set chart Series1
+            }
+        }
+
+        private void Chart_MaintainPriceAxis(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder)
+        {
+            var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
+            var maxPrice = 0m; // bookDataItems.Max(items => items.Value.Max(item => item.Price));
+
+            /// Set up the Categories list
+            //var lstPrices = new List<string>();
+            foreach (var name in seriesOrder)
+            {
+                foreach (var item in bookDataItems[name])
+                {
+                    if (!lstPrices.Contains(item.Price.ToString("n2")))
+                        lstPrices.Add(item.Price.ToString("n2"));
+
+                    minPrice = Math.Min(item.Price, minPrice);
+                    maxPrice = Math.Max(item.Price, maxPrice);
+                }
+            }
+            lstPrices.Sort();
+
+            var midPrice = (minPrice + maxPrice) / 2;
+            var n = 75;
+            /// Cull the list of prices if it's more than 100
+            if (lstPrices.Count > n)
+            {
+                var avgPrice = (Convert.ToDecimal(lstPrices.First()) + Convert.ToDecimal(lstPrices.Last())) / 2;
+                if (midPrice < avgPrice)
+                    /// Remove higher prices
+                    lstPrices = lstPrices.ToArray().Take(n).ToList();
+                else
+                    /// Remove lower prices
+                    lstPrices = lstPrices.ToArray().Skip(lstPrices.Count - n).ToList();
+            }
+            /// Picture the spread as two 0 points, one at high bid, one at low ask
+        }
+
         private static void AddSpreadPointsToBookData(Dictionary<string, BookDataItem[]> bookDataItems)
         {
             /// Picture the spread one at high bid one at low ask
-            var highBid = bookDataItems["bids"][0].Price;
-            var lowAsk = bookDataItems["asks"][0].Price;
+
 
             /// Create a series for spread with the two points above at 0 SIze
             /// and add to bookDataItems that just came in

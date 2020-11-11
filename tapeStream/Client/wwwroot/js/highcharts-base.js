@@ -1,4 +1,126 @@
 ﻿"use strict";
+
+window.loadHighchart = function (chartDivName, chartJson) {
+    loadScript("https://code.highcharts.com/highcharts.js").then(
+        function () {
+            loadScript("https://code.highcharts.com/modules/annotations.js").then(
+                function () {
+                    loadScript("https://code.highcharts.com/stock/highstock.js").then(
+                        function () {
+                            loadScript("https://code.highcharts.com/modules/exporting.js").then(
+                                function () {
+                                    loadScript("https://code.highcharts.com/highcharts-3d.js").then(
+                                        function () {
+                                            waitForGlobal("Highcharts", function () {
+                                                /// if window.chartObj is empty it's our first time rendering the chart
+
+                                                /// if window.chartObj is empty it's our first time rendering the chart
+                                                var isFirstTime = JSON.stringify(window.chartObj) === '{}';
+                                                //console.debug("window.loadHighchart => " + chartJson);
+
+                                                /// turn json to js object (deserialize)
+                                                window.chartObj = looseJsonParse(chartJson);
+                                                if (isFirstTime) {
+                                                    console.log("window.loadHighchart");
+                                                    console.table(window.chartObj);
+                                                }
+                                                //console.table(window.chart);
+                                                /// render the chart
+                                                window.chart = Highcharts.chart(chartDivName, window.chartObj);
+                                                /// if more than one 3d on page, only first gets this
+                                                $(window.chart.container).on('mousedown.hc touchstart.hc', function (eStart) {
+                                                    eStart = chart.pointer.normalize(eStart);
+
+                                                    var posX = eStart.pageX,
+                                                        posY = eStart.pageY,
+                                                        alpha = chart.options.chart.options3d.alpha,
+                                                        beta = chart.options.chart.options3d.beta,
+                                                        newAlpha,
+                                                        newBeta,
+                                                        sensitivity = 5; // lower is more sensitive
+
+                                                    $(document).on({
+                                                        'mousemove.hc touchdrag.hc': function (e) {
+                                                            // Run beta
+                                                            newBeta = beta + (posX - e.pageX) / sensitivity;
+                                                            chart.options.chart.options3d.beta = newBeta;
+
+                                                            // Run alpha
+                                                            newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                                            chart.options.chart.options3d.alpha = newAlpha;
+
+                                                            chart.redraw(false);
+                                                        },
+                                                        'mouseup touchend': function () {
+                                                            $(document).off('.hc');
+                                                        }
+                                                    });
+                                                });
+
+                                                SetLanguage();
+
+                                                /// send the chart object back to the server
+                                                /// (this should only be done once to initialize the cs chart object)
+                                                //if (isFirstTime)
+                                                if (isFirstTime) {
+                                                    var json = JSON.stringify(window.chartObj);
+                                                    console.log("window.getChartJson");
+                                                    console.log(json);
+                                                    window.getChartJson();
+                                                    return json;  
+                                                }
+                                      
+                                            )
+                                        }, function () { })
+                                }, function () { })
+                        }, function () { })
+                },
+                function () { })
+        },
+        function () { })
+}
+
+window.Initialize = function (dotNetObj) {
+    this.dotNetObject = dotNetObj;
+};
+
+window.getChartSeriesJson = function (jsObject) {
+    dotNetObject.invokeMethodAsync('getChartSeriesJson', JSON.stringify(window.chart3DObject.series));
+};
+
+window.getChartJson = function (isFirstTime) {
+    dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(window.chart3DObject));
+};
+
+/// Replace the chart series 
+window.updateHighchartSeries = function (seriesJson) {
+    if (chart.series.length) {
+        var series = looseJsonParse(seriesJson);
+        for (var i = 0; i < series.length; i++) {
+            /// replace the series
+            chart.series[i].remove();
+            chart.addSeries(series[i]);
+        }
+    }
+}
+
+/// Append the chart series
+window.appendHighchartSeries = function (seriesJson, isShifted) {
+    if (chart.series.length) {
+        var series = looseJsonParse(seriesJson);
+
+        /// Put the new point into the first value of the series
+        /// Will not replace the actual value in the series
+        for (var i = 0; i < series.length; i++) {
+            /// append a point to the series
+            chart.series[i].addPoint(series[i].data[0], true, isShifted);
+        }
+    }
+}
+
+
+
+
 function loadHighchart(n, t) {
     loadScript("https://code.highcharts.com/stock/highstock.js").then(function () {
         waitForGlobal("Highcharts", function () {
@@ -51,8 +173,7 @@ function load3Dchart(n, t) {
         function () { })
 }
 
-function setChart3Dseries( seriesJson, xAxisJson)
-{
+function setChart3Dseries(seriesJson, xAxisJson) {
     var series = looseJsonParse(seriesJson);
     var xAxis = looseJsonParse(xAxisJson);
     window.chart3DObject.series = series;
@@ -108,111 +229,8 @@ function loadScript(n) {
 }
 
 window.loadHighchart = loadHighchart;
-window.loadStockchart = loadStockchart;
-window.load3Dchart = load3Dchart;
-window.setChart3Dseries = setChart3Dseries;
 
 var waitForGlobal = function waitForGlobal(n, t) {
     window[n] ? t() : setTimeout(function () { waitForGlobal(n, t) }, 100)
 };
 
-window.loadHighchart = function (chartDivName, chartJson) {
-    loadScript("https://code.highcharts.com/highcharts.js").then(
-        function () {
-            loadScript("https://code.highcharts.com/modules/annotations.js").then(
-                function () {
-                    loadScript("https://code.highcharts.com/stock/highstock.js").then(
-                        function () {
-                            loadScript("https://code.highcharts.com/modules/exporting.js").then(
-                                function () {
-                                    loadScript("https://code.highcharts.com/highcharts-3d.js").then(
-                                        function () {
-                                            waitForGlobal("Highcharts", function () {
-                                                /// if window.chartObj is empty it's our first time rendering the chart
-
-                                                /// if window.chartObj is empty it's our first time rendering the chart
-                                                var isFirstTime = JSON.stringify(window.chartObj) === '{}';
-                                                //console.debug("window.loadHighchart => " + chartJson);
-
-                                                /// turn json to js object (deserialize)
-                                                window.chartObj = looseJsonParse(chartJson);
-                                                console.table(window.chartObj);
-                                                //console.table(window.chart);
-                                                /// render the chart
-                                                window.chart = Highcharts.chart(chartDivName, window.chartObj);
-                                                /// if more than one 3d on page, only first gets this
-                                                $(window.chart.container).on('mousedown.hc touchstart.hc', function (eStart) {
-                                                    eStart = chart.pointer.normalize(eStart);
-
-                                                    var posX = eStart.pageX,
-                                                        posY = eStart.pageY,
-                                                        alpha = chart.options.chart.options3d.alpha,
-                                                        beta = chart.options.chart.options3d.beta,
-                                                        newAlpha,
-                                                        newBeta,
-                                                        sensitivity = 5; // lower is more sensitive
-
-                                                    $(document).on({
-                                                        'mousemove.hc touchdrag.hc': function (e) {
-                                                            // Run beta
-                                                            newBeta = beta + (posX - e.pageX) / sensitivity;
-                                                            chart.options.chart.options3d.beta = newBeta;
-
-                                                            // Run alpha
-                                                            newAlpha = alpha + (e.pageY - posY) / sensitivity;
-                                                            chart.options.chart.options3d.alpha = newAlpha;
-
-                                                            chart.redraw(false);
-                                                        },
-                                                        'mouseup touchend': function () {
-                                                            $(document).off('.hc');
-                                                        }
-                                                    });
-                                                });
-
-                                                SetLanguage();
-
-                                                var json = JSON.stringify(window.chartObj);
-                                                console.table(json);
-                                                return json;
-                                                /// send the chart object back to the server
-                                                /// (this should only be done once to initialize the cs chart object)
-                                                //if (isFirstTime)
-                                                window.getChartJson()
-
-                                            }
-                                            )
-                                        }, function () { })
-                                }, function () { })
-                        }, function () { })
-                },
-                function () { })
-        },
-        function () { })
-}
-
-/// Replace the chart series 
-window.updateHighchartSeries = function (seriesJson) {
-    if (chart.series.length) {
-        var series = looseJsonParse(seriesJson);
-        for (var i = 0; i < series.length; i++) {
-            /// replace the series
-            chart.series[i].remove();
-            chart.addSeries(series[i]);
-        }
-    }
-}
-
-/// Append the chart series
-window.appendHighchartSeries = function (seriesJson, isShifted) {
-    if (chart.series.length) {
-        var series = looseJsonParse(seriesJson);
-
-        /// Put the new point into the first value of the series
-        /// Will not replace the actual value in the series
-        for (var i = 0; i < series.length; i++) {
-            /// append a point to the series
-            chart.series[i].addPoint(series[i].data[0], true, isShifted);
-        }
-    }
-}

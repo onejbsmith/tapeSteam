@@ -1,11 +1,15 @@
 ﻿
 @using tapeStream.Client.Data
+@using System.Timers
 
 <div class="top-row pl-4 navbar navbar-dark">
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
-    </button>    
+    </button>
     <a class="navbar-brand" href=""><i style="color:#009bec">tape</i>Stream</a>
+
+    <MatChip Class="text-white" Label="@timeOfDay"></MatChip>
+
     <img src="@hubStatus" style="display:none;width:16px;" title="tapeStream Hub Connection Status" />
 
     <img src="favicon.ico" style="width:16px;" />
@@ -61,12 +65,21 @@
 
     string hubStatus = "";
 
+    public string timeOfDay;
+
+    Timer timerClock = new Timer(1000);
+
+
+
     protected override async Task OnInitializedAsync()
     {
         hubStatus = TDAStreamerData.hubStatus;
 
         TDAStreamerData.OnHubStatusChanged += HubStatusChanged;
         await Task.CompletedTask;
+
+        timerClock.Elapsed += async (sender, e) => await timerClock_Elapsed(sender, e);
+        timerClock.Start();
     }
 
     public void HubStatusChanged()
@@ -78,8 +91,13 @@
     private async Task StateChangedAsync()
     {
         await InvokeAsync(() => StateHasChanged());
-    }
+        }
 
+    private async Task timerClock_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        timeOfDay = DateTime.Now.ToString("dddd, MMM d, yyyy   h:mm tt");
+        await Task.CompletedTask;
+    }
 
     private void ToggleNavMenu()
     {

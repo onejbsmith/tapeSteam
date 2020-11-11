@@ -27,6 +27,6 @@
 <div style="display:grid">
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart Json="@chart3Djson" />
+        <HighChart Json="@chart3Djson"  chartSeriesJson="@chartSeriesJson" updateMode="@HighChart.DataUpdateMode.Replace"/>
     </div>
 </div>

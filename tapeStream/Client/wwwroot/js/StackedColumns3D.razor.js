@@ -7,7 +7,7 @@ window.chart3DObject = {
     chart: {
         type: 'column',
         zoomType: 'x',
-        backgroundColor: 'gray',
+        backgroundColor: 'darkgray',
         panning: true,
         panKey: 'shift',
         options3d: {
@@ -132,21 +132,7 @@ window.chart3DObject = {
         ]
 }
 
-window.Initialize = function (dotNetObj) {
-    this.dotNetObject = dotNetObj;
-};
 
-window.getChartSeriesJson = function (jsObject) {
-    dotNetObject.invokeMethodAsync('getChartSeriesJson', JSON.stringify(window.chart3DObject.series));
-};
-
-window.getChartJson = function (jsObject) {
-    var json = JSON.stringify(window.chart3DObject);
-    console.log("window.getChartJson");
-    console.log(json);
-
-    dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(window.chart3DObject));
-};
 
 //window.getChartSeriesObject = function (jsObject) {
 //    dotNetObject.invokeMethodAsync('getChartSeriesObject', JSON.stringify(window.chart3DObject));

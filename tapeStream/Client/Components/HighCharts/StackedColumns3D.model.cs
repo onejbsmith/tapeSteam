@@ -79,8 +79,8 @@ namespace tapeStream.Client.Components.HighCharts
     public class Plotband
     {
         public string color { get; set; }
-        public int from { get; set; }
-        public int to { get; set; }
+        public decimal from { get; set; }
+        public decimal to { get; set; }
         public Label label { get; set; }
     }
 

@@ -44,6 +44,7 @@ namespace tapeStream.Client.Pages
 #endif
         Timer timerBookColumnsCharts = new Timer(500);
 
+
         #region Chart Data in order of appearance
 #if AllComponents
         /// <summary>
@@ -201,6 +202,7 @@ namespace tapeStream.Client.Pages
             //timerPrintsLineCharts.Start();
 #endif
         }
+
 
         private async Task InitializeData()
         {
