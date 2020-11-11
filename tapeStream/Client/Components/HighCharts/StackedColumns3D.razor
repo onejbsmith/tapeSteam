@@ -1,18 +1,20 @@
 ﻿@*<h3>StackedColumns3D</h3>*@
+@using tapeStream.Client.Components.HighCharts
+@using tapeStream.Client.Components.HighCharts.Base
 
 <style>
     #container {
-        height: 80vh;
+        /*height: 80vh;*/
         /*min-width: 310px;
         max-width: 100hw;*/
-        margin: 0 auto;
+        /*margin: 0 auto;*/
     }
 </style>
 
 @*<h3>HighChart</h3>*@
 
 <div style="width:100%">
-    <ChartConfigure title = "QQQ Matched Level II + Time & Sales"  />
+    <ChartConfigure title="QǬǪ —— Level II + Time & Sales" />
 </div>
 
 @* The chart HTML gets placed here by HighCharts *@
@@ -25,6 +27,6 @@
 <div style="display:grid">
     <div>
         @* Injects the data and redraws the chart *@
-        <tapeStream.Client.Components.HighCharts.Base.HighChart3D Json="@chart3Djson" />
+        <HighChart Json="@chart3Djson" />
     </div>
 </div>

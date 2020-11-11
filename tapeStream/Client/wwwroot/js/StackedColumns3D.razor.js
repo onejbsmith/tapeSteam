@@ -7,7 +7,7 @@ window.chart3DObject = {
     chart: {
         type: 'column',
         zoomType: 'x',
-        backgroundColor: 'gainsboro',
+        backgroundColor: 'gray',
         panning: true,
         panKey: 'shift',
         options3d: {
@@ -45,27 +45,27 @@ window.chart3DObject = {
                 fontSize: '16px'
             }
         },
-        plotBands:
-            [
-                { // mark the weekend
-                    color: '#FCFFC5',
-                    from: 0,                    /// Date.UTC(2010, 0, 2),
-                    to: 0,                      /// Date.UTC(2010, 0, 4),
-                    label:
-                    {
-                        text: 'I am a label',   // Content of the label. 
-                        align: 'left',          // Positioning of the label. 
-                        x: 0,
-                        y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
-                    }
-                }
-            ],
-        plotLines: [{
-            color: 'red', // Color value
-            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
-            value: 3, // Value of where the line will appear
-            width: 0 // Width of the line    
-        }]
+        //plotBands:
+        //    [
+        //        { // mark the weekend
+        //            color: '#FCFFC5',
+        //            from: 0,                    /// Date.UTC(2010, 0, 2),
+        //            to: 0,                      /// Date.UTC(2010, 0, 4),
+        //            label:
+        //            {
+        //                text: 'I am a label',   // Content of the label. 
+        //                align: 'left',          // Positioning of the label. 
+        //                x: 0,
+        //                y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
+        //            }
+        //        }
+        //    ],
+        //plotLines: [{
+        //    color: 'red', // Color value
+        //    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+        //    value: 3, // Value of where the line will appear
+        //    width: 0 // Width of the line    
+        //}]
     },
 
     yAxis: {
@@ -76,27 +76,29 @@ window.chart3DObject = {
             text: 'Number of fruits',
             skew3d: true
         },
-        plotBands:
-            [
-                {                               /// mark the weekend
-                    color: '#FCFFC5',
-                    from: 0,                    /// Date.UTC(2010, 0, 2),
-                    to: 0,                      /// Date.UTC(2010, 0, 4),
-                    label:
-                    {
-                        text: 'I am a label',   // Content of the label. 
-                        align: 'left',          // Positioning of the label. 
-                        x: +10,                  // Amount of pixels the label will be repositioned according to the alignment. 
-                        y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
-                   }
-                }
-            ],
-        plotLines: [{
-            color: 'red', // Color value
-            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
-            value: 3, // Value of where the line will appear
-            width: 2 // Width of the line    
-        }] },
+        //plotBands:
+        //    [
+        //        {                               /// mark the weekend
+        //            color: '#FCFFC5',
+        //            from: 0,                    /// Date.UTC(2010, 0, 2),
+        //            to: 0,                      /// Date.UTC(2010, 0, 4),
+        //            label:
+        //            {
+        //                text: 'I am a label',   // Content of the label. 
+        //                align: 'left',          // Positioning of the label. 
+        //                x: +10,                  // Amount of pixels the label will be repositioned according to the alignment. 
+        //                y: +10,                 // Amount of pixels the label will be repositioned according to the alignment.
+        //           }
+        //        }
+        //    ],
+        //plotLines: [{
+        //    color: 'red', // Color value
+        //    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+        //    value: 3, // Value of where the line will appear
+        //    width: 2 // Width of the line    
+        //}] 
+
+    },
 
 
 
