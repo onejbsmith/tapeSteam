@@ -6,6 +6,98 @@
 @using Syncfusion.Blazor.Charts;
 @using System.Globalization;
 
+<div class="flex-container">
+    <img src="images/TickerTapeIcon.png" style="height:32px" />
+    <h3 style="display:inline;margin-right:20px">
+        <RadzenLink Text="TDA Streaming Hub" Path="https://developer.tdameritrade.com/content/streaming-data" target="_blank" />
+    </h3>
+    <br />
+    <BSBadge IsPill="true" class="alert-primary" style="max-height:24px;position:relative;top:5px">@dateTimeNow</BSBadge>
+    <BSBadge IsPill="true" class="alert-secondary" style="max-height:24px;position:relative;top:5px;">@elapsed</BSBadge>
+</div>
+<div class="flex-container">
+    <RadzenButton Text="Log In" ButtonStyle="ButtonStyle.Primary" Disabled="false" Click="Login" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Send" ButtonStyle="ButtonStyle.Success" Disabled="false" Click="Sends" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Log Out" ButtonStyle="ButtonStyle.Warning" Disabled="false" Click="Logout" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Request" ButtonStyle="ButtonStyle.Secondary" Disabled="false" Click="Requested" Size="Radzen.ButtonSize.Small" />
+</div>
+<div class="flex-container" style="zoom:0.6">
+    <RadzenCheckBoxList @bind-Value="values" TValue="int" Change="@((args) => Change(args, "CheckBoxList with horizontal orientation"))">
+        <Items>
+            <RadzenCheckBoxListItem Text="Listed Book" Value="1" />
+            <RadzenCheckBoxListItem Text="Time & Sales" Value="2" />
+            <RadzenCheckBoxListItem Text="Chart" Value="3" />
+
+            <RadzenCheckBoxListItem Text="Quotes" Value="5" />
+            <RadzenCheckBoxListItem Text="Actives" Value="6" />
+            <RadzenCheckBoxListItem Text="Options" Value="4" />
+        </Items>
+    </RadzenCheckBoxList>
+
+    <RadzenAccordion Style="background-color:transparent;width:100%">
+        <Items>
+            <RadzenAccordionItem Text="Options" Icon="add_shopping_cart" Style="width:100%">
+                <RadzenCard>
+                    <div>
+                        <RadzenLabel Text="Strike:" />
+                        <RadzenNumeric Value="@strike" Max="1000" Min="200" Step="1" />
+                        <br />
+                        <RadzenLabel Text="Option Expiry:" />
+                        <RadzenDatePicker Name="dtpExpiryDate" DateFormat="dddd MMM d, yyyy" Value="@optionExpDate" TValue="DateTime" />
+                    </div>
+                </RadzenCard>
+
+            </RadzenAccordionItem>
+        </Items>
+    </RadzenAccordion>
+</div>
+<div class="flex-container">
+    <RadzenAccordion Style="background-color:transparent;width:100%">
+        <Items>
+            <RadzenAccordionItem Text="Simulator" Icon="settings" Style="width:100%">
+
+                <RadzenCard>
+
+                </RadzenCard>
+
+            </RadzenAccordionItem>
+        </Items>
+    </RadzenAccordion>
+</div>
+
+<div class="grid-container">
+    <RadzenCard>
+        <div>
+            <RadzenCheckBox @bind-Value="@logStreamer" TValue="bool?" Change="@(args => logStreamerChange(args, ""))" />
+            <RadzenLabel Text="TDA Streamer" Style="margin-left: 5px;" Component="CheckBox3" />
+            <BSBadge IsPill="true" class="alert-dark" title="Time elapsed since last data received">@sinceLastData</BSBadge>
+            <BSBadge IsPill="true" class="@statusClass" style="max-height:24px;" title="TDA Streamer Connection Status">@status</BSBadge>
+            <BSBadge IsPill="true" class="alert-black" style="max-height:24px;" title="@admCode">@admStatus</BSBadge>
+            <RadzenTextArea Visible="@((bool)logStreamer)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logText" />
+        </div>
+    </RadzenCard>
+    @*<div>
+            <RadzenCheckBox @bind-Value="@logHub" TValue="bool?" Change="@(args => logHubChange(args, ""))" />
+            <RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;" Component="CheckBox4" />
+            <BSBadge IsPill="true" class="alert-dark" title="Time of last data received">@clock</BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[1]].ToString("n0")' title="@valuesName[1]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[2]].ToString("n0")' title="@valuesName[2]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[3]].ToString("n0")' title="@valuesName[3]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[4]].ToString("n0")' logHubtitle="@valuesName[4]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[5]].ToString("n0")' title="@valuesName[5]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[6]].ToString("n0")' title="@valuesName[6]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[7]].ToString("n0")' title="@valuesName[7]" /></BSBadge>
+            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[8]].ToString("n0")' title="@valuesName[8]" /></BSBadge>
+            <RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
+        </div>*@
+    <div>
+        <HubMonitor logHub0="@logHub" clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+        @*@TDAStreamerData.timeOfTimeAndSales*@
+    </div>
+
+</div>
+
+
 <style>
 
     .flex-container {
@@ -24,8 +116,8 @@
         display: inline-block;
         padding: .5em .4em;
         font-size: 75%;
-/*        margin-right: 5px;
-*/        font-weight: 700;
+        /*        margin-right: 5px;
+        */ font-weight: 700;
         line-height: 1;
         text-align: center;
         white-space: nowrap;
@@ -61,81 +153,6 @@
         zoom: 0.9;
     }
 </style>
-
-<div class="flex-container">
-    <img src="images/TickerTapeIcon.png" style="height:32px" />
-    <h3 style="display:inline;margin-right:20px">
-        <RadzenLink Text="TDA Streaming Hub" Path="https://developer.tdameritrade.com/content/streaming-data" target="_blank" />
-    </h3>
-    <br />
-    <BSBadge IsPill="true" class="alert-primary" style="max-height:24px;position:relative;top:5px">@dateTimeNow</BSBadge>
-    <BSBadge IsPill="true" class="alert-secondary" style="max-height:24px;position:relative;top:5px;">@elapsed</BSBadge>
-</div>
-<div class="flex-container">
-    <RadzenButton Text="Log In" ButtonStyle="ButtonStyle.Primary" Disabled="false" Click="Login" Size="Radzen.ButtonSize.Small" />
-    <RadzenButton Text="Send" ButtonStyle="ButtonStyle.Success" Disabled="false" Click="Sends" Size="Radzen.ButtonSize.Small" />
-    <RadzenButton Text="Log Out" ButtonStyle="ButtonStyle.Warning" Disabled="false" Click="Logout" Size="Radzen.ButtonSize.Small" />
-    <RadzenButton Text="Request" ButtonStyle="ButtonStyle.Secondary" Disabled="false" Click="Requested" Size="Radzen.ButtonSize.Small" />
-</div>
-<div class="flex-container" style="zoom:0.6">
-    <RadzenCheckBoxList @bind-Value="values" TValue="int" Change="@((args) => Change(args, "CheckBoxList with horizontal orientation"))">
-        <Items>
-            <RadzenCheckBoxListItem Text="Listed Book" Value="1" />
-            <RadzenCheckBoxListItem Text="Time & Sales" Value="2" />
-            <RadzenCheckBoxListItem Text="Chart" Value="3" />
-
-            <RadzenCheckBoxListItem Text="Quotes" Value="5" />
-            <RadzenCheckBoxListItem Text="Actives" Value="6" />
-            <RadzenCheckBoxListItem Text="Options" Value="4" />
-        </Items>
-    </RadzenCheckBoxList>
-    <RadzenSplitButton>
-        <ChildContent>
-            <div style="zoom:0.5;">
-                <RadzenLabel Text="Strike:" />
-                <RadzenNumeric Value="@strike" Max="1000" Min="200" Step="1" />
-                <br />
-                <RadzenLabel Text="Option Expiry:" />
-                <RadzenDatePicker Name="dtpExpiryDate" DateFormat="dddd MMM d, yyyy" Value="@optionExpDate" TValue="DateTime" />
-            </div>
-        </ChildContent>
-
-    </RadzenSplitButton>
-</div>
-<div class="flex-container">
-</div>
-
-    <div class="grid-container">
-       <RadzenCard>
-             <div>
-                <RadzenCheckBox @bind-Value="@logStreamer" TValue="bool?" Change="@(args => logStreamerChange(args, ""))" />
-                <RadzenLabel Text="TDA Streamer" Style="margin-left: 5px;" Component="CheckBox3" />
-                <BSBadge IsPill="true" class="alert-dark" title="Time elapsed since last data received">@sinceLastData</BSBadge>
-                <BSBadge IsPill="true" class="@statusClass" style="max-height:24px;" title="TDA Streamer Connection Status">@status</BSBadge>
-                <BSBadge IsPill="true" class="alert-black" style="max-height:24px;" title="@admCode">@admStatus</BSBadge>
-                <RadzenTextArea Visible="@((bool)logStreamer)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logText" />
-            </div>
-        </RadzenCard>
-@*<div>
-        <RadzenCheckBox @bind-Value="@logHub" TValue="bool?" Change="@(args => logHubChange(args, ""))" />
-        <RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;" Component="CheckBox4" />
-        <BSBadge IsPill="true" class="alert-dark" title="Time of last data received">@clock</BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[1]].ToString("n0")' title="@valuesName[1]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[2]].ToString("n0")' title="@valuesName[2]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[3]].ToString("n0")' title="@valuesName[3]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[4]].ToString("n0")' logHubtitle="@valuesName[4]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[5]].ToString("n0")' title="@valuesName[5]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[6]].ToString("n0")' title="@valuesName[6]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[7]].ToString("n0")' title="@valuesName[7]" /></BSBadge>
-        <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[8]].ToString("n0")' title="@valuesName[8]" /></BSBadge>
-        <RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
-    </div>*@
-<div>
-    <HubMonitor logHub0="@logHub" clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
-    @*@TDAStreamerData.timeOfTimeAndSales*@
-</div>
-
-</div>
 @code
 {
 

@@ -16,6 +16,10 @@
   <ItemGroup>
     <Compile Remove="Components\BookGaugeChart.razor.cs" />
     <Compile Remove="Components\BookPieChart.razor.cs" />
+    <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
+    <Compile Remove="Components\HighCharts\highcharts\Market3DColumns.razor.cs" />
+    <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
+    <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
     <Compile Remove="Components\HubMonitorOld.razor.cs" />
     <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
     <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
@@ -38,6 +42,11 @@
   <ItemGroup>
     <Content Remove="Components\BookGaugeChart.razor" />
     <Content Remove="Components\BookPieChart.razor" />
+    <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
+    <Content Remove="Components\HighCharts\highcharts\Market3DColumns.razor" />
+    <Content Remove="Components\HighCharts\Market3DColumns.razor" />
+    <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
+    <Content Remove="Components\HighCharts\xStackedColumns3DSurface.razor" />
     <Content Remove="Components\HubMonitorOld.razor" />
     <Content Remove="Components\PrintArcGaugeChart.razor" />
     <Content Remove="Components\PrintLinesGauge___Copy.razor" />
@@ -54,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\HighCharts\xStackedColumns3DSurface.razor.js" />
     <None Remove="Shared\DarkReader.css" />
   </ItemGroup>
 

@@ -105,6 +105,8 @@ namespace tapeStream.Server.Components
             {
                 optionExpDate = optionExpDate.AddDays(1);
             }
+
+            TDAStreamerData.quoteSymbol = symbol;
             TDAStreamerData.expiryDate = optionExpDate;
 
             timer.Elapsed += async (sender, e) => await Timer_ElapsedAsync();
@@ -139,7 +141,7 @@ namespace tapeStream.Server.Components
 
             serviceSelection = item.Value;
             TDAStreamerData.chain = "102120C337,102120P337";
-            serviceRequestText = TDAStreamerData.getServiceRequestOld(serviceSelection,symbol);
+            serviceRequestText = TDAStreamerData.getServiceRequestOld(serviceSelection, symbol);
             //LogText(serviceRequestText);
         }
 
@@ -163,10 +165,8 @@ namespace tapeStream.Server.Components
 
         protected async Task Sends()
         {
-
-
             //var servicesSelected = string.Join(',', values.Select(i => valuesName[i]));
-            serviceRequestText = await TDAStreamerData.getServiceRequest(values,symbol);
+            serviceRequestText = await TDAStreamerData.getServiceRequest(values, symbol);
             await TDAStreamerJs.InvokeAsync<string>("tdaSendRequest", serviceRequestText);
         }
 
@@ -397,9 +397,10 @@ namespace tapeStream.Server.Components
                 await TDAStreamerData.captureTdaServiceData(svcFieldedJson);
 
                 /// Send to message queue
-                /// 
+                /// We can replay these messages later from simulator
+                /// Need to NOT reswnd 
                 dictTopicCounts[svcName] += 1;
-                //await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
+                await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
                 //await Send(svcName, svcFieldedJson);
                 StateHasChanged();
             }
@@ -485,6 +486,7 @@ namespace tapeStream.Server.Components
 
 
             var color = IsConnected ? "green" : "red";
+            quoteSymbol = symbol;
             TDAStreamerData.hubStatus = $"./images/{color}.gif";
             StateHasChanged();
 
@@ -508,6 +510,8 @@ namespace tapeStream.Server.Components
         /// </summary>
         /// 
         public bool IsConnected => hubConnection != null && hubConnection.State == HubConnectionState.Connected;
+
+        public static string quoteSymbol { get; internal set; }
 
         /// <summary>
         /// Method that will shut down hub if this page is closed

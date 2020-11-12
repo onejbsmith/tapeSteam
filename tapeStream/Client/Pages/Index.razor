@@ -24,14 +24,21 @@
                 <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <StackedColumns3D bookData="@bookColData" />
+                @*<StackedColumns3D bookData="@bookColData" />*@
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
     <div>
     </div>
     <div class="grid-item shrink" style="width:100hw">
-        @*<BookColumnsChart symbol="@symbol" bookData="@bookColData" />*@
     </div>
 
     @*<div>
