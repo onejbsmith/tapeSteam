@@ -25,7 +25,7 @@ window.chart3DObject = {
         {
             stacking: 'normal',
             grouping: false,
-            depth: 100
+            depth: 1
         },
         series: {
             animation: false,

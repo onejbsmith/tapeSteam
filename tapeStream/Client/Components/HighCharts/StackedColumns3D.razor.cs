@@ -91,6 +91,9 @@ namespace tapeStream.Client.Components.HighCharts
             chart.title.text = "";
             chart.chart.options3d.enabled = true;
             chart.yAxis.title.text = "Size";
+            chart.plotOptions.column.depth = 1;
+            chart.plotOptions.column.grouping = false;
+
             //chart.plotOptions.series.pointWidth = 100;
 
             chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);

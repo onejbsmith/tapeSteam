@@ -24,8 +24,8 @@ window.chart3DObject = {
         column:
         {
             stacking: 'normal',
-            grouping: true,
-            depth: 100
+            grouping: false,
+            depth: 3
         },
         series: {
             animation: false,
