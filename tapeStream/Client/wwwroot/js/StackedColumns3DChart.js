@@ -65,7 +65,7 @@ window.chart3DObject = {
             dashStyle: 'longdashdot', // Style of the plot line. Default to solid
             value: 3, // Value of where the line will appear
             width: 2 // Width of the line    
-        }] 
+        }]
     },
 
     yAxis: {

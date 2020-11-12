@@ -17,16 +17,14 @@
     <ChartConfigure title="QǬǪ —— Level II + Time & Sales" />
 </div>
 
-@* The chart HTML gets placed here by HighCharts *@
-<div id="container">
-
-</div>
-
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @*@name;*@
 <div style="display:grid">
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart Json="@chart3Djson"  chartSeriesJson="@chartSeriesJson" updateMode="@HighChart.DataUpdateMode.Replace"/>
+        <HighChart chartJson="@chart3Djson"
+                   chartSeriesJson="@chartSeriesJson"
+                   updateMode="@HighChart.dataUpdateMode"
+                   chartJsFilename="js/StackedColumns3DChart.js" />
     </div>
 </div>

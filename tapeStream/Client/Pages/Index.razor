@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using tapeStream.Client.Components
 @using tapeStream.Shared.Data;
+@using tapeStream.Client.Components.HighCharts
 
 @code {
 
@@ -9,18 +10,40 @@
 }
 
 <div class="grid-container">
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <StackedColumns3DSurface bookData="@bookColData" />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <StackedColumns3D bookData="@bookColData" />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
     <div>
-        <tapeStream.Client.Components.HighCharts.StackedColumns3D bookData="@bookColData" />
     </div>
     <div class="grid-item shrink" style="width:100hw">
-            <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
-        </div>
+        @*<BookColumnsChart symbol="@symbol" bookData="@bookColData" />*@
+    </div>
+
     @*<div>
             <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
         </div>*@
 </div>
 
 <style>
+    .mat-accordion {
+        color: #333;
+    }
+
     .rz-tick-text {
         stroke: none;
         fill: rgba(228, 228, 228, 0.5);
@@ -51,66 +74,66 @@
 </style>
 <style>
 
-        .grid-container {
-            display: grid;
-            grid-template-rows: auto auto;
-            grid-row-gap: 10px;
-            grid-column-gap: 5px;
-            /*        grid-template-columns: auto auto ;
+    .grid-container {
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-row-gap: 10px;
+        grid-column-gap: 5px;
+        /*        grid-template-columns: auto auto ;
         */
-        }
+    }
 
-        .shrink {
-            zoom: 1;
-        }
+    .shrink {
+        zoom: 1;
+    }
 
-        .ui-slider-horizontal {
-            height: 2px;
-            /*        width: 100%;
+    .ui-slider-horizontal {
+        height: 2px;
+        /*        width: 100%;
     */
+    }
+
+    .ui-slider-handle {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        margin-left: -0.5rem;
+        background-color: #479cc8;
+        border-radius: 20px;
+        width: 12px;
+        height: 12px;
+    }
+
+        .ui-slider-handle:before {
+            display: none;
+            color: #ffffff;
+            transform: rotate(90deg);
+            vertical-align: middle;
+            font-family: 'Material Icons';
+            content: 'drag_handle';
         }
 
-        .ui-slider-handle {
-            position: absolute;
-            transform: translateY(-50%);
-            top: 50%;
-            margin-left: -0.5rem;
-            background-color: #479cc8;
-            border-radius: 20px;
-            width: 12px;
-            height: 12px;
-        }
+    .mdc-chip-set .mdc-chip {
+        margin: 2px;
+    }
 
-            .ui-slider-handle:before {
-                display: none;
-                color: #ffffff;
-                transform: rotate(90deg);
-                vertical-align: middle;
-                font-family: 'Material Icons';
-                content: 'drag_handle';
-            }
+    .mdc-chip {
+        border-radius: 16px;
+        height: 16px;
+        padding: 6px;
+    }
 
-        .mdc-chip-set .mdc-chip {
-            margin: 2px;
-        }
+    .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
+        color: white;
+        background: #333;
+    }
 
-        .mdc-chip {
-            border-radius: 16px;
-            height: 16px;
-            padding: 6px;
-        }
+    .ui-accordion-content {
+        background-color: transparent;
+    }
 
-        .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
-            color: white;
-            background: #333;
-        }
-
-        .ui-accordion-content {
-            background-color: transparent;
-        }
-
-        .ui-accordion-header {
-            background-color: transparent;
-        }
+    .ui-accordion-header {
+        background-color: transparent;
+    }
 </style>
 

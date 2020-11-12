@@ -146,6 +146,8 @@ namespace tapeStream.Client.Components.HighCharts
         public int?[] data { get; set; }
         public string color { get; set; }
         public string stack { get; set; }
+        public bool showInLegend { get; set; }
+
     }
 
     #endregion

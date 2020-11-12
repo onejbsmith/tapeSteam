@@ -8,6 +8,10 @@ namespace tapeStream.Client.Components.HighCharts.Base
 {
     public partial class HighChart
     {
+
+        [Parameter]
+        public string chartJsFilename { get; set; }
+
         public static DataUpdateMode dataUpdateMode;
 
         public enum DataUpdateMode
@@ -17,7 +21,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
             Shift
         }
 
-        [Parameter] public string Json { get; set; }
+        [Parameter] public string chartJson { get; set; }
         private string id { get; set; } = "Highchart" + Guid.NewGuid().ToString();
 
         [Parameter]
@@ -45,11 +49,12 @@ namespace tapeStream.Client.Components.HighCharts.Base
             base.OnParametersSet();
         }
 
+
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!string.IsNullOrEmpty(Json))
+            if (!string.IsNullOrEmpty(chartJson))
             {
-                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, Json });
+                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson });
             }
 
             await base.OnAfterRenderAsync(firstRender);
