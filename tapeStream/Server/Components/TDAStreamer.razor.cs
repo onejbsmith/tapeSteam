@@ -139,7 +139,7 @@ namespace tapeStream.Server.Components
 
             serviceSelection = item.Value;
             TDAStreamerData.chain = "102120C337,102120P337";
-            serviceRequestText = TDAStreamerData.getServiceRequestOld(serviceSelection);
+            serviceRequestText = TDAStreamerData.getServiceRequestOld(serviceSelection,symbol);
             //LogText(serviceRequestText);
         }
 
@@ -166,7 +166,7 @@ namespace tapeStream.Server.Components
 
 
             //var servicesSelected = string.Join(',', values.Select(i => valuesName[i]));
-            serviceRequestText = await TDAStreamerData.getServiceRequest(values);
+            serviceRequestText = await TDAStreamerData.getServiceRequest(values,symbol);
             await TDAStreamerJs.InvokeAsync<string>("tdaSendRequest", serviceRequestText);
         }
 

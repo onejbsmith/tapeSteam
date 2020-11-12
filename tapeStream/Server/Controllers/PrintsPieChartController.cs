@@ -15,18 +15,18 @@ namespace tapeStream.Server.Controllers
     {
         // GET: api/<PrintsPieChartController>
         [HttpGet]
-        public async Task<double> GetPrintsGaugeScore()
+        public async Task<double> GetPrintsGaugeScore(string symbol)
         {
-            double it = await TDAPrintsManager.GetPrintsGaugeScore();
+            double it = await TDAPrintsManager.GetPrintsGaugeScore(symbol);
             return it;
         }
 
         // GET api/<PrintsPieChartController>/5
         [HttpGet("{id}")]
         [Route("api/[controller]/id")]
-        public async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
+        public async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id, string symbol)
         {
-            Dictionary<string, DataItem[]> it = await TDAPrintsManager.GetPrintsPies(id);
+            Dictionary<string, DataItem[]> it = await TDAPrintsManager.GetPrintsPies(id, symbol);
             return it;
         }
 

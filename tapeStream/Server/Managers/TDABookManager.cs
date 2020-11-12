@@ -70,7 +70,7 @@ namespace tapeStream.Server.Data
             bidsData = getBookDataItemArray(seconds, now, lstAllBids);
 
             var salesAtAskData = new BookDataItem[0];
-            salesAtAskData = getBookDataItemArray(seconds, now, lstAllSalesAtAsk);;
+            salesAtAskData = getBookDataItemArray(seconds, now, lstAllSalesAtAsk); ;
 
             var salesAtBidData = new BookDataItem[0];
             salesAtBidData = getBookDataItemArray(seconds, now, lstAllSalesAtBid); ;
@@ -305,7 +305,7 @@ namespace tapeStream.Server.Data
                 });
 
                 var salesAtMid = printsByPriceAtLevel.Where(sale => sale.level == 3);
-                
+
                 var salesAtBidByPriceAtLevel = printsByPriceAtLevel.Where(sale => sale.level == 1 || sale.level == 2);
                 foreach (var sale in salesAtBidByPriceAtLevel)
                 {
@@ -338,9 +338,9 @@ namespace tapeStream.Server.Data
                 }).ToList();
                 lstAllSalesAtAsk.AddRange(lstSalesAtAsk);
 
-                Dictionary<string, BookDataItem[]> it = getBookData();
-                string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(it);
-                await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
+                //Dictionary<string, BookDataItem[]> it = getBookData();
+                //string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(it);
+                //await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
 
                 /// We need the sales by Price for the chart
                 /// Need two series, salesAtBid, salesAtAsk
@@ -356,12 +356,11 @@ namespace tapeStream.Server.Data
                     askSize = (int)askEntry.Size,
                     printsSize = printsSizes
                 };
-
                 lstBookEntry.Add(newBookEntry);
 
 
-                json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
-                await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
+                //json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
+                //await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
 
             }
             catch { }  // in case 

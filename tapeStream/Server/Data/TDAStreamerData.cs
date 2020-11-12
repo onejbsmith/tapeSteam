@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.CodeAnalysis.Diagnostics;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Server.Components;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
@@ -16,6 +18,8 @@ namespace tapeStream.Server.Data
     /// </summary>
     public class TDAStreamerData
     {
+
+        public static string quoteSymbol;
 
         //static public Components.PrintsDashboard Dashboard = null;
         public static bool isRealTime = false;
@@ -47,11 +51,11 @@ namespace tapeStream.Server.Data
         /// </summary>
         /// 
         public static Dictionary<DateTime, Quote_BidAskLast> dictQuotes { get; set; } = new Dictionary<DateTime, Quote_BidAskLast>();
-        public static Dictionary<string, List<Quote_Content>> quotes { get; set; } = new Dictionary<string, List<Quote_Content>>() { { "QQQ", new List<Quote_Content>() } };
+        //public static Dictionary<string, List<Quote_Content>> quotes { get; set; } = new Dictionary<string, List<Quote_Content>>() { { quoteSymbol, new List<Quote_Content>() } };
         public static TimeSales_Content timeAndSales;
         public static DateTime timeOfTimeAndSales;
-        public static Dictionary<string, List<TimeSales_Content>> timeSales { get; set; } = new Dictionary<string, List<TimeSales_Content>>() { { "QQQ", new List<TimeSales_Content>() } };
-        public static Dictionary<string, Dictionary<int, Chart_Content>> chart { get; set; } = new Dictionary<string, Dictionary<int, Chart_Content>>() { { "QQQ", new Dictionary<int, Chart_Content>() } };
+        public static Dictionary<string, List<TimeSales_Content>> timeSales { get; set; } = new Dictionary<string, List<TimeSales_Content>>() { { "", new List<TimeSales_Content>() } };
+        public static Dictionary<string, Dictionary<int, Chart_Content>> chart { get; set; } = new Dictionary<string, Dictionary<int, Chart_Content>>() { { "", new Dictionary<int, Chart_Content>() } };
 
         public static List<BookDataItem> lstAsks = new List<BookDataItem>();
         public static List<BookDataItem> lstBids = new List<BookDataItem>();
@@ -233,7 +237,7 @@ namespace tapeStream.Server.Data
             };
         }
 
-        public static async Task<string> getServiceRequest(IEnumerable<int> values, string symbol = "QQQ")
+        public static async Task<string> getServiceRequest(IEnumerable<int> values, string symbol)
         {
 
             var userPrincipalsResponse = getUserPrincipalsResponse();
@@ -241,7 +245,7 @@ namespace tapeStream.Server.Data
 
             if (values.Contains(4))  // options
             {
-                var qt = await GetStaticQuote("QQQ");
+                var qt = await GetStaticQuote(symbol);
                 SetOptionStrike(qt);
             }
 
@@ -329,7 +333,7 @@ namespace tapeStream.Server.Data
             };
         }
 
-        public static string getServiceRequestOld(string serviceName, string symbol = "QQQ")
+        public static string getServiceRequestOld(string serviceName, string symbol)
         {
             var userPrincipalsResponse = getUserPrincipalsResponse();
             switch (serviceName)
@@ -1317,7 +1321,7 @@ namespace tapeStream.Server.Data
 //        TDAParameters.staticQuote.Add(qtSymbol, new Quote_Content() { key = qtSymbol });
 //    var staticQuoteToUpdate = TDAParameters.staticQuote[qtSymbol];
 //    /// Update a static quote object here
-//    /// TDAParameters.staticQuote["QQQ"]["askPrice"]
+//    /// TDAParameters.staticQuote["SPY"]["askPrice"]
 //    /// partialQuote["askPrice"]
 //    /// Write static quote to database
 //    List<string> fields = TDAConstants.TDAResponseFields[svcName];

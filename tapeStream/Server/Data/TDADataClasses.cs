@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using tapeStream.Server.Components;
 /// <summary>
 /// TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Get Source Control functioning
 /// </summary>
@@ -351,7 +352,7 @@ namespace tapeStream.Server.Data
         }
 
         public static bool inTheMoney { get; set; } = false;
-        public static string optionSymbol { get; set; } = "QQQ";
+        public static string optionSymbol { get; set; } 
         public static int optionNumContracts { get; set; } = 50;
         public static DateTime? optionExpDate { get; set; } = DateTime.Today.AddDays(((int)DayOfWeek.Friday - (int)DateTime.Today.DayOfWeek + 7) % 7);
         public static int optionNumStrikes { get; set; } = 7;

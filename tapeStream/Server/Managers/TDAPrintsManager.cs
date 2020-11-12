@@ -19,10 +19,10 @@ namespace tapeStream.Server.Data
         private static Dictionary<DateTime, double> gaugeValues = new Dictionary<DateTime, double>();
 
         private static Dictionary<string, DataItem[]> dictPies = new Dictionary<string, DataItem[]>();
-        static public async Task<double> GetPrintsGaugeScore()
+        static public async Task<double> GetPrintsGaugeScore(string symbol)
         {
             var rand = new Random();
-            await GetPrintsPies(1);
+            await GetPrintsPies(1, symbol);
             //var value = gaugeValues.Last().Value;
             var value = 0;
             foreach (var seconds in CONSTANTS.printSeconds)
@@ -44,13 +44,11 @@ namespace tapeStream.Server.Data
             return value;
         }
 
-        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id)
+        public static async Task<Dictionary<string, DataItem[]>> GetPrintsPies(int id, string symbol)
         {
             dictPies = new Dictionary<string, DataItem[]>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
-                string symbol = "QQQ";
-
                 var slices = TDAPrintsManager.GetPieSlices(symbol, seconds);
                 dictPies.Add(seconds.ToString(), slices);
             }

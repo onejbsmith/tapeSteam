@@ -3,11 +3,20 @@
 @using tapeStream.Server.Data
 @using tapeStream.Server.Components
 
-
-<TDAStreamer symbol="QQQ" />
-
+<Radzen.Blazor.RadzenCard>
+    <span>NASDAQ Symbol:&nbsp; <Radzen.Blazor.RadzenTextBox @bind-Value="@symbol" /></span>
+</Radzen.Blazor.RadzenCard>
+<TDAStreamer symbol="@symbol.ToUpper()" />
+<style>
+    .textbox {
+        font-weight: 600;
+        font-size: large;
+        text-transform: uppercase;
+    }
+</style>
 
 @code {
 
+    public string symbol = "QQQ";
 
 }

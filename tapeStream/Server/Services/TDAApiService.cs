@@ -281,7 +281,7 @@ namespace tapeStream.Server.Data
                 await GetAuthentication(TDATokens._TDARefreshToken, true);
 
                 // reset the Auth Status lamp by testing the quote service
-                var response = await GetQuoteResponseAsync("QQQ");
+                var response = await GetQuoteResponseAsync("SPY");
                 TDANotifications.TDAAuthStatus = response.StatusCode.ToString();
 
                 return authObject;
