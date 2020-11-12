@@ -1,0 +1,13 @@
+﻿@*<h3>Market3DColumns</h3>*@
+
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject HttpClient _client
+
+<Highchart @ref="highChartsBase"
+           chartJsFilename="js/highcharts/Highcharts3DMarketColumnChart.js?id=1"
+           chartJson="@chartJson" chartSeriesJson="@chartSeriesJson"
+           isSeriesShifted="@updateSeries" />
+
+
+@code {
+}

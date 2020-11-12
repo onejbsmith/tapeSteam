@@ -1,0 +1,25 @@
+﻿@*<h3>StackedColumns3DSurface</h3>*@
+@using tapeStream.Client.Components.HighCharts
+@using tapeStream.Client.Components.HighCharts.Base
+
+
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@*@name;*@
+<div style="display:grid">
+
+    <div>
+        @* Injects the data and redraws the chart *@
+        <HighChart chartJson="@chart3Djson" chartSeriesJson="@chartSeriesJson" updateMode="@HighChart.DataUpdateMode.Replace" 
+                   chartJsFilename="js/highcharts/StackedColumns3DSurfaceChart.js" />
+
+    </div>
+</div>
+
+<style>
+    #container {
+        /*height: 80vh;*/
+        /*min-width: 310px;
+        max-width: 100hw;*/
+        /*margin: 0 auto;*/
+    }
+</style>
