@@ -334,6 +334,9 @@ namespace tapeStream.Client.Components.HighCharts
             var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
             var maxPrice = 0m; // bookDataItems.Max(items => items.Value.Max(item => item.Price));
 
+            var x = new List<string>();
+            if(lstPrices.Count==0)
+                x = localStorage.GetItem<List<string>>("lstPrices");
             /// Set up the Categories list
             //var lstPrices = new List<string>();
             foreach (var name in seriesOrder)
@@ -363,6 +366,7 @@ namespace tapeStream.Client.Components.HighCharts
                     /// Remove lower prices
                     lstPrices = lstPrices.ToArray().Skip(lstPrices.Count - n).ToList();
             }
+            localStorage.SetItem("lstPrices", lstPrices);
             /// Picture the spread as two 0 points, one at high bid, one at low ask
         }
 

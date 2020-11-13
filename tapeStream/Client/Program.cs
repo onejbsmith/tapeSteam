@@ -1,4 +1,5 @@
 // other usings
+using Blazored.LocalStorage;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
@@ -43,6 +44,7 @@ namespace tapeStream.Client
 
             //builder.Services.AddSingleton<TimeSalesService>();
             builder.Services.AddSingleton<ChartService>();
+            builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddMatToaster(config =>
             {

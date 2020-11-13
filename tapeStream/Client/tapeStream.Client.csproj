@@ -91,6 +91,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
     <PackageReference Include="Blazorise.Bootstrap" Version="0.9.1.2" />
     <PackageReference Include="Blazorise.Charts" Version="0.9.1.2" />
     <PackageReference Include="Blazorise.Charts.Streaming" Version="0.9.1.2" />

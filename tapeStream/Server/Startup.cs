@@ -41,7 +41,6 @@ namespace tapeStream.Server
             services.AddServerSideBlazor();
 
             services.AddTransient<TDAApiService>();
-
             services.AddSignalR();
             services.AddResponseCompression(opts =>
             {
