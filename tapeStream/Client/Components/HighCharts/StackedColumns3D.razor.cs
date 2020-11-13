@@ -197,8 +197,10 @@ namespace tapeStream.Client.Components.HighCharts
         {
             try
             {
-                //var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
                 chart.yAxis.max = ChartConfigure.yAxisHigh;
+                if (ChartConfigure.yAxisMaxAutoReset == false) return;
+
+                //var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
                 var highestSize = maxSize;
                 if (highestSize > chart.yAxis.max)
                 {

@@ -24,6 +24,7 @@ namespace tapeStream.Client.Components
             }
         }
 
+        public static bool yAxisMaxAutoReset = true;
 
         [Parameter]
         public string title
@@ -54,7 +55,7 @@ namespace tapeStream.Client.Components
                 if (_seconds == 0)
                     showTitle = title0;
                 else
-                    showTitle = $"{title0} Aggregated for {seconds} seconds";
+                    showTitle = $"{title0} over {seconds} seconds";
             }
         }
         private static int _seconds = 3;
