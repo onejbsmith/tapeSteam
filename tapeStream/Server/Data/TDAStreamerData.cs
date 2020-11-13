@@ -888,10 +888,14 @@ namespace tapeStream.Server.Data
             else
                 TDAStreamerData.chart[symbol].Add(chart.sequence, chart);
 
+            tapeStream.Server.Managers.TDAChartManager.Decode(symbol, content);
+
             await Task.CompletedTask;
         }
 
         private static Dictionary<string, OptionQuote_Response> dictOptions = new Dictionary<string, OptionQuote_Response>();
+        internal static object charts;
+
         private static async Task Decode_Option(string content)
         {
 

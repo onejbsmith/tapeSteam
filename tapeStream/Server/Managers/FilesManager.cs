@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,25 @@ namespace tapeStream.Server.Data
             //    System.IO.File.WriteAllText(filePath, svcFieldedJson);
             //}
             await Task.CompletedTask;
+        }
+
+        public static List<string> GetChartEntries(int nCloses)
+        {
+            var entries = new List<string>();
+
+            string filePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY";
+
+            var lstFiles = Directory.GetFiles(filePath);
+            if (lstFiles.Length < nCloses) nCloses = 0;
+
+            var ourFiles = lstFiles.ToList().Skip(lstFiles.Length - nCloses);
+            foreach (var fileName in ourFiles)
+            {
+                var text = File.ReadAllText(fileName);
+                entries.Add(text);
+            }
+            return entries;
+
         }
     }
 

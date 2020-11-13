@@ -98,6 +98,8 @@ namespace tapeStream.Client.Components.HighCharts
         public string dashStyle { get; set; }
         public decimal value { get; set; }
         public int width { get; set; }
+        public int zIndex { get; set; }
+        
     }
 
     public class Yaxis

@@ -36,12 +36,13 @@ namespace tapeStream.Client
             builder.Services.AddSingleton<WeatherForecastService>();
 
             builder.Services.AddSingleton<BookColumnsService>();
-            builder.Services.AddSingleton<BookPieChartsService>();
+            //builder.Services.AddSingleton<BookPieChartsService>();
             builder.Services.AddTransient<BlazorTimer>();
-            builder.Services.AddSingleton<PrintsLineChartService>();
-            builder.Services.AddSingleton<PrintsPieChartService>();
+            //builder.Services.AddSingleton<PrintsLineChartService>();
+            //builder.Services.AddSingleton<PrintsPieChartService>();
 
-            builder.Services.AddSingleton<TimeSalesService>();
+            //builder.Services.AddSingleton<TimeSalesService>();
+            builder.Services.AddSingleton<ChartService>();
 
             builder.Services.AddMatToaster(config =>
             {

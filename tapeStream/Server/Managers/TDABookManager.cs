@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
@@ -53,6 +54,7 @@ namespace tapeStream.Server.Data
             var salesAtBidData = new BookDataItem[0];
             salesAtBidData = lstSalesAtBid.ToArray();
 
+
             var it = new Dictionary<string, BookDataItem[]>()
             { { "asks", asksData }, { "bids", bidsData } , { "salesAtAsk",salesAtAskData}, {"salesAtBid", salesAtBidData} };
             return it;
@@ -76,7 +78,9 @@ namespace tapeStream.Server.Data
             salesAtBidData = getBookDataItemArray(seconds, now, lstAllSalesAtBid); ;
 
             var it = new Dictionary<string, BookDataItem[]>()
-            { { "asks", asksData }, { "bids", bidsData } , { "salesAtAsk",salesAtAskData}, {"salesAtBid", salesAtBidData} };
+            { { "asks", asksData }, { "bids", bidsData } , { "salesAtAsk",salesAtAskData}, {"salesAtBid", salesAtBidData}  };
+
+
             return it;
         }
 
@@ -91,7 +95,8 @@ namespace tapeStream.Server.Data
                     Price = lstBookItems.Key,
                     dateTime = DateTime.Now,
                     time = now,
-                    Size = lstBookItems.Sum(item => item.Size)
+                    Size = lstBookItems.Sum(item => item.Size),
+                    bollingerBand = new TDAChart.Bollinger()
                 }
                 ).ToArray();
             return lstBookItemsData;
@@ -109,14 +114,17 @@ namespace tapeStream.Server.Data
                             dateTime=DateTime.Now,
                             Price = 0,
                             Size = 0,
-                            time = 0
+                            time = 0,
+                            bollingerBand = new TDAChart.Bollinger()
+
                         },
                         new BookDataItem()
                         {
                             dateTime = DateTime.Now,
                             Price = 0,
                             Size = 0,
-                            time = 0
+                            time = 0,
+                            bollingerBand = new TDAChart.Bollinger()
                         }
                     };
 

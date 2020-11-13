@@ -21,6 +21,7 @@ namespace tapeStream.Client.Pages
     {
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
+        [Inject] ChartService chartService { get; set; }
 
 #if AllComponents
         [Inject] BookPieChartsService bookPieChartsService { get; set; }
@@ -246,6 +247,7 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Stop();
             await Task.Yield();
             bookColData = await bookColumnsService.getBookColumnsData(seconds);
+            TDAChart.bollingerBands = await chartService.getBollingerBands();
             await Task.Delay(100);
             //Debug.WriteLine("2. BookColumnsCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();

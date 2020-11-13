@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Server.Managers;
 using tapeStream.Shared;
 
 namespace tapeStream.Server.Data
@@ -139,6 +140,7 @@ namespace tapeStream.Server.Data
                 var ask = timeAndSales.ask;
                 var price = timeAndSales.price;
 
+
                 timeAndSales.level = bid == 0 || ask == 0 || price == 0 ? 0 :
                  price < bid ? 1
                  : price == bid ? 2
@@ -153,9 +155,11 @@ namespace tapeStream.Server.Data
             }
             catch { }
 
+            // Update the Chart last close value
+
             TDAStreamerData.timeSales[symbol].Add(timeAndSales);
 
-            string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
+            // string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
             //await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
 
             //int value=0;

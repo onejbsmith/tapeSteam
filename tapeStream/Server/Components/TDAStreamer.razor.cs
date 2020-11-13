@@ -79,6 +79,11 @@ namespace tapeStream.Server.Components
         #endregion
 
 
+        public async Task ConsoleLog(string log)
+        {
+            await TDAStreamerJs.InvokeAsync<string>("console.log", log);
+        }
+
         #region Page Event Handlers   
         protected override async Task OnInitializedAsync()
         {

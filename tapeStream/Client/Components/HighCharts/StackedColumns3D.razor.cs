@@ -91,7 +91,7 @@ namespace tapeStream.Client.Components.HighCharts
             chart.title.text = "";
             chart.chart.options3d.enabled = true;
             chart.yAxis.title.text = "Size";
-            chart.plotOptions.column.depth = 1;
+            chart.plotOptions.column.depth = 100;
             chart.plotOptions.column.grouping = false;
 
             //chart.plotOptions.series.pointWidth = 100;
@@ -124,6 +124,8 @@ namespace tapeStream.Client.Components.HighCharts
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
                 chart.series = seriesList.ToArray();
 
+                Chart_AdjustYaxis(bookDataItems);
+
                 /// Send the new data and settings to the HighChart3D component
 
                 chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
@@ -149,6 +151,12 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
+        private void Chart_AdjustYaxis(Dictionary<string, BookDataItem[]> bookDataItems)
+        {
+            var highestSize = bookDataItems.Max(dict=>dict.Value.Max(it=>it.Size));
+            if (highestSize > chart.yAxis.max) chart.yAxis.max = (int)Math.Ceiling(highestSize / 5000) * 5000;
+        }
+
         private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
             var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
@@ -170,14 +178,21 @@ namespace tapeStream.Client.Components.HighCharts
         }
         private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
-            var lowPrice = 288.93.ToString("n2") ;
-            var midPrice = 289.27.ToString("n2");
-            var highPrice = 289.65.ToString("n2");
+            var bollingerBands = TDAChart.bollingerBands;
+            //var bollingerBands = bookDataItems["asks"][0].bollingerBand;
+
+            var lowPrice = bollingerBands.low.ToString("n2");
+            var midlowPrice = bollingerBands.midlow.ToString("n2");
+            var midPrice = bollingerBands.mid.ToString("n2");
+            var midhighPrice = bollingerBands.midhigh.ToString("n2");
+            var highPrice = bollingerBands.high.ToString("n2");
 
             //var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
 
             var low = categories.ToList().IndexOf(lowPrice); ;
+            var midlow = categories.ToList().IndexOf(midlowPrice); ;
             var mid = categories.ToList().IndexOf(midPrice); ;
+            var midhigh = categories.ToList().IndexOf(midhighPrice);
             var high = categories.ToList().IndexOf(highPrice);
 
             var midCategory = categories.Length / 2;
@@ -186,24 +201,40 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 new Plotline()
                 {  value=low,
-                    color="purple",
-                    width=4
+                    color="magenta",
+                    width=4,
+                    zIndex = 1
+                },
+                 new Plotline()
+                {  value=midlow,
+                    color="magenta",
+                    width=2,
+                    zIndex = 1
                 },
                 new Plotline()
                 {  value=mid,
                     color="cyan",
-                    width=4
+                    width=4,
+                    zIndex = 1
+                },
+                new Plotline()
+                {  value=midhigh,
+                    color="red",
+                    width=2,
+                    zIndex = 1
                 },
                 new Plotline()
                 {  value=high,
                     color="red",
-                    width=4
+                    width=4,
+                    zIndex = 1
                 },
                 new Plotline()
                 {  value=midCategory,
                     color="#666666",
-                    width=6
-                },            
+                    width=6,
+                    zIndex = 1
+                },
             };
         }
 

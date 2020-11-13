@@ -10,7 +10,7 @@
             <RadzenSteps>
                 <Steps>
                     <RadzenStepsItem Text="User Principal Auth Token">
-                        <h3><span>Get User Principal Auth token when Refresh Token expires (every 30 days) from the TDA API </span><RadzenLink Text="Get User Principals" Path="https://developer.tdameritrade.com/user-principal/apis" target="_blank" /></h3>
+                        <h3><span>Get User Principal Auth token when Refresh Token expires (once every day) from the TDA API </span><RadzenLink Text="Get User Principals" Path="https://developer.tdameritrade.com/user-principal/apis" target="_blank" /></h3>
                         <ol>
                             <li>Copy this string "streamerSubscriptionKeys,streamerConnectionInfo" (without the quotes)</li>
                             <li>
@@ -105,6 +105,11 @@
     </Tabs>
 </RadzenTabs>
 
+<style>
+    .ui-tabview-panels {
+        color: #333;
+    }
+</style>
 @code {
 
     string _TDAUrlEncodedAuthToken = "";
