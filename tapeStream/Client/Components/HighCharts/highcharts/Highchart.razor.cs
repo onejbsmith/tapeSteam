@@ -8,7 +8,7 @@ using static tapeStream.Client.Data.highcharts.HighCharts_Enums;
 namespace tapeStream.Client.Components.HighCharts.highcharts
 
 {
-    public partial class Highchart
+    public partial class HighChart
     {
         //private bool isUpdate;
         [Parameter]

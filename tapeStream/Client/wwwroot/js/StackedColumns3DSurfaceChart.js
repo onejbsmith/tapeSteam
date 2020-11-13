@@ -1,9 +1,5 @@
 ﻿
-
-var dotNetObject = {};
-
-
-window.chart3DObject = {
+{
     chart: {
         type: 'column',
         options3d: {
@@ -143,10 +139,3 @@ window.chart3DObject = {
             { showInLegend: false, data: [[6, 3], [7, 9], [8, 7], [9, 0]] }
         ]
 }
-
-
-
-
-//window.getChartSeriesObject = function (jsObject) {
-//    dotNetObject.invokeMethodAsync('getChartSeriesObject', JSON.stringify(window.chart3DObject));
-//};

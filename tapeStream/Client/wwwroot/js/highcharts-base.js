@@ -15,7 +15,7 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                 /// if window.chartObj is empty it's our first time rendering the chart
 
                                                 /// if window.chartObj is empty it's our first time rendering the chart
-                                                var isFirstTime = JSON.stringify(window.chartObj) === '{}';
+                                                var isFirstTime = window.chartObj == undefined;
                                                 //console.debug("window.loadHighchart => " + chartJson);
 
                                                 /// turn json to js object (deserialize)
@@ -84,9 +84,9 @@ window.loadHighchart = function (chartDivName, chartJson) {
 window.Initialize = function (dotNetObj) {
     this.dotNetObject = dotNetObj;
 
-    var darkCss = Array.from(window.document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
-    console.log("Darkreader css");
-    console.log(darkCss);
+    //var darkCss = Array.from(window.document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
+    //console.log("Darkreader css");
+    //console.log(darkCss);
 };
 
 window.getChartSeriesJson = function (jsObject) {
@@ -94,7 +94,7 @@ window.getChartSeriesJson = function (jsObject) {
 };
 
 window.getChartJson = function (isFirstTime) {
-    dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(window.chart3DObject));
+    dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(window.chartObj));
 };
 
 /// Replace the chart series 

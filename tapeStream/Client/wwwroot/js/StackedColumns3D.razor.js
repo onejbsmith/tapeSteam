@@ -1,9 +1,6 @@
-﻿
-
-var dotNetObject = {};
-
-
-window.chart3DObject = {
+﻿//var dotNetObject = {};
+//window.chart3DObject =
+{
     chart: {
         type: 'column',
         zoomType: 'x',

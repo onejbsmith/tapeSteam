@@ -21,8 +21,9 @@ namespace tapeStream.Client.Components.HighCharts.Base
             Shift
         }
 
-        [Parameter] public string chartJson { get; set; }
         private string id { get; set; } = "Highchart" + Guid.NewGuid().ToString();
+
+        [Parameter] public string chartJson { get; set; }
 
         [Parameter]
         public string chartSeriesJson
@@ -42,13 +43,21 @@ namespace tapeStream.Client.Components.HighCharts.Base
         [Parameter]
         public DataUpdateMode updateMode { get; set; }
 
-
-        protected override void OnParametersSet()
+        protected async override Task OnParametersSetAsync()
         {
-            StateHasChanged();
             base.OnParametersSet();
+            StateHasChanged();
         }
 
+        /// Get the chart json from the passed in filename
+        protected override async Task OnInitializedAsync()
+        {
+            chartJson = await _client.GetStringAsync(chartJsFilename);
+
+            StateHasChanged();
+
+            //Console.WriteLine($"OnInitializedAsync chartJson => " + chartJson);
+        }
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {

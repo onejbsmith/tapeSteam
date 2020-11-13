@@ -7,19 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\HighCharts\highcharts\**" />
     <Compile Remove="NewFolder\**" />
+    <Compile Remove="wwwroot\js\highcharts\**" />
+    <Content Remove="Components\HighCharts\highcharts\**" />
     <Content Remove="NewFolder\**" />
+    <Content Remove="wwwroot\js\highcharts\**" />
+    <EmbeddedResource Remove="Components\HighCharts\highcharts\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\js\highcharts\**" />
+    <None Remove="Components\HighCharts\highcharts\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="wwwroot\js\highcharts\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Components\BookGaugeChart.razor.cs" />
     <Compile Remove="Components\BookPieChart.razor.cs" />
+    <Compile Remove="Components\Highchart.razor.cs" />
     <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
-    <Compile Remove="Components\HighCharts\highcharts\Market3DColumns.razor.cs" />
+    <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
+    <Compile Remove="Components\HubMonitor.razor.cs" />
     <Compile Remove="Components\HubMonitorOld.razor.cs" />
     <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
     <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
@@ -42,11 +52,14 @@
   <ItemGroup>
     <Content Remove="Components\BookGaugeChart.razor" />
     <Content Remove="Components\BookPieChart.razor" />
+    <Content Remove="Components\Highchart.razor" />
     <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
-    <Content Remove="Components\HighCharts\highcharts\Market3DColumns.razor" />
+    <Content Remove="Components\HighCharts\Base\HighChart3D.razor" />
+    <Content Remove="Components\HighCharts\Columns3D.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
     <Content Remove="Components\HighCharts\xStackedColumns3DSurface.razor" />
+    <Content Remove="Components\HubMonitor.razor" />
     <Content Remove="Components\HubMonitorOld.razor" />
     <Content Remove="Components\PrintArcGaugeChart.razor" />
     <Content Remove="Components\PrintLinesGauge___Copy.razor" />
@@ -58,11 +71,13 @@
     <Content Remove="wwwroot\appsettings.json" />
     <Content Remove="wwwroot\js\JSInterop.js" />
     <Content Remove="wwwroot\js\JSInterop.min.js" />
+    <Content Remove="wwwroot\js\StackedColumns-3D.razor.js" />
     <Content Remove="wwwroot\js\StackedColumns3D.razor.js" />
     <Content Remove="wwwroot\web.config" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\HighCharts\StackedColumns3D.razor.js" />
     <None Remove="Components\HighCharts\xStackedColumns3DSurface.razor.js" />
     <None Remove="Shared\DarkReader.css" />
   </ItemGroup>
@@ -109,17 +124,10 @@
     <Content Update="wwwroot\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\js\highcharts\highcharts-base.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Components\Blazorise\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\js\StackedColumns3D.razor.js" />
   </ItemGroup>
 
   <ItemGroup>

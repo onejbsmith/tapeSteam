@@ -1,7 +1,8 @@
 ﻿@*<h3>StackedColumns3D</h3>*@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Client.Components.HighCharts.Base
-
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject HttpClient _client
 <style>
     #container {
         /*height: 80vh;*/
@@ -17,12 +18,12 @@
     <ChartConfigure title="QǬǪ —— Level II + Time & Sales" />
 </div>
 
-@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+
 @*@name;*@
 <div style="display:grid">
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart chartJson="@chart3Djson"
+        <HighChart chartJson="@chartJson"
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.dataUpdateMode"
                    chartJsFilename="js/StackedColumns3DChart.js" />

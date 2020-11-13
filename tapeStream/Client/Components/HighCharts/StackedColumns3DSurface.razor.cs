@@ -75,7 +75,7 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 var dotNetReference = DotNetObjectReference.Create(this);
                 await jsruntime.InvokeVoidAsync("Initialize", dotNetReference);
-                await jsruntime.InvokeVoidAsync("getChartJson");
+                //await jsruntime.InvokeVoidAsync("getChartJson");
                 //await jsruntime.InvokeVoidAsync("getChartSeriesJson");
 
 

@@ -1,9 +1,5 @@
 ﻿
-
-var dotNetObject = {};
-
-
-window.chart3DObject = {
+{
     chart: {
         type: 'column',
         zoomType: 'x',
@@ -132,7 +128,3 @@ window.chart3DObject = {
         ]
 }
 
-
-//window.getChartSeriesObject = function (jsObject) {
-//    dotNetObject.invokeMethodAsync('getChartSeriesObject', JSON.stringify(window.chart3DObject));
-//};

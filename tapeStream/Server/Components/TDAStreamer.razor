@@ -5,7 +5,7 @@
 @using Newtonsoft.Json.Linq;
 @using Syncfusion.Blazor.Charts;
 @using System.Globalization;
-
+@* Page Header *@
 <div class="flex-container">
     <img src="images/TickerTapeIcon.png" style="height:32px" />
     <h3 style="display:inline;margin-right:20px">
@@ -15,12 +15,14 @@
     <BSBadge IsPill="true" class="alert-primary" style="max-height:24px;position:relative;top:5px">@dateTimeNow</BSBadge>
     <BSBadge IsPill="true" class="alert-secondary" style="max-height:24px;position:relative;top:5px;">@elapsed</BSBadge>
 </div>
+@* Buttons *@
 <div class="flex-container">
     <RadzenButton Text="Log In" ButtonStyle="ButtonStyle.Primary" Disabled="false" Click="Login" Size="Radzen.ButtonSize.Small" />
     <RadzenButton Text="Send" ButtonStyle="ButtonStyle.Success" Disabled="false" Click="Sends" Size="Radzen.ButtonSize.Small" />
     <RadzenButton Text="Log Out" ButtonStyle="ButtonStyle.Warning" Disabled="false" Click="Logout" Size="Radzen.ButtonSize.Small" />
     <RadzenButton Text="Request" ButtonStyle="ButtonStyle.Secondary" Disabled="false" Click="Requested" Size="Radzen.ButtonSize.Small" />
 </div>
+@* Feed Check List *@
 <div class="flex-container" style="zoom:0.6">
     <RadzenCheckBoxList @bind-Value="values" TValue="int" Change="@((args) => Change(args, "CheckBoxList with horizontal orientation"))">
         <Items>
@@ -33,7 +35,7 @@
             <RadzenCheckBoxListItem Text="Options" Value="4" />
         </Items>
     </RadzenCheckBoxList>
-
+@* Configure Options Feed *@
     <RadzenAccordion Style="background-color:transparent;width:100%">
         <Items>
             <RadzenAccordionItem Text="Options" Icon="add_shopping_cart" Style="width:100%">
@@ -51,20 +53,30 @@
         </Items>
     </RadzenAccordion>
 </div>
+@*Simulator Settings*@
 <div class="flex-container">
     <RadzenAccordion Style="background-color:transparent;width:100%">
         <Items>
             <RadzenAccordionItem Text="Simulator" Icon="settings" Style="width:100%">
+                <div style="width:600px;justify-content: center;">
 
-                <RadzenCard>
-
-                </RadzenCard>
-
+                    <RadzenCard Style="width:600px;background-color:gainsboro">
+                        <div class="grid2-container">
+                            <h4 style="text-align:center;grid-column-end: span 2"> Simulator Settings</h4>
+                            <span>Available Dates: </span><Radzen.Blazor.RadzenDropDown TValue="DateTime" />
+                            <span>Start Time:  </span><Radzen.Blazor.RadzenDropDown TValue="DateTime" />
+                            <span>End Time: </span><Radzen.Blazor.RadzenDropDown TValue="DateTime" />
+                        </div>
+                        <div class="flex-container;margin:20 auto">
+                            <RadzenButton Text="Start" /><RadzenButton Text="Pause" /><RadzenButton Disabled="true" Text="Resume" /><RadzenButton Disabled="true" Text="Stop" />
+                        </div>
+                    </RadzenCard>
+                </div>
             </RadzenAccordionItem>
         </Items>
     </RadzenAccordion>
 </div>
-
+@* Feed Display *@
 <div class="grid-container">
     <RadzenCard>
         <div>
@@ -76,27 +88,35 @@
             <RadzenTextArea Visible="@((bool)logStreamer)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logText" />
         </div>
     </RadzenCard>
-    @*<div>
-            <RadzenCheckBox @bind-Value="@logHub" TValue="bool?" Change="@(args => logHubChange(args, ""))" />
-            <RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;" Component="CheckBox4" />
-            <BSBadge IsPill="true" class="alert-dark" title="Time of last data received">@clock</BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[1]].ToString("n0")' title="@valuesName[1]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[2]].ToString("n0")' title="@valuesName[2]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[3]].ToString("n0")' title="@valuesName[3]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[4]].ToString("n0")' logHubtitle="@valuesName[4]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[5]].ToString("n0")' title="@valuesName[5]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[6]].ToString("n0")' title="@valuesName[6]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[7]].ToString("n0")' title="@valuesName[7]" /></BSBadge>
-            <BSBadge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[valuesName[8]].ToString("n0")' title="@valuesName[8]" /></BSBadge>
-            <RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
-        </div>*@
+
+    @* Feed Counts *@
     <div>
+
         <HubMonitor logHub0="@logHub" clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
-        @*@TDAStreamerData.timeOfTimeAndSales*@
+
     </div>
 
 </div>
 
+<style>
+        .grid2-container {
+            display: grid;
+            grid-template-columns: 200px auto;
+            grid-row-gap: 10px;
+            /*        background-color: #2196F3;
+        */ padding: 10px;
+        }
+
+        .grid2-item {
+            /*        background-color: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.8);
+        */
+            padding: 20px;
+            /*            font-size: 30px;
+                text-align: center;
+    */
+        }
+</style>
 
 <style>
 

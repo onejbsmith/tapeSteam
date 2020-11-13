@@ -18,7 +18,6 @@ namespace tapeStream.Client.Components.HighCharts
     {
         List<string> lstPrices = new List<string>();
 
-
         [Parameter]
         public Dictionary<string, BookDataItem[]> bookData
         {
@@ -26,28 +25,34 @@ namespace tapeStream.Client.Components.HighCharts
             set
             {
                 _bookData = value;
+#if tracing
+Console.WriteLine("3. ChartSetData"); 
+#endif
                 ChartSetData(value);
             }
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
 
-        static string chart3Djson = @"[{
-            name: 'John',
-            data: [5, 3, 4, 7, 2],
-            stack: 'male'
-        }, {
-            name: 'Joe',
-            data: [3, 4, 4, 2, 5],
-            stack: 'male'
-        }, {
-            name: 'Jane',
-            data: [2, 5, 6, 2, 1],
-            stack: 'female'
-        }, {
-            name: 'Janet',
-            data: [3, 0, 4, 4, 3],
-            stack: 'female'
-        }]";
+        string chartJsFilename = "js/StackedColumns3DChart.js";
+
+        static string chartJson = "";
+        //@"[{
+        //    name: 'John',
+        //    data: [5, 3, 4, 7, 2],
+        //    stack: 'male'
+        //}, {
+        //    name: 'Joe',
+        //    data: [3, 4, 4, 2, 5],
+        //    stack: 'male'
+        //}, {
+        //    name: 'Jane',
+        //    data: [2, 5, 6, 2, 1],
+        //    stack: 'female'
+        //}, {
+        //    name: 'Janet',
+        //    data: [3, 0, 4, 4, 3],
+        //    stack: 'female'
+        //}]";
 
         public int seconds { get; set; }
 
@@ -65,7 +70,7 @@ namespace tapeStream.Client.Components.HighCharts
         {
             dictSeriesColor = SetSeriesColors();
             //ChartConfigure.seconds = 3;
-
+            await Task.CompletedTask;
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -73,7 +78,7 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 var dotNetReference = DotNetObjectReference.Create(this);
                 await jsruntime.InvokeVoidAsync("Initialize", dotNetReference);
-                await jsruntime.InvokeVoidAsync("getChartJson");
+                //await jsruntime.InvokeVoidAsync("getChartJson");
                 //await jsruntime.InvokeVoidAsync("getChartSeriesJson");
 
 
@@ -84,6 +89,10 @@ namespace tapeStream.Client.Components.HighCharts
         public async Task getChartJson(string jsonResponse)
         {
             /// get the chart as a POCO 
+#if tracing
+            Console.WriteLine("1. getChartJson");
+#endif
+
             Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
             chart = JsonSerializer.Deserialize<StackedColumns3DChart>(jsonResponse);
 
@@ -96,9 +105,10 @@ namespace tapeStream.Client.Components.HighCharts
 
             //chart.plotOptions.series.pointWidth = 100;
 
-            chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+            chartJson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+            Console.WriteLine("2. getChartJson");
 
-            Console.WriteLine(jsonResponse); /// to capture the chart object's json from js
+            Console.WriteLine(chartJson); /// to capture the chart object's json from js
             await Task.Yield();
         }
 
@@ -107,28 +117,53 @@ namespace tapeStream.Client.Components.HighCharts
 
             try
             {
+#if tracing
+                Console.WriteLine("4. ChartSetData");
+#endif
                 chart.yAxis.max = ChartConfigure.yAxisHigh;
 
+#if tracing
+                Console.WriteLine("5. ChartSetData");
+#endif
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
                 /// Get the price range min and max over all items in the dictionary
-                Chart_MaintainPriceAxis(bookDataItems, seriesOrder);                //AddSpreadPointsToBookData(bookDataItems);
+                Chart_MaintainPriceAxis(bookDataItems, seriesOrder);
+                //AddSpreadPointsToBookData(bookDataItems);
+#if tracing
+                Console.WriteLine("6. ChartSetData");
+#endif
                 var categories = lstPrices.ToArray();
                 chart.xAxis.categories = categories;
 
                 /// 
                 Chart_AddSpreadPlotBand(bookDataItems, categories);
+#if tracing
+                Console.WriteLine("7. ChartSetData");
+#endif
 
                 Chart_AddBollingerPlotLines(bookDataItems, categories);
+#if tracing
+                Console.WriteLine("8. ChartSetData");
+#endif
                 /// Convert BookDataItem[] to Series1[]
                 var seriesList = new List<Series1>();
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
+#if tracing
+                Console.WriteLine("9. ChartSetData");
+#endif
                 chart.series = seriesList.ToArray();
 
                 Chart_AdjustYaxis(bookDataItems);
+#if tracing
 
+                Console.WriteLine("10. ChartSetData");
+#endif
                 /// Send the new data and settings to the HighChart3D component
 
-                chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+                chartJson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+#if tracing
+                Console.WriteLine("11. ChartSetData");
+#endif
                 ///
                 /// We should only send the series and the categories, not the whole chart
                 /// But minor amouunt of config data involved in redraw
@@ -153,7 +188,7 @@ namespace tapeStream.Client.Components.HighCharts
 
         private void Chart_AdjustYaxis(Dictionary<string, BookDataItem[]> bookDataItems)
         {
-            var highestSize = bookDataItems.Max(dict=>dict.Value.Max(it=>it.Size));
+            var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
             if (highestSize > chart.yAxis.max) chart.yAxis.max = (int)Math.Ceiling(highestSize / 5000) * 5000;
         }
 
@@ -176,6 +211,7 @@ namespace tapeStream.Client.Components.HighCharts
                     }
             };
         }
+
         private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
             var bollingerBands = TDAChart.bollingerBands;
