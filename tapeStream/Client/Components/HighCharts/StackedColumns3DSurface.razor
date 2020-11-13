@@ -9,7 +9,8 @@
 
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart chartJson="@chart3Djson"
+        <HighChart id="StackedColumns3DSurfaceChart"
+                   chartJson="@chart3Djson"
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.DataUpdateMode.Replace"
                    chartJsFilename="js/StackedColumns3DSurfaceChart.js" />

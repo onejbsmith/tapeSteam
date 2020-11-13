@@ -7,7 +7,7 @@
         panning: true,
         panKey: 'shift',
         options3d: {
-            enabled: false,
+            enabled: true,
             alpha: 15,
             beta: 15,
             viewDistance: 25,

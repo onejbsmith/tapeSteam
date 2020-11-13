@@ -96,7 +96,6 @@ namespace tapeStream.Server.Data
                     dateTime = DateTime.Now,
                     time = now,
                     Size = lstBookItems.Sum(item => item.Size),
-                    bollingerBand = new TDAChart.Bollinger()
                 }
                 ).ToArray();
             return lstBookItemsData;
@@ -115,7 +114,6 @@ namespace tapeStream.Server.Data
                             Price = 0,
                             Size = 0,
                             time = 0,
-                            bollingerBand = new TDAChart.Bollinger()
 
                         },
                         new BookDataItem()
@@ -124,7 +122,6 @@ namespace tapeStream.Server.Data
                             Price = 0,
                             Size = 0,
                             time = 0,
-                            bollingerBand = new TDAChart.Bollinger()
                         }
                     };
 

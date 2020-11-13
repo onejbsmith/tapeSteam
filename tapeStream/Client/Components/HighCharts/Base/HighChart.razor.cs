@@ -21,7 +21,8 @@ namespace tapeStream.Client.Components.HighCharts.Base
             Shift
         }
 
-        private string id { get; set; } = "Highchart" + Guid.NewGuid().ToString();
+        [Parameter]
+        public string id { get; set; } //= "Highchart" + Guid.NewGuid().ToString();
 
         [Parameter] public string chartJson { get; set; }
 

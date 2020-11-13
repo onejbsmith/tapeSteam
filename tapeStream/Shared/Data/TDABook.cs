@@ -11,7 +11,6 @@ namespace tapeStream.Shared.Data
         public double Size { get; set; }
         public long time { get; set; }
         public DateTime dateTime { get; set; }
-        public TDAChart.Bollinger bollingerBand { get; set; }
     }
 
     public class TDABook

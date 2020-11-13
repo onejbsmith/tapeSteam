@@ -1,4 +1,8 @@
-﻿public static class DictionaryExtensions
+﻿using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
+
+public static class DictionaryExtensions
 {
     //public static void RemoveAll<TKey, TValue>(this IDictionary<TKey, TValue> dic,
     //    Func<TKey, TValue, bool> predicate)
@@ -10,4 +14,13 @@
     //    }
     //}
 }
+public static class ObjectExtensions
+{
+    public static void Dump<T>(this T data)
+    {
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        Console.WriteLine(json);
+        Debug.WriteLine(json);
+    }
 
+}

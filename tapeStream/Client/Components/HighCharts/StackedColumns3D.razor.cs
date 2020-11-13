@@ -1,4 +1,6 @@
-﻿using Blazorise.Utils;
+﻿#undef tracing
+#define bollinger
+using Blazorise.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Primitives;
 using Microsoft.JSInterop;
@@ -26,7 +28,7 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 _bookData = value;
 #if tracing
-Console.WriteLine("3. ChartSetData"); 
+                Console.WriteLine("3. ChartSetData");
 #endif
                 ChartSetData(value);
             }
@@ -66,6 +68,8 @@ Console.WriteLine("3. ChartSetData");
 
         string chartSeriesJson = "";
 
+        static double maxSize;
+
         protected override async Task OnInitializedAsync()
         {
             dictSeriesColor = SetSeriesColors();
@@ -102,6 +106,7 @@ Console.WriteLine("3. ChartSetData");
             chart.yAxis.title.text = "Size";
             chart.plotOptions.column.depth = 100;
             chart.plotOptions.column.grouping = false;
+            chart.yAxis.max = ChartConfigure.yAxisHigh;
 
             //chart.plotOptions.series.pointWidth = 100;
 
@@ -120,19 +125,21 @@ Console.WriteLine("3. ChartSetData");
 #if tracing
                 Console.WriteLine("4. ChartSetData");
 #endif
-                chart.yAxis.max = ChartConfigure.yAxisHigh;
 
 #if tracing
                 Console.WriteLine("5. ChartSetData");
 #endif
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
                 /// Get the price range min and max over all items in the dictionary
+                /// only if they changed set isDirty = true
                 Chart_MaintainPriceAxis(bookDataItems, seriesOrder);
                 //AddSpreadPointsToBookData(bookDataItems);
 #if tracing
                 Console.WriteLine("6. ChartSetData");
 #endif
                 var categories = lstPrices.ToArray();
+
+                /// only if they changed set isDirty = true
                 chart.xAxis.categories = categories;
 
                 /// 
@@ -188,10 +195,19 @@ Console.WriteLine("3. ChartSetData");
 
         private void Chart_AdjustYaxis(Dictionary<string, BookDataItem[]> bookDataItems)
         {
-            var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
-            if (highestSize > chart.yAxis.max) chart.yAxis.max = (int)Math.Ceiling(highestSize / 5000) * 5000;
-            ChartConfigure.yAxisHigh = chart.yAxis.max;
-
+            try
+            {
+                //var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
+                chart.yAxis.max = ChartConfigure.yAxisHigh;
+                var highestSize = maxSize;
+                if (highestSize > chart.yAxis.max)
+                {
+                    chart.yAxis.max = (int)Math.Ceiling(highestSize / 5000) * 5000;
+                    ChartConfigure.yAxisHigh = chart.yAxis.max;
+                }
+            }
+            catch (Exception ex)
+            { }
         }
 
         private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
@@ -226,7 +242,7 @@ Console.WriteLine("3. ChartSetData");
             var highPrice = bollingerBands.high.ToString("n2");
 
 
-#if tracing
+#if bollinger
             Console.WriteLine("7a. Chart_AddBollingerPlotLines");
             Console.WriteLine("7a. bollingerBands.mid=" + midPrice);
 
@@ -327,6 +343,7 @@ Console.WriteLine("3. ChartSetData");
 
                     minPrice = Math.Min(item.Price, minPrice);
                     maxPrice = Math.Max(item.Price, maxPrice);
+                    maxSize = Math.Max(item.Size, maxSize);
                 }
             }
             lstPrices.Sort();

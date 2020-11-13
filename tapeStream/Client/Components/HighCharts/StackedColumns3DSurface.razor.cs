@@ -31,23 +31,24 @@ namespace tapeStream.Client.Components.HighCharts
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
 
-        static string chart3Djson = @"[{
-            name: 'John',
-            data: [5, 3, 4, 7, 2],
-            stack: 'male'
-        }, {
-            name: 'Joe',
-            data: [3, 4, 4, 2, 5],
-            stack: 'male'
-        }, {
-            name: 'Jane',
-            data: [2, 5, 6, 2, 1],
-            stack: 'female'
-        }, {
-            name: 'Janet',
-            data: [3, 0, 4, 4, 3],
-            stack: 'female'
-        }]";
+        static string chart3Djson = "";
+        //    @"[{
+        //    name: 'John',
+        //    data: [5, 3, 4, 7, 2],
+        //    stack: 'male'
+        //}, {
+        //    name: 'Joe',
+        //    data: [3, 4, 4, 2, 5],
+        //    stack: 'male'
+        //}, {
+        //    name: 'Jane',
+        //    data: [2, 5, 6, 2, 1],
+        //    stack: 'female'
+        //}, {
+        //    name: 'Janet',
+        //    data: [3, 0, 4, 4, 3],
+        //    stack: 'female'
+        //}]";
 
         public int seconds { get; set; }
 

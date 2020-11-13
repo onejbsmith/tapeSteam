@@ -60,6 +60,7 @@ namespace tapeStream.Server.Managers
 
         public static void SeedCloses()
         {
+            closes.Clear();
             /// Read the last 25 chart entries from CHART_EQUITY Inputs
             var files = FilesManager.GetChartEntries(25);
             foreach (var file in files)
@@ -74,7 +75,8 @@ namespace tapeStream.Server.Managers
                     var symbol = contentObj["key"].ToString();
 
                     var chartEntry = JsonSerializer.Deserialize<Chart_Content>(content);
-                    closes.Add(chartEntry.close);
+                    if (chartEntry.close > 0)
+                        closes.Add(chartEntry.close);
                 }
             }
         }
@@ -86,8 +88,10 @@ namespace tapeStream.Server.Managers
 
             var symbol = TDAStreamerData.timeSales.Keys.Last();
             closes.Add(TDAStreamerData.timeSales[symbol].Last().price);
+            System.Diagnostics.Debug.Print("Last Close=" + closes[closes.Count() - 1].ToString());
 
-
+            DateTime.Now.Dump();
+            closes.Dump();
             //var x = new TDAStreamer();
             //x.ConsoleLog("Hello World");
             //x.Dispose();
@@ -120,6 +124,7 @@ namespace tapeStream.Server.Managers
                     //Console.WriteLine("TDA Server closes count=" + closes.Length);
                     total_average -= closes[i - periods + 1];
                     total_squares -= Math.Pow(closes[i - periods + 1], 2);
+                    bollingerBands.Dump();
                 }
             }
         }
