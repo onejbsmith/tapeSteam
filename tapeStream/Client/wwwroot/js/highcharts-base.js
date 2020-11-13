@@ -23,10 +23,11 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                 if (isFirstTime) {
                                                     console.log("window.loadHighchart " + chartDivName);
                                                     console.table(window.chartObj);
-                                                }
+
                                                     //console.table(window.chart);
                                                     /// render the chart
                                                     window.chart = Highcharts.chart(chartDivName, window.chartObj);
+
                                                     /// if more than one 3d on page, only first gets this
                                                     $(window.chart.container).on('mousedown.hc touchstart.hc', function (eStart) {
                                                         eStart = chart.pointer.normalize(eStart);
@@ -56,16 +57,25 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                         //    }
                                                         //});
                                                     });
-                                                //}
-                                                //else
-                                                //{
-                                                //    chart.update(window.chartObj);
-                                                //    //chart.series = (window.chartObj);
-                                                //    //chart.series = 
-                                                //    //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
-                                                //    chart.highcharts().redraw();
+                                                }
+                                                else {
+                                                    var chartInDiv = $("#" + chartDivName).highcharts();
 
-                                                //}
+                                                    //var series = window.chartObj.series;
+                                                    //for (var i = 0; i < series.length; i++)
+                                                    //{
+                                                    //    chartInDiv.series[i].setData(series[i].data, false);
+                                                    //};
+                                                    //chartInDiv.redraw();
+
+                                                    chartInDiv.update(window.chartObj);
+                                                    //chart.series = (window.chartObj);
+                                                    //chart.series = 
+                                                    //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
+                                                     chartInDiv.reflow();
+                                                   chartInDiv.redraw();
+
+                                                }
 
                                                 SetLanguage();
 
@@ -76,7 +86,7 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                     var json = JSON.stringify(window.chartObj);
                                                     console.log("window.getChartJson");
                                                     console.log(json);
-                                                window.getChartJson(window.chartObj);
+                                                    window.getChartJson(window.chartObj);
                                                     return json;
                                                 }
 
