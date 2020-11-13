@@ -190,6 +190,8 @@ Console.WriteLine("3. ChartSetData");
         {
             var highestSize = bookDataItems.Max(dict => dict.Value.Max(it => it.Size));
             if (highestSize > chart.yAxis.max) chart.yAxis.max = (int)Math.Ceiling(highestSize / 5000) * 5000;
+            ChartConfigure.yAxisHigh = chart.yAxis.max;
+
         }
 
         private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
@@ -223,6 +225,12 @@ Console.WriteLine("3. ChartSetData");
             var midhighPrice = bollingerBands.midhigh.ToString("n2");
             var highPrice = bollingerBands.high.ToString("n2");
 
+
+#if tracing
+            Console.WriteLine("7a. Chart_AddBollingerPlotLines");
+            Console.WriteLine("7a. bollingerBands.mid=" + midPrice);
+
+#endif
             //var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
 
             var low = categories.ToList().IndexOf(lowPrice); ;
