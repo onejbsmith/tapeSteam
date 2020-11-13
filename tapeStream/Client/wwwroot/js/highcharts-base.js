@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-window.loadHighchart = function (chartDivName, chartJson) {
+window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
     loadScript("https://code.highcharts.com/highcharts.js").then(
         function () {
             loadScript("https://code.highcharts.com/modules/annotations.js").then(
@@ -23,7 +23,10 @@ window.loadHighchart = function (chartDivName, chartJson) {
                                                 if (isFirstTime) {
                                                     console.log("window.loadHighchart " + chartDivName);
                                                     console.table(window.chartObj);
+                                                }
+ 
 
+                                                if (redrawChart==false || isFirstTime==true) {
                                                     //console.table(window.chart);
                                                     /// render the chart
                                                     window.chart = Highcharts.chart(chartDivName, window.chartObj);

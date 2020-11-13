@@ -8,6 +8,7 @@ namespace tapeStream.Client.Components
 {
     public partial class ChartConfigure
     {
+        public static bool redrawChart;
         public static int xAxisMaxCategories = 100;
 
         public static int yAxisHigh = 5000;

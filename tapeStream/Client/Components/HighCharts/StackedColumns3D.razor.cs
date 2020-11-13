@@ -336,7 +336,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             var x = new List<string>();
             if(lstPrices.Count==0)
-                x = localStorage.GetItem<List<string>>("lstPrices");
+                lstPrices = localStorage.GetItem<List<string>>("lstPrices");
             /// Set up the Categories list
             //var lstPrices = new List<string>();
             foreach (var name in seriesOrder)
