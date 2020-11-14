@@ -1,0 +1,27 @@
+﻿@*<h3>SurfaceChartConfigurator</h3>*@
+<RadzenAccordion Style="background-color:transparent">
+    <Items>
+        <RadzenAccordionItem Text="@showTitle" Icon="account_balance_wallet" Style="width:50%;display:inline-flex">
+
+            <span>
+                Seconds to Aggregate: &nbsp;[@seconds]&nbsp;
+                <RadzenSlider Min="0" Max="60" @bind-Value=@seconds Style="width:33%;position:relative;top:8px;margin:10px" />
+            </span>
+            <br />
+            <span>Max # of Prices:&nbsp;<RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="60" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric></span>
+            <span>Max Size Height:&nbsp;<RadzenNumeric @bind-Value="@yAxisMax" TValue="int" Min="0" Max="100000" Step="5000" Style="margin:10px;width:100px"></RadzenNumeric></span>
+            <span>Auto YAxis Max:&nbsp;<RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox></span>
+            <span>Chart Redraw:&nbsp;<RadzenCheckBox @bind-Value="@redrawChart" Style="margin:10px"></RadzenCheckBox></span>
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
+<style>
+    .ui-inputtext {
+        color: #333;
+        font-weight: 800;
+        font-size: large;
+    }
+</style>
+@code {
+
+}

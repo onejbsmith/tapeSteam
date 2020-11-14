@@ -58,7 +58,7 @@
     <Content Remove="Components\HighCharts\Columns3D.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
-    <Content Remove="Components\HighCharts\xStackedColumns3DSurface.razor" />
+    <Content Remove="Components\HighCharts\xSurface.StackedColumns3DSurface.razor" />
     <Content Remove="Components\HubMonitor.razor" />
     <Content Remove="Components\HubMonitorOld.razor" />
     <Content Remove="Components\PrintArcGaugeChart.razor" />
@@ -78,7 +78,7 @@
 
   <ItemGroup>
     <None Remove="Components\HighCharts\StackedColumns3D.razor.js" />
-    <None Remove="Components\HighCharts\xStackedColumns3DSurface.razor.js" />
+    <None Remove="Components\HighCharts\xSurface.StackedColumns3DSurface.razor.js" />
     <None Remove="Shared\DarkReader.css" />
   </ItemGroup>
 

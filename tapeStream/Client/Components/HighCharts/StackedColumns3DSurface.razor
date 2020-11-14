@@ -1,19 +1,36 @@
-﻿@*<h3>StackedColumns3DSurface</h3>*@
+﻿@*<h3>Surface.StackedColumns3DSurface</h3>*@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Client.Components.HighCharts.Base
 
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
+
 @*@name;*@
+
+@inject Blazored.LocalStorage.ISyncLocalStorageService  localStorage
+<style>
+    #container {
+        /*height: 80vh;*/
+        /*min-width: 310px;
+        max-width: 100hw;*/
+        /*margin: 0 auto;*/
+    }
+</style>
+
+<div style="width:100%">
+    <SurfaceChartConfigurator title="QǬǪ —— Level II + Time & Sales Surface" />
+</div>
+
 <div style="display:grid">
 
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart id="StackedColumns3DSurfaceChart"
+        <HighChart id="Surface.StackedColumns3DSurfaceChart"
                    chartJson="@chart3Djson"
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.DataUpdateMode.Replace"
-                   chartJsFilename="js/StackedColumns3DSurfaceChart.js" />
+                   chartJsFilename="js/StackedColumns3DSurfaceChart.js?id=2x1"
+                   redrawChart="SurfaceChartConfigurator.redrawChart"/>
 
     </div>
 </div>

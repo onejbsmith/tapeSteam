@@ -2,21 +2,21 @@
 {
     chart: {
         type: 'column',
-        options3d: {
+            options3d: {
             enabled: true,
-            alpha: 20,
-            beta: 30,
-            depth: 400,
-            panning: {
+                alpha: 20,
+                    beta: 30,
+                        depth: 400,
+                            panning: {
                 enabled: true,
-                type: 'xy'
+                    type: 'xy'
             },
             panKey: 'shift',
-            viewDistance: 50,
-            frame: {
+                viewDistance: 50,
+                    frame: {
                 bottom: {
                     size: 1,
-                    color: 'rgba(0,0,0,0.05)'
+                        color: 'rgba(0,0,0,0.05)'
                 }
             }
         }
@@ -24,118 +24,120 @@
     plotOptions: {
         series: {
             groupZPadding: 1,
-            depth: 8,
-            groupPadding: 0,
-            grouping: false,
+                depth: 8,
+                    groupPadding: 0,
+                        grouping: false,
+        },
+        column: {
+            colorByPoint: true,
+                //colors: [
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#00ff00',
+
+                //    '#00ff00',
+                //    '#00ff00',
+                //    '#0000ff',
+                //    '#0000ff',
+                //    '#0000ff',
+
+                //    '#00ff00',
+                //    '#00ff00',
+                //    '#0000ff',
+                //    '#0000ff',
+                //    '#0000ff',
+
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#ff0000',
+                //    '#00ff00',
+                //]
         }
     },
 
 
     title: {
-        text: 'Chart Title 2'
+        text: 'Chart Title 2 el'
     },
     subtitle: {
         text: 'Sub Title'
     },
     yAxis: {
         title: {
-            text: 'Size'
+            text: 'Y-Axis'
         },
         min: 0,
-        max: 10
+            max: 10
     },
     xAxis: {
         title: {
             text: 'Price',
-            skew3d: true
         },
         min: 0,
-        max: 10
+            max: 10
     },
     zAxis: {
         min: 0,
-        max: 10,
-        categories: ['A01', 'A02', 'A03', 'A04'],
-        labels: {
+            max: 10,
+                categories: ['A01', 'A02', 'A03', 'A04'],
+                    labels: {
             y: 5,
-            rotation: 18
-        }
+                rotation: 18
+        },
+        title: {
+            text: 'Time',
+        },
     },
 
 
 
     series:
-        [
-            {
-                data:
-                    [
-                        [0, 2], [1, 1], [2, 7], [3, 0]
-                    ],
-                color: '#FF0000'
-            },
-            {
-                data: [
-                    [4, 5], [5, 1],
-                ]
-            },
-            {
-                data: [
-                    [6, 9]
-                ]
-            },
-            {
-                data: [
-                    [6, 3], [7, 9], [8, 7], [9, 0]
-                ]
-            },
 
-            {
-                showInLegend: false,
-                data: [
-                    [0, 2], [1, 1], [2, 7], [3, 0]
-                ], color: '#FF0000'
-            },
-            {
-                showInLegend: false,
-                data: [
-                    [4, 5], [5, 1],
-                ]
-            },
-            {
-                showInLegend: false,
-                data: [[6, 9]]
-            },
-            {
-                showInLegend: false,
-                data: [[6, 3], [7, 9], [8, 7], [9, 0]]
-            },
+    [
+        //{
+        //    data: [{ x: 0, y: 5, color: '#BF0B23' }]
+        //},
+        {
+            data:
+                [
+                    [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+                    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]
+                ],
 
-            {
-                showInLegend: false,
-                data: [[0, 2], [1, 1], [2, 7], [3, 0]], color: '#FF0000'
-            },
-            {
-                showInLegend: false, data: [[4, 5], [5, 1],]
-            },
-            {
-                showInLegend: false, data:
-                    [[6, 9]]
-            },
-            { showInLegend: false, data: [[6, 3], [7, 9], [8, 7], [9, 0]] },
+        },
 
-            { showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0]], color: '#FF0000' },
-            { showInLegend: false, data: [[4, 5], [5, 1],] },
-            { showInLegend: false, data: [[6, 9]] },
-            { showInLegend: false, data: [[6, 3], [7, 9], [8, 7], [9, 0]] },
+        {
+            data: [
+                [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+                [5, 1], [6, 3], [7, 1], [8, 2], [9, 3]
+            ]
+        },
 
-            { showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0]], color: '#FF0000' },
-            { showInLegend: false, data: [[4, 5], [5, 1],] },
-            { showInLegend: false, data: [[6, 9]] },
-            { showInLegend: false, data: [[6, 3], [7, 9], [8, 7], [9, 0]] },
+        {
+            data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+            [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
+            ]
+        },
 
-            { showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0]], color: '#FF0000' },
-            { showInLegend: false, data: [[4, 5], [5, 1],] },
-            { showInLegend: false, data: [[6, 9]] },
-            { showInLegend: false, data: [[6, 3], [7, 9], [8, 7], [9, 0]] }
-        ]
+
+        {
+            data: [{x:0, y: 5, color: '#BF0B23' }, [1, 1], [2, 7], [3, 0], [4, 5],
+            [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
+            ]
+        },
+
+
+        {
+            showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
+        },
+
+        {
+            showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
+        },
+    ]
 }

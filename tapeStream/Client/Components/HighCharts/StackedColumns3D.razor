@@ -13,8 +13,6 @@
     }
 </style>
 
-@*<h3>HighChart</h3>*@
-
 <div style="width:100%">
     <ChartConfigure title="QǬǪ —— Level II + Time & Sales" />
 </div>
@@ -28,6 +26,7 @@
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.dataUpdateMode"
                    chartJsFilename="js/StackedColumns-3DChart.js"
-                   id="StackedColumns3DChart" />
+                   id="StackedColumns3DChart" 
+                   redrawChart="ChartConfigure.redrawChart"/>
     </div>
 </div>

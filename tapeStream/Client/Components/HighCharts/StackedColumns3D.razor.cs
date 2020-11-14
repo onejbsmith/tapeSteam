@@ -265,36 +265,36 @@ namespace tapeStream.Client.Components.HighCharts
                 {  value=low,
                     color="magenta",
                     width=4,
-                    zIndex = 1
+                    zIndex = 2
                 },
                  new Plotline()
                 {  value=midlow,
                     color="magenta",
                     width=2,
-                    zIndex = 1
+                    zIndex = 2
                 },
                 new Plotline()
                 {  value=mid,
                     color="cyan",
                     width=4,
-                    zIndex = 1
+                    zIndex = 2
                 },
                 new Plotline()
                 {  value=midhigh,
                     color="red",
                     width=2,
-                    zIndex = 1
+                    zIndex = 2
                 },
                 new Plotline()
                 {  value=high,
                     color="red",
                     width=4,
-                    zIndex = 1
+                    zIndex = 2
                 },
                 new Plotline()
                 {  value=midCategory,
                     color="#666666",
-                    width=6,
+                    width=8,
                     zIndex = 1
                 },
             };

@@ -54,20 +54,20 @@ namespace tapeStream.Client.Components.HighCharts
 
         string name = "not set";
 
-        static StackedColumns3DChart chart = new StackedColumns3DChart();
+        static Surface.StackedColumns3DSurface chart = new Surface.StackedColumns3DSurface();
 
         static Dictionary<string, string> dictSeriesColor;
 
         static TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        static List<Series1> seriesList = new List<Series1>();
+        static List<Surface.Series1> seriesList = new List<Surface.Series1>();
 
         string chartSeriesJson = "";
 
         protected override async Task OnInitializedAsync()
         {
             dictSeriesColor = SetSeriesColors();
-            //ChartConfigure.seconds = 3;
+            //SurfaceChartConfigurator.seconds = 3;
 
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -88,17 +88,19 @@ namespace tapeStream.Client.Components.HighCharts
         {
             /// get the chart as a POCO 
             Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
-            chart = JsonSerializer.Deserialize<StackedColumns3DChart>(jsonResponse);
+            Console.WriteLine("1. getChartJson");
+            chart = JsonSerializer.Deserialize<Surface.StackedColumns3DSurface>(jsonResponse);
 
             /// We set some static chart Properties here and pass back to js
             chart.title.text = "";
             chart.chart.options3d.enabled = true;
-            chart.yAxis.title.text = "Size";
+            //chart.yAxis.title.text = "Size";
             //chart.plotOptions.series.pointWidth = 100;
 
-            chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+            chart3Djson = JsonSerializer.Serialize<Surface.StackedColumns3DSurface>(chart);
 
             Console.WriteLine(jsonResponse); /// to capture the chart object's json from js
+            Console.WriteLine("2. getChartJson");
             await Task.Yield();
         }
 
@@ -106,17 +108,20 @@ namespace tapeStream.Client.Components.HighCharts
         {
 
             try
-            {
-                chart.title.text = "Surface";
-                chart.plotOptions.column.depth = 1;
 
-                chart.yAxis.max = ChartConfigure.yAxisHigh;
+            {
+                Console.WriteLine("3. StackedColumns3DSurface ChartSetData");
+                chart.title.text = "Surface";
+                //chart.plotOptions.column.depth = 1;
+
+                chart.yAxis.max = SurfaceChartConfigurator.yAxisHigh;
 
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
                 /// Get the price range min and max over all items in the dictionary
                 Chart_MaintainPriceAxis(bookDataItems, seriesOrder);                //AddSpreadPointsToBookData(bookDataItems);
+                Console.WriteLine("4. ChartSetData");
                 var categories = lstPrices.ToArray();
-                chart.xAxis.categories = categories;
+                chart.zAxis.categories = categories;
 
                 /// 
                 //Chart_AddSpreadPlotBand(bookDataItems, categories);
@@ -124,13 +129,15 @@ namespace tapeStream.Client.Components.HighCharts
                 //Chart_AddBollingerPlotLines(bookDataItems, categories);
                 /// Convert BookDataItem[] to Series1[]
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
+                Console.WriteLine("5. ChartSetData");
                 chart.series = seriesList.ToArray();
 
-                chart.chart.options3d.depth = Math.Max(100, chart.series.Count() * chart.plotOptions.column.depth);
+                //chart.chart.options3d.depth = Math.Max(100, chart.series.Count() * chart.plotOptions.column.depth);
 
                 /// Send the new data and settings to the HighChart3D component
 
-                chart3Djson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+                chart3Djson = JsonSerializer.Serialize<Surface.StackedColumns3DSurface>(chart);
+                Console.WriteLine("6. StackedColumns3DSurface ChartSetData");
                 ///
                 /// We should only send the series and the categories, not the whole chart
                 /// But minor amouunt of config data involved in redraw
@@ -158,19 +165,19 @@ namespace tapeStream.Client.Components.HighCharts
             var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
             var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
 
-            chart.xAxis.plotBands = new Plotband[]
-            {
-                    new Plotband()
-                    { from=highBid,
-                        to =lowAsk,
-                        color="#888888",
-                        //label= new Label()
-                        //{
-                        //    text="Spread"
-                        //}
+        //    chart.xAxis.plotBands = new Plotband[]
+        //    {
+        //            new Plotband()
+        //            { from=highBid,
+        //                to =lowAsk,
+        //                color="#888888",
+        //                //label= new Label()
+        //                //{
+        //                //    text="Spread"
+        //                //}
 
-                    }
-            };
+        //            }
+        //    };
         }
         private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
@@ -186,32 +193,32 @@ namespace tapeStream.Client.Components.HighCharts
 
             var midCategory = categories.Length / 2;
 
-            chart.xAxis.plotLines = new Plotline[]
-            {
-                new Plotline()
-                {  value=low,
-                    color="purple",
-                    width=4
-                },
-                new Plotline()
-                {  value=mid,
-                    color="cyan",
-                    width=4
-                },
-                new Plotline()
-                {  value=high,
-                    color="red",
-                    width=4
-                },
-                new Plotline()
-                {  value=midCategory,
-                    color="#666666",
-                    width=6
-                },
-            };
+            //chart.xAxis.plotLines = new Plotline[]
+            //{
+            //    new Plotline()
+            //    {  value=low,
+            //        color="purple",
+            //        width=4
+            //    },
+            //    new Plotline()
+            //    {  value=mid,
+            //        color="cyan",
+            //        width=4
+            //    },
+            //    new Plotline()
+            //    {  value=high,
+            //        color="red",
+            //        width=4
+            //    },
+            //    new Plotline()
+            //    {  value=midCategory,
+            //        color="#666666",
+            //        width=6
+            //    },
+            //};
         }
 
-        private static void Chart_BuildSeriesData(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder, string[] categories, List<Series1> seriesList)
+        private static void Chart_BuildSeriesData(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder, string[] categories, List<Surface.Series1> seriesList)
         {
 
 
@@ -233,29 +240,29 @@ namespace tapeStream.Client.Components.HighCharts
             for (int i = 0; i < bookDataItems.Count; i++)
             {
                 /// Create the series
-                var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
-                var seriesItem = new Series1()   /// Chart Series1 item
-                {
-                    name = (seriesName == "salesAtAsk") ? "Buys" : seriesName == "salesAtBid" ? "Sells" : textInfo.ToTitleCase(seriesName),
-                    // This array needs to be the 100 slots and Size put in slot for Price
-                    data = new int?[categories.Length],
-                    color = dictSeriesColor[seriesName],
-                    stack = seriesName == "asks" || seriesName == "salesAtAsk" ? "Sell Demand" : "Buy Demand",
-                    showInLegend = true
-                };
+                //var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
+                //var seriesItem = new Surface.Series1()   /// Chart Series1 item
+                //{
+                //    name = (seriesName == "salesAtAsk") ? "Buys" : seriesName == "salesAtBid" ? "Sells" : textInfo.ToTitleCase(seriesName),
+                //    // This array needs to be the 100 slots and Size put in slot for Price
+                //    data = new int?[categories.Length],
+                //    color = dictSeriesColor[seriesName],
+                //    stack = seriesName == "asks" || seriesName == "salesAtAsk" ? "Sell Demand" : "Buy Demand",
+                //    showInLegend = true
+                //};
 
-                /// Fill out the series data 
-                foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
-                {
-                    /// Place bookitem Sizes in Series1 data
-                    var index = categories.ToList().IndexOf(item.Price.ToString("n2"));
+                ///// Fill out the series data (needs to be 2d)
+                //foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
+                //{
+                //    /// Place bookitem Sizes in Series1 data
+                //    var index = categories.ToList().IndexOf(item.Price.ToString("n2"));
 
-                    seriesItem.data[index] = (int)item.Size;
-                }
+                //    seriesItem.data[index] = (int)item.Size;
+                //}
 
 
-                /// Add to chart Series1 as first series
-                seriesList.Insert(0, seriesItem);
+                ///// Add to chart Series1 as first series
+                //seriesList.Insert(0, seriesItem);
                 /// Set chart Series1
             }
         }
@@ -281,7 +288,7 @@ namespace tapeStream.Client.Components.HighCharts
             lstPrices.Sort();
 
             //var midPrice = (minPrice + maxPrice) / 2;
-            //var n = ChartConfigure.xAxisMaxCategories;
+            //var n = SurfaceChartConfigurator.xAxisMaxCategories;
             ///// Cull the list of prices if it's more than 100
             //if (lstPrices.Count > n)
             //{

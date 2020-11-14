@@ -2,16 +2,17 @@
 
 namespace tapeStream.Client.Components
 {
-    public partial class ChartConfigure
+
+  public partial class SurfaceChartConfigurator
     {
         public static bool redrawChart;
         public static int xAxisMaxCategories = 100;
 
         public static int yAxisHigh = 5000;
+         
+        private int _yAxisMax = yAxisHigh;
 
-        private  int _yAxisMax = yAxisHigh;
-
-        public  int yAxisMax
+        public int yAxisMax
         {
             get { return _yAxisMax; }
             set
