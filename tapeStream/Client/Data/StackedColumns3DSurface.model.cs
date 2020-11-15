@@ -4,7 +4,7 @@ namespace tapeStream.Client.Components.HighCharts
 {
 
 
-    public class Surface
+    public partial class Surface
     {
 
         public class StackedColumns3DSurface
