@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using tapeStream.Server.Data.classes;
 
 namespace tapeStream.Server.Data
 {
@@ -47,6 +48,7 @@ namespace tapeStream.Server.Data
                 return "";
             }
         }
+
 
 
         public static string GetFileNameForToday(string fileType)
@@ -94,6 +96,98 @@ namespace tapeStream.Server.Data
             return entries;
 
         }
+
+        /// <summary>
+        /// Needs to read filenames from 3 folders and return one list in time order
+        /// </summary>
+        /// <param name="simulatorSettings"></param>
+        /// <returns></returns>
+        internal static Dictionary<DateTime, string> GetFeedFileNames(SimulatorSettings simulatorSettings)
+        {
+            /// Get all file times, names into one dictionary
+            var dictAllFileNames = new Dictionary<DateTime, string>();
+            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
+            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+
+            folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\";
+            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+
+            folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
+            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+
+
+            /// Get all times into a sorted list
+            var lstAllTimes = new List<DateTime>();
+            lstAllTimes = dictAllFileNames.Keys.ToList();
+            lstAllTimes.Sort();
+
+
+            /// Create sorted dictionary
+            var dictFinalFilesNames = new Dictionary<DateTime, string>();
+            foreach (var time in lstAllTimes)
+            {
+                dictFinalFilesNames.Add(time, dictAllFileNames[time]);
+            }
+
+            return dictFinalFilesNames;
+        }
+
+        private static void FeedAddFiles(string folderPath, Dictionary<DateTime, string> dictAllFileNames, SimulatorSettings simulatorSettings)
+        {
+            var fileNames = Directory.GetFiles(folderPath).ToList();
+            var lstFileDates = new List<string>();
+            foreach (var fileName in fileNames)
+            {
+                var fileDate = File.GetLastAccessTime(fileName);
+                if (fileDate.Date == simulatorSettings.runDate.Date)
+                    if (fileDate.TimeOfDay >= simulatorSettings.startTime.TimeOfDay && fileDate.TimeOfDay <= simulatorSettings.endTime.TimeOfDay)
+                    {
+                        /// Since GetLastAccessTime is only to the second, add millis to make fileDate unique
+                        while (dictAllFileNames.ContainsKey(fileDate))
+                            fileDate = fileDate.AddMilliseconds(1);
+
+                        dictAllFileNames.Add(fileDate, fileName);
+                    }
+            }
+        }
+
+        internal static string GetFeedFile(string feedFile)
+        {
+            var fileText = File.ReadAllText(feedFile);
+            return fileText;
+        }
+
+        internal static List<string> GetFeedDates()
+        {
+            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
+            var fileNames = Directory.GetFiles(folderPath).ToList();
+            var lstFileDates = new List<string>();
+            foreach (var fileName in fileNames)
+            {
+                var fileDate = File.GetLastAccessTime(fileName).ToLongDateString();
+                if (!lstFileDates.Contains(fileDate))
+                    lstFileDates.Add(fileDate);
+            }
+            return lstFileDates;
+        }
+        internal static List<string> GetFeedTimes(DateTime runDate)
+        {
+            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
+            var fileNames = Directory.GetFiles(folderPath).ToList();
+            var lstFileTimes = new List<string>();
+            foreach (var fileName in fileNames)
+            {
+                var fileDate = File.GetLastAccessTime(fileName);
+                if (fileDate.Date == runDate)
+                {
+                    var fileTime = fileDate.ToShortTimeString();
+                    if (!lstFileTimes.Contains(fileTime))
+                        lstFileTimes.Add(fileTime);
+                }
+            }
+            return lstFileTimes;
+        }
+
     }
 
 

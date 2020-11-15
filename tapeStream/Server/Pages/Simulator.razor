@@ -1,0 +1,60 @@
+﻿@page "/Simulator"
+
+<h3>Simulator</h3>
+@using tapeStream.Server.Data
+@using tapeStream.Server.Components
+@using tapeStream.Server.Data.classes
+
+
+<TDAStreamer simulate="true" simulatorSettings="@simulatorSettings" />
+
+<div class="flex-container">
+    <RadzenAccordion Style="background-color:transparent;width:100%">
+        <Items>
+            <RadzenAccordionItem Text="Simulator Settings" Icon="settings" Style="width:100%">
+                <div style="width:600px;justify-content: center;">
+
+                    <RadzenCard Style="width:600px;background-color:gainsboro">
+                        <div class="grid-container">
+                            <h4 style="text-align:center;grid-column-end: span 2">&nbsp;Simulator Settings</h4>
+                            <span>Available Dates: </span>
+                            <RadzenDropDown TValue="string"
+                                            Data="@lstFeedDates"
+                                            Change="@(args => FeedDateChange(args, "DropDown"))" />
+                            <span>Start Time:  </span>
+                            <RadzenDropDown TValue="string"
+                                            @bind-Value="@startTime"
+                                            Data="@lstFeedTimes"
+                                            Disabled="@(simulatorSettings.runDate.Date==new DateTime().Date)"
+                                            Change="@(args => StartTimeChange(args, "DropDown"))" />
+                            <span>End Time: </span>
+                            <RadzenDropDown TValue="string"
+                                            @bind-Value="@endTime"
+                                            Data="@lstFeedTimes"
+                                            Change="@(args => EndTimeChange(args, "DropDown"))"
+                                            Disabled="@(simulatorSettings.runDate.Date==new DateTime().Date)" />
+                        </div>
+
+                    </RadzenCard>
+                </div>
+            </RadzenAccordionItem>
+        </Items>
+    </RadzenAccordion>
+</div>
+<br />
+
+@code {
+}
+<style>
+    .flex-container {
+        display: flex;
+        margin-bottom: 5px;
+        /*        zoom: 0.8;
+    */
+    }
+
+    .grid-container {
+        display: grid;
+        grid-row-gap: 5px;
+    }
+</style>

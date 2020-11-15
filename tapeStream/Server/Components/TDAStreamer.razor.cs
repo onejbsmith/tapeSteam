@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using tapeStream.Shared;
 using tapeStream.Server.Data;
+using tapeStream.Server.Data.classes;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace tapeStream.Server.Components
 {
@@ -27,6 +29,13 @@ namespace tapeStream.Server.Components
         #region Variables
         [Parameter]
         public string symbol { get; set; }
+
+        [Parameter]
+        public bool simulate { get; set; }
+
+        [Parameter]
+        public SimulatorSettings simulatorSettings { get; set; }
+
 
         //public ObservableCollection<SparkData> DataSource { get; set; }
         DateTime svcDateTime = DateTime.Now;
@@ -83,6 +92,83 @@ namespace tapeStream.Server.Components
         {
             await TDAStreamerJs.InvokeAsync<string>("console.log", log);
         }
+
+
+        #region Simulator Button Event Handlers
+
+        void Click(MouseEventArgs args, string buttonName)
+        {
+            switch (buttonName)
+            {
+                case "Start":
+                    Simulator_Start();
+                    break;
+                case "Pause":
+                    Simulator_Pause();
+                    break;
+                case "Resume":
+                    Simulator_Resume();
+                    break;
+                case "Stop":
+                    Simulator_Stop();
+                    break;
+            }
+            StateHasChanged();
+        }
+        private async Task Simulator_Start()
+        {
+            simulatorStarted = true;
+            StateHasChanged();
+
+            /// Get all the feed file names for the simulatorSettings
+            Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(simulatorSettings);
+
+            /// Process each file
+            foreach (var feedFile in feedFilesList)
+            {
+                /// Get the next feed file and make it a json Array 
+
+                var fileJson = FilesManager.GetFeedFile(feedFile.Value);
+                var feedJson = $"{{ \"data\":[{fileJson}] }}";
+
+                /// Process file
+                await TDAStreamerOnMessage(feedJson);
+
+                /// Wait for next file
+                int delayMilliSecs = 300;
+                await Task.Delay(delayMilliSecs);
+
+                /// Pause the simulator
+                while (simulatorPaused)
+                {
+                    await Task.Yield();
+                    await Task.Delay(1000);
+                }
+                /// Stop the simulator
+                if (simulatorStarted == false)
+                    break;
+            }
+        }
+
+        private void Simulator_Stop()
+        {
+            simulatorStarted = false;
+            StateHasChanged();
+        }
+
+        private void Simulator_Resume()
+        {
+            simulatorPaused = false;
+            StateHasChanged();
+        }
+
+        private void Simulator_Pause()
+        {
+            simulatorPaused = true;
+            StateHasChanged();
+        }
+
+        #endregion
 
         #region Page Event Handlers   
         protected override async Task OnInitializedAsync()
@@ -347,6 +433,8 @@ namespace tapeStream.Server.Components
         List<string> lstJson = new List<string>();
         private string loginStatus;
         private string adminMsg;
+        private bool simulatorStarted;
+        private bool simulatorPaused;
 
         [JSInvokable("TDAStreamerOnMessage")]
         public async Task TDAStreamerOnMessage(string jsonResponse)
@@ -405,7 +493,8 @@ namespace tapeStream.Server.Components
                 /// We can replay these messages later from simulator
                 /// Need to NOT reswnd 
                 dictTopicCounts[svcName] += 1;
-                await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
+                if (!simulate)
+                    await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
                 //await Send(svcName, svcFieldedJson);
                 StateHasChanged();
             }
