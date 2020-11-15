@@ -21,7 +21,7 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                 /// turn json to js object (deserialize)
                                                 window.chartObj = looseJsonParse(chartJson);
                                                 if (isFirstTime) {
-                                                    console.log("window.loadHighchart " + chartDivName);
+                                                    console.log(`1. ${chartDivName} window.loadHighchart`);
                                                     console.table(window.chartObj);
                                                 }
  
@@ -43,22 +43,22 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                             newBeta,
                                                             sensitivity = 5; // lower is more sensitive
 
-                                                        //$(document).on({
-                                                        //    'mousemove.hc touchdrag.hc': function (e) {
-                                                        //        // Run beta
-                                                        //        newBeta = beta + (posX - e.pageX) / sensitivity;
-                                                        //        chart.options.chart.options3d.beta = newBeta;
+                                                        $(document).on({
+                                                            'mousemove.hc touchdrag.hc': function (e) {
+                                                                // Run beta
+                                                                newBeta = beta + (posX - e.pageX) / sensitivity;
+                                                                chart.options.chart.options3d.beta = newBeta;
 
-                                                        //        // Run alpha
-                                                        //        newAlpha = alpha + (e.pageY - posY) / sensitivity;
-                                                        //        chart.options.chart.options3d.alpha = newAlpha;
+                                                                // Run alpha
+                                                                newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                                                chart.options.chart.options3d.alpha = newAlpha;
 
-                                                        //        chart.redraw(false);
-                                                        //    },
-                                                        //    'mouseup touchend': function () {
-                                                        //        $(document).off('.hc');
-                                                        //    }
-                                                        //});
+                                                                chart.redraw(false);
+                                                            },
+                                                            'mouseup touchend': function () {
+                                                                $(document).off('.hc');
+                                                            }
+                                                        });
                                                     });
                                                 }
                                                 else {
@@ -87,9 +87,9 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                 //if (isFirstTime)
                                                 if (isFirstTime) {
                                                     var json = JSON.stringify(window.chartObj);
-                                                    console.log("window.getChartJson");
+                                                    console.log(`2. ${chartDivName} window.getChartJson`);
                                                     console.log(json);
-                                                    window.getChartJson(window.chartObj);
+                                                    window.getChartJson(window.chartObj, chartDivName);
                                                     return json;
                                                 }
 
@@ -104,8 +104,9 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
         function () { })
 }
 
-window.Initialize = function (dotNetObj) {
+window.Initialize = function (dotNetObj, chartDivName) {
     this.dotNetObject = dotNetObj;
+    console.log(`0. ${chartDivName} window.Initialize`);
 
     //var darkCss = Array.from(window.document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
     //console.log("Darkreader css");
@@ -118,6 +119,8 @@ window.getChartSeriesJson = function (jsObject) {
 
 window.getChartJson = function (windowObj) {
     dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(windowObj));
+    console.log(`3. ${chartDivName} window.getChartJson`);
+
 };
 
 /// Replace the chart series 
@@ -145,9 +148,6 @@ window.appendHighchartSeries = function (seriesJson, isShifted) {
         }
     }
 }
-
-
-
 
 function loadHighchart(n, t) {
     loadScript("https://code.highcharts.com/stock/highstock.js").then(function () {

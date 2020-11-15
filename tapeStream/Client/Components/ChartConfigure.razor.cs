@@ -9,9 +9,9 @@ namespace tapeStream.Client.Components
 
         public static int yAxisHigh = 5000;
 
-        private  int _yAxisMax = yAxisHigh;
+        private int _yAxisMax = yAxisHigh;
 
-        public  int yAxisMax
+        public int yAxisMax
         {
             get { return _yAxisMax; }
             set
@@ -23,6 +23,21 @@ namespace tapeStream.Client.Components
 
         public static bool yAxisMaxAutoReset = true;
 
+        [Parameter]
+
+
+        public string symbol
+        {
+            get { return _symbol; }
+            set
+            {
+                _symbol = value;
+                symbol0 = value;
+            }
+        }
+        private string _symbol;
+
+        public static string symbol0;
         [Parameter]
         public string title
         {
@@ -52,7 +67,7 @@ namespace tapeStream.Client.Components
                 if (_seconds == 0)
                     showTitle = title0;
                 else
-                    showTitle = $"{title0} over {seconds} seconds";
+                    showTitle = $"{symbol0}{title0} over {seconds} seconds";
             }
         }
         private static int _seconds = 3;

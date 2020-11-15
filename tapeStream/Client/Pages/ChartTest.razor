@@ -1,7 +1,8 @@
 ﻿@page "/chartest"
+@using tapeStream.Client.Components.HighCharts
 
-<tapeStream.Client.Components.HighCharts.StackedColumns3D />
 <h3>ChartTest</h3>
+<StackedColumns3DSurface bookData="@bookColData" />
 
 @code {
 

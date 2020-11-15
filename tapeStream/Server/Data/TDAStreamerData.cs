@@ -648,7 +648,7 @@ namespace tapeStream.Server.Data
                 return quote;
             }
         }
-        public static async Task captureTdaServiceData(string svcFieldedJson)
+        public static async Task captureTdaServiceData(string svcFieldedJson, bool isSimulated)
         {
             var svcJsonObject = JObject.Parse(svcFieldedJson);
             var svcName = svcJsonObject["service"].ToString();
@@ -662,7 +662,7 @@ namespace tapeStream.Server.Data
                 switch (svcName)
                 {
                     case "TIMESALE_EQUITY":
-                        await TDAPrintsManager.Decode(symbol, content);
+                        await TDAPrintsManager.Decode(symbol, content, isSimulated);
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);
@@ -671,7 +671,7 @@ namespace tapeStream.Server.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        await TDABookManager.Decode(symbol, content);
+                        await TDABookManager.Decode(symbol, content, isSimulated);
                         break;
 
                     case "CHART_EQUITY":
@@ -880,9 +880,10 @@ namespace tapeStream.Server.Data
         {
             var chart = JsonSerializer.Deserialize<Chart_Content>(content);
 
-            /// Write to database
+            /// Create chart dictionary  and sequence dictionary for symbol if it does not exist            
             if (!TDAStreamerData.chart.ContainsKey(symbol))
                 TDAStreamerData.chart.Add(symbol, new Dictionary<int, Chart_Content>());
+
             if (TDAStreamerData.chart[symbol].ContainsKey(chart.sequence))
                 TDAStreamerData.chart[symbol][chart.sequence] = chart;
             else

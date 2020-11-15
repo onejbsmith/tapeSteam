@@ -103,7 +103,7 @@ namespace tapeStream.Server.Data
 
         }
 
-        public static async Task Decode(string symbol, string content)
+        public static async Task Decode(string symbol, string content, bool isSimulated)
         {
             //if (TDABookManager.lstBookEntry.Count == 0) return;
 
@@ -132,6 +132,13 @@ namespace tapeStream.Server.Data
                 timeAndSales.askSize = book.askSize;
                 timeAndSales.bidSize = book.bidSize;
                 timeAndSales.bookTime = book.time;
+
+                if (isSimulated)
+                {
+                    /// replace feed time with current time so can match book entries to time and sales
+                    long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+                    timeAndSales.time = now;
+                }
 
                 timeAndSales.bidIncr = timeAndSales.bid - prevTimeAndSales.bid;
                 timeAndSales.askIncr = timeAndSales.ask - prevTimeAndSales.ask;

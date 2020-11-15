@@ -16,6 +16,7 @@ namespace tapeStream.Client.Components.HighCharts
 {
     public partial class StackedColumns3DSurface
     {
+        string id = "StackedColumns3DSurface";
         List<string> lstPrices = new List<string>();
 
 
@@ -75,7 +76,7 @@ namespace tapeStream.Client.Components.HighCharts
             if (firstRender)
             {
                 var dotNetReference = DotNetObjectReference.Create(this);
-                await jsruntime.InvokeVoidAsync("Initialize", dotNetReference);
+                await jsruntime.InvokeVoidAsync("Initialize", dotNetReference, id);
                 //await jsruntime.InvokeVoidAsync("getChartJson");
                 //await jsruntime.InvokeVoidAsync("getChartSeriesJson");
 
@@ -88,7 +89,7 @@ namespace tapeStream.Client.Components.HighCharts
         {
             /// get the chart as a POCO 
             Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
-            Console.WriteLine("1. getChartJson");
+            Console.WriteLine("1. StackedColumns3DSurface getChartJson");
             chart = JsonSerializer.Deserialize<Surface.StackedColumns3DSurface>(jsonResponse);
 
             /// We set some static chart Properties here and pass back to js
@@ -100,7 +101,7 @@ namespace tapeStream.Client.Components.HighCharts
             chart3Djson = JsonSerializer.Serialize<Surface.StackedColumns3DSurface>(chart);
 
             Console.WriteLine(jsonResponse); /// to capture the chart object's json from js
-            Console.WriteLine("2. getChartJson");
+            Console.WriteLine("2. StackedColumns3DSurface getChartJson");
             await Task.Yield();
         }
 
@@ -119,7 +120,7 @@ namespace tapeStream.Client.Components.HighCharts
                 var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
                 /// Get the price range min and max over all items in the dictionary
                 Chart_MaintainPriceAxis(bookDataItems, seriesOrder);                //AddSpreadPointsToBookData(bookDataItems);
-                Console.WriteLine("4. ChartSetData");
+                Console.WriteLine("4. StackedColumns3DSurface ChartSetData");
                 var categories = lstPrices.ToArray();
                 chart.zAxis.categories = categories;
 
@@ -129,7 +130,7 @@ namespace tapeStream.Client.Components.HighCharts
                 //Chart_AddBollingerPlotLines(bookDataItems, categories);
                 /// Convert BookDataItem[] to Series1[]
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
-                Console.WriteLine("5. ChartSetData");
+                Console.WriteLine("5. StackedColumns3DSurface ChartSetData");
                 chart.series = seriesList.ToArray();
 
                 //chart.chart.options3d.depth = Math.Max(100, chart.series.Count() * chart.plotOptions.column.depth);

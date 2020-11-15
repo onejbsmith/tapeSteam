@@ -18,14 +18,14 @@
 </style>
 
 <div style="width:100%">
-    <SurfaceChartConfigurator title="QǬǪ —— Level II + Time & Sales Surface" />
+    <SurfaceChartConfigurator title=" —— Level II + Time & Sales Surface" />
 </div>
 
 <div style="display:grid">
 
     <div>
         @* Injects the data and redraws the chart *@
-        <HighChart id="Surface.StackedColumns3DSurfaceChart"
+        <HighChart id="@id"
                    chartJson="@chart3Djson"
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.DataUpdateMode.Replace"

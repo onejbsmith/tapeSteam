@@ -42,17 +42,13 @@ namespace tapeStream.Server.Data
 
         static Dictionary<string, BookDataItem[]> getBookData()
         {
-            var asksData = new BookDataItem[0];
-            asksData = lstAsks.ToArray();
+            var asksData = lstAsks.ToArray();
 
-            var bidsData = new BookDataItem[0];
-            bidsData = lstBids.ToArray();
+            var bidsData = lstBids.ToArray();
 
-            var salesAtAskData = new BookDataItem[0];
-            salesAtAskData = lstSalesAtAsk.ToArray();
+            var salesAtAskData = lstSalesAtAsk.ToArray();
 
-            var salesAtBidData = new BookDataItem[0];
-            salesAtBidData = lstSalesAtBid.ToArray();
+            var salesAtBidData = lstSalesAtBid.ToArray();
 
 
             var it = new Dictionary<string, BookDataItem[]>()
@@ -65,17 +61,13 @@ namespace tapeStream.Server.Data
         {
             long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
 
-            var asksData = new BookDataItem[0];
-            asksData = getBookDataItemArray(seconds, now, lstAllAsks);
+            var asksData = getBookDataItemArray(seconds, now, lstAllAsks);
 
-            var bidsData = new BookDataItem[0];
-            bidsData = getBookDataItemArray(seconds, now, lstAllBids);
+            var bidsData = getBookDataItemArray(seconds, now, lstAllBids);
 
-            var salesAtAskData = new BookDataItem[0];
-            salesAtAskData = getBookDataItemArray(seconds, now, lstAllSalesAtAsk); ;
+            var salesAtAskData = getBookDataItemArray(seconds, now, lstAllSalesAtAsk); ;
 
-            var salesAtBidData = new BookDataItem[0];
-            salesAtBidData = getBookDataItemArray(seconds, now, lstAllSalesAtBid); ;
+            var salesAtBidData = getBookDataItemArray(seconds, now, lstAllSalesAtBid); ;
 
             var it = new Dictionary<string, BookDataItem[]>()
             { { "asks", asksData }, { "bids", bidsData } , { "salesAtAsk",salesAtAskData}, {"salesAtBid", salesAtBidData}  };
@@ -211,7 +203,7 @@ namespace tapeStream.Server.Data
             public int[] printsSize { get; set; } = new int[5];
         }
 
-        public static async Task Decode(string symbol, string content)
+        public static async Task Decode(string symbol, string content, bool isSimulated)
         {
             var all = JObject.Parse(content);
             var bids = all["2"];
@@ -343,9 +335,9 @@ namespace tapeStream.Server.Data
                 }).ToList();
                 lstAllSalesAtAsk.AddRange(lstSalesAtAsk);
 
-                //Dictionary<string, BookDataItem[]> it = getBookData();
-                //string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(it);
-                //await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
+                Dictionary<string, BookDataItem[]> it = getBookData();
+                string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(it);
+                await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
 
                 /// We need the sales by Price for the chart
                 /// Need two series, salesAtBid, salesAtAsk
@@ -364,8 +356,8 @@ namespace tapeStream.Server.Data
                 lstBookEntry.Add(newBookEntry);
 
 
-                //json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
-                //await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
+                json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
+                await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
 
             }
             catch { }  // in case 

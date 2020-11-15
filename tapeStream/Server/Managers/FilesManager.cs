@@ -106,14 +106,15 @@ namespace tapeStream.Server.Data
         {
             /// Get all file times, names into one dictionary
             var dictAllFileNames = new Dictionary<DateTime, string>();
-            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
+            var folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
+            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+
+            folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
             FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
 
             folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\";
             FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
 
-            folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
-            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
 
 
             /// Get all times into a sorted list
@@ -138,7 +139,7 @@ namespace tapeStream.Server.Data
             var lstFileDates = new List<string>();
             foreach (var fileName in fileNames)
             {
-                var fileDate = File.GetLastAccessTime(fileName);
+                var fileDate = File.GetCreationTime(fileName);
                 if (fileDate.Date == simulatorSettings.runDate.Date)
                     if (fileDate.TimeOfDay >= simulatorSettings.startTime.TimeOfDay && fileDate.TimeOfDay <= simulatorSettings.endTime.TimeOfDay)
                     {
@@ -154,6 +155,7 @@ namespace tapeStream.Server.Data
         internal static string GetFeedFile(string feedFile)
         {
             var fileText = File.ReadAllText(feedFile);
+            /// Replace times with current time
             return fileText;
         }
 

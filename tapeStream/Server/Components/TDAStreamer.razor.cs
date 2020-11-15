@@ -487,7 +487,7 @@ namespace tapeStream.Server.Components
 
                 /// Send to connected hub
                 /// 
-                await TDAStreamerData.captureTdaServiceData(svcFieldedJson);
+                await TDAStreamerData.captureTdaServiceData(svcFieldedJson, simulate);
 
                 /// Send to message queue
                 /// We can replay these messages later from simulator
