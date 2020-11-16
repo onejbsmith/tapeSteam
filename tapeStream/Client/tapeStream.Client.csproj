@@ -35,6 +35,7 @@
     <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
     <Compile Remove="Components\PrintPieGauge.razor.cs" />
     <Compile Remove="Data\classes\CONSTANTS.cs" />
+    <Compile Remove="Data\classes\Extensions.cs" />
     <Compile Remove="Data\classes\FixedSizedQueue.cs" />
     <Compile Remove="Data\classes\RhAutoProcs.cs" />
     <Compile Remove="Data\classes\RhLogins.cs" />

@@ -14,6 +14,9 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                             waitForGlobal("Highcharts", function () {
                                                 /// if window.chartObj is empty it's our first time rendering the chart
 
+                                                if (chartDivName == "StackedColumns3DSurface")
+                                                    debugger;
+
                                                 /// if window.chartObj is empty it's our first time rendering the chart
                                                 var isFirstTime = window.chartObj == undefined;
                                                 //console.debug("window.loadHighchart => " + chartJson);
@@ -107,11 +110,20 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
 window.Initialize = function (dotNetObj, chartDivName) {
     this.dotNetObject = dotNetObj;
     console.log(`0. ${chartDivName} window.Initialize`);
+    if (chartDivName == "StackedColumns3DSurface")
+        debugger;
 
     //var darkCss = Array.from(window.document.querySelectorAll('.darkreader')).map((n) => n.textContent).join('\n');
     //console.log("Darkreader css");
     //console.log(darkCss);
 };
+
+window.Dump = function (dumpJson, dumpName) {
+    window.dumpObj = looseJsonParse(dumpJson);
+    console.groupCollapsed(dumpName);
+    console.table(window.dumpObj);
+    console.groupEnd();
+}
 
 window.getChartSeriesJson = function (jsObject) {
     dotNetObject.invokeMethodAsync('getChartSeriesJson', JSON.stringify(window.chart3DObject.series));

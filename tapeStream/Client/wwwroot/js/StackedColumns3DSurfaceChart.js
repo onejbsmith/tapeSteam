@@ -2,11 +2,12 @@
 {
     chart: {
         type: 'column',
+            height: 800,
             options3d: {
             enabled: true,
                 alpha: 20,
                     beta: 30,
-                        depth: 400,
+                        depth: 1000,
                             panning: {
                 enabled: true,
                     type: 'xy'
@@ -23,10 +24,11 @@
     },
     plotOptions: {
         series: {
-            groupZPadding: 1,
-                depth: 8,
-                    groupPadding: 0,
-                        grouping: false,
+            animation: false,
+                groupZPadding: 1,
+                    depth:20,
+                        groupPadding: 0,
+                            grouping: false,
         },
         column: {
             colorByPoint: true,
@@ -73,17 +75,39 @@
             max: 10
     },
     xAxis: {
-        title: {
+        categories: [],
+            title: {
             text: 'Price',
         },
         min: 0,
-            max: 10
+            max: 1000,
+                plotBands:
+        [
+            {                               /// mark the weekend
+                color: '#FCFFC5',
+                from: 3,                    /// Date.UTC(2010, 0, 2),
+                to: 5,                      /// Date.UTC(2010, 0, 4),
+                label:
+                {
+                    text: '',   // Content of the label. 
+                    align: 'left',          // Positioning of the label. 
+                    x: +20,                  // Amount of pixels the label will be repositioned according to the alignment. 
+                    y: -10,                 // Amount of pixels the label will be repositioned according to the alignment.
+                }
+            }
+        ],
+            plotLines: [{
+                color: 'red', // Color value
+                dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                value: 3, // Value of where the line will appear
+                width: 2 // Width of the line    
+            }]
     },
     zAxis: {
         min: 0,
-            max: 10,
-                categories: ['A01', 'A02', 'A03', 'A04'],
-                    labels: {
+            max: 1000,
+
+                labels: {
             y: 5,
                 rotation: 18
         },
@@ -97,47 +121,48 @@
     series:
 
     [
+        {
+            data: [{ x: 0, y: 5, color: '#BF0B23' }],
+            selected: true
+        },
         //{
-        //    data: [{ x: 0, y: 5, color: '#BF0B23' }]
+        //    data:
+        //        [
+        //            [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+        //            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]
+        //        ],
+
         //},
-        {
-            data:
-                [
-                    [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-                    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]
-                ],
 
-        },
+        //{
+        //    data: [
+        //        [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+        //        [5, 1], [6, 3], [7, 1], [8, 2], [9, 3]
+        //    ]
+        //},
 
-        {
-            data: [
-                [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-                [5, 1], [6, 3], [7, 1], [8, 2], [9, 3]
-            ]
-        },
-
-        {
-            data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-            [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
-            ]
-        },
+        //{
+        //    data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+        //    [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
+        //    ]
+        //},
 
 
-        {
-            data: [{x:0, y: 5, color: '#BF0B23' }, [1, 1], [2, 7], [3, 0], [4, 5],
-            [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
-            ]
-        },
+        //{
+        //    data: [{x:0, y: 5, color: '#BF0B23' }, [1, 1], [2, 7], [3, 0], [4, 5],
+        //    [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
+        //    ]
+        //},
 
 
-        {
-            showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
-        },
+        //{
+        //    showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+        //    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
+        //},
 
-        {
-            showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
-        },
+        //{
+        //    showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
+        //    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
+        //},
     ]
 }

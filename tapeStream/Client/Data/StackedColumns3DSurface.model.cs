@@ -23,6 +23,8 @@ namespace tapeStream.Client.Components.HighCharts
         {
             public string type { get; set; }
             public Options3d options3d { get; set; }
+
+            public int height { get; set; }
         }
 
         public class Options3d
@@ -85,9 +87,12 @@ namespace tapeStream.Client.Components.HighCharts
 
         public class Xaxis
         {
-            public Title2 title { get; set; }
+             public string[] categories { get; set; }
+           public Title2 title { get; set; }
             public double min { get; set; }
             public double max { get; set; }
+            public Plotband[] plotBands { get; set; }
+            public Plotline[] plotLines { get; set; }
         }
         public class Yaxis
         {
@@ -102,9 +107,27 @@ namespace tapeStream.Client.Components.HighCharts
         {
             public double min { get; set; }
             public double max { get; set; }
-            public string[] categories { get; set; }
             public Labels labels { get; set; }
         }
+
+        public class Plotline
+        {
+            public string color { get; set; }
+            public string dashStyle { get; set; }
+            public decimal value { get; set; }
+            public int width { get; set; }
+            public int zIndex { get; set; }
+
+        }
+
+        public class Plotband
+        {
+            public string color { get; set; }
+            public decimal from { get; set; }
+            public decimal to { get; set; }
+            public Label label { get; set; }
+        }
+
         public class Title2
         {
             public string text { get; set; }
@@ -123,9 +146,10 @@ namespace tapeStream.Client.Components.HighCharts
 
         public class Series1
         {
-            public Datum[] data { get; set; }
+            public Datum?[] data { get; set; }
             public string color { get; set; }
             public bool showInLegend { get; set; }
+            public bool selected { get; set; }
         }
 
         public class Datum

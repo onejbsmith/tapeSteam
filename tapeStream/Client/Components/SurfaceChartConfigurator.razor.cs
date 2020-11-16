@@ -5,10 +5,10 @@ namespace tapeStream.Client.Components
 
   public partial class SurfaceChartConfigurator
     {
-        public static bool redrawChart;
-        public static int xAxisMaxCategories = 100;
+        public static bool redrawChart = false;
+        public static int xAxisMaxCategories = 1000;
 
-        public static int yAxisHigh = 5000;
+        public static int yAxisHigh = 15000;
          
         private int _yAxisMax = yAxisHigh;
 
@@ -23,6 +23,10 @@ namespace tapeStream.Client.Components
         }
 
         public static bool yAxisMaxAutoReset = true;
+
+        public static int alpha { get; set; } = 20;
+
+        public static int beta { get; set; } = 30;
 
         [Parameter]
         public string title
@@ -56,7 +60,7 @@ namespace tapeStream.Client.Components
                     showTitle = $"{title0} over {seconds} seconds";
             }
         }
-        private static int _seconds = 3;
+        private static int _seconds = 0;
 
     }
 }
