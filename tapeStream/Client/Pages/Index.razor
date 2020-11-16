@@ -12,33 +12,33 @@
 <div class="grid-container">
     <MatAccordion>
 
+        <StackedColumns3D symbol="@symbol" bookData="@bookColData" />
 
         @*<MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <Surface />
             </MatExpansionPanelDetails>
-        </MatExpansionPanel>*@
+        </MatExpansionPanel>
 
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <Columns />
+                <StackedColumns3DSurface bookData="@bookColData" />
             </MatExpansionPanelDetails>
-        </MatExpansionPanel>
+        </MatExpansionPanel>*@
 
-        @*<MatExpansionPanel>
+        <MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
                 <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
             </MatExpansionPanelDetails>
-        </MatExpansionPanel>*@
+        </MatExpansionPanel>
     </MatAccordion>
     <div>
     </div>
