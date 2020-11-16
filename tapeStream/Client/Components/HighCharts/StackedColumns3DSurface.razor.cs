@@ -19,6 +19,7 @@ namespace tapeStream.Client.Components.HighCharts
         string id = "StackedColumns3DSurface";
         List<string> lstPrices = new List<string>();
 
+        public string chartJsFilename { get; set; } = "js/StackedColumns3DSurfaceChart.js?id="+DateTime.Now.ToOADate().ToString();
 
         [Parameter]
         public Dictionary<string, BookDataItem[]> bookData
