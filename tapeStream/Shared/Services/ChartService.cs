@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared.Data;
 
@@ -46,11 +48,15 @@ namespace tapeStream.Shared.Services
             return values;
         }
 
-        public async Task<string> GetValue(int input)
+        public async Task<TDAChart.Chart_Content> GetTDAChartLastCandle(int input)
         {
-            var value = await Http.GetStringAsync(controllerUrl + input.ToString());
-            return value;
+            var json = await Http.GetStringAsync(controllerUrl + input.ToString());
+            var chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(json);
+            return chartEntry;
         }
-
+        public async Task<string> GetSvcDate()
+        {
+            return await Http.GetStringAsync(controllerUrl + "getSvcDateTime");
+        }
     }
 }

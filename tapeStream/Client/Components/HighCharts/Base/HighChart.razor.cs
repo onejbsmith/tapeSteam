@@ -78,7 +78,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
             if (!string.IsNullOrEmpty(chartJson))
             {
                 await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart2 });
-//                if (redrawChart2 == false) redrawChart2 = true;
+                //if (redrawChart2 == false) redrawChart2 = true;
             }
 
             await base.OnAfterRenderAsync(firstRender);

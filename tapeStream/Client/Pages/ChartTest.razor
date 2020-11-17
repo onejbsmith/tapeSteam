@@ -1,6 +1,7 @@
 ﻿@page "/chartest"
 @using tapeStream.Client.Components.HighCharts
 
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
 <h3>ChartTest</h3>
 <StackedColumns3DSurface bookData="@bookColData" />
 

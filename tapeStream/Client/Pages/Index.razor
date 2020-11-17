@@ -2,6 +2,8 @@
 @using tapeStream.Client.Components
 @using tapeStream.Shared.Data;
 @using tapeStream.Client.Components.HighCharts
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+
 
 @code {
 
@@ -15,21 +17,21 @@
         <StackedColumns3D symbol="@symbol" bookData="@bookColData" />
 
         @*<MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
+                <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
+                </MatExpansionPanelSummary>
+                <MatExpansionPanelDetails>
+                </MatExpansionPanelDetails>
+            </MatExpansionPanel>
 
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <StackedColumns3DSurface bookData="@bookColData" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>*@
+            <MatExpansionPanel>
+                <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
+                </MatExpansionPanelSummary>
+                <MatExpansionPanelDetails>
+                    <StackedColumns3DSurface bookData="@bookColData" />
+                </MatExpansionPanelDetails>
+            </MatExpansionPanel>*@
 
         <MatExpansionPanel>
             <MatExpansionPanelSummary>

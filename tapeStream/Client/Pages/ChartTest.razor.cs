@@ -14,6 +14,7 @@ using tapeStream.Shared.Services;
 using MatBlazor;
 using Threader = System.Threading;
 using tapeStream.Client.Components;
+using Microsoft.JSInterop;
 
 namespace tapeStream.Client.Pages
 {
@@ -67,8 +68,15 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Stop();
             await Task.Yield();
             bookColData = await bookColumnsService.getBookColumnsData(seconds);
+
             TDAChart.bollingerBands = await chartService.getBollingerBands();
+            TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
+            TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
+            //TDAChart.lastCandles = await chartService.getLastCandles(2);
             await Task.Delay(100);
+
+            await jsruntime.InvokeVoidAsync("Dump", TDAChart.lastCandle.Dumps(), "TDAChart.lastCandle");
+
             //Debug.WriteLine("2. BookColumnsCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();
             timerBookColumnsCharts.Start();

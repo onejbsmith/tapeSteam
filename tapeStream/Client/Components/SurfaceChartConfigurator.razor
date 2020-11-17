@@ -9,13 +9,26 @@
             </span>
             <span>
                 Alpha: &nbsp;[@alpha]&nbsp;
-                <RadzenNumeric Min="0" Max="360" @bind-Value=@alpha Style="width:100px;position:relative;top:8px;margin:10px" />
+                <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@alpha Style="width:100px;position:relative;top:8px;margin:10px" />
             </span>
             <span>
                 Beta: &nbsp;[@beta]&nbsp;
-                <RadzenNumeric Min="0" Max="360" @bind-Value=@beta Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>           <br />
-             <span>Max # of Prices:&nbsp;<RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="60" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric></span>
+                <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@beta Style="width:100px;position:relative;top:8px;margin:10px" />
+            </span>
+            <span>
+                Chart Depth: &nbsp;[@chartDepth]&nbsp;
+                <RadzenNumeric Min="0" Max="6000" Step="10" @bind-Value=@chartDepth Style="width:100px;position:relative;top:8px;margin:10px" />
+            </span>
+            <span>
+                Series Depth: &nbsp;[@seriesDepth]&nbsp;
+                <RadzenNumeric Min="0" Max="100" Step="10" @bind-Value=@seriesDepth Style="width:100px;position:relative;top:8px;margin:10px" />
+            </span>
+            <span>
+                Flat Map: &nbsp;[@isFlat]&nbsp;
+                <RadzenCheckBox @bind-Value=@isFlat Style="width:100px;position:relative;top:8px;margin:10px" />
+            </span>
+            <br />
+            <span>Max # of Prices:&nbsp;<RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="60" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric></span>
             <span>Max Size Height:&nbsp;<RadzenNumeric @bind-Value="@yAxisMax" TValue="int" Min="0" Max="100000" Step="5000" Style="margin:10px;width:100px"></RadzenNumeric></span>
             <span>Auto YAxis Max:&nbsp;<RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox></span>
             <span>Chart Redraw:&nbsp;<RadzenCheckBox @bind-Value="@redrawChart" Style="margin:10px"></RadzenCheckBox></span>

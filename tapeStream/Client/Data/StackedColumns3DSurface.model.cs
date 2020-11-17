@@ -22,9 +22,13 @@ namespace tapeStream.Client.Components.HighCharts
         public class Chart
         {
             public string type { get; set; }
+            public string zoomType { get; set; }
+            public string backgroundColor { get; set; }
+            public bool panning { get; set; }
+            public string panKey { get; set; }
             public Options3d options3d { get; set; }
-
             public int height { get; set; }
+
         }
 
         public class Options3d

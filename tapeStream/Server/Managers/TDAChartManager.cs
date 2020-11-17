@@ -6,9 +6,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Server.Components;
 using tapeStream.Server.Data;
+using tapeStream.Shared.Data;
+//using tapeStream.Server.Data;
 using static tapeStream.Shared.Data.TDAChart;
+using FilesManager = tapeStream.Server.Data.FilesManager;
 
-using Chart_Content = tapeStream.Shared.Data.Chart_Content;
+//using Chart_Content = tapeStream.Shared.Data.Chart_Content;
 
 namespace tapeStream.Server.Managers
 {
@@ -24,6 +27,11 @@ namespace tapeStream.Server.Managers
 
         private static int periods;
 
+        internal static DateTime getSvcDateTime()
+        {
+            return TDAChart.svcDateTime;
+        }
+
         /// <summary>
         /// This happens once per minute.
         /// The charts[] will already have a last entry added by TDAPrintsManager
@@ -35,7 +43,9 @@ namespace tapeStream.Server.Managers
         public static async Task Decode(string symbol, string content)
         {
             /// Get current time and sales from streamer content
-            var chartEntry = JsonSerializer.Deserialize<Chart_Content>(content);
+            var chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(content);
+
+            TDAChart.lastCandle = chartEntry;
 
             /// Just in case this hits before TDAPrintsManager update
             if (closes.Count() == 0)
@@ -59,7 +69,7 @@ namespace tapeStream.Server.Managers
 
 
         public static void SeedCloses()
-        {
+        { var chartEntry = new TDAChart.Chart_Content();
             closes.Clear();
             /// Read the last 25 chart entries from CHART_EQUITY Inputs
             var files = FilesManager.GetChartEntries(25);
@@ -74,11 +84,14 @@ namespace tapeStream.Server.Managers
                     var content = contentObj.ToString();
                     var symbol = contentObj["key"].ToString();
 
-                    var chartEntry = JsonSerializer.Deserialize<Chart_Content>(content);
+                    chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(content);
                     if (chartEntry.close > 0)
                         closes.Add(chartEntry.close);
                 }
             }
+            if (TDAChart.lastCandle == null)
+                TDAChart.lastCandle = chartEntry;
+
         }
 
 
@@ -86,8 +99,8 @@ namespace tapeStream.Server.Managers
         {
             SeedCloses();
 
-            var symbol = TDAStreamerData.timeSales.Keys.Last();
-            closes.Add(TDAStreamerData.timeSales[symbol].Last().price);
+            var symbol = Data.TDAStreamerData.timeSales.Keys.Last();
+            closes.Add(Data.TDAStreamerData.timeSales[symbol].Last().price);
             System.Diagnostics.Debug.Print("Last Close=" + closes[closes.Count() - 1].ToString());
 
             DateTime.Now.Dump();
@@ -129,6 +142,26 @@ namespace tapeStream.Server.Managers
             }
         }
 
+        internal static TDAChart.Chart_Content getLastCandle()
+        {
+            var chartEntry = TDAChart.lastCandle;
+            //var files = FilesManager.GetChartEntries(1);
+            //foreach (var file in files)
+            //{
+            //    var svcJsonObject = JObject.Parse(file);
+            //    var svcName = svcJsonObject["service"].ToString();
+            //    var contents = svcJsonObject["content"];
+            //    var timeStamp = Convert.ToInt64(svcJsonObject["timestamp"]);
+            //    foreach (var contentObj in contents)
+            //    {
+            //        var content = contentObj.ToString();
+            //        var symbol = contentObj["key"].ToString();
 
+            //        chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(content);
+            //        break;
+            //    }
+            //}
+            return chartEntry;
+        }
     }
 }

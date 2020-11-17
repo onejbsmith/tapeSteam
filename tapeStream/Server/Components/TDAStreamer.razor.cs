@@ -13,6 +13,10 @@ using tapeStream.Shared;
 using tapeStream.Server.Data;
 using tapeStream.Server.Data.classes;
 using Microsoft.AspNetCore.Components.Web;
+using tapeStream.Shared.Data;
+using FilesManager = tapeStream.Server.Data.FilesManager;
+using TDAApiService = tapeStream.Server.Data.TDAApiService;
+using TDAConstants = tapeStream.Server.Data.TDAConstants;
 
 namespace tapeStream.Server.Components
 {
@@ -537,6 +541,7 @@ namespace tapeStream.Server.Components
             var svcEpochTime = Convert.ToInt64(svcJsonObject[timeField]);
             var svcDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0)
                 .AddMilliseconds(svcEpochTime).ToLocalTime();
+            TDAChart.svcDateTime = svcDateTime;
             clock = svcDateTime.ToString(clockFormat);
             return svcDateTime;
         }

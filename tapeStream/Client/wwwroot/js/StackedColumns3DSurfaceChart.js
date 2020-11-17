@@ -2,14 +2,15 @@
 {
     chart: {
         type: 'column',
-            height: 800,
+            height: 1000,
+            backgroundColor: 'darkgray',    
             options3d: {
             enabled: true,
-                alpha: 20,
-                    beta: 30,
+                alpha: 15,
+                    beta: 15,
                         depth: 1000,
                             panning: {
-                enabled: true,
+                enabled: true,  
                     type: 'xy'
             },
             panKey: 'shift',
@@ -24,9 +25,9 @@
     },
     plotOptions: {
         series: {
-            animation: false,
+            animation: true,
                 groupZPadding: 1,
-                    depth:20,
+                    depth:25,
                         groupPadding: 0,
                             grouping: false,
         },
@@ -105,7 +106,7 @@
     },
     zAxis: {
         min: 0,
-            max: 1000,
+            max: 40,
 
                 labels: {
             y: 5,

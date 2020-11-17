@@ -40,7 +40,7 @@ namespace tapeStream.Client.Components.HighCharts
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
 
-        string chartJsFilename = "js/StackedColumns3DChart.js";
+        string chartJsFilename = "js/StackedColumns3DChart.js?x=1";
 
         static string chartJson = "";
 
@@ -85,7 +85,8 @@ namespace tapeStream.Client.Components.HighCharts
             chart.plotOptions.column.depth = 100;
             chart.plotOptions.column.grouping = false;
             chart.yAxis.max = ChartConfigure.yAxisHigh;
-            localStorage.SetItem("lstPrices", lstPrices);
+
+            lstPrices = localStorage.GetItem<List<string>>("lstPrices").Skip(lstPrices.Count()-20).Take(20).ToList();
 
             //chart.plotOptions.series.pointWidth = 100;
 
@@ -123,7 +124,9 @@ namespace tapeStream.Client.Components.HighCharts
                 chart.xAxis.categories = categories;
 
                 /// 
-                Chart_AddSpreadPlotBand(bookDataItems, categories);
+          //     Chart_AddSpreadPlotBand(bookDataItems, categories);
+
+                Chart_AddCandlePlotBands(bookDataItems, TDAChart.lastCandle, categories);
 #if tracing
                 Console.WriteLine("7. Columns ChartSetData");
 #endif
@@ -194,7 +197,9 @@ namespace tapeStream.Client.Components.HighCharts
 
         private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
-            var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
+                   var highBidPrice = bookDataItems["bids"][0].Price;
+            var lowAskPrice = bookDataItems["asks"][0].Price;
+     var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
             var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
 
             chart.xAxis.plotBands = new Plotband[]
@@ -202,14 +207,104 @@ namespace tapeStream.Client.Components.HighCharts
                     new Plotband()
                     { from=highBid,
                         to =lowAsk,
+                        label= new Label()
+                        {
+                            text = ((highBidPrice+lowAskPrice)/2).ToString("n2")
+                        },
                         color="#888888",
-                        //label= new Label()
-                        //{
-                        //    text="Spread"
-                        //}
+
 
                     }
             };
+        }
+
+        private static void Chart_AddCandlePlotBands(Dictionary<string, BookDataItem[]> bookDataItems, TDAChart.Chart_Content chartEntry, string[] categories)
+        {
+
+
+            var highBidPrice = bookDataItems["bids"][0].Price;
+            var lowAskPrice = bookDataItems["asks"][0].Price;
+            var highBid = categories.ToList().IndexOf(highBidPrice.ToString("n2"));
+            var lowAsk = categories.ToList().IndexOf(lowAskPrice.ToString("n2"));
+
+            //chart.xAxis.plotBands = new Plotband[]
+            var open = categories.ToList().IndexOf(chartEntry.open.ToString("n2"));
+            var close = categories.ToList().IndexOf(chartEntry.close.ToString("n2"));
+            var low = categories.ToList().IndexOf(chartEntry.low.ToString("n2"));
+            var high = categories.ToList().IndexOf(chartEntry.high.ToString("n2"));
+            //{
+
+            //};
+
+            /// Candle body
+            if (chartEntry.open < chartEntry.close) // green bar
+                chart.xAxis.plotBands = new Plotband[]
+                {
+                    new Plotband()
+                    {
+                        from=(decimal)close,
+                        to =(decimal)open,
+                        color="limegreen"
+                    },
+                    new Plotband()
+                    {
+                        from=(decimal)low,
+                        to =(decimal)open,
+                        color="MEDIUMSEAGREEN"
+                    },
+                    new Plotband()
+                    {
+                        from=(decimal)close,
+                        to =(decimal)high,
+                        color="MEDIUMSEAGREEN"
+                    },
+
+                    new Plotband()
+                    { from=highBid,
+                        to =lowAsk,
+                        color="#888888",
+                        label= new Label()
+                        {
+                            text = ((highBidPrice+lowAskPrice)/2).ToString("n2")
+                        }
+
+                    }
+                };
+            else
+
+            {
+                chart.xAxis.plotBands = new Plotband[]
+                {
+                    new Plotband()
+                    {
+                        from=(decimal)open,
+                        to =(decimal)close,
+                        color="red"
+                    },
+                    new Plotband()
+                    {
+                        from=(decimal)low,
+                        to =(decimal)close,
+                        color="indianred"
+                    },
+                    new Plotband()
+                    {
+                        from=(decimal)open,
+                        to =(decimal)high,
+                        color="indianred"
+                    },
+                    new Plotband()
+                    { from=highBid,
+                        to =lowAsk,
+                        color="#888888",
+                        label= new Label()
+                        {
+                            text = ((highBidPrice+lowAskPrice)/2).ToString("n2")
+                        }
+
+                    }
+                };
+            }
         }
 
         private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)

@@ -8,6 +8,11 @@ namespace tapeStream.Shared.Data
     {
         public static Bollinger bollingerBands = new Bollinger();
 
+        public static Chart_Content[] ohlcs;
+        public static Chart_Content[] lastCandles;
+
+        public static Chart_Content lastCandle { get; set; }
+
         public class Bollinger
         {
             public double low { get; set; }
@@ -24,6 +29,9 @@ namespace tapeStream.Shared.Data
             public string command { get; set; }
             public Chart_Content[] content { get; set; }
         }
+
+        public static DateTime svcDateTime { get; set; }
+        public static string svcDateTimeRaw { get; set; }
 
         public class Chart_Content
         {
