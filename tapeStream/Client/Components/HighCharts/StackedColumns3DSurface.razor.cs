@@ -364,26 +364,6 @@ namespace tapeStream.Client.Components.HighCharts
                 };
             }
 
-            var annotation = new Surface.Annotation()
-            {
-                labels = new Surface.LabelA[]
-                {
-                    new Surface.LabelA()
-                    {
-                        text = mark.ToString(),
-                        x = highBid,
-                        y = 0,
-                        point = new Surface.Point()
-                        {
-                            x = 0,
-                            y = 0
-                        }
-
-                    }
-                }
-            };
-            chart.chart.annotations = new List<Surface.Annotation>() { annotation }.ToArray();
-
             //chart.chart.annotations[0].labels[0].text = mark.ToString();
             //chart.chart.annotations[0].labels[0].x = highBid;
             //chart.chart.annotations[0].labels[0].y = 0;
@@ -547,7 +527,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             if (seriesList.Count() > chart.zAxis.max - 2)
                 seriesList.Remove(seriesList.Last());
-            else if (seriesList.Count() == chart.zAxis.max - 2)
+            else if (seriesList.Count() == chart.zAxis.max - 2|| seriesList.Count() == 10 || seriesList.Count() == 11 )
                 SurfaceChartConfigurator.redrawChart = true;
 
             if (SurfaceChartConfigurator.isTimeSalesOnly)

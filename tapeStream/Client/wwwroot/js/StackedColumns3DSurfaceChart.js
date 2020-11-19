@@ -104,22 +104,5 @@
         }
 
     ],
-        annotations: [{
-            labelOptions: {
-                backgroundColor: 'rgba(255,255,255,0.5)',
-                verticalAlign: 'top',
-                y: 0
-            },
-            labels: [{
-                point: {
-                    xAxis: 0,
-                    yAxis: 0,
-                    x: 27,
-                    y: 0
-                },
-                text: 'Arbys'
-            }
-            ]
-        }],
 
 }
