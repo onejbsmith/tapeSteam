@@ -253,6 +253,8 @@ namespace tapeStream.Client.Pages
             TDAChart.bollingerBands = await chartService.getBollingerBands();
             TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
             TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
+            TDAChart.svcDateTimeRaw = TDAChart.svcDateTimeRaw.Replace("\"", "");
+            TDAChart.svcDateTime = Convert.ToDateTime(TDAChart.svcDateTimeRaw);
             StateHasChanged();
 
             await Task.Delay(100);

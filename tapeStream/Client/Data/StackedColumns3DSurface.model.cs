@@ -28,6 +28,7 @@ namespace tapeStream.Client.Components.HighCharts
             public string panKey { get; set; }
             public Options3d options3d { get; set; }
             public int height { get; set; }
+            public Annotation[] annotations { get; set; }
 
         }
 
@@ -161,6 +162,151 @@ namespace tapeStream.Client.Components.HighCharts
             public double? x { get; set; }
             public double? y { get; set; }
             public string color { get; set; }
+        }
+
+        public class Annotation
+        {
+            public bool visible { get; set; }
+            public Animation animation { get; set; }
+            public string draggable { get; set; }
+            public Labeloptions labelOptions { get; set; }
+            public Shapeoptions shapeOptions { get; set; }
+            public Controlpointoptions controlPointOptions { get; set; }
+            public Events1 events { get; set; }
+            public int zIndex { get; set; }
+            public LabelA[] labels { get; set; }
+        }
+
+        public class Animation
+        {
+        }
+
+        public class Labeloptions
+        {
+            public string align { get; set; }
+            public bool allowOverlap { get; set; }
+            public string backgroundColor { get; set; }
+            public string borderColor { get; set; }
+            public int borderRadius { get; set; }
+            public int borderWidth { get; set; }
+            public string className { get; set; }
+            public bool crop { get; set; }
+            public bool includeInDataExport { get; set; }
+            public string overflow { get; set; }
+            public int padding { get; set; }
+            public bool shadow { get; set; }
+            public string shape { get; set; }
+            public Style style { get; set; }
+            public bool useHTML { get; set; }
+            public string verticalAlign { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
+            public bool justify { get; set; }
+        }
+
+        public class Style
+        {
+            public string fontSize { get; set; }
+            public string fontWeight { get; set; }
+            public string color { get; set; }
+            public string textOutline { get; set; }
+        }
+
+        public class Shapeoptions
+        {
+            public string stroke { get; set; }
+            public int strokeWidth { get; set; }
+            public string fill { get; set; }
+            public int r { get; set; }
+            public int snap { get; set; }
+        }
+
+        public class Controlpointoptions
+        {
+            public string symbol { get; set; }
+            public int width { get; set; }
+            public int height { get; set; }
+            public Style1 style { get; set; }
+            public bool visible { get; set; }
+            public Events events { get; set; }
+        }
+
+        public class Style1
+        {
+            public string stroke { get; set; }
+            public int strokewidth { get; set; }
+            public string fill { get; set; }
+        }
+
+        public class Events
+        {
+        }
+
+        public class Events1
+        {
+        }
+
+        public class LabelA
+        {
+            public Point point { get; set; }
+            public string text { get; set; }
+            public string align { get; set; }
+            public bool allowOverlap { get; set; }
+            public string backgroundColor { get; set; }
+            public string borderColor { get; set; }
+            public int borderRadius { get; set; }
+            public int borderWidth { get; set; }
+            public string className { get; set; }
+            public bool crop { get; set; }
+            public bool includeInDataExport { get; set; }
+            public string overflow { get; set; }
+            public int padding { get; set; }
+            public bool shadow { get; set; }
+            public string shape { get; set; }
+            public Style2 style { get; set; }
+            public bool useHTML { get; set; }
+            public string verticalAlign { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
+            public Controlpointoptions1 controlPointOptions { get; set; }
+            public bool justify { get; set; }
+        }
+
+        public class Point
+        {
+            public int xAxis { get; set; }
+            public int yAxis { get; set; }
+            public float x { get; set; }
+            public int y { get; set; }
+        }
+
+        public class Style2
+        {
+            public string fontSize { get; set; }
+            public string fontWeight { get; set; }
+            public string color { get; set; }
+            public string textOutline { get; set; }
+        }
+
+        public class Controlpointoptions1
+        {
+            public string symbol { get; set; }
+            public int width { get; set; }
+            public int height { get; set; }
+            public Style3 style { get; set; }
+            public bool visible { get; set; }
+            public Events2 events { get; set; }
+        }
+
+        public class Style3
+        {
+            public string stroke { get; set; }
+            public int strokewidth { get; set; }
+            public string fill { get; set; }
+        }
+
+        public class Events2
+        {
         }
 
 

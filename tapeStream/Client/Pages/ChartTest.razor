@@ -1,10 +1,28 @@
 ﻿@page "/chartest"
+@using MatBlazor;
+
 @using tapeStream.Client.Components.HighCharts
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 <h3>ChartTest</h3>
-<StackedColumns3DSurface bookData="@bookColData" />
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+            <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
+        </div>
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+            <ClockGauge />
+        </div>
 
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3"></div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1"></div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8"></div>*@
+    </div>
+</div>
+
+<div id="container">
+</div>
 @code {
+    string symbol = "QQQ";
 
 }

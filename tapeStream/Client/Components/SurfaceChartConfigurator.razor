@@ -3,35 +3,59 @@
     <Items>
         <RadzenAccordionItem Text="@showTitle" Icon="account_balance_wallet" Style="display:inline-flex">
 
-            <span>
-                Seconds to Aggregate: &nbsp;[@seconds]&nbsp;
-                <RadzenNumeric Min="0" Max="60" @bind-Value=@seconds Style="width:100;position:relative;top:8px;margin:10px" />
-            </span>
-            <span>
-                Alpha: &nbsp;[@alpha]&nbsp;
-                <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@alpha Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>
-            <span>
-                Beta: &nbsp;[@beta]&nbsp;
-                <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@beta Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>
-            <span>
-                Chart Depth: &nbsp;[@chartDepth]&nbsp;
-                <RadzenNumeric Min="0" Max="6000" Step="10" @bind-Value=@chartDepth Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>
-            <span>
-                Series Depth: &nbsp;[@seriesDepth]&nbsp;
-                <RadzenNumeric Min="0" Max="100" Step="10" @bind-Value=@seriesDepth Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>
-            <span>
-                Flat Map: &nbsp;[@isFlat]&nbsp;
-                <RadzenCheckBox @bind-Value=@isFlat Style="width:100px;position:relative;top:8px;margin:10px" />
-            </span>
-            <br />
-            <span>Max # of Prices:&nbsp;<RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="60" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric></span>
-            <span>Max Size Height:&nbsp;<RadzenNumeric @bind-Value="@yAxisMax" TValue="int" Min="0" Max="100000" Step="5000" Style="margin:10px;width:100px"></RadzenNumeric></span>
-            <span>Auto YAxis Max:&nbsp;<RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox></span>
-            <span>Chart Redraw:&nbsp;<RadzenCheckBox @bind-Value="@redrawChart" Style="margin:10px"></RadzenCheckBox></span>
+            <div style="display:flex">
+                <span>
+                    Seconds to Aggregate: &nbsp;[@seconds]&nbsp;
+                    <b style="display:flex">
+                        <RadzenNumeric Min="0" Max="60" @bind-Value=@seconds timerClock />
+                        <RadzenNumeric Min="200" Max="1500" @bind-Value=@height Step="100" timerClock />
+                    </b>
+                </span>
+                <span>
+                    Alpha: &nbsp;[@alpha]&nbsp;
+                    <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@alpha Style="" />
+                </span>
+                <span>
+                    Beta: &nbsp;[@beta]&nbsp;
+                    <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@beta timerClock />
+                </span>
+                <span>
+                    Chart Depth: &nbsp;[@chartDepth]&nbsp;
+                    <RadzenNumeric Min="0" Max="6000" Step="10" @bind-Value=@chartDepth timerClock />
+                </span>
+                <span>
+                    Series Depth: &nbsp;[@seriesDepth]&nbsp;
+                    <RadzenNumeric Min="0" Max="100" Step="10" @bind-Value=@seriesDepth timerClock />
+                </span>
+                <span>
+                    Flat Map: &nbsp;[@isFlat]&nbsp;
+                    <RadzenCheckBox @bind-Value=@isFlat Style="position:relative;top:8px;margin:10px" />
+                </span>
+
+                <span>
+                    Time &amp; Sales Only: &nbsp;[@isTimeSalesOnly]&nbsp;
+                    <RadzenCheckBox @bind-Value=@isTimeSalesOnly Style="position:relative;top:8px;margin:10px" />
+                </span>
+                <span>
+                    Max # of Prices:&nbsp;
+                    <RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="60" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric>
+                </span>
+                <span>
+                    Max Size Height:&nbsp;
+                    <RadzenNumeric @bind-Value="@yAxisMax" TValue="int" Min="0" Max="100000" Step="5000" Style="margin:10px;width:100px"></RadzenNumeric>
+                </span>
+                <span>
+                    Auto YAxis Max:&nbsp;
+                    <RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox>
+                </span>
+                <span>
+                    Chart Redraw:&nbsp;
+                    <RadzenCheckBox @bind-Value="@redrawChart" Style="margin:10px"></RadzenCheckBox>
+                </span>
+            </div>
+
+
+
         </RadzenAccordionItem>
     </Items>
 </RadzenAccordion>
@@ -41,11 +65,29 @@
         font-weight: 800;
         font-size: large;
     }
+
     .material-icons-label {
         width: 100%;
     }
-    span
-    {color:#333}
+
+    .ui-spinner.ui-widget {
+        width: 100px;
+        position: relative;
+        top: 8px;
+        margin: 10px;
+        zoom:1.25;
+    }
+
+    span {
+        color: #333;
+        display: grid;
+        grid-column-gap: 10px;
+        background-color: gainsboro;
+        margin-right: 10px;
+        padding:10px;
+        zoom:0.75;
+    }
+
 </style>
 @code {
 

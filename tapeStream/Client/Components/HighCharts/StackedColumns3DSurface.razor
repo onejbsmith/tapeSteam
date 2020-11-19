@@ -4,7 +4,6 @@
 
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
-
 @*@name;*@
 
 @inject Blazored.LocalStorage.ISyncLocalStorageService  localStorage
@@ -17,24 +16,48 @@
     }
 </style>
 
-<div style="width:100%">
-    <SurfaceChartConfigurator title=" —— Level II + Time & Sales Surface" />
-</div>
+<div style="width:100hw">
+    <div style="width:auto;display:flex">
+        <SurfaceChartConfigurator title=" — Level II + Time & Sales Surface" symbol="@symbol" />
+        <MatChipSet Filter="true" @bind-SelectedChips="selectedChips" Choice="true">
+            <MatChip Label="Front" IsCheckable="true" Value="0"></MatChip>
+            <MatChip Label="Top" IsCheckable="true" Value="1"></MatChip>
+            <MatChip Label="Left" IsCheckable="true" Value="2"></MatChip>
+            <MatChip Label="Right" IsCheckable="true" Value="3"></MatChip>
+            <MatChip Label="Back" IsCheckable="true" Value="4"></MatChip>
+            <MatChip Label="Return" IsCheckable="true" Value="5"></MatChip>
 
-<div style="display:grid;">
+        </MatChipSet>
+        <span><RadzenButton Click="ResetXAxis">Reset X-Axis</RadzenButton></span>
 
-    <div style="height:100vh">
+        <div>
+            <span>
+                @foreach (var chip in selectedChips ?? new MatChip[0])
+                {
+
+                    @if ((chip.IsSelected))
+                    {
+                        int n = Convert.ToInt16(chip.Value);
+                        SurfaceChartConfigurator.chipValue = n;
+                    }
+                }
+            </span>
+        </div>
+    </div>
+
+
+    <div style="height:80vh;">
         @* Injects the data and redraws the chart *@
         <HighChart id="@id"
                    chartJson="@chart3Djson"
                    chartSeriesJson="@chartSeriesJson"
                    updateMode="@HighChart.DataUpdateMode.Replace"
                    chartJsFilename="@chartJsFilename"
-                   redrawChart="SurfaceChartConfigurator.redrawChart"/>
+                   redrawChart="SurfaceChartConfigurator.redrawChart" />
 
     </div>
-</div>
 
+</div>
 <style>
     #container {
         /*height: 80vh;*/
@@ -43,3 +66,14 @@
         /*margin: 0 auto;*/
     }
 </style>
+
+@code
+{
+    string[] saPairs = new string[] { "0,0", "90,0", "0,90", "0,-90", "0,180", "360,360" };
+
+    void ResetXAxis()
+    {
+       SurfaceChartConfigurator.resetXAxis = true;
+    }
+
+}

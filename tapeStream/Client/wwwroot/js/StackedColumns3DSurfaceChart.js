@@ -2,15 +2,15 @@
 {
     chart: {
         type: 'column',
-            height: 1000,
-            backgroundColor: 'darkgray',    
-            options3d: {
+            height: 1200,
+                backgroundColor: 'darkgray',
+                    options3d: {
             enabled: true,
                 alpha: 15,
                     beta: 15,
-                        depth: 1000,
+                        depth: 2500,
                             panning: {
-                enabled: true,  
+                enabled: true,
                     type: 'xy'
             },
             panKey: 'shift',
@@ -27,37 +27,14 @@
         series: {
             animation: true,
                 groupZPadding: 1,
-                    depth:25,
+                    depth: 25,
                         groupPadding: 0,
                             grouping: false,
         },
         column: {
             colorByPoint: true,
-                //colors: [
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#00ff00',
+                stacking: 'normal',
 
-                //    '#00ff00',
-                //    '#00ff00',
-                //    '#0000ff',
-                //    '#0000ff',
-                //    '#0000ff',
-
-                //    '#00ff00',
-                //    '#00ff00',
-                //    '#0000ff',
-                //    '#0000ff',
-                //    '#0000ff',
-
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#ff0000',
-                //    '#00ff00',
-                //]
         }
     },
 
@@ -82,7 +59,8 @@
         },
         min: 0,
             max: 1000,
-                plotBands:
+
+        plotBands:
         [
             {                               /// mark the weekend
                 color: '#FCFFC5',
@@ -94,6 +72,7 @@
                     align: 'left',          // Positioning of the label. 
                     x: +20,                  // Amount of pixels the label will be repositioned according to the alignment. 
                     y: -10,                 // Amount of pixels the label will be repositioned according to the alignment.
+                    useHTML: false
                 }
             }
         ],
@@ -106,7 +85,7 @@
     },
     zAxis: {
         min: 0,
-            max: 40,
+            max: 100,
 
                 labels: {
             y: 5,
@@ -117,53 +96,30 @@
         },
     },
 
-
-
     series:
-
     [
         {
             data: [{ x: 0, y: 5, color: '#BF0B23' }],
             selected: true
-        },
-        //{
-        //    data:
-        //        [
-        //            [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-        //            [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]
-        //        ],
+        }
 
-        //},
+    ],
+        annotations: [{
+            labelOptions: {
+                backgroundColor: 'rgba(255,255,255,0.5)',
+                verticalAlign: 'top',
+                y: 0
+            },
+            labels: [{
+                point: {
+                    xAxis: 0,
+                    yAxis: 0,
+                    x: 27,
+                    y: 0
+                },
+                text: 'Arbys'
+            }
+            ]
+        }],
 
-        //{
-        //    data: [
-        //        [0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-        //        [5, 1], [6, 3], [7, 1], [8, 2], [9, 3]
-        //    ]
-        //},
-
-        //{
-        //    data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-        //    [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
-        //    ]
-        //},
-
-
-        //{
-        //    data: [{x:0, y: 5, color: '#BF0B23' }, [1, 1], [2, 7], [3, 0], [4, 5],
-        //    [5, 1], [6, 3], [7, 9], [8, 7], [9, 0]
-        //    ]
-        //},
-
-
-        //{
-        //    showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-        //    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
-        //},
-
-        //{
-        //    showInLegend: false, data: [[0, 2], [1, 1], [2, 7], [3, 0], [4, 5],
-        //    [5, 1], [6, 9], [7, 9], [8, 7], [9, 0]]
-        //},
-    ]
 }

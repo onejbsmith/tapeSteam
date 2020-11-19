@@ -1,0 +1,19 @@
+﻿@*<h3>ClockGauge</h3>*@
+
+
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject HttpClient _client
+<div style="height:100px">
+    <Highchart chartJsFilename="@chartJsFilename"
+               chartJson="@chartJson" chartSeriesJson="@chartSeriesJson"
+               isSeriesShifted="@updateSeries" />
+</div>
+
+<style>
+    .highcharts-background
+    {
+    }
+</style>
+@code {
+
+}

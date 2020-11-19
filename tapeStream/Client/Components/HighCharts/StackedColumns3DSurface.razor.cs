@@ -1,6 +1,7 @@
-﻿#define tracing
+﻿#undef tracing
 #define bollinger
 using Blazorise.Utils;
+using MatBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Primitives;
 using Microsoft.JSInterop;
@@ -41,7 +42,7 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
-        public string chartJsFilename { get; set; } = "js/StackedColumns3DSurfaceChart.js";
+        public string chartJsFilename { get; set; } = "js/StackedColumns3DSurfaceChart.js?id=22";
 
         static string chart3Djson = "";
 
@@ -61,25 +62,31 @@ namespace tapeStream.Client.Components.HighCharts
 
         string chartSeriesJson = "";
 
+        MatChip[] selectedChips = null;
+        MatChip selectedChip = null;
+
         protected override async Task OnInitializedAsync()
         {
             dictSeriesColor = SetSeriesColors();
             var dotNetReference = DotNetObjectReference.Create(this);
             await jsruntime.InvokeVoidAsync("Initialize", dotNetReference, id);
             //SurfaceChartConfigurator.seconds = 3;
-
+            if (SurfaceChartConfigurator.redrawChart == true) SurfaceChartConfigurator.redrawChart = false;
             await Task.CompletedTask;
         }
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
-            //if (!firstRender)
-            //    if (SurfaceChartConfigurator.redrawChart == false) SurfaceChartConfigurator.redrawChart = true;
+            if (firstRender)
+            {
+                //await jsruntime.InvokeVoidAsync("onBlazorReady");
+            }
+
             await Task.CompletedTask;
         }
 
         [JSInvokable("getChartJson")]
-        public async Task getChartJson(string jsonResponse)
+        public async Task getSurfaceChartJson(string jsonResponse)
         {
             /// get the chart as a POCO 
 #if tracing
@@ -119,7 +126,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             {
 #if tracing
-                Console.WriteLine("4. Surface ChartSetData");
+                Console.WriteLine("4. Surface   ChartSetData");
 #endif
                 //chart.title.text = "Surface";
                 //chart.plotOptions.column.depth = 1;
@@ -131,6 +138,23 @@ namespace tapeStream.Client.Components.HighCharts
                 chart.chart.options3d.beta = SurfaceChartConfigurator.beta;
                 chart.chart.options3d.depth = SurfaceChartConfigurator.chartDepth;
                 chart.plotOptions.series.depth = SurfaceChartConfigurator.seriesDepth;
+                chart.zAxis.max = chart.chart.options3d.depth / chart.plotOptions.series.depth;
+                chart.chart.height = SurfaceChartConfigurator.height;
+
+                int n = Convert.ToInt16(SurfaceChartConfigurator.chipValue);
+                string vals = saPairs[n];
+                var alpha = Convert.ToInt16(vals.Split(',')[0]);
+                var beta = Convert.ToInt16(vals.Split(',')[1]);
+                if (alpha != 360)
+                {
+                    chart.chart.options3d.alpha = alpha;
+                    chart.chart.options3d.beta = beta;
+                }
+                else
+                {
+                    chart.chart.options3d.alpha = SurfaceChartConfigurator.alpha;
+                    chart.chart.options3d.beta = SurfaceChartConfigurator.beta;
+                }
 
 #if tracing
                 Console.WriteLine("5. Surface ChartSetData");
@@ -142,6 +166,7 @@ namespace tapeStream.Client.Components.HighCharts
                 Console.WriteLine("6. Surface ChartSetData");
 
 #endif
+                Chart_AdjustYaxis(bookDataItems);
 
                 var categories = lstPrices.ToArray();
 
@@ -149,7 +174,8 @@ namespace tapeStream.Client.Components.HighCharts
 
                 chart.xAxis.categories = categories;
                 chart.xAxis.max = categories.Count();
-                chart.subtitle.text = TDAChart.svcDateTimeRaw;
+                chart.title.text = SurfaceChartConfigurator.showTitle;
+                chart.subtitle.text = TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
 
 
                 //TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
@@ -260,6 +286,7 @@ namespace tapeStream.Client.Components.HighCharts
             var highBid = categories.ToList().IndexOf(highBidPrice.ToString("n2"));
             var lowAsk = categories.ToList().IndexOf(lowAskPrice.ToString("n2"));
 
+            var mark = ((highBidPrice + lowAskPrice) / 2).ToString("n2");
             //chart.xAxis.plotBands = new Surface.Plotband[]
             //{
 
@@ -291,10 +318,11 @@ namespace tapeStream.Client.Components.HighCharts
                     new Surface.Plotband()
                     { from=highBid,
                         to =lowAsk,
-                        color="#888888",
+                        color="#0",
                         label= new Label()
                         {
-                            text = ((highBidPrice+lowAskPrice)/2).ToString("n2")
+                            text = $"{mark}",
+                            y = -10
                         }
 
                     }
@@ -308,32 +336,59 @@ namespace tapeStream.Client.Components.HighCharts
                     {
                         from=(decimal)open,
                         to =(decimal)close,
-                        color="red"
+                        color="darkred"
                     },
                     new Surface.Plotband()
                     {
                         from=(decimal)low,
                         to =(decimal)close,
-                        color="indianred"
+                        color="lightsalmon"
                     },
                     new Surface.Plotband()
                     {
                         from=(decimal)open,
                         to =(decimal)high,
-                        color="indianred"
+                        color="lightsalmon"
                     },
                     new Surface.Plotband()
                     { from=highBid,
                         to =lowAsk,
-                        color="#888888",
+                        color="#0",
                         label= new Label()
                         {
-                            text = ((highBidPrice+lowAskPrice)/2).ToString("n2")
-                        }
+                            text = $"{mark}",
+                        },
+
 
                     }
                 };
             }
+
+            var annotation = new Surface.Annotation()
+            {
+                labels = new Surface.LabelA[]
+                {
+                    new Surface.LabelA()
+                    {
+                        text = mark.ToString(),
+                        x = highBid,
+                        y = 0,
+                        point = new Surface.Point()
+                        {
+                            x = 0,
+                            y = 0
+                        }
+
+                    }
+                }
+            };
+            chart.chart.annotations = new List<Surface.Annotation>() { annotation }.ToArray();
+
+            //chart.chart.annotations[0].labels[0].text = mark.ToString();
+            //chart.chart.annotations[0].labels[0].x = highBid;
+            //chart.chart.annotations[0].labels[0].y = 0;
+
+
         }
 
         private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
@@ -432,41 +487,102 @@ namespace tapeStream.Client.Components.HighCharts
                 showInLegend = false
             };
 
+            if (seriesList.Count > 1)
+            {
+                seriesList.RemoveAt(0);
+                seriesList.RemoveAt(0);
+            }
+
+            if (!SurfaceChartConfigurator.isTimeSalesOnly)
+            {
+                for (int i = 0; i < bookDataItems.Count; i++)
+                {
+                    /// Create the series one series item for all 4 book types
+                    var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
+
+
+                    /// Fill out the series data (needs to be 2d)
+                    /// 
+                    /// 
+                    if (seriesName.Length == 4) /// Bids and Asks the Book
+                        Series_AddItems(bookDataItems, seriesItem, seriesName);
+
+                    /// Add a 
+                    //item.Size;
+                    /// Add to chart Series1 as first series
+                    /// Set chart Series1
+                }
+                seriesList.Insert(0, seriesItem);
+            }
+
+            seriesItem = new Surface.Series1()   /// Chart Series1 item
+            {
+                // This array needs to be the 100 slots and Size put in slot for Price
+                data = new Surface.Datum?[lstPrices.Count()],
+                showInLegend = false
+            };
             for (int i = 0; i < bookDataItems.Count; i++)
             {
                 /// Create the series one series item for all 4 book types
                 var seriesName = seriesOrder[i];  /// Dictionary where values are BookDataItem[]
 
                 /// Fill out the series data (needs to be 2d)
-                foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
-                {
+                /// 
+                /// 
+                if (seriesName.Length > 4)  /// Time & Sales
+                    Series_AddItems(bookDataItems, seriesItem, seriesName);
 
-                    /// Place bookitem Sizes in Series1 data
-                    var index = lstPrices.IndexOf(item.Price.ToString("n2"));
-
-                    //seriesItem.data[]
-
-                    var data = new Surface.Datum()
-                    {
-                        x = index,
-                        y = SurfaceChartConfigurator.isFlat ? 0 : item.Size,
-                        color = dictSeriesColor[seriesName],
-                    };
-
-                    seriesItem.data[index] = data;
-                }
+                /// Add a 
                 //item.Size;
                 /// Add to chart Series1 as first series
                 /// Set chart Series1
             }
             seriesList.Insert(0, seriesItem);
+
             seriesItem.selected = true;
 
-            if (seriesList.Count() > chart.zAxis.max)
+            seriesList.Insert(0, new Surface.Series1());
+            seriesList.Insert(0, new Surface.Series1());
+
+
+            if (seriesList.Count() > chart.zAxis.max - 2)
                 seriesList.Remove(seriesList.Last());
-            else if (seriesList.Count() == chart.zAxis.max)
+            else if (seriesList.Count() == chart.zAxis.max - 2)
                 SurfaceChartConfigurator.redrawChart = true;
 
+            if (SurfaceChartConfigurator.isTimeSalesOnly)
+            {
+                /// Hide all non-sales series
+                //foreach(var series in seriesList)
+                //{
+                //    series.
+                //}
+            }
+
+
+
+
+        }
+
+        private static void Series_AddItems(Dictionary<string, BookDataItem[]> bookDataItems, Surface.Series1 seriesItem, string seriesName)
+        {
+            foreach (var item in bookDataItems[seriesName])    /// item is one BookDataItem
+            {
+
+                /// Place bookitem Sizes in Series1 data
+                var index = lstPrices.IndexOf(item.Price.ToString("n2"));
+
+                //seriesItem.data[]
+
+                var data = new Surface.Datum()
+                {
+                    x = index,
+                    y = SurfaceChartConfigurator.isFlat ? 0 : item.Size,
+                    color = dictSeriesColor[seriesName],
+                };
+
+                seriesItem.data[index] = data;
+            }
         }
 
         private void Chart_MaintainPriceAxis(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder)
@@ -474,6 +590,11 @@ namespace tapeStream.Client.Components.HighCharts
             var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
             var maxPrice = 0m; // bookDataItems.Max(items => items.Value.Max(item => item.Price));
 
+            if (SurfaceChartConfigurator.resetXAxis)
+            {
+                lstPrices = new List<string>();
+                SurfaceChartConfigurator.resetXAxis = false;
+            }
 
             /// Set up the Categories list
             //var lstPrices = new List<string>();
@@ -492,8 +613,9 @@ namespace tapeStream.Client.Components.HighCharts
             }
             lstPrices.Sort();
 
-            localStorage.SetItem( id + "lstPrices", lstPrices);
+            localStorage.SetItem(id + "lstPrices", lstPrices);
 
+            jsruntime.InvokeVoidAsync("Dump", maxSize.Dumps(), "maxSize");
 
             //var midPrice = (minPrice + maxPrice) / 2;
             //var n = SurfaceChartConfigurator.xAxisMaxCategories;

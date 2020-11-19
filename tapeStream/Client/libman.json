@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "highcharts@8.2.2",
+      "destination": "wwwroot/lib/highcharts/"
+    }
+  ]
+}

@@ -26,6 +26,7 @@
     <Compile Remove="Components\BookPieChart.razor.cs" />
     <Compile Remove="Components\Highchart.razor.cs" />
     <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
+    <Compile Remove="Components\HighCharts\ClockGauge.razor.cs" />
     <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
@@ -56,6 +57,7 @@
     <Content Remove="Components\Highchart.razor" />
     <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
     <Content Remove="Components\HighCharts\Base\HighChart3D.razor" />
+    <Content Remove="Components\HighCharts\ClockGauge.razor" />
     <Content Remove="Components\HighCharts\Columns3D.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />

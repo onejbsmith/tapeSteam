@@ -78,6 +78,26 @@ namespace tapeStream.Server.Data
             await Task.CompletedTask;
         }
 
+        internal static async Task SendToMessageQueueDated(string svcName, DateTime svcDateTime, string svcFieldedJson)
+        {
+            string fileName = svcName + svcDateTime.ToString(".yyMMdd.HHmm.ss.ff");
+            string svcDate = svcDateTime.ToString("dddd MMMM d, yyyy");
+            string folderPath = $"D:\\MessageQs\\Dated\\{svcDate}\\Inputs\\{svcName}\\";
+
+            string filePath = $"{folderPath}{fileName}.json";
+            /// Add folder for date if not already there
+            /// 
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            System.IO.File.WriteAllText(filePath, svcFieldedJson);
+            //if (svcName == "QUOTE")
+            //{
+            //    filePath = filePath = $"D:\\MessageQs\\Inputs\\{CONSTANTS.TIMESALE_EQUITY}\\{fileName}.json";
+            //    System.IO.File.WriteAllText(filePath, svcFieldedJson);
+            //}
+            await Task.CompletedTask;
+        }
+
         public static List<string> GetChartEntries(int nCloses)
         {
             var entries = new List<string>();

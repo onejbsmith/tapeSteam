@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTrader", "..\..\Blazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.HighCharts", "..\..\Libaries\HighCharts\Blazor.HighCharts\Blazor.HighCharts.csproj", "{2A52A773-8D90-42B1-9417-AC48577B0C5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighCharts.Charts.Basic", "..\Components\HighCharts\HighCharts.Charts.Basic\HighCharts.Charts.Basic.csproj", "{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighCharts.Charts.Basic", "..\Components\HighCharts\HighCharts.Charts.Basic\HighCharts.Charts.Basic.csproj", "{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

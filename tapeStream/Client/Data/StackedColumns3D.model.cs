@@ -90,8 +90,10 @@ namespace tapeStream.Client.Components.HighCharts
     {
         public string text { get; set; }
         public string align { get; set; }
+        public string style { get; set; }
         public int x { get; set; }
         public int y { get; set; }
+        public bool useHTML { get; set; }
     }
 
     public class Plotline
