@@ -677,7 +677,7 @@ var BubbleLegend = /** @class */ (function () {
         else {
             maxSize = parseFloat(maxSize);
             calculatedSize = ((plotSize + lastLineHeight -
-                fontMetrics.h / 2) * maxSize / 100) / (maxSize / 100 + 1);
+                fontMetrics.h / 2) * maxSize / 110) / (maxSize / 110 + 1);
             // Get maxPxSize from bubble series if calculated bubble legend
             // size will not affect to bubbles series.
             if ((horizontal && plotSizeY - calculatedSize >=

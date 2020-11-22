@@ -762,9 +762,9 @@ module.exports = function pathParse(svgPath) {
 // Usage:
 //
 //    SvgPath('...')
-//      .translate(-150, -100)
+//      .translate(-150, -110)
 //      .scale(0.5)
-//      .translate(-150, -100)
+//      .translate(-150, -110)
 //      .toFixed(1)
 //      .toString()
 //

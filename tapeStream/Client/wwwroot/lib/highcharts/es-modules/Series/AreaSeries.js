@@ -144,7 +144,7 @@ BaseSeries.seriesType('area', 'line',
      *   corresponding Y axis extreme is filled (since v6.1.0).
      *
      * @sample {highcharts} highcharts/plotoptions/area-threshold/
-     *         A threshold of 100
+     *         A threshold of 110
      * @sample {highcharts} highcharts/plotoptions/area-threshold-infinity/
      *         A threshold of Infinity
      *

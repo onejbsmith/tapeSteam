@@ -183,7 +183,7 @@ var AxisResizer = /** @class */ (function () {
         prevAxes = [resizer.axis].concat(axes.prev), 
         // prev and next configs
         axesConfigs = [], stopDrag = false, plotTop = chart.plotTop, plotHeight = chart.plotHeight, plotBottom = plotTop + plotHeight, yDelta, calculatePercent = function (value) {
-            return value * 100 / plotHeight + '%';
+            return value * 110 / plotHeight + '%';
         }, normalize = function (val, min, max) {
             return Math.round(clamp(val, min, max));
         };
@@ -327,7 +327,7 @@ var AxisResizer = /** @class */ (function () {
          * @requires  modules/drag-panes
          * @apioption yAxis.maxLength
          */
-        maxLength: '100%',
+        maxLength: '110%',
         /**
          * Options for axis resizing. It adds a thick line between panes which
          * the user can drag in order to resize the panes.

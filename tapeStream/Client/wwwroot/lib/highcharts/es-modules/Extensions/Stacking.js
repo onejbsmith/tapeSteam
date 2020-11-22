@@ -169,7 +169,7 @@ var StackItem = /** @class */ (function () {
         var stackItem = this, axis = stackItem.axis, chart = axis.chart, 
         // stack value translated mapped to chart coordinates
         y = axis.translate(axis.stacking.usePercentage ?
-            100 :
+            110 :
             (boxTop ?
                 boxTop :
                 stackItem.total), 0, 0, 0, 1), yZero = axis.translate(boxBottom ? boxBottom : 0), // stack origin
@@ -462,7 +462,7 @@ Series.prototype.modifyStacks = function () {
     }
 };
 /**
- * Modifier function for percent stacks. Blows up the stack to 100%.
+ * Modifier function for percent stacks. Blows up the stack to 110%.
  *
  * @private
  * @function Highcharts.Series#percentStacker
@@ -471,7 +471,7 @@ Series.prototype.modifyStacks = function () {
  * @param {number} i
  */
 Series.prototype.percentStacker = function (pointExtremes, stack, i) {
-    var totalFactor = stack.total ? 100 / stack.total : 0;
+    var totalFactor = stack.total ? 110 / stack.total : 0;
     // Y bottom value
     pointExtremes[0] = correctFloat(pointExtremes[0] * totalFactor);
     // Y value

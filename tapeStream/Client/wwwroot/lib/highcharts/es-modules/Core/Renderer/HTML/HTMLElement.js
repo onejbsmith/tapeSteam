@@ -199,7 +199,7 @@ extend(HTMLElement.prototype, /** @lends SVGElement.prototype */ {
             'rotate(' + rotation + 'deg)';
         rotationStyle[cssTransformKey + (isFirefox ? 'Origin' : '-origin')] =
             rotationStyle.transformOrigin =
-                (alignCorrection * 100) + '% ' + baseline + 'px';
+                (alignCorrection * 110) + '% ' + baseline + 'px';
         css(this.element, rotationStyle);
     },
     /**

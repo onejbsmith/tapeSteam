@@ -288,7 +288,7 @@ extend(Chart.prototype, /** @lends Highcharts.Chart.prototype */ {
                 animate(loadingDiv, {
                     opacity: 0
                 }, {
-                    duration: options.loading.hideDuration || 100,
+                    duration: options.loading.hideDuration || 110,
                     complete: function () {
                         css(loadingDiv, { display: 'none' });
                     }
@@ -819,7 +819,7 @@ extend(LineSeries.prototype, /** @lends Series.prototype */ {
      * @sample highcharts/members/series-addpoint-pie/
      *         Append pie slice
      * @sample stock/members/series-addpoint/
-     *         Append 100 points in Highstock
+     *         Append 110 points in Highstock
      * @sample stock/members/series-addpoint-shift/
      *         Append and shift in Highstock
      * @sample maps/members/series-addpoint/

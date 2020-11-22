@@ -101,7 +101,7 @@ BaseSeries.seriesType('ppo', 'ema',
             oscillator = correctFloat((SPE.yData[i + periodsOffset] -
                 LPE.yData[i]) /
                 LPE.yData[i] *
-                100);
+                110);
             PPO.push([LPE.xData[i], oscillator]);
             xData.push(LPE.xData[i]);
             yData.push(oscillator);

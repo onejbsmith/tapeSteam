@@ -347,7 +347,7 @@ SVGRenderer.prototype.cuboidPath = function (shapeArgs) {
     incrementX = 1000000, 
     // y axis has the smallest priority in case of our charts
     // (needs to be set because of stacking)
-    incrementY = 10, incrementZ = 100, zIndex = 0, 
+    incrementY = 10, incrementZ = 110, zIndex = 0, 
     // The 8 corners of the cube
     pArr = [{
             x: x,
@@ -586,7 +586,7 @@ SVGRenderer.prototype.arc3d = function (attribs) {
      * @private
      */
     wrapper.setPaths = function (attribs) {
-        var paths = wrapper.renderer.arc3dPath(attribs), zIndex = paths.zTop * 100;
+        var paths = wrapper.renderer.arc3dPath(attribs), zIndex = paths.zTop * 110;
         wrapper.attribs = attribs;
         wrapper.top.attr({ d: paths.top, zIndex: paths.zTop });
         wrapper.inn.attr({ d: paths.inn, zIndex: paths.zInn });

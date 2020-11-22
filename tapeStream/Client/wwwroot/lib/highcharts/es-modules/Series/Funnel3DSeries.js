@@ -84,7 +84,7 @@ Series.seriesType('funnel3d', 'column',
      * @sample  {highcharts} highcharts/demo/funnel3d/ Funnel3d demo
      * @product highcharts
      */
-    height: '100%',
+    height: '110%',
     /**
      * The height of the neck, the lower part of the funnel. A number
      * defines pixel width, a percentage string defines a percentage
@@ -234,7 +234,7 @@ Series.seriesType('funnel3d', 'column',
             }
             point.shapeArgs = extend(point.shapeArgs, shapeArgs);
             // for tooltips and data labels context
-            point.percentage = fraction * 100;
+            point.percentage = fraction * 110;
             point.plotX = centerX;
             if (reversed) {
                 point.plotY = centerY + height / 2 -

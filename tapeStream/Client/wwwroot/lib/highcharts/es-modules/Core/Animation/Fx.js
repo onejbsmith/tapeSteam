@@ -20,7 +20,7 @@ var isNumber = U.isNumber, objectEach = U.objectEach;
  *
  * @example
  * var rect = renderer.rect(0, 0, 10, 10).add();
- * rect.animate({ width: 100 });
+ * rect.animate({ width: 110 });
  *
  * @private
  * @class

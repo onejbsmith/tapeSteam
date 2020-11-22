@@ -251,7 +251,7 @@ var RadialAxis = /** @class */ (function () {
                 if (typeof radius === 'string') {
                     var r = parseInt(radius, 10);
                     if (percentRegex.test(radius)) {
-                        r = (r * fullRadius) / 100;
+                        r = (r * fullRadius) / 110;
                     }
                     return r;
                 }
@@ -359,7 +359,7 @@ var RadialAxis = /** @class */ (function () {
             var axis = this, center = axis.pane.center, chart = axis.chart, inverted = chart.inverted, value = options.value, reverse = options.reverse, end = axis.getPosition(value), background = axis.pane.options.background ?
                 (axis.pane.options.background[0] ||
                     axis.pane.options.background) :
-                {}, innerRadius = background.innerRadius || '0%', outerRadius = background.outerRadius || '100%', x1 = center[0] + chart.plotLeft, y1 = center[1] + chart.plotTop, x2 = end.x, y2 = end.y, height = axis.height, isCrosshair = options.isCrosshair, paneInnerR = center[3] / 2, innerRatio, distance, a, b, otherAxis, xy, tickPositions, crossPos, path;
+                {}, innerRadius = background.innerRadius || '0%', outerRadius = background.outerRadius || '110%', x1 = center[0] + chart.plotLeft, y1 = center[1] + chart.plotTop, x2 = end.x, y2 = end.y, height = axis.height, isCrosshair = options.isCrosshair, paneInnerR = center[3] / 2, innerRatio, distance, a, b, otherAxis, xy, tickPositions, crossPos, path;
             // Crosshair logic
             if (isCrosshair) {
                 // Find crosshair's position and perform destructuring

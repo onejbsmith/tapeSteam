@@ -72,6 +72,8 @@
     <Content Remove="Pages\Filer.razor" />
     <Content Remove="Pages\TDAclient.razor" />
     <Content Remove="wwwroot\appsettings.json" />
+    <Content Remove="wwwroot\js\ClockGauge.chart.code.js" />
+    <Content Remove="wwwroot\js\ClockGauge.chart.js" />
     <Content Remove="wwwroot\js\JSInterop.js" />
     <Content Remove="wwwroot\js\JSInterop.min.js" />
     <Content Remove="wwwroot\js\StackedColumns-3D.razor.js" />
@@ -125,7 +127,7 @@
     <Folder Include="Files\Prints\" />
   </ItemGroup>  
   <ItemGroup>
-    <Content Update="wwwroot\index.html">
+    <Content Update="wwwroot\index.html?id=3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -94,9 +94,9 @@ BaseSeries.seriesType('rsi', 'sma',
             avgGain = toFixed((avgGain * (period - 1) + gain) / period, decimals);
             avgLoss = toFixed((avgLoss * (period - 1) + loss) / period, decimals);
             // If average-loss is equal zero, then by definition RSI is set
-            // to 100:
+            // to 110:
             if (avgLoss === 0) {
-                RSIPoint = 100;
+                RSIPoint = 110;
                 // If average-gain is equal zero, then by definition RSI is set
                 // to 0:
             }
@@ -104,7 +104,7 @@ BaseSeries.seriesType('rsi', 'sma',
                 RSIPoint = 0;
             }
             else {
-                RSIPoint = toFixed(100 - (100 / (1 + (avgGain / avgLoss))), decimals);
+                RSIPoint = toFixed(110 - (110 / (1 + (avgGain / avgLoss))), decimals);
             }
             RSI.push([xVal[i], RSIPoint]);
             xData.push(xVal[i]);

@@ -1,4 +1,4 @@
-﻿#undef tracing
+﻿#define tracing
 #define bollinger
 using Blazorise.Utils;
 using MatBlazor;
@@ -19,6 +19,32 @@ namespace tapeStream.Client.Components.HighCharts
 {
     public partial class StackedColumns3DSurface
     {
+        [Inject]
+        public Microsoft.JSInterop.IJSRuntime jsruntime { get; set; }
+
+        [Inject]
+        public Blazored.LocalStorage.ISyncLocalStorageService localStorage { get; set; }
+
+
+        private string[] _categories;
+
+        public string[] categories
+        {
+            get { return _categories; }
+            set
+            {
+                _categories = value;
+                /// So we keep state of chart current in case we need to redraw whole
+                /// Make chart model observable then call js when prop change detected?
+                chart.xAxis.categories = _categories;
+                jsruntime.SetCategories(_categories);
+            }
+        }
+
+
+        string[] saPairs = new string[] { "0,0", "90,0", "0,90", "0,-90", "0,180", "360,-1", "360,360" };
+
+
         string id = "Surface3D";
         static List<string> lstPrices = new List<string>();
 
@@ -42,7 +68,7 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
-        public string chartJsFilename { get; set; } = "js/StackedColumns3DSurfaceChart.js?id=22";
+        public string chartJsFilename { get; set; } = "js/StackedColumns3DSurfaceChart.js?id=23a";
 
         static string chart3Djson = "";
 
@@ -81,8 +107,14 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 //await jsruntime.InvokeVoidAsync("onBlazorReady");
             }
+            //ExtensionMethodsDemo.Console.WriteBlueLine("");
 
             await Task.CompletedTask;
+        }
+
+        void ResetXAxis()
+        {
+            SurfaceChartConfigurator.resetXAxis = true;
         }
 
         [JSInvokable("getChartJson")]
@@ -105,13 +137,21 @@ namespace tapeStream.Client.Components.HighCharts
             chart.chart.backgroundColor = "darkgray";
             chart3Djson = JsonSerializer.Serialize<Surface.StackedColumns3DSurface>(chart);
 
-            lstPrices = localStorage.GetItem<List<string>>(id + "lstPrices").Take(20).ToList();
+            var lst = localStorage.GetItem<List<string>>(id + "lstPrices");
+            if (lst != null && lst.Count() > 20)
+                lstPrices = lst.Take(20).ToList();
+            else
+                lstPrices = lst;
+
+            if (lstPrices == null)
+                lstPrices = new List<string>();
+
 
 
 #if tracing            
             Console.WriteLine("2. Surface getChartJson");
-#endif
             Console.WriteLine(chart3Djson);
+#endif
 
 
             await Task.Yield();
@@ -120,6 +160,7 @@ namespace tapeStream.Client.Components.HighCharts
         private async Task ChartSetData(Dictionary<string, BookDataItem[]> bookDataItems)
         {
 
+            //await jsruntime.GroupTableAsync(bookDataItems, "bookDataItems");
             await jsruntime.InvokeVoidAsync("Dump", bookDataItems.Dumps(), "bookDataItems");
 
             try
@@ -150,6 +191,11 @@ namespace tapeStream.Client.Components.HighCharts
                     chart.chart.options3d.alpha = alpha;
                     chart.chart.options3d.beta = beta;
                 }
+                else if (beta == -1)
+                {
+                    chart.chart.options3d.alpha = SurfaceChartConfigurator.alpha;
+                    chart.chart.options3d.beta = -SurfaceChartConfigurator.beta;
+                }
                 else
                 {
                     chart.chart.options3d.alpha = SurfaceChartConfigurator.alpha;
@@ -172,32 +218,39 @@ namespace tapeStream.Client.Components.HighCharts
 
 
 
-                chart.xAxis.categories = categories;
                 chart.xAxis.max = categories.Count();
+                chart.xAxis.categories = categories;
+
                 chart.title.text = SurfaceChartConfigurator.showTitle;
                 chart.subtitle.text = TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
 
 
                 //TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
-                await jsruntime.InvokeVoidAsync("Dump", chart.xAxis.categories.Dumps(), "chart.xAxis.categories");
-                await jsruntime.InvokeVoidAsync("Dump", chart.subtitle.text.Dumps(), "chart.subtitle.text");
+                await jsruntime.GroupTableAsync(chart.xAxis.categories, "chart.xAxis.categories");
+                await jsruntime.GroupTableAsync(chart.subtitle.text, "chart.subtitle.text");
 
                 ;
 
                 /// 
-
+#if tracing
+                Console.WriteLine("7. Surface ChartSetData");
+#endif   
                 Chart_AddCandlePlotBands(bookDataItems, TDAChart.lastCandle, categories);
 
                 //Chart_AddSpreadPlotBand(bookDataItems, categories);
 
+
                 Chart_AddBollingerPlotLines(bookDataItems, categories);
                 /// Convert BookDataItem[] to Series1[]
                 Chart_BuildSeriesData(bookDataItems, seriesOrder, categories, seriesList);
-#if tracing
-                Console.WriteLine("7. Surface ChartSetData");
-#endif
+
+                /// TODO: /// 2. Control which items in series get passed to chart
+                /// TODO: /// 3. Better just send new series to chart and let chart roll off stale data, it has series in memory.
+                /// TODO: /// 4. Should only have to redraw if resize event, all else should just update specific chart property
+                /// TODO: /// 5.  Just direct jsRuntime calls for each property
+                /// TODO: /// 6. Use jsRuntime extension methods so can name the calls and strong type parameters
                 chart.series = seriesList.ToArray();
-                await jsruntime.InvokeVoidAsync("Dump", chart.series.Dumps(), "chart.series");
+                await jsruntime.GroupTableAsync(chart, "chart");
 
                 //chart.chart.options3d.depth = Math.Max(100, chart.series.Count() * chart.plotOptions.column.depth);
 
@@ -207,7 +260,7 @@ namespace tapeStream.Client.Components.HighCharts
 #if tracing
 
                 Console.WriteLine("8. Surface ChartSetData chart3Djson");
-                Console.WriteLine(chart3Djson);
+                //Console.WriteLine(chart3Djson);
 
 #endif                    ///
                 /// We should only send the series and the categories, not the whole chart
@@ -230,6 +283,14 @@ namespace tapeStream.Client.Components.HighCharts
 
             }
         }
+
+        static Dictionary<string, double> dictAvgSizes = new Dictionary<string, double>();
+        static Dictionary<string, double> dictSumSizes = new Dictionary<string, double>();
+        static Dictionary<string, int> dictNumsizes = new Dictionary<string, int>();
+
+        static Dictionary<string, double> dictStAvgSizes = new Dictionary<string, double>();
+        static Dictionary<string, double> dictStSumSizes = new Dictionary<string, double>();
+        static Dictionary<string, int> dictStNumsizes = new Dictionary<string, int>();
 
         private void Chart_AdjustYaxis(Dictionary<string, BookDataItem[]> bookDataItems)
         {
@@ -300,7 +361,7 @@ namespace tapeStream.Client.Components.HighCharts
                     {
                         from=(decimal)close,
                         to =(decimal)open,
-                        color="limegreen"
+                        color="#3CDD71"
                     },
                     new Surface.Plotband()
                     {
@@ -336,19 +397,19 @@ namespace tapeStream.Client.Components.HighCharts
                     {
                         from=(decimal)open,
                         to =(decimal)close,
-                        color="darkred"
+                        color="#99143C"
                     },
                     new Surface.Plotband()
                     {
                         from=(decimal)low,
                         to =(decimal)close,
-                        color="lightsalmon"
+                        color="#995C5C"
                     },
                     new Surface.Plotband()
                     {
                         from=(decimal)open,
                         to =(decimal)high,
-                        color="lightsalmon"
+                        color="#995C5C"
                     },
                     new Surface.Plotband()
                     { from=highBid,
@@ -371,7 +432,7 @@ namespace tapeStream.Client.Components.HighCharts
 
         }
 
-        private static void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
+        private  void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
             var bollingerBands = TDAChart.bollingerBands;
             //var bollingerBands = bookDataItems["asks"][0].bollingerBand;
@@ -381,6 +442,8 @@ namespace tapeStream.Client.Components.HighCharts
             var midPrice = bollingerBands.mid.ToString("n2");
             var midhighPrice = bollingerBands.midhigh.ToString("n2");
             var highPrice = bollingerBands.high.ToString("n2");
+
+
 
 
 #if bollinger
@@ -395,9 +458,78 @@ namespace tapeStream.Client.Components.HighCharts
             var mid = categories.ToList().IndexOf(midPrice); ;
             var midhigh = categories.ToList().IndexOf(midhighPrice);
             var high = categories.ToList().IndexOf(highPrice);
+#if bollinger
+            Console.WriteLine("7a1. Columns Chart_AddBollingerPlotLines");
 
+#endif
+            var avgPriceIndex = categories.ToList().IndexOf(avgPrice.ToString("n2"));
             var midCategory = categories.Length / 2;
 
+            if (!dictAvgSizes.ContainsKey("salesAtBid"))
+            { dictAvgSizes.Add("salesAtBid", 0); dictStAvgSizes.Add("salesAtBid", 0); }
+            if (!dictAvgSizes.ContainsKey("salesAtAsk"))
+            { dictAvgSizes.Add("salesAtAsk", 0); dictStAvgSizes.Add("salesAtAsk", 0);}
+
+#if bollinger
+            Console.WriteLine("7a1. Columns Chart_AddBollingerPlotLines");
+            jsruntime.GroupTable(dictAvgSizes, nameof(dictAvgSizes));
+
+#endif            
+            var avgSells = (decimal)(dictAvgSizes["asks"] - dictAvgSizes["salesAtBid"]); ;
+            var avgBuys = (decimal)(dictAvgSizes["bids"] - dictAvgSizes["salesAtAsk"]);
+
+#if bollinger
+            Console.WriteLine("7b. Columns Chart_AddBollingerPlotLines");
+
+#endif
+            try
+            {
+                chart.yAxis.plotLines = new Surface.Plotline[]
+                    {
+                    new Surface.Plotline()
+                    {  value=avgSells, // asks want to sell, sold at bid
+                        color=asksColor,
+                        width=8,
+                        zIndex = 1
+                    },
+                    new Surface.Plotline()
+                    {  value= avgBuys,  // bids want to buy, bought at ask
+                        color=bidsColor,
+                        width=8,
+                        zIndex = 1
+                    },
+                    new Surface.Plotline()
+                    {  value=(decimal)(dictStAvgSizes["asks"] + dictStAvgSizes["salesAtBid"]),
+                        color =sellsColor,
+                        width=4,
+                        zIndex = 2
+                    },
+                    new Surface.Plotline()
+                    {  value=(decimal)(dictStAvgSizes["bids"] + dictStAvgSizes["salesAtAsk"]),
+                        color=buysColor,
+                        width=4,
+                        zIndex = 2
+                    },
+                    };
+            }
+            catch(Exception ex)
+            {
+                jsruntime.Confirm(ex.Message);
+            }
+
+#if bollinger
+            Console.WriteLine("7c. Columns Chart_AddBollingerPlotLines");
+
+#endif
+            if (avgSells < avgBuys)
+                chart.chart.options3d.beta = -SurfaceChartConfigurator.beta;
+            else
+                chart.chart.options3d.beta = SurfaceChartConfigurator.beta;
+
+#if bollinger
+            Console.WriteLine("7d. Columns Chart_AddBollingerPlotLines");
+
+#endif
             chart.xAxis.plotLines = new Surface.Plotline[]
             {
                 new Surface.Plotline()
@@ -436,20 +568,31 @@ namespace tapeStream.Client.Components.HighCharts
                     width=8,
                     zIndex = 1
                 },
+                new Surface.Plotline()
+                {  value=avgPriceIndex,
+                    color="green",
+                    width=8,
+                    zIndex = 1
+                },
             };
+
+#if bollinger
+            Console.WriteLine("7e. Columns Chart_AddBollingerPlotLines");
+
+#endif
         }
 
 
-        private static void Chart_BuildSeriesData(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder, string[] categories, List<Surface.Series1> seriesList)
+        private void Chart_BuildSeriesData(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder, string[] categories, List<Surface.Series1> seriesList)
         {
 
 
             ///// Remove any over 600*4 series (10 minutes)
             ///// 
-            var minutesToKeep = 10;
-            var seriesToKeep = minutesToKeep * seriesOrder.Length * 60;
+            //var minutesToKeep = 10;
+            //var seriesToKeep = minutesToKeep * seriesOrder.Length * 60;
 
-            seriesToKeep = (int)chart.zAxis.max - 1;
+            //seriesToKeep = (int)chart.zAxis.max - 1;
             // seriesList = seriesList.Take(seriesToKeep).ToList();
 
             ///// Remove previous 4 series from the legend
@@ -460,6 +603,15 @@ namespace tapeStream.Client.Components.HighCharts
             //    series.showInLegend = false;
             //}
 
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 1");
+            if (seriesList.Count > 1)
+            {
+                seriesList.RemoveAt(0);
+                seriesList.RemoveAt(0);
+            }
+
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 2");
+
             var seriesItem = new Surface.Series1()   /// Chart Series1 item
             {
                 // This array needs to be the 100 slots and Size put in slot for Price
@@ -467,11 +619,7 @@ namespace tapeStream.Client.Components.HighCharts
                 showInLegend = false
             };
 
-            if (seriesList.Count > 1)
-            {
-                seriesList.RemoveAt(0);
-                seriesList.RemoveAt(0);
-            }
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 3");
 
             if (!SurfaceChartConfigurator.isTimeSalesOnly)
             {
@@ -494,6 +642,7 @@ namespace tapeStream.Client.Components.HighCharts
                 }
                 seriesList.Insert(0, seriesItem);
             }
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 4");
 
             seriesItem = new Surface.Series1()   /// Chart Series1 item
             {
@@ -501,6 +650,8 @@ namespace tapeStream.Client.Components.HighCharts
                 data = new Surface.Datum?[lstPrices.Count()],
                 showInLegend = false
             };
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 5");
+
             for (int i = 0; i < bookDataItems.Count; i++)
             {
                 /// Create the series one series item for all 4 book types
@@ -517,18 +668,34 @@ namespace tapeStream.Client.Components.HighCharts
                 /// Add to chart Series1 as first series
                 /// Set chart Series1
             }
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 6");
+
             seriesList.Insert(0, seriesItem);
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 7");
 
             seriesItem.selected = true;
 
             seriesList.Insert(0, new Surface.Series1());
             seriesList.Insert(0, new Surface.Series1());
+            ////jsruntime.Confirm("Chart_BuildSeriesData: 8");
 
 
+
+            /// TODO: /// 1. Don't remove any series data, just control how much passed to 
             if (seriesList.Count() > chart.zAxis.max - 2)
-                seriesList.Remove(seriesList.Last());
-            else if (seriesList.Count() == chart.zAxis.max - 2|| seriesList.Count() == 10 || seriesList.Count() == 11 )
+            {
+                for (var i = 0; i < 2; i++)
+                    seriesList.Remove(seriesList.Last());
+            }
+
+
+            else if (seriesList.Count() == chart.zAxis.max - 2 || seriesList.Count() == 10 || seriesList.Count() == 11)
                 SurfaceChartConfigurator.redrawChart = true;
+            else if (seriesList.Count() % 10 == 0 || seriesList.Count() % 11 == 0 && seriesList.Count() < chart.zAxis.max - 2)
+                SurfaceChartConfigurator.redrawChart = !SurfaceChartConfigurator.redrawChart;
+
+
+            //jsruntime.Confirm("Chart_BuildSeriesData: 9");
 
             if (SurfaceChartConfigurator.isTimeSalesOnly)
             {
@@ -565,6 +732,8 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
+        static decimal avgPrice = 0;
+
         private void Chart_MaintainPriceAxis(Dictionary<string, BookDataItem[]> bookDataItems, string[] seriesOrder)
         {
             var minPrice = 999999m; // bookDataItems.Min(items => items.Value.Min(item => item.Price));
@@ -573,27 +742,87 @@ namespace tapeStream.Client.Components.HighCharts
             if (SurfaceChartConfigurator.resetXAxis)
             {
                 lstPrices = new List<string>();
+                //
                 SurfaceChartConfigurator.resetXAxis = false;
             }
 
             /// Set up the Categories list
             //var lstPrices = new List<string>();
+            var sumPrices = 0m;
+            var nPrices = 0;
+
+#if tracingFine
+            Console.WriteLine("5a. Surface ChartSetData");
+#endif
             foreach (var name in seriesOrder)
             {
+                if (dictNumsizes.ContainsKey(name) == false) dictNumsizes[name] = 0;
+                if (dictSumSizes.ContainsKey(name) == false) dictSumSizes[name] = 0;
+                //if (seriesList.Count % 10 == 0)
+                //{
+                dictStNumsizes[name] = 0;
+                dictStSumSizes[name] = 0;
+                //}
+#if tracingFine
+                Console.WriteLine("5b. Surface ChartSetData");
+#endif
                 foreach (var item in bookDataItems[name])
                 {
+#if tracingFine
+                    Console.WriteLine("5c. Surface ChartSetData");
+
+                    jsruntime.GroupTable(lstPrices, nameof(lstPrices));
+                    jsruntime.GroupTable(item, nameof(item));
+#endif
+
                     if (!lstPrices.Contains(item.Price.ToString("n2")))
                         lstPrices.Add(item.Price.ToString("n2"));
-
+#if tracingFine
+                    Console.WriteLine("5d. Surface ChartSetData");
+#endif
+                    sumPrices += item.Price;
+#if tracingFine
+                    Console.WriteLine("5e. Surface ChartSetData");
+#endif                   
+                    nPrices += 1;
                     minPrice = Math.Min(item.Price, minPrice);
                     maxPrice = Math.Max(item.Price, maxPrice);
 
+#if tracingFine
+                    Console.WriteLine("5f. Surface ChartSetData");
+#endif                    
                     maxSize = Math.Max(item.Size, maxSize);
+#if tracingFine
+                    Console.WriteLine("5g. Surface ChartSetData");
+#endif  
+                    dictNumsizes[name] += 1;
+                    dictSumSizes[name] += item.Size;
+                    if (dictNumsizes[name] > 0)
+                        dictAvgSizes[name] = dictSumSizes[name] / dictNumsizes[name];
+#if tracingFine
+                    Console.WriteLine("5h. Surface ChartSetData");
+#endif  
+                    dictStNumsizes[name] += 1;
+                    dictStSumSizes[name] += item.Size;
+                    if (dictStNumsizes[name] > 0)
+                        dictStAvgSizes[name] = dictStSumSizes[name] / dictStNumsizes[name];
                 }
+#if tracingFine
+                Console.WriteLine("5i. Surface ChartSetData");
+#endif            
             }
+
+
+            //jsruntime.Confirm(seriesList.Count.ToString());
+
+            avgPrice = sumPrices / nPrices;
             lstPrices.Sort();
 
+            jsruntime.GroupTable(lstPrices, nameof(lstPrices));
+            ////jsruntime.Confirm(nameof(lstPrices), true);
             localStorage.SetItem(id + "lstPrices", lstPrices);
+
+            //jsruntime.Confirm(lstPrices.Count.ToString());
 
             jsruntime.InvokeVoidAsync("Dump", maxSize.Dumps(), "maxSize");
 
@@ -613,14 +842,15 @@ namespace tapeStream.Client.Components.HighCharts
             /// Picture the spread as two 0 points, one at high bid, one at low ask
         }
 
+        static string asksColor = "#8085e9"; //"#cb6992";
+        static string bidsColor = "#0479cc";
+        static string buysColor = "#90ed7d";
+        static string sellsColor = "#f45b5b";
+        static string spreadColor = "#8085e9";
         private static Dictionary<string, string> SetSeriesColors()
         {
             Dictionary<string, string> dictSeriesColor = new Dictionary<string, string>();
-            string asksColor = "#8085e9"; //"#cb6992";
-            string bidsColor = "#0479cc";
-            string buysColor = "#90ed7d";
-            string sellsColor = "#f45b5b";
-            string spreadColor = "#8085e9";
+
             dictSeriesColor = new Dictionary<string, string>()
             {
                 { "asks", asksColor } ,
@@ -631,5 +861,32 @@ namespace tapeStream.Client.Components.HighCharts
             };
             return dictSeriesColor;
         }
+
+
+
+    }
+
+    /// <summary>
+    /// Using this class to strong-type calls to jsRuntime for chart property changes
+    /// </summary>
+    public static class jsRuntimeHighchartExtensions
+    {
+        public static async Task<string> ConfirmAsync(this Microsoft.JSInterop.IJSRuntime jSRuntime, string message)
+        {
+            return await jSRuntime.InvokeAsync<string>("Confirm", new object[] { message });
+        }
+
+        /// <summary>
+        /// Should this be called in the property set of the model?
+        /// </summary>
+        /// <param name="jSRuntime"></param>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        public static void SetCategories(this Microsoft.JSInterop.IJSRuntime jSRuntime, string[] categories)
+        {
+            jSRuntime.InvokeAsync<string>("SetCategories", new object[] { categories });
+        }
+
+
     }
 }

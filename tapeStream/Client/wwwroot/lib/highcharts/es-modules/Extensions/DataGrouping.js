@@ -337,7 +337,7 @@ commonOptions = {
 defaultDataGroupingUnits = H.defaultDataGroupingUnits = [
     [
         'millisecond',
-        [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
+        [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
     ], [
         'second',
         [1, 2, 5, 10, 15, 30]
@@ -851,7 +851,7 @@ export default dataGrouping;
  * ```js
  * units: [[
  *     'millisecond', // unit name
- *     [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
+ *     [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
  * ], [
  *     'second',
  *     [1, 2, 5, 10, 15, 30]

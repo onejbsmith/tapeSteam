@@ -327,18 +327,18 @@ extend(NavigationBindings.prototype, {
         }
         positions = yAxes.map(function (yAxis) {
             var height = isPercentage(yAxis.options.height) ?
-                parseFloat(yAxis.options.height) / 100 :
+                parseFloat(yAxis.options.height) / 110 :
                 yAxis.height / plotHeight, top = isPercentage(yAxis.options.top) ?
-                parseFloat(yAxis.options.top) / 100 :
+                parseFloat(yAxis.options.top) / 110 :
                 correctFloat(yAxis.top - yAxis.chart.plotTop) / plotHeight;
             // New yAxis does not contain "height" info yet
             if (!isNumber(height)) {
-                height = defaultHeight / 100;
+                height = defaultHeight / 110;
             }
             allAxesHeight = correctFloat(allAxesHeight + height);
             return {
-                height: height * 100,
-                top: top * 100
+                height: height * 110,
+                top: top * 110
             };
         });
         positions.allAxesHeight = allAxesHeight;
@@ -406,7 +406,7 @@ extend(NavigationBindings.prototype, {
         yAxes = chart.yAxis.filter(bindingsUtils.isNotNavigatorYAxis), plotHeight = chart.plotHeight, allAxesLength = yAxes.length, 
         // Gather current heights (in %)
         positions = this.getYAxisPositions(yAxes, plotHeight, defaultHeight), resizers = this.getYAxisResizers(yAxes), allAxesHeight = positions.allAxesHeight, changedSpace = defaultHeight;
-        // More than 100%
+        // More than 110%
         if (allAxesHeight > 1) {
             // Simple case, add new panes up to 5
             if (allAxesLength < 6) {
@@ -418,7 +418,7 @@ extend(NavigationBindings.prototype, {
             else {
                 // We have more panes, rescale all others to gain some space,
                 // This is new height for upcoming yAxis:
-                defaultHeight = 100 / allAxesLength;
+                defaultHeight = 110 / allAxesLength;
                 // This is how much we need to take from each other yAxis:
                 changedSpace = defaultHeight / (allAxesLength - 1);
                 // Now update all positions:
@@ -426,13 +426,13 @@ extend(NavigationBindings.prototype, {
             }
             // Set last position manually:
             positions[allAxesLength - 1] = {
-                top: correctFloat(100 - defaultHeight),
+                top: correctFloat(110 - defaultHeight),
                 height: defaultHeight
             };
         }
         else {
-            // Less than 100%
-            changedSpace = correctFloat(1 - allAxesHeight) * 100;
+            // Less than 110%
+            changedSpace = correctFloat(1 - allAxesHeight) * 110;
             // Simple case, return first pane it's space:
             if (allAxesLength < 5) {
                 positions[0].height = correctFloat(positions[0].height + changedSpace);
@@ -1222,7 +1222,7 @@ var stockToolsBindings = {
                             y: coords.yAxis[0].value
                         }],
                     innerBackground: {
-                        fill: 'rgba(100, 170, 255, 0.8)'
+                        fill: 'rgba(110, 170, 255, 0.8)'
                     }
                 },
                 shapeOptions: {

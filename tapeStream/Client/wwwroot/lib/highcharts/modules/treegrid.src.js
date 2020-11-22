@@ -1506,7 +1506,7 @@
                         // two days.
                         units: [[
                                 'millisecond',
-                                [1, 10, 100]
+                                [1, 10, 110]
                             ], [
                                 'second',
                                 [1, 10]

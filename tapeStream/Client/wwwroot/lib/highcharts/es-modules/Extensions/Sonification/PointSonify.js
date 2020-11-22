@@ -167,7 +167,7 @@ var error = U.error, merge = U.merge, pick = U.pick;
 *      dataExtremes: {
 *          y: {
 *              min: 0,
-*              max: 100
+*              max: 110
 *          },
 *          z: {
 *              min: -10,

@@ -330,7 +330,7 @@ extend(defaultOptions, {
                 smoothed: true,
                 // Day and week differs from plotOptions.series.dataGrouping
                 units: [
-                    ['millisecond', [1, 2, 5, 10, 20, 25, 50, 100, 200, 500]],
+                    ['millisecond', [1, 2, 5, 10, 20, 25, 50, 110, 200, 500]],
                     ['second', [1, 2, 5, 10, 15, 30]],
                     ['minute', [1, 2, 5, 10, 15, 30]],
                     ['hour', [1, 2, 3, 4, 6, 8, 12]],

@@ -3,7 +3,8 @@
     chart: {
         type: 'column',
         zoomType: 'x',
-        backgroundColor: 'darkgray',
+            backgroundColor: 'darkgray',
+            height: 600,
         panning: true,
         panKey: 'shift',
         options3d: {
@@ -11,7 +12,7 @@
             alpha: 15,
             beta: 15,
             viewDistance: 25,
-            depth: 100
+            depth: 400
         }
     },
 
@@ -19,8 +20,8 @@
     {
         column:
         {
-            stacking: 'normal',
-            grouping: false,
+            //stacking: 'normal',
+            grouping: true,
             depth: 100
         },
         series: {

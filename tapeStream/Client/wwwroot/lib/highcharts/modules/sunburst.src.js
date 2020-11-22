@@ -460,7 +460,7 @@
             pick = U.pick,
             stableSort = U.stableSort;
         /* eslint-disable no-invalid-this */
-        var AXIS_MAX = 100;
+        var AXIS_MAX = 110;
         // @todo Similar to eachObject, this function is likely redundant
         var isBoolean = function (x) {
                 return typeof x === 'boolean';
@@ -2201,7 +2201,7 @@
                     else if (unit === 'percentage') {
                         options.levelSize = {
                             unit: 'pixels',
-                            value: (value / 100) * diffRadius
+                            value: (value / 110) * diffRadius
                         };
                         remainingSize -= options.levelSize.value;
                     }
@@ -2672,7 +2672,7 @@
                  * percentages or pixel values.
                  *
                  * @sample {highcharts} highcharts/plotoptions/pie-center/
-                 *         Centered at 100, 100
+                 *         Centered at 110, 110
                  *
                  * @type    {Array<number|string>}
                  * @default ["50%", "50%"]

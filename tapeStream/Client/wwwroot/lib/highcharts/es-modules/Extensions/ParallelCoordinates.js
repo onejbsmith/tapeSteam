@@ -360,7 +360,7 @@ var ParallelAxisAdditions = /** @class */ (function () {
             options.angle = 360 * fraction;
         }
         else {
-            options[axisPosition[0]] = 100 * fraction + '%';
+            options[axisPosition[0]] = 110 * fraction + '%';
             axis[axisPosition[1]] = options[axisPosition[1]] = 0;
             // In case of chart.update(inverted), remove old options:
             axis[axisPosition[2]] = options[axisPosition[2]] = null;

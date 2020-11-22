@@ -104,6 +104,8 @@ namespace tapeStream.Client.Components.HighCharts
             public Title1 title { get; set; }
             public double min { get; set; }
             public double max { get; set; }
+            public Plotband[] plotBands { get; set; }
+            public Plotline[] plotLines { get; set; }
         }
 
 

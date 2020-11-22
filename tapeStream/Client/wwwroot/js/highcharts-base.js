@@ -78,7 +78,7 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     //chart.series = (window.chartObj);
                                                     //chart.series = 
                                                     //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
-                                                     chartInDiv.reflow();
+                                                   chartInDiv.reflow();
                                                    chartInDiv.redraw();
 
                                                 }
@@ -125,11 +125,38 @@ window.Dump = function (dumpJson, dumpName) {
     console.groupEnd();
 }
 
+window.Confirm = function (message) {
+    return window.confirm(message);
+}
+
+window.GroupTable = function (dumpJson, dumpName) {
+    window.dumpObj = looseJsonParse(dumpJson);
+    console.groupCollapsed(dumpName);
+    console.table(window.dumpObj);
+    console.groupEnd();
+}
+
+window.Table = function (objectJson) {
+    window.dumpObj = looseJsonParse(objectJson);
+    console.table(window.dumpObj);
+}
+
+window.Group = function (groupLabel) {
+    console.groupCollapsed(groupLabel);
+}
+
+window.EndGroup = function () {
+    console.groupEnd();
+}
+
+window.Log = function (message) {
+    console.log(message);
+}
 window.getChartSeriesJson = function (jsObject) {
     dotNetObject.invokeMethodAsync('getChartSeriesJson', JSON.stringify(window.chart3DObject.series));
 };
 
-window.getChartJson = function (windowObj) {
+window.getChartJson = function (windowObj, chartDivName) {
     dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(windowObj));
     console.log(`3. ${chartDivName} window.getChartJson`);
 

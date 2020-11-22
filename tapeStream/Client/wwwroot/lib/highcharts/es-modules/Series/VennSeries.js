@@ -103,13 +103,13 @@ var loss = function loss(mapOfIdToCircle, relations) {
  * The highest number in the search range.
  * @param {number} [tolerance=1e-10]
  * The allowed difference between the returned value and root.
- * @param {number} [maxIterations=100]
+ * @param {number} [maxIterations=110]
  * The maximum iterations allowed.
  * @return {number}
  * Root number.
  */
 var bisect = function bisect(f, a, b, tolerance, maxIterations) {
-    var fA = f(a), fB = f(b), nMax = maxIterations || 100, tol = tolerance || 1e-10, delta = b - a, n = 1, x, fX;
+    var fA = f(a), fB = f(b), nMax = maxIterations || 110, tol = tolerance || 1e-10, delta = b - a, n = 1, x, fX;
     if (a >= b) {
         throw new Error('a must be smaller than b.');
     }

@@ -490,7 +490,7 @@ var Chart3D;
                  * @since   4.0
                  * @product highcharts
                  */
-                depth: 100,
+                depth: 110,
                 /**
                  * Whether the 3d box should automatically adjust to the chart
                  * plot area.

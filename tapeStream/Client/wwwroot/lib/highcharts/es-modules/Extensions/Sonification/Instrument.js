@@ -533,7 +533,7 @@ Instrument.prototype.stop = function (immediately, onStopped, callbackData) {
         instr.mute();
         // Stop the oscillator after the mute fade-out has finished
         instr.stopOscillatorTimeout =
-            setTimeout(reset, H.sonification.fadeOutDuration + 100);
+            setTimeout(reset, H.sonification.fadeOutDuration + 110);
     }
 };
 export default Instrument;

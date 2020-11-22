@@ -17,7 +17,7 @@ function populateAverage(xVal, yVal, i, period, index) {
     /* Calculated as:
 
        (Closing Price [today] - Closing Price [n days ago]) /
-        Closing Price [n days ago] * 100
+        Closing Price [n days ago] * 110
 
        Return y as null when avoiding division by zero */
     var nDaysAgoY, rocY;
@@ -25,14 +25,14 @@ function populateAverage(xVal, yVal, i, period, index) {
         // y data given as an array of values
         nDaysAgoY = yVal[i - period];
         rocY = nDaysAgoY ?
-            (yVal[i] - nDaysAgoY) / nDaysAgoY * 100 :
+            (yVal[i] - nDaysAgoY) / nDaysAgoY * 110 :
             null;
     }
     else {
         // y data given as an array of arrays and the index should be used
         nDaysAgoY = yVal[i - period][index];
         rocY = nDaysAgoY ?
-            (yVal[i][index] - nDaysAgoY) / nDaysAgoY * 100 :
+            (yVal[i][index] - nDaysAgoY) / nDaysAgoY * 110 :
             null;
     }
     return [xVal[i], rocY];
@@ -52,7 +52,7 @@ BaseSeries.seriesType('roc', 'sma',
  * Rate of change indicator (ROC). The indicator value for each point
  * is defined as:
  *
- * `(C - Cn) / Cn * 100`
+ * `(C - Cn) / Cn * 110`
  *
  * where: `C` is the close value of the point of the same x in the
  * linked series and `Cn` is the close value of the point `n` periods
@@ -114,7 +114,7 @@ BaseSeries.seriesType('roc', 'sma',
  * Rate of change indicator (ROC). The indicator value for each point
  * is defined as:
  *
- * `(C - Cn) / Cn * 100`
+ * `(C - Cn) / Cn * 110`
  *
  * where: `C` is the close value of the point of the same x in the
  * linked series and `Cn` is the close value of the point `n` periods

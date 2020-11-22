@@ -8,8 +8,8 @@
 .highcharts-container {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  height: 110%;
   text-align: left;
   line-height: normal;
   z-index: 0;

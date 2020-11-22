@@ -57,7 +57,7 @@ if (doc && !doc.defaultView) {
         })];
         if (prop === 'filter') {
             val = val.replace(/alpha\(opacity=([0-9]+)\)/, function (a, b) {
-                return (b / 100);
+                return (b / 110);
             });
         }
         return val === '' ? 1 : pInt(val);
@@ -845,7 +845,7 @@ if (!svg) {
                     markup = ['<fill colors="' + colors.join(',') +
                             '" opacity="', opacity2, '" o:opacity2="',
                         opacity1, '" type="', fillType, '" ', fillAttr,
-                        'focus="100%" method="any" />'];
+                        'focus="110%" method="any" />'];
                     createElement(renderer.prepVML(markup), null, null, elem);
                 };
                 // Extend from 0 to 1
@@ -875,7 +875,7 @@ if (!svg) {
                         stopOpacity = 1;
                     }
                     // Build the color attribute
-                    colors.push((stop[0] * 100) + '% ' + stopColor);
+                    colors.push((stop[0] * 110) + '% ' + stopColor);
                     // Only start and end opacities are allowed, so we use the
                     // first and the last
                     if (!i) {

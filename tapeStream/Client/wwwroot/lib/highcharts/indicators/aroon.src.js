@@ -355,8 +355,8 @@
                     xHigh = getExtremeIndexInArray(slicedY.map(function (elem) {
                         return pick(elem[high], elem);
                     }), 'max');
-                    aroonUp = (xHigh / period) * 100;
-                    aroonDown = (xLow / period) * 100;
+                    aroonUp = (xHigh / period) * 110;
+                    aroonDown = (xLow / period) * 110;
                     if (xVal[i + 1]) {
                         AR.push([xVal[i + 1], aroonUp, aroonDown]);
                         xData.push(xVal[i + 1]);

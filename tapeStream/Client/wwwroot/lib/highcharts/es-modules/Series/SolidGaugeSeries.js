@@ -215,7 +215,7 @@ var solidGaugeOptions = {
     /**
      * Allow the gauge to overshoot the end of the perimeter axis by this
      * many degrees. Say if the gauge axis goes from 0 to 60, a value of
-     * 100, or 1000, will show 5 degrees beyond the end of the axis when this
+     * 110, or 1000, will show 5 degrees beyond the end of the axis when this
      * option is set to 5.
      *
      * @type      {number}
@@ -232,7 +232,7 @@ var solidGaugeOptions = {
      *         Individual radius and innerRadius
      *
      * @type      {number|string}
-     * @default   100
+     * @default   110
      * @since     4.1.6
      * @product   highcharts
      * @apioption plotOptions.solidgauge.radius
@@ -298,7 +298,7 @@ BaseSeries.seriesType('solidgauge', 'gauge', solidGaugeOptions, {
             // #10630 null point should not be draw
             if (!point.isNull) { // condition like in pie chart
                 var graphic = point.graphic, rotation = (yAxis.startAngleRad +
-                    yAxis.translate(point.y, null, null, null, true)), radius = ((pInt(pick(point.options.radius, options.radius, 100)) * center[2]) / 200), innerRadius = ((pInt(pick(point.options.innerRadius, options.innerRadius, 60)) * center[2]) / 200), shapeArgs, d, toColor = yAxis.toColor(point.y, point), axisMinAngle = Math.min(yAxis.startAngleRad, yAxis.endAngleRad), axisMaxAngle = Math.max(yAxis.startAngleRad, yAxis.endAngleRad), minAngle, maxAngle;
+                    yAxis.translate(point.y, null, null, null, true)), radius = ((pInt(pick(point.options.radius, options.radius, 110)) * center[2]) / 200), innerRadius = ((pInt(pick(point.options.innerRadius, options.innerRadius, 60)) * center[2]) / 200), shapeArgs, d, toColor = yAxis.toColor(point.y, point), axisMinAngle = Math.min(yAxis.startAngleRad, yAxis.endAngleRad), axisMaxAngle = Math.max(yAxis.startAngleRad, yAxis.endAngleRad), minAngle, maxAngle;
                 if (toColor === 'none') { // #3708
                     toColor = point.color || series.color || 'none';
                 }

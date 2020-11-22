@@ -95,7 +95,7 @@ merge(DerivedSeriesMixin, {
                     sumY += point;
                 }
                 else {
-                    percentPoint = (point / sum) * 100;
+                    percentPoint = (point / sum) * 110;
                     percentPoints.push([
                         xValues[i],
                         correctFloat(sumPercent + percentPoint)

@@ -694,7 +694,7 @@
                 // y axis has the smallest priority in case of our charts
                 // (needs to be set because of stacking)
                 incrementY = 10,
-                incrementZ = 100,
+                incrementZ = 110,
                 zIndex = 0, 
                 // The 8 corners of the cube
                 pArr = [{
@@ -942,7 +942,7 @@
              */
             wrapper.setPaths = function (attribs) {
                 var paths = wrapper.renderer.arc3dPath(attribs),
-                    zIndex = paths.zTop * 100;
+                    zIndex = paths.zTop * 110;
                 wrapper.attribs = attribs;
                 wrapper.top.attr({ d: paths.top, zIndex: paths.zTop });
                 wrapper.inn.attr({ d: paths.inn, zIndex: paths.zInn });
@@ -2721,7 +2721,7 @@
                          * @since   4.0
                          * @product highcharts
                          */
-                        depth: 100,
+                        depth: 110,
                         /**
                          * Whether the 3d box should automatically adjust to the chart
                          * plot area.

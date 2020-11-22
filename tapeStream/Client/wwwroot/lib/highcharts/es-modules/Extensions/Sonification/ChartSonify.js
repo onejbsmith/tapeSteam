@@ -69,7 +69,7 @@ import H from '../../Core/Globals.js';
 *     dataExtremes: {
 *         y: {
 *             min: 0,
-*             max: 100
+*             max: 110
 *         },
 *         z: {
 *             min: -10,
@@ -856,7 +856,7 @@ function getChartSonifyOptions(chart, options) {
 *      dataExtremes: {
 *          y: {
 *              min: 0,
-*              max: 100
+*              max: 110
 *          },
 *          z: {
 *              min: -10,

@@ -77,7 +77,12 @@ namespace tapeStream.Client.Pages
             //TDAChart.lastCandles = await chartService.getLastCandles(2);
             await Task.Delay(100);
 
-            await jsruntime.InvokeVoidAsync("Dump", TDAChart.lastCandle.Dumps(), "TDAChart.lastCandle");
+            //await jsruntime.InvokeVoidAsync("Dump", Dumps(), "TDAChart.lastCandle");
+            //await jsruntime.InvokeAsync<string>("Confirm", "Task GetBookColumnsData");
+
+            jsruntime.GroupTable(TDAChart.lastCandle, nameof(TDAChart.lastCandle));
+
+            //jsruntime.Confirm("Task GetBookColumnsData");
 
             //Debug.WriteLine("2. BookColumnsCharts = " + Threader.Thread.CurrentThread.ManagedThreadId.ToString());
             StateHasChanged();

@@ -677,7 +677,7 @@ var Axis = /** @class */ (function () {
                         // Get this particular series extremes
                         var dataExtremes = series.applyExtremes();
                         // Get the dataMin and dataMax so far. If percentage is
-                        // used, the min and max are always 0 and 100. If
+                        // used, the min and max are always 0 and 110. If
                         // seriesDataMin and seriesDataMax is null, then series
                         // doesn't have active y data, we continue with nulls
                         if (isNumber(dataExtremes.dataMin)) {
@@ -4145,8 +4145,8 @@ var Axis = /** @class */ (function () {
          *
          * On logarithmic axes, the unit is the power of the value. For example,
          * setting the minorTickInterval to 1 puts one tick on each of 0.1, 1,
-         * 10, 100 etc. Setting the minorTickInterval to 0.1 produces 9 ticks
-         * between 1 and 10, 10 and 100 etc.
+         * 10, 110 etc. Setting the minorTickInterval to 0.1 produces 9 ticks
+         * between 1 and 10, 10 and 110 etc.
          *
          * If user settings dictate minor ticks to become too dense, they don't
          * make sense, and will be ignored to prevent performance problems.
@@ -4256,8 +4256,8 @@ var Axis = /** @class */ (function () {
          * interval between any of the data points.
          *
          * On a logarithmic axis, the unit for the minimum range is the power.
-         * So a minRange of 1 means that the axis can be zoomed to 10-100,
-         * 100-1000, 1000-10000 etc.
+         * So a minRange of 1 means that the axis can be zoomed to 10-110,
+         * 110-1000, 1000-10000 etc.
          *
          * **Note**: The `minPadding`, `maxPadding`, `startOnTick` and
          * `endOnTick` settings also affect how the extremes of the axis
@@ -4553,7 +4553,7 @@ var Axis = /** @class */ (function () {
          * `24 * 3600 * 1000`.
          *
          * On logarithmic axes, the tickInterval is based on powers, so a
-         * tickInterval of 1 means one tick on each of 0.1, 1, 10, 100 etc. A
+         * tickInterval of 1 means one tick on each of 0.1, 1, 10, 110 etc. A
          * tickInterval of 2 means a tick of 0.1, 10, 1000 etc. A tickInterval
          * of 0.2 puts a tick on 0.1, 0.2, 0.4, 0.6, 0.8, 1, 2, 4, 6, 8, 10, 20,
          * 40 etc.
@@ -4603,7 +4603,7 @@ var Axis = /** @class */ (function () {
          * @sample {highstock} stock/xaxis/tickpixelinterval/
          *         200 px on X axis
          */
-        tickPixelInterval: 100,
+        tickPixelInterval: 110,
         /**
          * For categorized axes only. If `on` the tick mark is placed in the
          * center of the category, if `between` the tick mark is placed between
@@ -4912,7 +4912,7 @@ var Axis = /** @class */ (function () {
          * ```js
          * units: [[
          *     'millisecond', // unit name
-         *     [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
+         *     [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
          * ], [
          *     'second',
          *     [1, 2, 5, 10, 15, 30]

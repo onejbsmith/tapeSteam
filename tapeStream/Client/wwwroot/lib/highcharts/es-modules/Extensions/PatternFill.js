@@ -473,7 +473,7 @@ addEvent(SVGRenderer, 'complexColor', function (args) {
         }
         // Add it. This function does nothing if an element with this ID
         // already exists.
-        this.addPattern(pattern, !this.forExport && pick(pattern.animation, this.globalAnimation, { duration: 100 }));
+        this.addPattern(pattern, !this.forExport && pick(pattern.animation, this.globalAnimation, { duration: 110 }));
         value = "url(" + this.url + "#" + (pattern.id + (this.forExport ? '-export' : '')) + ")";
     }
     else {

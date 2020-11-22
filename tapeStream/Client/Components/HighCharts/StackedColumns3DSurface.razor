@@ -3,10 +3,8 @@
 @using tapeStream.Client.Components.HighCharts.Base
 
 
-@inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @*@name;*@
 
-@inject Blazored.LocalStorage.ISyncLocalStorageService  localStorage
 <style>
     #container {
         /*height: 80vh;*/
@@ -25,7 +23,8 @@
             <MatChip Label="Left" IsCheckable="true" Value="2"></MatChip>
             <MatChip Label="Right" IsCheckable="true" Value="3"></MatChip>
             <MatChip Label="Back" IsCheckable="true" Value="4"></MatChip>
-            <MatChip Label="Return" IsCheckable="true" Value="5"></MatChip>
+            <MatChip Label="Flip" IsCheckable="true" Value="5"></MatChip>
+            <MatChip Label="Return" IsCheckable="true" Value="6"></MatChip>
 
         </MatChipSet>
         <span><RadzenButton Click="ResetXAxis">Reset X-Axis</RadzenButton></span>
@@ -69,11 +68,6 @@
 
 @code
 {
-    string[] saPairs = new string[] { "0,0", "90,0", "0,90", "0,-90", "0,180", "360,360" };
 
-    void ResetXAxis()
-    {
-       SurfaceChartConfigurator.resetXAxis = true;
-    }
 
 }

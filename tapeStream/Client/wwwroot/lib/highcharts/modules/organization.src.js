@@ -130,19 +130,19 @@
                  */
                 nodeFormatter: function () {
                     var outerStyle = {
-                            width: '100%',
-                            height: '100%',
+                            width: '110%',
+                            height: '110%',
                             display: 'flex',
                             'flex-direction': 'row',
                             'align-items': 'center',
                             'justify-content': 'center'
                         },
                         imageStyle = {
-                            'max-height': '100%',
+                            'max-height': '110%',
                             'border-radius': '50%'
                         },
                         innerStyle = {
-                            width: '100%',
+                            width: '110%',
                             padding: 0,
                             'text-align': 'center',
                             'white-space': 'normal'
@@ -444,8 +444,8 @@
                         css(text.element, {
                             left: 0,
                             top: 0,
-                            width: '100%',
-                            height: '100%',
+                            width: '110%',
+                            height: '110%',
                             overflow: 'hidden'
                         });
                     }

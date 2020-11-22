@@ -49,7 +49,7 @@ var centeredSeriesMixin = H.CenteredSeriesMixin = {
             pick(centerOption[0], '50%'),
             pick(centerOption[1], '50%'),
             // Prevent from negative values
-            pick(size && size < 0 ? void 0 : options.size, '100%'),
+            pick(size && size < 0 ? void 0 : options.size, '110%'),
             pick(innerSize && innerSize < 0 ? void 0 : options.innerSize || 0, '0%')
         ];
         // No need for inner size in angular (gauges) series but still required

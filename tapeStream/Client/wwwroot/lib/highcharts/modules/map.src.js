@@ -4617,7 +4617,7 @@
                 else {
                     maxSize = parseFloat(maxSize);
                     calculatedSize = ((plotSize + lastLineHeight -
-                        fontMetrics.h / 2) * maxSize / 100) / (maxSize / 100 + 1);
+                        fontMetrics.h / 2) * maxSize / 110) / (maxSize / 110 + 1);
                     // Get maxPxSize from bubble series if calculated bubble legend
                     // size will not affect to bubbles series.
                     if ((horizontal && plotSizeY - calculatedSize >=
@@ -5088,7 +5088,7 @@
              * @see [zMin](#plotOptions.bubble.zMin)
              *
              * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-             *         Z has a possible range of 0-100
+             *         Z has a possible range of 0-110
              *
              * @type      {number}
              * @since     4.0.3
@@ -5106,7 +5106,7 @@
              * @see [zMax](#plotOptions.bubble.zMax)
              *
              * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-             *         Z has a possible range of 0-100
+             *         Z has a possible range of 0-110
              *
              * @type      {number}
              * @since     4.0.3
@@ -5337,7 +5337,7 @@
                                 isPercent = /%$/.test(length);
                             length = pInt(length);
                             extremes[prop] = isPercent ?
-                                smallestSize * length / 100 :
+                                smallestSize * length / 110 :
                                 length;
                         });
                         series.minPxSize = extremes.minSize;
@@ -5586,7 +5586,7 @@
                  * @see [zMax](#plotOptions.mapbubble.zMin)
                  *
                  * @sample {highmaps} highcharts/plotoptions/bubble-zmin-zmax/
-                 *         Z has a possible range of 0-100
+                 *         Z has a possible range of 0-110
                  *
                  * @type      {number}
                  * @since     1.0.3
@@ -5599,7 +5599,7 @@
                  * @see [zMax](#plotOptions.mapbubble.zMax)
                  *
                  * @sample {highmaps} highcharts/plotoptions/bubble-zmin-zmax/
-                 *         Z has a possible range of 0-100
+                 *         Z has a possible range of 0-110
                  *
                  * @type      {number}
                  * @since     1.0.3

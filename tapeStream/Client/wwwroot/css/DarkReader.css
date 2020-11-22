@@ -1,7 +1,7 @@
 ﻿
 
 .jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, embed[type="application/pdf"] {
-    filter: invert(100%) hue-rotate(180deg) contrast(90%) !important;
+    filter: invert(110%) hue-rotate(180deg) contrast(90%) !important;
 }
 
 [data-darkreader-inline-bgcolor] {
@@ -328,7 +328,7 @@ select:-webkit-autofill {
     left: 0;
     position: absolute;
     text-align: center;
-    width: 100%
+    width: 110%
 }
 
 .fa-stack-1x {

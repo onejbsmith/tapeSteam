@@ -654,7 +654,7 @@
     function css(el, styles) {
         if (isMS && !hasSVG) { // #2686
             if (styles && styles.opacity !== UNDEFINED) {
-                styles.filter = 'alpha(opacity=' + (styles.opacity * 100) + ')';
+                styles.filter = 'alpha(opacity=' + (styles.opacity * 110) + ')';
             }
         }
         extend(el.style, styles);
@@ -711,7 +711,7 @@
      * Return a length based on either the integer value, or a percentage of a base.
      */
     function relativeLength(value, base) {
-        return (/%$/).test(value) ? base * parseFloat(value) / 100 : parseFloat(value);
+        return (/%$/).test(value) ? base * parseFloat(value) / 110 : parseFloat(value);
     }
 
     /**
@@ -1506,7 +1506,7 @@
                 val = val.replace(
                     /alpha\(opacity=([0-9]+)\)/,
                     function (a, b) {
-                        return b / 100;
+                        return b / 110;
                     }
                 );
             }
@@ -1846,7 +1846,7 @@
         },
 
         loading: {
-            // hideDuration: 100,
+            // hideDuration: 110,
             labelStyle: {
                 fontWeight: 'bold',
                 position: RELATIVE,
@@ -3943,7 +3943,7 @@
          * @param {Number} width
          */
         crispLine: function (points, width) {
-            // points format: [M, 0, 0, L, 100, 0]
+            // points format: [M, 0, 0, L, 110, 0]
             // normalize to a crisp line
             if (points[1] === points[4]) {
                 // Substract due to #1129. Now bottom and left axis gridlines behave the same.
@@ -4989,7 +4989,7 @@
                 cssTransformKey = isMS ? '-ms-transform' : isWebKit ? '-webkit-transform' : isFirefox ? 'MozTransform' : isOpera ? '-o-transform' : '';
 
             rotationStyle[cssTransformKey] = rotationStyle.transform = 'rotate(' + rotation + 'deg)';
-            rotationStyle[cssTransformKey + (isFirefox ? 'Origin' : '-origin')] = rotationStyle.transformOrigin = (alignCorrection * 100) + '% ' + baseline + 'px';
+            rotationStyle[cssTransformKey + (isFirefox ? 'Origin' : '-origin')] = rotationStyle.transformOrigin = (alignCorrection * 110) + '% ' + baseline + 'px';
             css(this.element, rotationStyle);
         },
 
@@ -5840,7 +5840,7 @@
                         // Add the fill subnode. When colors attribute is used, the meanings of opacity and o:opacity2
                         // are reversed.
                         markup = ['<fill colors="' + colors.join(',') + '" opacity="', opacity2, '" o:opacity2="', opacity1,
-                            '" type="', fillType, '" ', fillAttr, 'focus="100%" method="any" />'];
+                            '" type="', fillType, '" ', fillAttr, 'focus="110%" method="any" />'];
                         createElement(renderer.prepVML(markup), null, null, elem);
                     };
 
@@ -5872,7 +5872,7 @@
                     }
 
                     // Build the color attribute
-                    colors.push((stop[0] * 100) + '% ' + stopColor);
+                    colors.push((stop[0] * 110) + '% ' + stopColor);
 
                     // Only start and end opacities are allowed, so we use the first and the last
                     if (!i) {
@@ -7060,7 +7060,7 @@
             //tickInterval: null,
             tickLength: 10,
             tickmarkPlacement: 'between', // on or between
-            tickPixelInterval: 100,
+            tickPixelInterval: 110,
             tickPosition: 'outside',
             //tickWidth: 1,
             title: {
@@ -7458,7 +7458,7 @@
                         seriesDataMin = series.dataMin;
 
                         // Get the dataMin and dataMax so far. If percentage is used, the min and max are
-                        // always 0 and 100. If seriesDataMin and seriesDataMax is null, then series
+                        // always 0 and 110. If seriesDataMin and seriesDataMax is null, then series
                         // doesn't have active y data, we continue with nulls
                         if (defined(seriesDataMin) && defined(seriesDataMax)) {
                             axis.dataMin = mathMin(pick(axis.dataMin, seriesDataMin), seriesDataMin);
@@ -8504,10 +8504,10 @@
             // Check for percentage based input values. Rounding fixes problems with
             // column overflow and plot line filtering (#4898, #4899)
             if (percentRegex.test(height)) {
-                height = Math.round(parseFloat(height) / 100 * chart.plotHeight);
+                height = Math.round(parseFloat(height) / 110 * chart.plotHeight);
             }
             if (percentRegex.test(top)) {
-                top = Math.round(parseFloat(top) / 100 * chart.plotHeight + chart.plotTop);
+                top = Math.round(parseFloat(top) / 110 * chart.plotHeight + chart.plotTop);
             }
 
             // Expose basic values to use in Series object and navigator
@@ -9539,7 +9539,7 @@
     Axis.prototype.normalizeTimeTickInterval = function (tickInterval, unitsOption) {
         var units = unitsOption || [[
                 'millisecond', // unit name
-                [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
+                [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
             ], [
                 'second',
                 [1, 2, 5, 10, 15, 30]
@@ -9627,7 +9627,7 @@
             axis._minorAutoInterval = null;
         }
 
-        // First case: All ticks fall on whole logarithms: 1, 10, 100 etc.
+        // First case: All ticks fall on whole logarithms: 1, 10, 110 etc.
         if (interval >= 0.5) {
             interval = mathRound(interval);
             positions = axis.getLinearTickPositions(interval, min, max);
@@ -9646,9 +9646,9 @@
 
             if (interval > 0.3) {
                 intermediate = [1, 2, 4];
-            } else if (interval > 0.15) { // 0.2 equals five minor ticks per 1, 10, 100 etc
+            } else if (interval > 0.15) { // 0.2 equals five minor ticks per 1, 10, 110 etc
                 intermediate = [1, 2, 4, 6, 8];
-            } else { // 0.1 equals ten minor ticks per 1, 10, 100 etc
+            } else { // 0.1 equals ten minor ticks per 1, 10, 110 etc
                 intermediate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             }
 
@@ -12884,7 +12884,7 @@
                         if (chart.container) { // It may have been destroyed in the meantime (#1257)
                             chart.setSize(undefined, undefined, false);
                         }
-                    }, e ? 100 : 0);
+                    }, e ? 110 : 0);
                 }
                 chart.containerWidth = width;
                 chart.containerHeight = height;
@@ -13585,7 +13585,7 @@
                 plotWidth = chart.plotWidth - 2 * slicingRoom,
                 plotHeight = chart.plotHeight - 2 * slicingRoom,
                 centerOption = options.center,
-                positions = [pick(centerOption[0], '50%'), pick(centerOption[1], '50%'), options.size || '100%', options.innerSize || 0],
+                positions = [pick(centerOption[0], '50%'), pick(centerOption[1], '50%'), options.size || '110%', options.innerSize || 0],
                 smallestSize = mathMin(plotWidth, plotHeight),
                 i,
                 value;
@@ -14619,7 +14619,7 @@
                     }
 
                     point.total = point.stackTotal = pointStack.total;
-                    point.percentage = pointStack.total && (point.y / pointStack.total * 100);
+                    point.percentage = pointStack.total && (point.y / pointStack.total * 110);
                     point.stackY = yValue;
 
                     // Place the stack label
@@ -15851,7 +15851,7 @@
                 inverted = chart.inverted,
                 reversed = axis.reversed,
                 neg = (this.isNegative && !reversed) || (!this.isNegative && reversed), // #4056
-                y = axis.translate(axis.usePercentage ? 100 : this.total, 0, 0, 0, 1), // stack value translated mapped to chart coordinates
+                y = axis.translate(axis.usePercentage ? 110 : this.total, 0, 0, 0, 1), // stack value translated mapped to chart coordinates
                 yZero = axis.translate(0),                        // stack origin
                 h = mathAbs(y - yZero),                            // stack height
                 x = chart.xAxis[0].translate(this.x) + xOffset,    // stack x position
@@ -16151,7 +16151,7 @@
                 stack = stacks[key] && stacks[key][x];
                 pointExtremes = stack && stack.points[stackIndicator.key];
                 if (pointExtremes) {
-                    totalFactor = stack.total ? 100 / stack.total : 0;
+                    totalFactor = stack.total ? 110 / stack.total : 0;
                     pointExtremes[0] = correctFloat(pointExtremes[0] * totalFactor); // Y bottom value
                     pointExtremes[1] = correctFloat(pointExtremes[1] * totalFactor); // Y value
                     series.stackedYData[i] = pointExtremes[1];
@@ -16304,7 +16304,7 @@
                 animate(loadingDiv, {
                     opacity: 0
                 }, {
-                    duration: options.loading.hideDuration || 100,
+                    duration: options.loading.hideDuration || 110,
                     complete: function () {
                         css(loadingDiv, { display: NONE });
                     }
@@ -17807,7 +17807,7 @@
             // Set each point's properties
             for (i = 0; i < len; i++) {
                 point = points[i];
-                point.percentage = (total > 0 && (point.visible || !ignoreHiddenPoint)) ? point.y / total * 100 : 0;
+                point.percentage = (total > 0 && (point.visible || !ignoreHiddenPoint)) ? point.y / total * 110 : 0;
                 point.total = total;
             }
         },
@@ -17873,7 +17873,7 @@
                 // set start and end angle
                 start = startAngleRad + (cumulative * circ);
                 if (!ignoreHiddenPoint || point.visible) {
-                    cumulative += point.percentage / 100;
+                    cumulative += point.percentage / 110;
                 }
                 end = startAngleRad + (cumulative * circ);
 
@@ -18473,11 +18473,11 @@
                     }
 
                     slots.forEach(function (pos, no) {
-                        var slotX = series.getX(pos, i) + chart.plotLeft - (i ? 100 : 0),
+                        var slotX = series.getX(pos, i) + chart.plotLeft - (i ? 110 : 0),
                             slotY = pos + chart.plotTop;
 
                         if (isNumber(slotX)) {
-                            series.slotElements.push(chart.renderer.rect(slotX, slotY - 7, 100, labelHeight, 1)
+                            series.slotElements.push(chart.renderer.rect(slotX, slotY - 7, 110, labelHeight, 1)
                                 .attr({
                                     'stroke-width': 1,
                                     stroke: 'silver',
@@ -19294,7 +19294,7 @@
             // Redraw
             if (hasZoomed) {
                 chart.redraw(
-                    pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 100) // animation
+                    pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 110) // animation
                 );
             }
         },

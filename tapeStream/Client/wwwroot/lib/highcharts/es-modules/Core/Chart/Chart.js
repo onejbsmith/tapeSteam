@@ -1228,7 +1228,7 @@ var Chart = /** @class */ (function () {
                     if (chart.container) {
                         chart.setSize(void 0, void 0, false);
                     }
-                }, e ? 100 : 0);
+                }, e ? 110 : 0);
             }
             chart.containerWidth = width;
             chart.containerHeight = height;

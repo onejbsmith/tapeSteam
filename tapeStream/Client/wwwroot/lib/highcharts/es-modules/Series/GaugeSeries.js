@@ -187,7 +187,7 @@ BaseSeries.seriesType('gauge', 'line', {
     /**
      * Allow the dial to overshoot the end of the perimeter axis by this
      * many degrees. Say if the gauge axis goes from 0 to 60, a value of
-     * 100, or 1000, will show 5 degrees beyond the end of the axis when this
+     * 110, or 1000, will show 5 degrees beyond the end of the axis when this
      * option is set to 5.
      *
      * @see [wrap](#plotOptions.gauge.wrap)
@@ -297,8 +297,8 @@ BaseSeries.seriesType('gauge', 'line', {
         series.points.forEach(function (point) {
             var dialOptions = merge(options.dial, point.dial), radius = ((pInt(pick(dialOptions.radius, '80%')) * center[2]) /
                 200), baseLength = ((pInt(pick(dialOptions.baseLength, '70%')) * radius) /
-                100), rearLength = ((pInt(pick(dialOptions.rearLength, '10%')) * radius) /
-                100), baseWidth = dialOptions.baseWidth || 3, topWidth = dialOptions.topWidth || 1, overshoot = options.overshoot, rotation = yAxis.startAngleRad + yAxis.translate(point.y, null, null, null, true);
+                110), rearLength = ((pInt(pick(dialOptions.rearLength, '10%')) * radius) /
+                110), baseWidth = dialOptions.baseWidth || 3, topWidth = dialOptions.topWidth || 1, overshoot = options.overshoot, rotation = yAxis.startAngleRad + yAxis.translate(point.y, null, null, null, true);
             // Handle the wrap and overshoot options
             if (isNumber(overshoot) || options.wrap === false) {
                 overshoot = isNumber(overshoot) ?

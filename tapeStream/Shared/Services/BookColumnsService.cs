@@ -11,8 +11,8 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        string controllerUrl = "http://localhost:55540/api/BookColumns/";
-        //string controllerUrl = "http://tapestream.com/api/BookColumns/";
+        //string controllerUrl = "http://localhost:55540/api/BookColumns/";
+        string controllerUrl = "http://tapestream.com/api/BookColumns/";
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;

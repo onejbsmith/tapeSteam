@@ -222,7 +222,7 @@ var clusterDefaultOptions = {
          * clusters, otherwise `kmeans`. It ensures good performance on
          * large datasets and better clusters arrangement after the zoom.
          */
-        kmeansThreshold: 100
+        kmeansThreshold: 110
     },
     /**
      * Options for the cluster marker.

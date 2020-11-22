@@ -169,7 +169,7 @@
         function GLShader(gl) {
             var vertShade = [
                     /* eslint-disable max-len, @typescript-eslint/indent */
-                    '#version 100',
+                    '#version 110',
                     '#define LN10 2.302585092994046',
                     'precision highp float;',
                     'attribute vec4 aVertexPosition;',

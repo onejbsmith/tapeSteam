@@ -8,7 +8,7 @@ namespace tapeStream.Client.Components
         public static bool resetXAxis = false;
 
         public static bool redrawChart = true;
-        public static int xAxisMaxCategories = 1000;
+        public static int xAxisMaxCategories = 100;
 
         public static int yAxisHigh = 15000;
 
@@ -24,7 +24,7 @@ namespace tapeStream.Client.Components
             }
         }
 
-        public static bool yAxisMaxAutoReset = true;
+        public static bool yAxisMaxAutoReset = false;
         public static bool isFlat = false;
 
         public static bool isTimeSalesOnly = false;
@@ -35,7 +35,7 @@ namespace tapeStream.Client.Components
         public static int chartDepth { get; set; } = 2500;
 
         public static int seriesDepth { get; set; } = 25;
-        public static int chipValue { get; set; } = 5;
+        public static int chipValue { get; set; } = 6;
         [Parameter]
         public string title
         {

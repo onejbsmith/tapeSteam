@@ -448,7 +448,7 @@ extend(Chart.prototype, /** @lends Chart.prototype */ {
         }
         // Redraw
         if (hasZoomed) {
-            chart.redraw(pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 100));
+            chart.redraw(pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 110));
         }
     },
     /**

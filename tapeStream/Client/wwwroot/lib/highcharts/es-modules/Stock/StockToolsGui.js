@@ -1085,7 +1085,7 @@ var Toolbar = /** @class */ (function () {
             wrapper.style.height = showhideBtn.offsetHeight + 'px';
         }
         else {
-            wrapper.style.height = '100%';
+            wrapper.style.height = '110%';
             showhideBtn.style.top = getStyle(toolbar, 'padding-top') + 'px';
             showhideBtn.style.left = (wrapper.offsetWidth +
                 getStyle(toolbar, 'padding-left')) + 'px';

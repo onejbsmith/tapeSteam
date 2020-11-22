@@ -84,8 +84,8 @@
              *
              * @sample {highcharts} highcharts/variable-radius-pie/min-max-point-size/
              *         Example of minPointSize and maxPointSize
-             * @sample {highcharts} highcharts/variable-radius-pie/min-point-size-100/
-             *         minPointSize set to 100
+             * @sample {highcharts} highcharts/variable-radius-pie/min-point-size-110/
+             *         minPointSize set to 110
              *
              * @type  {number|string}
              * @since 6.0.0
@@ -101,7 +101,7 @@
              * @type  {number|string}
              * @since 6.0.0
              */
-            maxPointSize: '100%',
+            maxPointSize: '110%',
             /**
              * The minimum possible z value for the point's radius calculation. If
              * the point's Z value is smaller than zMin, the slice will be drawn
@@ -186,7 +186,7 @@
                         isPercent = /%$/.test(length);
                     length = parseInt(length, 10);
                     extremes[prop] = isPercent ?
-                        smallestSize * length / 100 :
+                        smallestSize * length / 110 :
                         length * 2; // Because it should be radius, not diameter.
                 });
                 series.minPxSize = positions[3] + extremes.minPointSize;
@@ -309,7 +309,7 @@
                     // set start and end angle
                     start = startAngleRad + (cumulative * circ);
                     if (!ignoreHiddenPoint || point.visible) {
-                        cumulative += point.percentage / 100;
+                        cumulative += point.percentage / 110;
                     }
                     end = startAngleRad + (cumulative * circ);
                     // set the shape

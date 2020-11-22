@@ -50,7 +50,31 @@
             text: 'Y-Axis'
         },
         min: 0,
-            max: 10
+            max: 10,
+                plotBands:
+        [
+            //{                               /// mark the weekend
+            //    color: '#FCFFC5',
+            //    from: 3,                    /// Date.UTC(2010, 0, 2),
+            //    to: 5,                      /// Date.UTC(2010, 0, 4),
+            //    label:
+            //    {
+            //        text: '',   // Content of the label. 
+            //        align: 'left',          // Positioning of the label. 
+            //        x: +20,                  // Amount of pixels the label will be repositioned according to the alignment. 
+            //        y: -10,                 // Amount of pixels the label will be repositioned according to the alignment.
+            //        useHTML: false
+            //    }
+            //}
+        ],
+            plotLines: [
+                //{
+                //color: 'red', // Color value
+                //dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                //value: 3, // Value of where the line will appear
+                //width: 2 // Width of the line    
+                //}
+            ]
     },
     xAxis: {
         categories: [],
@@ -58,9 +82,9 @@
             text: 'Price',
         },
         min: 0,
-            max: 1000,
+            max: 10,
 
-        plotBands:
+                plotBands:
         [
             {                               /// mark the weekend
                 color: '#FCFFC5',
