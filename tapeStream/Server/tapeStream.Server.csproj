@@ -42,6 +42,7 @@
     <Compile Remove="Data\classes\Signals.cs" />
     <Compile Remove="Data\classes\Tests.cs" />
     <Compile Remove="Data\classes\Trades.cs" />
+    <Compile Remove="Data\Extensions.cs" />
     <Compile Remove="Data\OptionQuotesMgr.cs" />
     <Compile Remove="Data\SampleUtils.cs" />
     <Compile Remove="Data\SqlDbContext.cs" />

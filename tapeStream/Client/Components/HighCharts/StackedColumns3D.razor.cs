@@ -40,7 +40,7 @@ namespace tapeStream.Client.Components.HighCharts
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
 
-        string chartJsFilename = "js/StackedColumns3DChart.js?x=1";
+        string chartJsFilename = "js/StackedColumns3DChart.js?x=22";
 
         static string chartJson = "";
 

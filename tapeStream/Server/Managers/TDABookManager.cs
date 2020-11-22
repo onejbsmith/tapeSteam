@@ -229,7 +229,9 @@ namespace tapeStream.Server.Data
             var n = bids.Count();
 
             if (n == 0) return;
-            long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+            //now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+            long now = (long)((Newtonsoft.Json.Linq.JValue)bids.Root["1"]).Value;
+
             var baseBidPrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
             for (int i = 0; i < n; i++)
             {
@@ -238,6 +240,7 @@ namespace tapeStream.Server.Data
 
                 if (Math.Abs(price - baseBidPrice) < 0.30m)
                 {
+
                     var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
                     lstBids.Add(bid);
                     lstAllBids.Add(bid);

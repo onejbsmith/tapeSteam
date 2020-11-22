@@ -1,5 +1,5 @@
-﻿#define tracing
-#define bollinger
+﻿#undef tracing
+#undef bollinger
 using Blazorise.Utils;
 using MatBlazor;
 using Microsoft.AspNetCore.Components;
@@ -234,7 +234,7 @@ namespace tapeStream.Client.Components.HighCharts
                 /// 
 #if tracing
                 Console.WriteLine("7. Surface ChartSetData");
-#endif   
+#endif
                 Chart_AddCandlePlotBands(bookDataItems, TDAChart.lastCandle, categories);
 
                 //Chart_AddSpreadPlotBand(bookDataItems, categories);
@@ -432,7 +432,7 @@ namespace tapeStream.Client.Components.HighCharts
 
         }
 
-        private  void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
+        private void Chart_AddBollingerPlotLines(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
             var bollingerBands = TDAChart.bollingerBands;
             //var bollingerBands = bookDataItems["asks"][0].bollingerBand;
@@ -468,15 +468,18 @@ namespace tapeStream.Client.Components.HighCharts
             if (!dictAvgSizes.ContainsKey("salesAtBid"))
             { dictAvgSizes.Add("salesAtBid", 0); dictStAvgSizes.Add("salesAtBid", 0); }
             if (!dictAvgSizes.ContainsKey("salesAtAsk"))
-            { dictAvgSizes.Add("salesAtAsk", 0); dictStAvgSizes.Add("salesAtAsk", 0);}
+            { dictAvgSizes.Add("salesAtAsk", 0); dictStAvgSizes.Add("salesAtAsk", 0); }
 
 #if bollinger
             Console.WriteLine("7a1. Columns Chart_AddBollingerPlotLines");
             jsruntime.GroupTable(dictAvgSizes, nameof(dictAvgSizes));
 
 #endif            
-            var avgSells = (decimal)(dictAvgSizes["asks"] - dictAvgSizes["salesAtBid"]); ;
-            var avgBuys = (decimal)(dictAvgSizes["bids"] - dictAvgSizes["salesAtAsk"]);
+            var n = 2;
+            var avgSells = n * (decimal)(dictAvgSizes["asks"] + dictAvgSizes["salesAtBid"]); ;
+            var avgBuys = n * (decimal)(dictAvgSizes["bids"] + dictAvgSizes["salesAtAsk"]);
+            var avgStSells =  (decimal)(dictStAvgSizes["asks"] + dictStAvgSizes["salesAtBid"]);
+            var avgStBuys = (decimal)(dictStAvgSizes["bids"] + dictStAvgSizes["salesAtAsk"]);
 
 #if bollinger
             Console.WriteLine("7b. Columns Chart_AddBollingerPlotLines");
@@ -499,20 +502,20 @@ namespace tapeStream.Client.Components.HighCharts
                         zIndex = 1
                     },
                     new Surface.Plotline()
-                    {  value=(decimal)(dictStAvgSizes["asks"] + dictStAvgSizes["salesAtBid"]),
+                    {  value=avgStSells,
                         color =sellsColor,
                         width=4,
                         zIndex = 2
                     },
                     new Surface.Plotline()
-                    {  value=(decimal)(dictStAvgSizes["bids"] + dictStAvgSizes["salesAtAsk"]),
+                    {  value=avgStBuys,
                         color=buysColor,
                         width=4,
                         zIndex = 2
                     },
                     };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 jsruntime.Confirm(ex.Message);
             }

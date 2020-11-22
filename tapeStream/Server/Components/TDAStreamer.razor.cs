@@ -29,6 +29,7 @@ namespace tapeStream.Server.Components
 
         [Inject]
         IJSRuntime TDAStreamerJs { get; set; }
+       
 
         #region Variables
         [Parameter]
@@ -124,6 +125,10 @@ namespace tapeStream.Server.Components
             simulatorStarted = true;
             StateHasChanged();
 
+            //TEMP
+            //FilesManager.MoveQFilesToDatedFolders();
+            //return;
+
             /// Get all the feed file names for the simulatorSettings
             Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(simulatorSettings);
 
@@ -213,6 +218,9 @@ namespace tapeStream.Server.Components
             /// This is fired by Decode_TimeSales
             TDAStreamerData.OnTimeSalesStatusChanged += sendTimeSalesData;
             TDAStreamerData.OnBookStatusChanged += TDAStreamerData_OnBookStatusChanged;
+
+
+            TDAPrintsManager.jsruntime = TDAStreamerJs;
 
         }
 

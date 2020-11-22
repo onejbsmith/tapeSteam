@@ -7,7 +7,8 @@ namespace tapeStream.Server.Data.classes
 {
     public class SimulatorSettings
     {
-        public DateTime runDate;
+        public string runDate;
+        public DateTime runDateDate;
         public DateTime startTime;
         public DateTime endTime;
     }

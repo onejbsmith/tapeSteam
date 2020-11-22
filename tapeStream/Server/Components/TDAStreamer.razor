@@ -14,7 +14,7 @@
         <RadzenButton Text="Start"
                       Size="Radzen.ButtonSize.Small"
                        Icon="play_arrow"
-                     Disabled="@(simulatorSettings.runDate.Date==new DateTime().Date || simulatorStarted)"
+                     Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date || simulatorStarted)"
                       Click="@((args) => Click(args, "Start"))" />
         <RadzenButton Disabled="@(!simulatorStarted || simulatorPaused)"
                       Click="@((args) => Click(args,"Pause"))"

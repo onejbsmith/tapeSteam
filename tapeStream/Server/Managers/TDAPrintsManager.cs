@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.JSInterop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -10,6 +11,8 @@ namespace tapeStream.Server.Data
 {
     public class TDAPrintsManager
     {
+        public static IJSRuntime jsruntime { get; set; }
+
         DataItem[] rawGaugesCombined = new DataItem[] {
             new DataItem
             {
@@ -126,6 +129,8 @@ namespace tapeStream.Server.Data
                 /// t.Key is Quote date and time, we want last quote before t&s time
                 ///                 
                 var book = TDABookManager.lstBookEntry.Where(be => be.time < timeAndSales.time).Last();
+
+                jsruntime.GroupTable(book,"book");
 
                 timeAndSales.bid = book.bid;
                 timeAndSales.ask = book.ask;

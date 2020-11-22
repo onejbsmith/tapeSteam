@@ -28,11 +28,13 @@ namespace tapeStream.Server.Pages
         void FeedDateChange(object value, string name)
         {
             /// Got the Run Date
-            simulatorSettings.runDate = Convert.ToDateTime(value);
+            var dateVal = value.ToString().Split('(')[0].Trim();
+            simulatorSettings.runDate = dateVal;
+            simulatorSettings.runDateDate = Convert.ToDateTime(dateVal);
             simulatorSettings.startTime = Convert.ToDateTime(startTime);
             simulatorSettings.endTime = Convert.ToDateTime(endTime);
 
-            lstFeedTimes = FilesManager.GetFeedTimes(simulatorSettings.runDate);
+            lstFeedTimes = FilesManager.GetFeedTimes(dateVal);
 
             StateHasChanged();
         }

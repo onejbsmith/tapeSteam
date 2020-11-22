@@ -12,7 +12,7 @@
             alpha: 15,
             beta: 15,
             viewDistance: 25,
-            depth: 400
+            depth: 100
         }
     },
 
@@ -20,8 +20,8 @@
     {
         column:
         {
-            //stacking: 'normal',
-            grouping: true,
+            stacking: 'normal',
+            grouping: false,
             depth: 100
         },
         series: {

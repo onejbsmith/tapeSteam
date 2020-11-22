@@ -25,14 +25,14 @@
                             <RadzenDropDown TValue="string"
                                             @bind-Value="@startTime"
                                             Data="@lstFeedTimes"
-                                            Disabled="@(simulatorSettings.runDate.Date==new DateTime().Date)"
+                                            Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date)"
                                             Change="@(args => StartTimeChange(args, "DropDown"))" />
                             <span>End Time: </span>
                             <RadzenDropDown TValue="string"
                                             @bind-Value="@endTime"
                                             Data="@lstFeedTimes"
                                             Change="@(args => EndTimeChange(args, "DropDown"))"
-                                            Disabled="@(simulatorSettings.runDate.Date==new DateTime().Date)" />
+                                            Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date)" />
                         </div>
 
                     </RadzenCard>
