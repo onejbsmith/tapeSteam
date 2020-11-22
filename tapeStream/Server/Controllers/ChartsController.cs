@@ -33,10 +33,5 @@ namespace tapeStream.Server.Controllers
             return TDAChartManager.getSvcDateTime();
         }
 
-        [Route("getAverages/{seconds}")]
-        public async Task<List<double>> getAverages(int seconds)
-        {
-            return TDAChartManager.getAverages(seconds);
-        }    
     }
 }

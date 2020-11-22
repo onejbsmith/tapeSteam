@@ -284,13 +284,13 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
-        static Dictionary<string, double> dictAvgSizes = new Dictionary<string, double>();
-        static Dictionary<string, double> dictSumSizes = new Dictionary<string, double>();
-        static Dictionary<string, int> dictNumsizes = new Dictionary<string, int>();
+        //static Dictionary<string, double> dictAvgSizes = new Dictionary<string, double>();
+        //static Dictionary<string, double> dictSumSizes = new Dictionary<string, double>();
+        //static Dictionary<string, int> dictNumsizes = new Dictionary<string, int>();
 
-        static Dictionary<string, double> dictStAvgSizes = new Dictionary<string, double>();
-        static Dictionary<string, double> dictStSumSizes = new Dictionary<string, double>();
-        static Dictionary<string, int> dictStNumsizes = new Dictionary<string, int>();
+        //static Dictionary<string, double> dictStAvgSizes = new Dictionary<string, double>();
+        //static Dictionary<string, double> dictStSumSizes = new Dictionary<string, double>();
+        //static Dictionary<string, int> dictStNumsizes = new Dictionary<string, int>();
 
         private void Chart_AdjustYaxis(Dictionary<string, BookDataItem[]> bookDataItems)
         {
@@ -465,10 +465,10 @@ namespace tapeStream.Client.Components.HighCharts
             var avgPriceIndex = categories.ToList().IndexOf(avgPrice.ToString("n2"));
             var midCategory = categories.Length / 2;
 
-            if (!dictAvgSizes.ContainsKey("salesAtBid"))
-            { dictAvgSizes.Add("salesAtBid", 0); dictStAvgSizes.Add("salesAtBid", 0); }
-            if (!dictAvgSizes.ContainsKey("salesAtAsk"))
-            { dictAvgSizes.Add("salesAtAsk", 0); dictStAvgSizes.Add("salesAtAsk", 0); }
+            //if (!dictAvgSizes.ContainsKey("salesAtBid"))
+            //{ dictAvgSizes.Add("salesAtBid", 0); dictStAvgSizes.Add("salesAtBid", 0); }
+            //if (!dictAvgSizes.ContainsKey("salesAtAsk"))
+            //{ dictAvgSizes.Add("salesAtAsk", 0); dictStAvgSizes.Add("salesAtAsk", 0); }
 
 #if bollinger
             Console.WriteLine("7a1. Columns Chart_AddBollingerPlotLines");
@@ -476,10 +476,10 @@ namespace tapeStream.Client.Components.HighCharts
 
 #endif            
             var n = 2;
-            var avgSells = n * (decimal)(dictAvgSizes["asks"] + dictAvgSizes["salesAtBid"]); ;
-            var avgBuys = n * (decimal)(dictAvgSizes["bids"] + dictAvgSizes["salesAtAsk"]);
-            var avgStSells =  (decimal)(dictStAvgSizes["asks"] + dictStAvgSizes["salesAtBid"]);
-            var avgStBuys = (decimal)(dictStAvgSizes["bids"] + dictStAvgSizes["salesAtAsk"]);
+            var avgSells = n * (decimal)(TDAChart.avgSizes.averageSize["asks"] + TDAChart.avgSizes.averageSize["salesAtBid"]); ;
+            var avgBuys = n * (decimal)(TDAChart.avgSizes.averageSize["bids"] + TDAChart.avgSizes.averageSize["salesAtAsk"]);
+            var avgStSells = (decimal)(TDAChart.avgStSizes.averageSize["asks"] + TDAChart.avgStSizes.averageSize["salesAtBid"]);
+            var avgStBuys = (decimal)(TDAChart.avgStSizes.averageSize["bids"] + TDAChart.avgStSizes.averageSize["salesAtAsk"]);
 
 #if bollinger
             Console.WriteLine("7b. Columns Chart_AddBollingerPlotLines");
@@ -759,12 +759,12 @@ namespace tapeStream.Client.Components.HighCharts
 #endif
             foreach (var name in seriesOrder)
             {
-                if (dictNumsizes.ContainsKey(name) == false) dictNumsizes[name] = 0;
-                if (dictSumSizes.ContainsKey(name) == false) dictSumSizes[name] = 0;
-                //if (seriesList.Count % 10 == 0)
-                //{
-                dictStNumsizes[name] = 0;
-                dictStSumSizes[name] = 0;
+                //if (dictNumsizes.ContainsKey(name) == false) dictNumsizes[name] = 0;
+                //if (dictSumSizes.ContainsKey(name) == false) dictSumSizes[name] = 0;
+                ////if (seriesList.Count % 10 == 0)
+                ////{
+                //dictStNumsizes[name] = 0;
+                //dictStSumSizes[name] = 0;
                 //}
 #if tracingFine
                 Console.WriteLine("5b. Surface ChartSetData");
@@ -798,17 +798,17 @@ namespace tapeStream.Client.Components.HighCharts
 #if tracingFine
                     Console.WriteLine("5g. Surface ChartSetData");
 #endif  
-                    dictNumsizes[name] += 1;
-                    dictSumSizes[name] += item.Size;
-                    if (dictNumsizes[name] > 0)
-                        dictAvgSizes[name] = dictSumSizes[name] / dictNumsizes[name];
+                    //dictNumsizes[name] += 1;
+                    //dictSumSizes[name] += item.Size;
+                    //if (dictNumsizes[name] > 0)
+                    //    dictAvgSizes[name] = dictSumSizes[name] / dictNumsizes[name];
 #if tracingFine
                     Console.WriteLine("5h. Surface ChartSetData");
 #endif  
-                    dictStNumsizes[name] += 1;
-                    dictStSumSizes[name] += item.Size;
-                    if (dictStNumsizes[name] > 0)
-                        dictStAvgSizes[name] = dictStSumSizes[name] / dictStNumsizes[name];
+                    //dictStNumsizes[name] += 1;
+                    //dictStSumSizes[name] += item.Size;
+                    //if (dictStNumsizes[name] > 0)
+                    //    dictStAvgSizes[name] = dictStSumSizes[name] / dictStNumsizes[name];
                 }
 #if tracingFine
                 Console.WriteLine("5i. Surface ChartSetData");

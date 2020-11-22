@@ -13,6 +13,12 @@ namespace tapeStream.Shared.Data
         public DateTime dateTime { get; set; }
     }
 
+    public class AverageSizes
+    {
+        public Dictionary<string, double> averageSize { get; set; }
+    }
+
+
     public class TDABook
     {
 

@@ -32,10 +32,7 @@ namespace tapeStream.Server.Managers
             return TDAChart.svcDateTime;
         }
 
-        internal static List<double> getAverages(int seconds)
-        {
-            return new List<double>() { 1,2,3,3 };
-        }        
+     
         
         /// <summary>
         /// This happens once per minute.

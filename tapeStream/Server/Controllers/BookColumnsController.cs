@@ -9,6 +9,7 @@ using tapeStream.Shared.Data;
 namespace tapeStream.Server.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class BookColumnsController : ControllerBase
     {
@@ -25,5 +26,11 @@ namespace tapeStream.Server.Controllers
             return await TDABookManager.getBookColumnsData(id);
         }
 
+
+        [Route("getAverages/{seconds}")]
+        public async Task<AverageSizes> getAverages(int seconds)
+        {
+            return await TDABookManager.getAverages(seconds);
+        }
     }
 }

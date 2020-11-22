@@ -68,12 +68,26 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Stop();
             await Task.Yield();
             bookColData = await bookColumnsService.getBookColumnsData(seconds);
+            var avgSizes = await bookColumnsService.getAverages(600, jsruntime);
+            var avgStSizes = await  bookColumnsService.getAverages(3, jsruntime);
 
             TDAChart.bollingerBands = await chartService.getBollingerBands();
             TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
             TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
             TDAChart.svcDateTimeRaw = TDAChart.svcDateTimeRaw.Replace("\"", "");
             TDAChart.svcDateTime = Convert.ToDateTime(TDAChart.svcDateTimeRaw);
+
+            //foreach (var name in avgSizes.averageSize.Keys)
+            //    if (avgSizes.averageSize[name] > 0)
+            //        TDAChart.avgSizes.averageSize[name] = avgSizes.averageSize[name];
+
+            //foreach (var name in avgStSizes.averageSize.Keys)
+            //    if (avgStSizes.averageSize[name] > 0)
+            //        TDAChart.avgStSizes.averageSize[name] = avgStSizes.averageSize[name];
+
+            TDAChart.avgSizes = avgSizes;
+            TDAChart.avgStSizes = avgStSizes;
+
             //TDAChart.lastCandles = await chartService.getLastCandles(2);
             await Task.Delay(100);
 

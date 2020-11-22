@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -42,6 +43,16 @@ namespace tapeStream.Shared.Services
             {
                 System.Console.WriteLine(ex.ToString());
             }
+            return values;
+        }
+
+        public async Task<AverageSizes> getAverages(int seconds, IJSRuntime jSRuntime)
+        {
+            AverageSizes values = new AverageSizes();
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+            values = await Http.GetFromJsonAsync<AverageSizes>($"{controllerUrl}getAverages/{seconds}" );
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes values");
             return values;
         }
 

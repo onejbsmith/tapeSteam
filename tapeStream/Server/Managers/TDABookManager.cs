@@ -76,8 +76,53 @@ namespace tapeStream.Server.Data
             return it;
         }
 
+        public static async Task<AverageSizes> getAverages(int seconds)
+        {
+
+            /// Get the book data for the number of seconds
+            Dictionary<string, BookDataItem[]> dictBookDataItem = getBookData(seconds);
+            var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
+            var avgSizes = new AverageSizes()
+            {
+                averageSize = new Dictionary<string, double>()
+            };
+
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, dictBookDataItem, "dictBookDataItem");
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, avgSizes, "init avgSizes");
+            /// Calc average for each data type
+
+            try
+            {
+                foreach (var name in seriesOrder)
+                {
+
+                    var avgSize = 0d;
+
+                    BookDataItem[] items = dictBookDataItem[name];
+                    if (items.Length > 0)
+                    {
+                        avgSize = items.Average(item => item.Size);
+                    }
+                    avgSizes.averageSize.Add(name, avgSize);
+
+                }
+
+                JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, avgSizes, "filled avgSizes");
+
+            }
+            catch
+            {
+                //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
+
+            }
+            await Task.CompletedTask;
+            return avgSizes;
+        }
+
+
         private static BookDataItem[] getBookDataItemArray(int seconds, long now, List<BookDataItem> lstItems)
         {
+
             var lstBookItems = lstItems;
             lstBookItems.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-seconds));
             var lstBookItemsData = lstBookItems
@@ -90,8 +135,12 @@ namespace tapeStream.Server.Data
                     Size = lstBookItems.Sum(item => item.Size),
                 }
                 ).ToArray();
+
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, lstBookItemsData, "lstBookItemsData");
+
             return lstBookItemsData;
         }
+
         public static async Task<Dictionary<string, BookDataItem[]>> getBookPiesData()
         {
             Dictionary<string, BookDataItem[]> dictBookPies = new Dictionary<string, BookDataItem[]>();
@@ -387,5 +436,6 @@ namespace tapeStream.Server.Data
             public float size { get; set; }
             public DateTime dateTime { get; set; }
         }
+
     }
 }
