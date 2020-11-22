@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Server.Components;
+using tapeStream.Server.Data.classes;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
@@ -18,6 +20,9 @@ namespace tapeStream.Server.Data
     /// </summary>
     public class TDAStreamerData
     {
+
+        public static string runDate;
+        public static SimulatorSettings simulatorSettings { get; set; }
 
         public static string quoteSymbol;
 
@@ -85,6 +90,7 @@ namespace tapeStream.Server.Data
         public static long quoteLatency { get; set; }
 
         public static Dictionary<DateTime, double> gaugeValues { get; set; } = new Dictionary<DateTime, double>();
+        public static IJSRuntime jSRuntime { get; internal set; }
 
         public static int printLevelCount(string symbol, int level)
         {
@@ -648,7 +654,7 @@ namespace tapeStream.Server.Data
                 return quote;
             }
         }
-        public static async Task captureTdaServiceData(string svcFieldedJson, bool isSimulated)
+        public static async Task captureTdaServiceData(string svcFieldedJson)
         {
             var svcJsonObject = JObject.Parse(svcFieldedJson);
             var svcName = svcJsonObject["service"].ToString();
@@ -662,7 +668,7 @@ namespace tapeStream.Server.Data
                 switch (svcName)
                 {
                     case "TIMESALE_EQUITY":
-                        await TDAPrintsManager.Decode(symbol, content, isSimulated);
+                        await TDAPrintsManager.Decode(symbol, content);
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);
@@ -671,7 +677,7 @@ namespace tapeStream.Server.Data
                         await Decode_Option(content);
                         break;
                     case "NASDAQ_BOOK":
-                        await TDABookManager.Decode(symbol, content, isSimulated);
+                        await TDABookManager.Decode(symbol, content);
                         break;
 
                     case "CHART_EQUITY":

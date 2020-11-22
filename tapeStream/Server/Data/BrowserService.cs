@@ -5,7 +5,7 @@ namespace tapeStream.Server.Data
 {
     public class BrowserService
     {
-        private readonly IJSRuntime _js;
+        public readonly IJSRuntime _js;
 
         public BrowserService(IJSRuntime js)
         {

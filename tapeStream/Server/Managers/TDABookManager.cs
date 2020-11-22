@@ -203,7 +203,7 @@ namespace tapeStream.Server.Data
             public int[] printsSize { get; set; } = new int[5];
         }
 
-        public static async Task Decode(string symbol, string content, bool isSimulated)
+        public static async Task Decode(string symbol, string content)
         {
             var all = JObject.Parse(content);
             var bids = all["2"];

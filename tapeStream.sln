@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.HighCharts", "..\..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighCharts.Charts.Basic", "..\Components\HighCharts\HighCharts.Charts.Basic\HighCharts.Charts.Basic.csproj", "{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsConsole", "..\..\Server Projects\JsConsole\JsConsole.csproj", "{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -34,6 +34,9 @@ namespace tapeStream.Server.Pages
             simulatorSettings.startTime = Convert.ToDateTime(startTime);
             simulatorSettings.endTime = Convert.ToDateTime(endTime);
 
+            TDAStreamerData.simulatorSettings = simulatorSettings;
+
+            //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings1");
             lstFeedTimes = FilesManager.GetFeedTimes(dateVal);
 
             StateHasChanged();
@@ -43,6 +46,9 @@ namespace tapeStream.Server.Pages
         {
             /// Got the Run Date
             simulatorSettings.startTime = Convert.ToDateTime(value);
+            TDAStreamerData.simulatorSettings = simulatorSettings;
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings2");
+
             StateHasChanged();
         }
 
@@ -50,6 +56,9 @@ namespace tapeStream.Server.Pages
         {
             /// Got the Run Date
             simulatorSettings.endTime = Convert.ToDateTime(value);
+            TDAStreamerData.simulatorSettings = simulatorSettings;
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings3");
+
 
             StateHasChanged();
         }

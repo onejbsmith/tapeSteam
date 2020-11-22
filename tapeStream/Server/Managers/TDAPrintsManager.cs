@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Server.Components;
 using tapeStream.Server.Managers;
 using tapeStream.Shared;
 
@@ -11,7 +12,6 @@ namespace tapeStream.Server.Data
 {
     public class TDAPrintsManager
     {
-        public static IJSRuntime jsruntime { get; set; }
 
         DataItem[] rawGaugesCombined = new DataItem[] {
             new DataItem
@@ -106,7 +106,7 @@ namespace tapeStream.Server.Data
 
         }
 
-        public static async Task Decode(string symbol, string content, bool isSimulated)
+        public static async Task Decode(string symbol, string content)
         {
             //if (TDABookManager.lstBookEntry.Count == 0) return;
 
@@ -130,7 +130,9 @@ namespace tapeStream.Server.Data
                 ///                 
                 var book = TDABookManager.lstBookEntry.Where(be => be.time < timeAndSales.time).Last();
 
-                jsruntime.GroupTable(book,"book");
+                //browserService._js.GroupTable(book,"book");
+                //          JsConsole.JsConsole.GroupTable(jSRuntime, book, "bbok");
+
 
                 timeAndSales.bid = book.bid;
                 timeAndSales.ask = book.ask;
@@ -138,8 +140,17 @@ namespace tapeStream.Server.Data
                 timeAndSales.bidSize = book.bidSize;
                 timeAndSales.bookTime = book.time;
 
-                if (isSimulated)
+                if (TDAStreamerData.simulatorSettings.isSimulated)
                 {
+
+                    JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, timeAndSales, "timeAndSales");
+
+                    TDAStreamerData.simulatorSettings.currentSimulatedTime = timeAndSales.TimeDate;
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.isSimulated, "TDAStreamerData.simulatorSettings.isSimulated");
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.runDate, "TDAStreamerData.simulatorSettings.runDate");
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.startTime, "TDAStreamerData.simulatorSettings.startTime");
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.endTime, "TDAStreamerData.simulatorSettings.endTime");
+                    JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.currentSimulatedTime, "TDAStreamerData.simulatorSettings.currentSimulatedTime");
                     /// replace feed time with current time so can match book entries to time and sales
                     long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
                     timeAndSales.time = now;

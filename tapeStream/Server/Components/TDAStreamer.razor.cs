@@ -17,19 +17,20 @@ using tapeStream.Shared.Data;
 using FilesManager = tapeStream.Server.Data.FilesManager;
 using TDAApiService = tapeStream.Server.Data.TDAApiService;
 using TDAConstants = tapeStream.Server.Data.TDAConstants;
+using JsConsole;
 
 namespace tapeStream.Server.Components
 {
     public partial class TDAStreamer
     {
         [Inject]
-        BrowserService Service { get; set; }
+        BrowserService browserService { get; set; }
         [Inject]
         BlazorTimer Timer { get; set; }
 
         [Inject]
         IJSRuntime TDAStreamerJs { get; set; }
-       
+
 
         #region Variables
         [Parameter]
@@ -129,9 +130,13 @@ namespace tapeStream.Server.Components
             //FilesManager.MoveQFilesToDatedFolders();
             //return;
 
-            /// Get all the feed file names for the simulatorSettings
-            Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(simulatorSettings);
+            /// Get all the feed file names for the TDAStreamerData.simulatorSettings
+            
+            TDAStreamerData.runDate = TDAStreamerData.simulatorSettings.runDate;
+            TDAStreamerData.simulatorSettings.isSimulated = true;
 
+            Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(TDAStreamerData.simulatorSettings);
+            
             /// Process each file
             foreach (var feedFile in feedFilesList)
             {
@@ -162,6 +167,8 @@ namespace tapeStream.Server.Components
         private void Simulator_Stop()
         {
             simulatorStarted = false;
+            TDAStreamerData.simulatorSettings.isSimulated = false;
+
             StateHasChanged();
         }
 
@@ -219,14 +226,22 @@ namespace tapeStream.Server.Components
             TDAStreamerData.OnTimeSalesStatusChanged += sendTimeSalesData;
             TDAStreamerData.OnBookStatusChanged += TDAStreamerData_OnBookStatusChanged;
 
+            TDAStreamerData.jSRuntime = TDAStreamerJs;
 
-            TDAPrintsManager.jsruntime = TDAStreamerJs;
 
+            string svcDate = DateTime.Now.ToString("MMMM dd, yyyy");
+
+            TDAStreamerData.runDate = svcDate;
+
+            TDAStreamerData.simulatorSettings = new SimulatorSettings(); ;
+
+            JsConsole. JsConsole .Warn(TDAStreamerJs, $"tapeStream.Server.Components TDAStreamer OnInitializedAsync {TDAStreamerData .runDate}");
+            await Task.CompletedTask;
         }
 
         async Task GetDimensions()
         {
-            var dimension = await Service.GetDimensions();
+            var dimension = await browserService.GetDimensions();
             Height = dimension.Height;
             Width = dimension.Width;
         }
@@ -499,7 +514,7 @@ namespace tapeStream.Server.Components
 
                 /// Send to connected hub
                 /// 
-                await TDAStreamerData.captureTdaServiceData(svcFieldedJson, simulate);
+                await TDAStreamerData.captureTdaServiceData(svcFieldedJson);
 
                 /// Send to message queue
                 /// We can replay these messages later from simulator

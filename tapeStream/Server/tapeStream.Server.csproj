@@ -182,6 +182,7 @@
   </ItemGroup>
     
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Server Projects\JsConsole\JsConsole.csproj" />
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>
     

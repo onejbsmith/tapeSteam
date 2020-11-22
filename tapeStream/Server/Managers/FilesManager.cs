@@ -25,20 +25,20 @@ namespace tapeStream.Server.Data
         /// <summary>
         /// Needs to read filenames from 3 folders and return one list in time order
         /// </summary>
-        /// <param name="simulatorSettings"></param>
+        /// <param name="TDAStreamerData.simulatorSettings"></param>
         /// <returns></returns>
         internal static Dictionary<DateTime, string> GetFeedFileNames(SimulatorSettings simulatorSettings)
         {
             /// Get all file times, names into one dictionary
             var dictAllFileNames = new Dictionary<DateTime, string>();
-            var folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{simulatorSettings.runDate}\\";
-            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+            var folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
-            folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{simulatorSettings.runDate}\\";
-            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+            folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
-            folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\{simulatorSettings.runDate}\\";
-            FeedAddFiles(folderPath, dictAllFileNames, simulatorSettings);
+            folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
 
 
@@ -66,8 +66,8 @@ namespace tapeStream.Server.Data
             foreach (var fileName in fileNames)
             {
                 var fileDate = File.GetCreationTime(fileName);
-                if (fileDate.Date == simulatorSettings.runDateDate.Date)
-                    if (fileDate.TimeOfDay >= simulatorSettings.startTime.TimeOfDay && fileDate.TimeOfDay <= simulatorSettings.endTime.TimeOfDay)
+                if (fileDate.Date == TDAStreamerData.simulatorSettings.runDateDate.Date)
+                    if (fileDate.TimeOfDay >= TDAStreamerData.simulatorSettings.startTime.TimeOfDay && fileDate.TimeOfDay <= TDAStreamerData.simulatorSettings.endTime.TimeOfDay)
                     {
                         /// Since GetLastAccessTime is only to the second, add millis to make fileDate unique
                         while (dictAllFileNames.ContainsKey(fileDate))
@@ -93,7 +93,7 @@ namespace tapeStream.Server.Data
             foreach (var folderName in folderNames)
             {
                 var filesCount = Directory.GetFiles(folderName).Count().ToString("n0");
-                var fileDate =  $"{ Path.GetFileName(folderName)} ({filesCount})" ;
+                var fileDate = $"{ Path.GetFileName(folderName)} ({filesCount})";
                 if (!lstFileDates.Contains(fileDate))
                     lstFileDates.Add(fileDate);
             }
@@ -264,13 +264,25 @@ namespace tapeStream.Server.Data
         public static List<string> GetChartEntries(int nCloses)
         {
             var entries = new List<string>();
+            string svcDate = TDAStreamerData.runDate;
 
-            string filePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY";
+            string filePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{svcDate}\\";
 
+            /// Get's all the files in this day's CHART_EQUITY folder
+            /// which works in real time, giving you the latest candles...
+            /// For the simulator we need to return files before the run time
+            /// So what is the runtime -- need to add to simulator settings and pass to 
             var lstFiles = Directory.GetFiles(filePath);
+
+            if (TDAStreamerData.simulatorSettings.isSimulated)
+            {
+                lstFiles = lstFiles.Where(file => File.GetCreationTime(file) <= TDAStreamerData.simulatorSettings.currentSimulatedTime).ToArray();
+            }
+
             if (lstFiles.Length < nCloses) nCloses = 0;
 
             var ourFiles = lstFiles.ToList().Skip(lstFiles.Length - nCloses);
+            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings");
             foreach (var fileName in ourFiles)
             {
                 var text = File.ReadAllText(fileName);
