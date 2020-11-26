@@ -46,6 +46,7 @@
     <Compile Remove="Pages\Chat.razor.cs" />
     <Compile Remove="Pages\Filer.razor.cs" />
     <Compile Remove="Pages\TDAclient.razor.cs" />
+    <Compile Remove="Shared\xNavMenu.razor.cs" />
   </ItemGroup>
 
   <ItemGroup>

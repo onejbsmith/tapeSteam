@@ -1,5 +1,5 @@
-﻿#define tracing
-#define tracingFine
+﻿#undef tracing
+#undef tracingFine
 #undef bollinger
 using Blazorise.Utils;
 using MatBlazor;
@@ -77,6 +77,8 @@ namespace tapeStream.Client.Components.HighCharts
 
                 ChartSetData(value);
 
+                
+
             }
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
@@ -99,6 +101,8 @@ namespace tapeStream.Client.Components.HighCharts
         static List<Surface.Series1> seriesList = new List<Surface.Series1>();
 
         private string _chartSeriesJson;
+
+        private DateTime _clockDateTime = DateTime.Now; 
 
         public string chartSeriesJson
         {
@@ -289,6 +293,8 @@ namespace tapeStream.Client.Components.HighCharts
                 /// Send the new data and settings to the HighChart3D component
 
 
+                /// Update the clock (current time only at this point)
+                _clockDateTime = TDAChart.svcDateTime;
 
                 var wholeChartJson = JsonSerializer.Serialize<Surface.StackedColumns3DSurface>(chart);
                 chart3Djson = wholeChartJson;

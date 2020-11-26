@@ -3,6 +3,7 @@
 window.chartInDiv = {};
 window.chartObj = {}
 window.chart = {}
+window.dotNetObject = {}
 
 window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
     loadScript("https://code.highcharts.com/highcharts.js").then(
@@ -110,7 +111,7 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     var json = JSON.stringify(window.chartObj[chartDivName]);
                                                     console.log(`2. ${chartDivName} window.getChartJson`);
                                                     console.log(json);
-                                                    window.getChartJson(window.chartObj[chartDivName], chartDivName);
+                                                    window.getChartJson(chartDivName,json);
                                                     return json;
                                                 }
 
@@ -126,7 +127,7 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
 }
 
 window.Initialize = function (dotNetObj, chartDivName) {
-    this.dotNetObject = dotNetObj;
+    window.dotNetObject[chartDivName] = dotNetObj;
     console.log(`0. ${chartDivName} window.Initialize`);
 
 
@@ -146,9 +147,10 @@ window.getChartSeriesJson = function (jsObject) {
     dotNetObject.invokeMethodAsync('getChartSeriesJson', JSON.stringify(window.chart3DObject.series));
 };
 
-window.getChartJson = function (windowObj, chartDivName) {
-    dotNetObject.invokeMethodAsync('getChartJson', JSON.stringify(windowObj));
+window.getChartJson = function (chartDivName, json) {
     console.log(`3. ${chartDivName} window.getChartJson`);
+    console.table(json);
+    window.dotNetObject[chartDivName].invokeMethodAsync('getChartJson', json);
 
 };
 
