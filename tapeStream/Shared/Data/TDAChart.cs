@@ -34,6 +34,18 @@ namespace tapeStream.Shared.Data
         public static string svcDateTimeRaw { get; set; }
         public static AverageSizes avgSizes { get; set; }
         public static AverageSizes avgStSizes { get; set; }
+        public static AverageSizes avgLtSizes { get; set; }
+
+        public static decimal avgSells { get; set; }
+        public static decimal avgBuys { get; set; }
+        public static decimal avgStSells { get; set; }
+        public static decimal avgStBuys { get; set; }
+        public static decimal avgLtSells { get; set; }
+        public static decimal avgLtBuys { get; set; }
+
+        public static int countSellsUp { get; set; }
+
+        public static int countBuysUp { get; set; }
 
         public class Chart_Content
         {

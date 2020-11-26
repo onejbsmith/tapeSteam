@@ -111,7 +111,7 @@ if (seriesTypes.bubble) {
          * @see [zMax](#plotOptions.mapbubble.zMin)
          *
          * @sample {highmaps} highcharts/plotoptions/bubble-zmin-zmax/
-         *         Z has a possible range of 0-110
+         *         Z has a possible range of 0-100
          *
          * @type      {number}
          * @since     1.0.3
@@ -124,7 +124,7 @@ if (seriesTypes.bubble) {
          * @see [zMax](#plotOptions.mapbubble.zMax)
          *
          * @sample {highmaps} highcharts/plotoptions/bubble-zmin-zmax/
-         *         Z has a possible range of 0-110
+         *         Z has a possible range of 0-100
          *
          * @type      {number}
          * @since     1.0.3

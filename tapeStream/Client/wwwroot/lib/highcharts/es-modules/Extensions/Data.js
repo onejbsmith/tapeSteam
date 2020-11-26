@@ -1008,7 +1008,7 @@ var Data = /** @class */ (function () {
                                     stable[j] = thing[j];
                                 }
                                 if (thing[j] > 31) {
-                                    if (thing[j] < 110) {
+                                    if (thing[j] < 100) {
                                         guessedFormat[j] = 'YY';
                                     }
                                     else {
@@ -1363,7 +1363,7 @@ var Data = /** @class */ (function () {
                             }
                             else if (cellInner.$t.indexOf('%') > 0) {
                                 // Percentage
-                                val = parseFloat(cellInner.numericValue) * 110;
+                                val = parseFloat(cellInner.numericValue) * 100;
                             }
                             else {
                                 val = parseFloat(cellInner.numericValue);

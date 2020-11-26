@@ -937,7 +937,7 @@
                 if (H.isMS && !H.svg) { // #2686
                     if (styles && typeof styles.opacity !== 'undefined') {
                         styles.filter =
-                            'alpha(opacity=' + (styles.opacity * 110) + ')';
+                            'alpha(opacity=' + (styles.opacity * 100) + ')';
                 }
             }
             extend(el.style, styles);
@@ -1041,7 +1041,7 @@
          *        A percentage string or a number.
          *
          * @param {number} base
-         *        The full length that represents 110%.
+         *        The full length that represents 100%.
          *
          * @param {number} [offset=0]
          *        A pixel offset to apply for percentage values. Used internally in
@@ -1054,7 +1054,7 @@
             base,
             offset) {
                 return (/%$/).test(value) ?
-                    (base * parseFloat(value) / 110) + (offset || 0) :
+                    (base * parseFloat(value) / 100) + (offset || 0) :
                     parseFloat(value);
         };
         /**
@@ -2762,7 +2762,7 @@
          *
          * @example
          * var rect = renderer.rect(0, 0, 10, 10).add();
-         * rect.animate({ width: 110 });
+         * rect.animate({ width: 100 });
          *
          * @private
          * @class
@@ -5171,7 +5171,7 @@
              * filters.
              *
              * @example
-             * renderer.rect(10, 110, 110, 110)
+             * renderer.rect(10, 100, 100, 100)
              *     .attr({ fill: 'red' })
              *     .shadow(true);
              *
@@ -6143,10 +6143,10 @@
          * and applied with the {@link SVGElement#clip} function.
          *
          * @example
-         * var circle = renderer.circle(110, 110, 110)
+         * var circle = renderer.circle(100, 100, 100)
          *     .attr({ fill: 'red' })
          *     .add();
-         * var clipRect = renderer.clipRect(110, 110, 110, 110);
+         * var clipRect = renderer.clipRect(100, 100, 100, 100);
          *
          * // Leave only the lower right quarter visible
          * circle.clip(clipRect);
@@ -7286,7 +7286,7 @@
              * @function Highcharts.SVGRenderer#crispLine
              *
              * @param {Highcharts.SVGPathArray} points
-             *        The original points on the format `[['M', 0, 0], ['L', 110, 0]]`.
+             *        The original points on the format `[['M', 0, 0], ['L', 100, 0]]`.
              *
              * @param {number} width
              *        The width of the line.
@@ -7849,10 +7849,10 @@
              * function.
              *
              * @example
-             * var circle = renderer.circle(110, 110, 110)
+             * var circle = renderer.circle(100, 100, 100)
              *     .attr({ fill: 'red' })
              *     .add();
-             * var clipRect = renderer.clipRect(110, 110, 110, 110);
+             * var clipRect = renderer.clipRect(100, 100, 100, 100);
              *
              * // Leave only the lower right quarter visible
              * circle.clip(clipRect);
@@ -8757,7 +8757,7 @@
                     'rotate(' + rotation + 'deg)';
                 rotationStyle[cssTransformKey + (isFirefox ? 'Origin' : '-origin')] =
                     rotationStyle.transformOrigin =
-                        (alignCorrection * 110) + '% ' + baseline + 'px';
+                        (alignCorrection * 100) + '% ' + baseline + 'px';
                 css(this.element, rotationStyle);
             },
             /**
@@ -11169,7 +11169,7 @@
                  *   `Math` object. See
                  *   [the easing demo](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/series-animation-easing/).
                  *
-                 * When zooming on a series with less than 110 points, the chart redraw
+                 * When zooming on a series with less than 100 points, the chart redraw
                  * will be done with animation, but in case of more data points, it is
                  * necessary to set this option to ensure animation on zoom.
                  *
@@ -11824,11 +11824,11 @@
                  * position).
                  *
                  * @sample {highcharts} highcharts/chart/spacingbottom/
-                 *         Spacing bottom set to 110
+                 *         Spacing bottom set to 100
                  * @sample {highstock} stock/chart/spacingbottom/
-                 *         Spacing bottom set to 110
+                 *         Spacing bottom set to 100
                  * @sample {highmaps} maps/chart/spacing/
-                 *         Spacing 110 all around
+                 *         Spacing 100 all around
                  *
                  * @type      {number}
                  * @default   15
@@ -11841,11 +11841,11 @@
                  * position).
                  *
                  * @sample {highcharts} highcharts/chart/spacingleft/
-                 *         Spacing left set to 110
+                 *         Spacing left set to 100
                  * @sample {highstock} stock/chart/spacingleft/
-                 *         Spacing left set to 110
+                 *         Spacing left set to 100
                  * @sample {highmaps} maps/chart/spacing/
-                 *         Spacing 110 all around
+                 *         Spacing 100 all around
                  *
                  * @type      {number}
                  * @default   10
@@ -11857,14 +11857,14 @@
                  * area, axis title and labels, title, subtitle or legend in top
                  * position).
                  *
-                 * @sample {highcharts} highcharts/chart/spacingright-110/
-                 *         Spacing set to 110
+                 * @sample {highcharts} highcharts/chart/spacingright-100/
+                 *         Spacing set to 100
                  * @sample {highcharts} highcharts/chart/spacingright-legend/
                  *         Legend in right position with default spacing
                  * @sample {highstock} stock/chart/spacingright/
-                 *         Spacing set to 110
+                 *         Spacing set to 100
                  * @sample {highmaps} maps/chart/spacing/
-                 *         Spacing 110 all around
+                 *         Spacing 100 all around
                  *
                  * @type      {number}
                  * @default   10
@@ -11876,15 +11876,15 @@
                  * area, axis title and labels, title, subtitle or legend in top
                  * position).
                  *
-                 * @sample {highcharts} highcharts/chart/spacingtop-110/
-                 *         A top spacing of 110
+                 * @sample {highcharts} highcharts/chart/spacingtop-100/
+                 *         A top spacing of 100
                  * @sample {highcharts} highcharts/chart/spacingtop-10/
                  *         Floating chart title makes the plot area align to the default
                  *         spacingTop of 10.
                  * @sample {highstock} stock/chart/spacingtop/
-                 *         A top spacing of 110
+                 *         A top spacing of 100
                  * @sample {highmaps} maps/chart/spacing/
-                 *         Spacing 110 all around
+                 *         Spacing 100 all around
                  *
                  * @type      {number}
                  * @default   10
@@ -13296,7 +13296,7 @@
                  *         Fade in and out over a second
                  *
                  * @type      {number}
-                 * @default   110
+                 * @default   100
                  * @since     1.2.0
                  * @apioption loading.hideDuration
                  */
@@ -13307,7 +13307,7 @@
                  *         Fade in and out over a second
                  *
                  * @type      {number}
-                 * @default   110
+                 * @default   100
                  * @since     1.2.0
                  * @apioption loading.showDuration
                  */
@@ -13590,7 +13590,7 @@
                  *
                  *
                  * The return should be an object containing x and y values, for example
-                 * `{ x: 110, y: 110 }`.
+                 * `{ x: 100, y: 100 }`.
                  *
                  * @sample {highcharts} highcharts/tooltip/positioner/
                  *         A fixed tooltip position
@@ -14911,7 +14911,7 @@
                                 // Get this particular series extremes
                                 var dataExtremes = series.applyExtremes();
                                 // Get the dataMin and dataMax so far. If percentage is
-                                // used, the min and max are always 0 and 110. If
+                                // used, the min and max are always 0 and 100. If
                                 // seriesDataMin and seriesDataMax is null, then series
                                 // doesn't have active y data, we continue with nulls
                                 if (isNumber(dataExtremes.dataMin)) {
@@ -18642,8 +18642,8 @@
                  *
                  * On logarithmic axes, the unit is the power of the value. For example,
                  * setting the minorTickInterval to 1 puts one tick on each of 0.1, 1,
-                 * 10, 110 etc. Setting the minorTickInterval to 0.1 produces 9 ticks
-                 * between 1 and 10, 10 and 110 etc.
+                 * 10, 100 etc. Setting the minorTickInterval to 0.1 produces 9 ticks
+                 * between 1 and 10, 10 and 100 etc.
                  *
                  * If user settings dictate minor ticks to become too dense, they don't
                  * make sense, and will be ignored to prevent performance problems.
@@ -18753,8 +18753,8 @@
                  * interval between any of the data points.
                  *
                  * On a logarithmic axis, the unit for the minimum range is the power.
-                 * So a minRange of 1 means that the axis can be zoomed to 10-110,
-                 * 110-1000, 1000-10000 etc.
+                 * So a minRange of 1 means that the axis can be zoomed to 10-100,
+                 * 100-1000, 1000-10000 etc.
                  *
                  * **Note**: The `minPadding`, `maxPadding`, `startOnTick` and
                  * `endOnTick` settings also affect how the extremes of the axis
@@ -19050,7 +19050,7 @@
                  * `24 * 3600 * 1000`.
                  *
                  * On logarithmic axes, the tickInterval is based on powers, so a
-                 * tickInterval of 1 means one tick on each of 0.1, 1, 10, 110 etc. A
+                 * tickInterval of 1 means one tick on each of 0.1, 1, 10, 100 etc. A
                  * tickInterval of 2 means a tick of 0.1, 10, 1000 etc. A tickInterval
                  * of 0.2 puts a tick on 0.1, 0.2, 0.4, 0.6, 0.8, 1, 2, 4, 6, 8, 10, 20,
                  * 40 etc.
@@ -19100,7 +19100,7 @@
                  * @sample {highstock} stock/xaxis/tickpixelinterval/
                  *         200 px on X axis
                  */
-                tickPixelInterval: 110,
+                tickPixelInterval: 100,
                 /**
                  * For categorized axes only. If `on` the tick mark is placed in the
                  * center of the category, if `between` the tick mark is placed between
@@ -19409,7 +19409,7 @@
                  * ```js
                  * units: [[
                  *     'millisecond', // unit name
-                 *     [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
+                 *     [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
                  * ], [
                  *     'second',
                  *     [1, 2, 5, 10, 15, 30]
@@ -20515,7 +20515,7 @@
             DateTimeAxisAdditions.prototype.normalizeTimeTickInterval = function (tickInterval, unitsOption) {
                 var units = unitsOption || [[
                             'millisecond',
-                            [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
+                            [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
                         ],
                     [
                             'second',
@@ -20706,7 +20706,7 @@
                 if (!minor) {
                     log.minorAutoInterval = void 0;
                 }
-                // First case: All ticks fall on whole logarithms: 1, 10, 110 etc.
+                // First case: All ticks fall on whole logarithms: 1, 10, 100 etc.
                 if (interval >= 0.5) {
                     interval = Math.round(interval);
                     positions = axis.getLinearTickPositions(interval, min, max);
@@ -20724,12 +20724,12 @@
                         break2;
                     if (interval > 0.3) {
                         intermediate = [1, 2, 4];
-                        // 0.2 equals five minor ticks per 1, 10, 110 etc
+                        // 0.2 equals five minor ticks per 1, 10, 100 etc
                     }
                     else if (interval > 0.15) {
                         intermediate = [1, 2, 4, 6, 8];
                     }
-                    else { // 0.1 equals ten minor ticks per 1, 10, 110 etc
+                    else { // 0.1 equals ten minor ticks per 1, 10, 100 etc
                         intermediate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                     }
                     for (i = roundedMin; i < max + 1 && !break2; i++) {
@@ -21671,7 +21671,7 @@
             /**
              * In a gauge chart, this option determines the inner radius of the
              * plot band that stretches along the perimeter. It can be given as
-             * a percentage string, like `"110%"`, or as a pixel number, like `110`.
+             * a percentage string, like `"100%"`, or as a pixel number, like `100`.
              * By default, the inner radius is controlled by the [thickness](
              * #yAxis.plotBands.thickness) option.
              *
@@ -21686,13 +21686,13 @@
             /**
              * In a gauge chart, this option determines the outer radius of the
              * plot band that stretches along the perimeter. It can be given as
-             * a percentage string, like `"110%"`, or as a pixel number, like `110`.
+             * a percentage string, like `"100%"`, or as a pixel number, like `100`.
              *
              * @sample {highcharts} highcharts/xaxis/plotbands-gauge
              *         Gauge plot band
              *
              * @type      {number|string}
-             * @default   110%
+             * @default   100%
              * @since     2.3
              * @product   highcharts
              * @apioption yAxis.plotBands.outerRadius
@@ -28779,7 +28779,7 @@
                             if (chart.container) {
                                 chart.setSize(void 0, void 0, false);
                             }
-                        }, e ? 110 : 0);
+                        }, e ? 100 : 0);
                     }
                     chart.containerWidth = width;
                     chart.containerHeight = height;
@@ -34567,7 +34567,7 @@
                         point.total = point.stackTotal = pointStack.total;
                         point.percentage =
                             pointStack.total &&
-                                (point.y / pointStack.total * 110);
+                                (point.y / pointStack.total * 100);
                         point.stackY = yValue;
                         // Place the stack label
                         // in case of variwide series (where widths of points are
@@ -36414,7 +36414,7 @@
                     chart = axis.chart, 
                     // stack value translated mapped to chart coordinates
                     y = axis.translate(axis.stacking.usePercentage ?
-                        110 :
+                        100 :
                         (boxTop ?
                             boxTop :
                             stackItem.total), 0, 0, 0, 1),
@@ -36737,7 +36737,7 @@
             }
         };
         /**
-         * Modifier function for percent stacks. Blows up the stack to 110%.
+         * Modifier function for percent stacks. Blows up the stack to 100%.
          *
          * @private
          * @function Highcharts.Series#percentStacker
@@ -36746,7 +36746,7 @@
          * @param {number} i
          */
         Series.prototype.percentStacker = function (pointExtremes, stack, i) {
-            var totalFactor = stack.total ? 110 / stack.total : 0;
+            var totalFactor = stack.total ? 100 / stack.total : 0;
             // Y bottom value
             pointExtremes[0] = correctFloat(pointExtremes[0] * totalFactor);
             // Y value
@@ -37098,7 +37098,7 @@
                         animate(loadingDiv, {
                             opacity: 0
                         }, {
-                            duration: options.loading.hideDuration || 110,
+                            duration: options.loading.hideDuration || 100,
                             complete: function () {
                                 css(loadingDiv, { display: 'none' });
                             }
@@ -37643,7 +37643,7 @@
              * @sample highcharts/members/series-addpoint-pie/
              *         Append pie slice
              * @sample stock/members/series-addpoint/
-             *         Append 110 points in Highstock
+             *         Append 100 points in Highstock
              * @sample stock/members/series-addpoint-shift/
              *         Append and shift in Highstock
              * @sample maps/members/series-addpoint/
@@ -38348,7 +38348,7 @@
              *   corresponding Y axis extreme is filled (since v6.1.0).
              *
              * @sample {highcharts} highcharts/plotoptions/area-threshold/
-             *         A threshold of 110
+             *         A threshold of 100
              * @sample {highcharts} highcharts/plotoptions/area-threshold-infinity/
              *         A threshold of Infinity
              *
@@ -40722,7 +40722,7 @@
                     pick(centerOption[0], '50%'),
                     pick(centerOption[1], '50%'),
                     // Prevent from negative values
-                    pick(size && size < 0 ? void 0 : options.size, '110%'),
+                    pick(size && size < 0 ? void 0 : options.size, '100%'),
                     pick(innerSize && innerSize < 0 ? void 0 : options.innerSize || 0, '0%')
                 ];
                 // No need for inner size in angular (gauges) series but still required
@@ -40873,7 +40873,7 @@
              * center should be explicitly set, for example to `["50%", "50%"]`.
              *
              * @sample {highcharts} highcharts/plotoptions/pie-center/
-             *         Centered at 110, 110
+             *         Centered at 100, 100
              *
              * @type    {Array<(number|string|null),(number|string|null)>}
              * @default [null, null]
@@ -41428,7 +41428,7 @@
                     point = points[i];
                     point.percentage =
                         (total > 0 && (point.visible || !ignoreHiddenPoint)) ?
-                            point.y / total * 110 :
+                            point.y / total * 100 :
                             0;
                     point.total = total;
                 }
@@ -41514,7 +41514,7 @@
                     // set start and end angle
                     start = startAngleRad + (cumulative * circ);
                     if (!ignoreHiddenPoint || point.visible) {
-                        cumulative += point.percentage / 110;
+                        cumulative += point.percentage / 100;
                     }
                     end = startAngleRad + (cumulative * circ);
                     // set the shape
@@ -44094,7 +44094,7 @@
                 }
                 // Redraw
                 if (hasZoomed) {
-                    chart.redraw(pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 110));
+                    chart.redraw(pick(chart.options.chart.animation, event && event.animation, chart.pointCount < 100));
                 }
             },
             /**

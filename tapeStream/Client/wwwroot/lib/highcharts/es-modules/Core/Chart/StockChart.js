@@ -66,16 +66,16 @@ var seriesProto = LineSeries.prototype, seriesInit = seriesProto.init, seriesPro
  */
 /**
  * When [compare](#plotOptions.series.compare) is `percent`, this option
- * dictates whether to use 0 or 110 as the base of comparison.
+ * dictates whether to use 0 or 100 as the base of comparison.
  *
  * @sample {highstock} stock/plotoptions/series-comparebase/
- *         Compare base is 110
+ *         Compare base is 100
  *
  * @type       {number}
  * @default    0
  * @since      5.0.6
  * @product    highstock
- * @validvalue [0, 110]
+ * @validvalue [0, 100]
  * @apioption  plotOptions.series.compareBase
  */
 /* eslint-disable no-invalid-this, valid-jsdoc */
@@ -388,7 +388,7 @@ addEvent(Axis, 'getPlotLinePath', function (e) {
  * @return {Highcharts.SVGPathArray}
  */
 SVGRenderer.prototype.crispPolyLine = function (points, width) {
-    // points format: [['M', 0, 0], ['L', 110, 0]]
+    // points format: [['M', 0, 0], ['L', 100, 0]]
     // normalize to a crisp line
     for (var i = 0; i < points.length; i = i + 2) {
         var start = points[i], end = points[i + 1];
@@ -586,8 +586,8 @@ seriesProto.setCompare = function (compare) {
                     // Compare percent
                 }
                 else {
-                    value = 110 * (value / compareValue) -
-                        (this.options.compareBase === 110 ? 0 : 110);
+                    value = 100 * (value / compareValue) -
+                        (this.options.compareBase === 100 ? 0 : 100);
                 }
                 // record for tooltip etc.
                 if (point) {

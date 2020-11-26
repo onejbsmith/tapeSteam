@@ -35,7 +35,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
                 if (value != seriesJson)
                 {
                     seriesJson = value;
-                    updateHighchartSeries().Wait();
+                    updateHighchartSeries();
                 }
             }
         }
@@ -45,13 +45,15 @@ namespace tapeStream.Client.Components.HighCharts.Base
         public DataUpdateMode updateMode { get; set; }
 
 
-           [Parameter]
-     public bool redrawChart
+        [Parameter]
+        public bool redrawChart
         {
             get { return _redrawChart; }
-            set { _redrawChart = value;
+            set
+            {
+                _redrawChart = value;
                 redrawChart2 = value;
-            } 
+            }
         }
         private bool _redrawChart;
 
@@ -78,7 +80,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
             if (!string.IsNullOrEmpty(chartJson))
             {
                 await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart2 });
-                //if (redrawChart2 == false) redrawChart2 = true;
+               // if (redrawChart2 == false) redrawChart2 = true;
             }
 
             await base.OnAfterRenderAsync(firstRender);

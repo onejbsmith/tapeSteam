@@ -1,17 +1,23 @@
 ﻿@*<h3>ClockGauge</h3>*@
 
+@using tapeStream.Client.Components.HighCharts.Base
+@using MatBlazor
+@using tapeStream.Shared.Data
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @inject HttpClient _client
-<div style="height:100px">
-    <Highchart chartJsFilename="@chartJsFilename"
-               chartJson="@chartJson" chartSeriesJson="@chartSeriesJson"
-               isSeriesShifted="@updateSeries" />
+<div style="zoom:0.43">
+    <HighChart id="@id"
+               chartJson="@chartJson"
+               updateMode="@HighChart.DataUpdateMode.Replace"
+               chartJsFilename="@chartJsFilename"
+               redrawChart="@redraw" />
 </div>
 
 <style>
-    .highcharts-background
-    {
+    .highcharts-root {
+        position: relative;
+        right: 260px
     }
 </style>
 @code {

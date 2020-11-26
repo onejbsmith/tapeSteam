@@ -460,7 +460,7 @@
             pick = U.pick,
             stableSort = U.stableSort;
         /* eslint-disable no-invalid-this */
-        var AXIS_MAX = 110;
+        var AXIS_MAX = 100;
         // @todo Similar to eachObject, this function is likely redundant
         var isBoolean = function (x) {
                 return typeof x === 'boolean';

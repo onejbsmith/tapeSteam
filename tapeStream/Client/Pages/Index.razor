@@ -1,158 +1,34 @@
 ﻿@page "/"
-@using tapeStream.Client.Components
-@using tapeStream.Shared.Data;
+
+
+@using MatBlazor;
+
 @using tapeStream.Client.Components.HighCharts
+
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 
+<div id="resizer" style="min-width: 350px; min-height: 200px">
+    <div id="inner-resizer">
+        <div id="container">
+            <div class="mat-layout-grid">
+                <div class="mat-layout-grid-inner">
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                        <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
+                    </div>
+                    @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                            <ClockGauge />
+                        </div>
+
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3"></div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1"></div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8"></div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-
     string symbol = "QQQ";
 
 }
-
-<div class="grid-container">
-    <MatAccordion>
-
-        <StackedColumns3D symbol="@symbol" bookData="@bookColData" />
-
-        @*<MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <StackedColumns3DSurface bookData="@bookColData" />
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>*@
-
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <div>
-    </div>
-    <div class="grid-item shrink" style="width:100hw">
-    </div>
-
-    @*<div>
-            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
-        </div>*@
-</div>
-
-<style>
-
-    .ui-accordion {
-        box-shadow: none;
-        width: 100%;
-    }
-
-    .mat-accordion {
-        color: #333;
-    }
-
-    .rz-tick-text {
-        stroke: none;
-        fill: rgba(228, 228, 228, 0.5);
-    }
-
-    .rz-chart {
-        height: 40vh;
-    }
-
-    body {
-        zoom: 1;
-    }
-
-    th {
-        text-align: center;
-        padding: 5px;
-    }
-
-    .flex-container {
-        /*display: none;*/ /* or inline-flex */
-    }
-
-    article {
-        flex: 0 1 auto;
-        margin-top: 50px;
-        border: solid 1px green;
-    }
-</style>
-<style>
-
-    .grid-container {
-        display: grid;
-        grid-template-rows: auto auto;
-        grid-row-gap: 10px;
-        grid-column-gap: 5px;
-        /*        grid-template-columns: auto auto ;
-        */
-    }
-
-    .shrink {
-        zoom: 1;
-    }
-
-    .ui-slider-horizontal {
-        height: 2px;
-        /*        width: 100%;
-    */
-    }
-
-    .ui-slider-handle {
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        margin-left: -0.5rem;
-        background-color: #479cc8;
-        border-radius: 20px;
-        width: 12px;
-        height: 12px;
-    }
-
-        .ui-slider-handle:before {
-            display: none;
-            color: #ffffff;
-            transform: rotate(90deg);
-            vertical-align: middle;
-            font-family: 'Material Icons';
-            content: 'drag_handle';
-        }
-
-    .mdc-chip-set .mdc-chip {
-        margin: 2px;
-    }
-
-    .mdc-chip {
-        border-radius: 16px;
-        height: 16px;
-        padding: 6px;
-    }
-
-    .mdc-chip-set--choice .mdc-chip.mdc-chip--selected {
-        color: white;
-        background: #333;
-    }
-
-    .ui-accordion-content {
-        background-color: transparent;
-    }
-
-    .ui-accordion-header {
-        background-color: transparent;
-    }
-</style>
-

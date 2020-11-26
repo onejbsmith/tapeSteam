@@ -214,7 +214,7 @@ BaseSeries.seriesType('bubble', 'scatter', {
      * @see [zMin](#plotOptions.bubble.zMin)
      *
      * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-     *         Z has a possible range of 0-110
+     *         Z has a possible range of 0-100
      *
      * @type      {number}
      * @since     4.0.3
@@ -232,7 +232,7 @@ BaseSeries.seriesType('bubble', 'scatter', {
      * @see [zMax](#plotOptions.bubble.zMax)
      *
      * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-     *         Z has a possible range of 0-110
+     *         Z has a possible range of 0-100
      *
      * @type      {number}
      * @since     4.0.3
@@ -427,7 +427,7 @@ Axis.prototype.beforePadding = function () {
                     var length = seriesOptions[prop], isPercent = /%$/.test(length);
                     length = pInt(length);
                     extremes[prop] = isPercent ?
-                        smallestSize * length / 110 :
+                        smallestSize * length / 100 :
                         length;
                 });
                 series.minPxSize = extremes.minSize;

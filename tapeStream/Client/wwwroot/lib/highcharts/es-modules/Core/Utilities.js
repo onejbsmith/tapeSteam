@@ -802,7 +802,7 @@ var css = H.css = function css(el, styles) {
     if (H.isMS && !H.svg) { // #2686
         if (styles && typeof styles.opacity !== 'undefined') {
             styles.filter =
-                'alpha(opacity=' + (styles.opacity * 110) + ')';
+                'alpha(opacity=' + (styles.opacity * 100) + ')';
         }
     }
     extend(el.style, styles);
@@ -901,7 +901,7 @@ var pad = H.pad = function pad(number, length, padder) {
  *        A percentage string or a number.
  *
  * @param {number} base
- *        The full length that represents 110%.
+ *        The full length that represents 100%.
  *
  * @param {number} [offset=0]
  *        A pixel offset to apply for percentage values. Used internally in
@@ -912,7 +912,7 @@ var pad = H.pad = function pad(number, length, padder) {
  */
 var relativeLength = H.relativeLength = function relativeLength(value, base, offset) {
     return (/%$/).test(value) ?
-        (base * parseFloat(value) / 110) + (offset || 0) :
+        (base * parseFloat(value) / 100) + (offset || 0) :
         parseFloat(value);
 };
 /**

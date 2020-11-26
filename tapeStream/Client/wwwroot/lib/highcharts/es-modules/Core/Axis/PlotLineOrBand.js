@@ -787,7 +787,7 @@ extend(Axis.prototype, /** @lends Highcharts.Axis.prototype */ {
     /**
      * In a gauge chart, this option determines the inner radius of the
      * plot band that stretches along the perimeter. It can be given as
-     * a percentage string, like `"110%"`, or as a pixel number, like `110`.
+     * a percentage string, like `"100%"`, or as a pixel number, like `100`.
      * By default, the inner radius is controlled by the [thickness](
      * #yAxis.plotBands.thickness) option.
      *
@@ -802,13 +802,13 @@ extend(Axis.prototype, /** @lends Highcharts.Axis.prototype */ {
     /**
      * In a gauge chart, this option determines the outer radius of the
      * plot band that stretches along the perimeter. It can be given as
-     * a percentage string, like `"110%"`, or as a pixel number, like `110`.
+     * a percentage string, like `"100%"`, or as a pixel number, like `100`.
      *
      * @sample {highcharts} highcharts/xaxis/plotbands-gauge
      *         Gauge plot band
      *
      * @type      {number|string}
-     * @default   110%
+     * @default   100%
      * @since     2.3
      * @product   highcharts
      * @apioption yAxis.plotBands.outerRadius

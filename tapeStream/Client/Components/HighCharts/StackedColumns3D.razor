@@ -11,6 +11,10 @@
         max-width: 100hw;*/
         /*margin: 0 auto;*/
     }
+
+    span {
+        color: ActiveCaption;
+    }
 </style>
 
 <div style="width:100%">
@@ -19,14 +23,21 @@
 
 
 @*@name;*@
-<div style="display:grid">
-    <div>
-        @* Injects the data and redraws the chart *@
-        <HighChart chartJson="@chartJson"
-                   chartSeriesJson="@chartSeriesJson"
-                   updateMode="@HighChart.dataUpdateMode"
-                   chartJsFilename="js/StackedColumns-3DChart.js"
-                   id="@id" 
-                   redrawChart="ChartConfigure.redrawChart"/>
+
+<div class="resizer" style="min-width: 350px; min-height: 200px">
+    <div id="inner-resizer">
+        <div id="container">
+            <div style="display:grid">
+                <div>
+                    @* Injects the data and redraws the chart *@
+                    <HighChart chartJson="@chartJson"
+                               chartSeriesJson="@chartSeriesJson"
+                               updateMode="@HighChart.dataUpdateMode"
+                               chartJsFilename="js/StackedColumns-3DChart.js"
+                               id="@id"
+                               redrawChart="ChartConfigure.redrawChart" />
+                </div>
+            </div>
+        </div>
     </div>
 </div>

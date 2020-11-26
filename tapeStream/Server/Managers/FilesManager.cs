@@ -235,10 +235,10 @@ namespace tapeStream.Server.Data
             /// Walk thru 3 folders and move files to Date Folders ( create Date folders as needed)
             /// The 3 folders are:
             /// 
-            var tsPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
-            var nbPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\";
-            var cePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
-            var paths = new List<string>() { cePath, nbPath, tsPath };
+            var tsPath = $"D:\\MessageQs\\Inputs\\BookedTimeSales\\";
+            var nbPath = $"D:\\MessageQs\\Inputs\\NasdaqBook\\";
+            //var cePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
+            var paths = new List<string>() {  nbPath, tsPath };
             foreach (var path in paths)
             {
                 /// Get the filenames in the path

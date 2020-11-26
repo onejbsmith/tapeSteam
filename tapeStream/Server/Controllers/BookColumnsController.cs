@@ -32,5 +32,11 @@ namespace tapeStream.Server.Controllers
         {
             return await TDABookManager.getAverages(seconds);
         }
+
+        [Route("getLtAverages/{seconds}")]
+        public async Task<AverageSizes> getLtAverages(int seconds)
+        {
+            return await TDABookManager.getLtAverages(seconds);
+        }    
     }
 }

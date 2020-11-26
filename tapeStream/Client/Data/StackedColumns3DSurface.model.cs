@@ -25,6 +25,7 @@ namespace tapeStream.Client.Components.HighCharts
             public string zoomType { get; set; }
             public string backgroundColor { get; set; }
             public bool panning { get; set; }
+            public bool animation { get; set; } = false;
             public string panKey { get; set; }
             public Options3d options3d { get; set; }
             public int height { get; set; }
@@ -64,14 +65,35 @@ namespace tapeStream.Client.Components.HighCharts
         public class Plotoptions
         {
             public Series series { get; set; }
+
+            public Column column  { get; set; }
         }
 
+        public class Column
+        {
+            public string stacking { get; set; }
+            public bool colorByPoint { get; set; }
+
+            public bool grouping { get; set; }
+            public int depth { get; set; }
+
+            public Animation animation { get; set; }
+
+        }
+
+        public class Animation
+        {
+            public int defer { get; set; }
+            public int duration { get; set; }
+        }
         public class Series
         {
             public int groupZPadding { get; set; }
             public int depth { get; set; }
             public int groupPadding { get; set; }
             public bool grouping { get; set; }
+            public string stacking { get; set; }
+
         }
 
         public class Title
@@ -98,6 +120,7 @@ namespace tapeStream.Client.Components.HighCharts
             public double max { get; set; }
             public Plotband[] plotBands { get; set; }
             public Plotline[] plotLines { get; set; }
+            public bool reversed { get; set; }
         }
         public class Yaxis
         {
@@ -106,12 +129,14 @@ namespace tapeStream.Client.Components.HighCharts
             public double max { get; set; }
             public Plotband[] plotBands { get; set; }
             public Plotline[] plotLines { get; set; }
+            public bool reversed { get; set; }
         }
 
 
 
         public class Zaxis
         {
+            public bool reversed { get; set; }
             public double min { get; set; }
             public double max { get; set; }
             public Labels labels { get; set; }
@@ -163,6 +188,7 @@ namespace tapeStream.Client.Components.HighCharts
         {
             public double? x { get; set; }
             public double? y { get; set; }
+            public int? z { get; set; }
             public string color { get; set; }
         }
 
@@ -177,10 +203,6 @@ namespace tapeStream.Client.Components.HighCharts
             public Events1 events { get; set; }
             public int zIndex { get; set; }
             public LabelA[] labels { get; set; }
-        }
-
-        public class Animation
-        {
         }
 
         public class Labeloptions

@@ -419,7 +419,7 @@
                     LL = extremes[0]; // Lowest low in %K periods
                     CL = yVal[i][close] - LL;
                     HL = extremes[1] - LL;
-                    K = CL / HL * 110;
+                    K = CL / HL * 100;
                     xData.push(xVal[i]);
                     yData.push([K, null]);
                     // Calculate smoothed %D, which is SMA of %K

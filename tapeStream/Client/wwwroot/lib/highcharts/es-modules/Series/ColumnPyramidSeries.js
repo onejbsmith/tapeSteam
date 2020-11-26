@@ -94,12 +94,12 @@ BaseSeries.seriesType('columnpyramid', 'column',
                 ];
             stackTotal =
                 threshold + (point.total || point.y);
-            // overwrite stacktotal (always 110 / -110)
+            // overwrite stacktotal (always 100 / -100)
             if (options.stacking === 'percent') {
                 stackTotal =
                     threshold + (point.y < 0) ?
-                        -110 :
-                        110;
+                        -100 :
+                        100;
             }
             // get the highest point (if stack, extract from total)
             topPointY = yAxis.toPixels((stackTotal), true);

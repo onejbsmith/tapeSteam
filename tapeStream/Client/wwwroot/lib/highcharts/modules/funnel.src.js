@@ -113,7 +113,7 @@
              * @type  {number|string}
              * @since 3.0
              */
-            height: '110%',
+            height: '100%',
             /**
              * The height of the neck, the lower part of the funnel. A number
              * defines pixel width, a percentage string defines a percentage of the
@@ -222,7 +222,7 @@
                  */
                 function getLength(length, relativeTo) {
                     return (/%$/).test(length) ?
-                        relativeTo * parseInt(length, 10) / 110 :
+                        relativeTo * parseInt(length, 10) / 100 :
                         parseInt(length, 10);
                 }
                 series.getWidthAt = function (y) {
@@ -311,7 +311,7 @@
                     point.shapeType = 'path';
                     point.shapeArgs = { d: path };
                     // for tooltips and data labels
-                    point.percentage = fraction * 110;
+                    point.percentage = fraction * 100;
                     point.plotX = centerX;
                     point.plotY = (y1 + (y5 || y3)) / 2;
                     // Placement of tooltips and data labels

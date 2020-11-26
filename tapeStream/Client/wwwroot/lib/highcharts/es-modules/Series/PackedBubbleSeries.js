@@ -443,7 +443,7 @@ BaseSeries.seriesType('packedbubble', 'bubble',
             maxIterations: 400,
             gravitationalConstant: 0.03,
             maxSpeed: 50,
-            initialPositionRadius: 110,
+            initialPositionRadius: 100,
             seriesInteraction: true,
             /**
              * Styling options for parentNodes markers. Similar to
@@ -1143,7 +1143,7 @@ BaseSeries.seriesType('packedbubble', 'bubble',
         ['minSize', 'maxSize'].forEach(function (prop) {
             var length = parseInt(seriesOptions[prop], 10), isPercent = /%$/.test(seriesOptions[prop]);
             extremes[prop] = isPercent ?
-                smallestSize * length / 110 :
+                smallestSize * length / 100 :
                 length * Math.sqrt(allDataPoints.length);
         });
         chart.minRadius = minSize = extremes.minSize /

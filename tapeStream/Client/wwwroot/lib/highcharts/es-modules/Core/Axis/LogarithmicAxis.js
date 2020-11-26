@@ -47,7 +47,7 @@ var LogarithmicAxisAdditions = /** @class */ (function () {
         if (!minor) {
             log.minorAutoInterval = void 0;
         }
-        // First case: All ticks fall on whole logarithms: 1, 10, 110 etc.
+        // First case: All ticks fall on whole logarithms: 1, 10, 100 etc.
         if (interval >= 0.5) {
             interval = Math.round(interval);
             positions = axis.getLinearTickPositions(interval, min, max);
@@ -58,12 +58,12 @@ var LogarithmicAxisAdditions = /** @class */ (function () {
             var roundedMin = Math.floor(min), intermediate, i, j, len, pos, lastPos, break2;
             if (interval > 0.3) {
                 intermediate = [1, 2, 4];
-                // 0.2 equals five minor ticks per 1, 10, 110 etc
+                // 0.2 equals five minor ticks per 1, 10, 100 etc
             }
             else if (interval > 0.15) {
                 intermediate = [1, 2, 4, 6, 8];
             }
-            else { // 0.1 equals ten minor ticks per 1, 10, 110 etc
+            else { // 0.1 equals ten minor ticks per 1, 10, 100 etc
                 intermediate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             }
             for (i = roundedMin; i < max + 1 && !break2; i++) {

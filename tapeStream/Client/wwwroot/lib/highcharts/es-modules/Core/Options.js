@@ -696,7 +696,7 @@ H.defaultOptions = {
          *   `Math` object. See
          *   [the easing demo](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/series-animation-easing/).
          *
-         * When zooming on a series with less than 110 points, the chart redraw
+         * When zooming on a series with less than 100 points, the chart redraw
          * will be done with animation, but in case of more data points, it is
          * necessary to set this option to ensure animation on zoom.
          *
@@ -1351,11 +1351,11 @@ H.defaultOptions = {
          * position).
          *
          * @sample {highcharts} highcharts/chart/spacingbottom/
-         *         Spacing bottom set to 110
+         *         Spacing bottom set to 100
          * @sample {highstock} stock/chart/spacingbottom/
-         *         Spacing bottom set to 110
+         *         Spacing bottom set to 100
          * @sample {highmaps} maps/chart/spacing/
-         *         Spacing 110 all around
+         *         Spacing 100 all around
          *
          * @type      {number}
          * @default   15
@@ -1368,11 +1368,11 @@ H.defaultOptions = {
          * position).
          *
          * @sample {highcharts} highcharts/chart/spacingleft/
-         *         Spacing left set to 110
+         *         Spacing left set to 100
          * @sample {highstock} stock/chart/spacingleft/
-         *         Spacing left set to 110
+         *         Spacing left set to 100
          * @sample {highmaps} maps/chart/spacing/
-         *         Spacing 110 all around
+         *         Spacing 100 all around
          *
          * @type      {number}
          * @default   10
@@ -1384,14 +1384,14 @@ H.defaultOptions = {
          * area, axis title and labels, title, subtitle or legend in top
          * position).
          *
-         * @sample {highcharts} highcharts/chart/spacingright-110/
-         *         Spacing set to 110
+         * @sample {highcharts} highcharts/chart/spacingright-100/
+         *         Spacing set to 100
          * @sample {highcharts} highcharts/chart/spacingright-legend/
          *         Legend in right position with default spacing
          * @sample {highstock} stock/chart/spacingright/
-         *         Spacing set to 110
+         *         Spacing set to 100
          * @sample {highmaps} maps/chart/spacing/
-         *         Spacing 110 all around
+         *         Spacing 100 all around
          *
          * @type      {number}
          * @default   10
@@ -1403,15 +1403,15 @@ H.defaultOptions = {
          * area, axis title and labels, title, subtitle or legend in top
          * position).
          *
-         * @sample {highcharts} highcharts/chart/spacingtop-110/
-         *         A top spacing of 110
+         * @sample {highcharts} highcharts/chart/spacingtop-100/
+         *         A top spacing of 100
          * @sample {highcharts} highcharts/chart/spacingtop-10/
          *         Floating chart title makes the plot area align to the default
          *         spacingTop of 10.
          * @sample {highstock} stock/chart/spacingtop/
-         *         A top spacing of 110
+         *         A top spacing of 100
          * @sample {highmaps} maps/chart/spacing/
-         *         Spacing 110 all around
+         *         Spacing 100 all around
          *
          * @type      {number}
          * @default   10
@@ -2823,7 +2823,7 @@ H.defaultOptions = {
          *         Fade in and out over a second
          *
          * @type      {number}
-         * @default   110
+         * @default   100
          * @since     1.2.0
          * @apioption loading.hideDuration
          */
@@ -2834,7 +2834,7 @@ H.defaultOptions = {
          *         Fade in and out over a second
          *
          * @type      {number}
-         * @default   110
+         * @default   100
          * @since     1.2.0
          * @apioption loading.showDuration
          */
@@ -3117,7 +3117,7 @@ H.defaultOptions = {
          *
          *
          * The return should be an object containing x and y values, for example
-         * `{ x: 110, y: 110 }`.
+         * `{ x: 100, y: 100 }`.
          *
          * @sample {highcharts} highcharts/tooltip/positioner/
          *         A fixed tooltip position

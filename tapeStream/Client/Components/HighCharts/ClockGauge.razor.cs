@@ -1,79 +1,56 @@
 ﻿
 
-using Blazorise.Utils;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Primitives;
-using Microsoft.JSInterop;
-using Newtonsoft.Json.Schema;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
-using tapeStream.Client.Data.highcharts;
-using tapeStream.Shared.Data;
-using static HighCharts.Charts.Basic.Shared.HighCharts_Enums;
+using System;
+using Microsoft.JSInterop;
+using static tapeStream.Client.Data.ClockGaugeData;
+using tapeStream.Client.Data;
 
 namespace tapeStream.Client.Components.HighCharts
 {
     public partial class ClockGauge
     {
-    //    Highchart highChartsBase;
-        public static HighchartChart activityGauge;
-        static string chartJsFilename = $"js/ClockGauge.chart.js?id={DateTime.Now.ToOADate()}";
-
-        [Parameter]
-        public string chartJson
-        {
-            get { return json; }
-            set
-            {
-                if (value != json)
-                {
-                    json = value;
-                }
-            }
-        }
-        private string json;
-
-        [Parameter]
-        public string chartSeriesJson
-        {
-            get { return seriesJson; }
-            set
-            {
-                if (value != seriesJson)
-                {
-                    seriesJson = value;
-                }
-            }
-        }
-        private string seriesJson;
-
-        [Parameter]
-        public DataUpdateType updateSeries { get; set; }
-
-
+        static string chartJsFilename = $"js/highcharts/ClockGauge.chart.js?id={DateTime.Now.ToOADate()}";
+        static string chartJson = "";
+        static string id = "ClockGauge";
+        static bool redraw = false;
+        static ClockGaugeData.HighchartChart chart = new ClockGaugeData.HighchartChart();
 
         protected override async Task OnInitializedAsync()
         {
-            //Highchart.OnChartCreated += async () => await Highchart_OnChartCreated();
-            chartJson = "Draw me please";
+            var dotNetReference = DotNetObjectReference.Create(this);
+            await jsruntime.InvokeVoidAsync("Initialize", dotNetReference, id);
+ 
+            //ChartConfigure.seconds = 3;
             await Task.CompletedTask;
         }
 
-        /// Capture the chart object's json from js
-        private async Task Highchart_OnChartCreated()
+        [JSInvokable("getChartJson")]
+        public async Task getChartJson(string jsonResponse)
         {
-            //if (!string.IsNullOrEmpty(highChartsBase.chartJson))
-            //{
-            //    activityGauge = JsonSerializer.Deserialize<HighchartChart>(highChartsBase.chartJson);
-            //    await base.InvokeAsync(StateHasChanged);
-            //}
+            /// get the chart as a POCO 
+#if tracing
+            Console.WriteLine("1. Columns getChartJson");
+#endif
 
-            StateHasChanged();
+            Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
+            chart = JsonSerializer.Deserialize<ClockGaugeData.HighchartChart>(jsonResponse);
+
+            /// We set some static chart Properties here and pass back to js
+
+
+
+            //chart.plotOptions.series.pointWidth = 100;
+
+            redraw = true;
+            chartJson = JsonSerializer.Serialize<ClockGaugeData.HighchartChart>(chart);
+            
+#if tracing            
+            Console.WriteLine("2. Columns getChartJson");
+#endif
+            Console.WriteLine(chartJson); /// to capture the chart object's json from js
             await Task.Yield();
         }
     }

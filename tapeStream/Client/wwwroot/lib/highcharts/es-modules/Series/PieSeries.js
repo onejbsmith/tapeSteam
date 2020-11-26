@@ -94,7 +94,7 @@ BaseSeries.seriesType('pie', 'line',
      * center should be explicitly set, for example to `["50%", "50%"]`.
      *
      * @sample {highcharts} highcharts/plotoptions/pie-center/
-     *         Centered at 110, 110
+     *         Centered at 100, 100
      *
      * @type    {Array<(number|string|null),(number|string|null)>}
      * @default [null, null]
@@ -641,7 +641,7 @@ BaseSeries.seriesType('pie', 'line',
             point = points[i];
             point.percentage =
                 (total > 0 && (point.visible || !ignoreHiddenPoint)) ?
-                    point.y / total * 110 :
+                    point.y / total * 100 :
                     0;
             point.total = total;
         }
@@ -706,7 +706,7 @@ BaseSeries.seriesType('pie', 'line',
             // set start and end angle
             start = startAngleRad + (cumulative * circ);
             if (!ignoreHiddenPoint || point.visible) {
-                cumulative += point.percentage / 110;
+                cumulative += point.percentage / 100;
             }
             end = startAngleRad + (cumulative * circ);
             // set the shape

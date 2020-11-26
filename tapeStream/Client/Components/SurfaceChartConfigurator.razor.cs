@@ -5,6 +5,7 @@ namespace tapeStream.Client.Components
 
     public partial class SurfaceChartConfigurator
     {
+
         public static bool resetXAxis = false;
 
         public static bool redrawChart = true;
@@ -32,7 +33,7 @@ namespace tapeStream.Client.Components
 
         public static int beta { get; set; } = 15;
 
-        public static int chartDepth { get; set; } = 2500;
+        public static int chartDepth { get; set; } = 1250;
 
         public static int seriesDepth { get; set; } = 25;
         public static int chipValue { get; set; } = 6;
@@ -70,8 +71,6 @@ namespace tapeStream.Client.Components
 
         public static string symbol0;
 
-        public static int height { get; set; } = 1200;
-
         public static int seconds
         {
             get { return _seconds; }
@@ -87,5 +86,9 @@ namespace tapeStream.Client.Components
         }
         private static int _seconds = 0;
 
+
+
+        internal static int shortSeconds = 5;
+        internal static int longSeconds = 15;
     }
 }

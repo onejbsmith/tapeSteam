@@ -174,7 +174,7 @@
                     LL = extremes[0];
                     HH = extremes[1];
                     CC = yVal[i][close];
-                    R = ((HH - CC) / (HH - LL)) * -110;
+                    R = ((HH - CC) / (HH - LL)) * -100;
                     if (xVal[i]) {
                         WR.push([xVal[i], R]);
                         xData.push(xVal[i]);

@@ -754,7 +754,7 @@
                             if (typeof radius === 'string') {
                                 var r = parseInt(radius, 10);
                             if (percentRegex.test(radius)) {
-                                r = (r * fullRadius) / 110;
+                                r = (r * fullRadius) / 100;
                             }
                             return r;
                         }
@@ -882,7 +882,7 @@
                     var axis = this, center = axis.pane.center, chart = axis.chart, inverted = chart.inverted, value = options.value, reverse = options.reverse, end = axis.getPosition(value), background = axis.pane.options.background ?
                             (axis.pane.options.background[0] ||
                                 axis.pane.options.background) :
-                            {}, innerRadius = background.innerRadius || '0%', outerRadius = background.outerRadius || '110%', x1 = center[0] + chart.plotLeft, y1 = center[1] + chart.plotTop, x2 = end.x, y2 = end.y, height = axis.height, isCrosshair = options.isCrosshair, paneInnerR = center[3] / 2, innerRatio, distance, a, b, otherAxis, xy, tickPositions, crossPos, path;
+                            {}, innerRadius = background.innerRadius || '0%', outerRadius = background.outerRadius || '100%', x1 = center[0] + chart.plotLeft, y1 = center[1] + chart.plotTop, x2 = end.x, y2 = end.y, height = axis.height, isCrosshair = options.isCrosshair, paneInnerR = center[3] / 2, innerRatio, distance, a, b, otherAxis, xy, tickPositions, crossPos, path;
                     // Crosshair logic
                     if (isCrosshair) {
                         // Find crosshair's position and perform destructuring
@@ -2620,12 +2620,12 @@
                         ];
                     stackTotal =
                         threshold + (point.total || point.y);
-                    // overwrite stacktotal (always 110 / -110)
+                    // overwrite stacktotal (always 100 / -100)
                     if (options.stacking === 'percent') {
                         stackTotal =
                             threshold + (point.y < 0) ?
-                                -110 :
-                                110;
+                                -100 :
+                                100;
                     }
                     // get the highest point (if stack, extract from total)
                     topPointY = yAxis.toPixels((stackTotal), true);
@@ -2969,7 +2969,7 @@
             /**
              * Allow the dial to overshoot the end of the perimeter axis by this
              * many degrees. Say if the gauge axis goes from 0 to 60, a value of
-             * 110, or 1000, will show 5 degrees beyond the end of the axis when this
+             * 100, or 1000, will show 5 degrees beyond the end of the axis when this
              * option is set to 5.
              *
              * @see [wrap](#plotOptions.gauge.wrap)
@@ -3085,9 +3085,9 @@
                         radius = ((pInt(pick(dialOptions.radius, '80%')) * center[2]) /
                             200),
                         baseLength = ((pInt(pick(dialOptions.baseLength, '70%')) * radius) /
-                            110),
+                            100),
                         rearLength = ((pInt(pick(dialOptions.rearLength, '10%')) * radius) /
-                            110),
+                            100),
                         baseWidth = dialOptions.baseWidth || 3,
                         topWidth = dialOptions.topWidth || 1,
                         overshoot = options.overshoot,
@@ -3777,7 +3777,7 @@
                             highPlot = highPlot + crispCorr;
                             lowPlot = lowPlot + crispCorr;
                             pointWiskerLength = (/%$/).test(whiskerLength) ?
-                                halfWidth * parseFloat(whiskerLength) / 110 :
+                                halfWidth * parseFloat(whiskerLength) / 100 :
                                 whiskerLength / 2;
                             d = [
                                 // High whisker
@@ -5942,7 +5942,7 @@
                 else {
                     maxSize = parseFloat(maxSize);
                     calculatedSize = ((plotSize + lastLineHeight -
-                        fontMetrics.h / 2) * maxSize / 110) / (maxSize / 110 + 1);
+                        fontMetrics.h / 2) * maxSize / 100) / (maxSize / 100 + 1);
                     // Get maxPxSize from bubble series if calculated bubble legend
                     // size will not affect to bubbles series.
                     if ((horizontal && plotSizeY - calculatedSize >=
@@ -6413,7 +6413,7 @@
              * @see [zMin](#plotOptions.bubble.zMin)
              *
              * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-             *         Z has a possible range of 0-110
+             *         Z has a possible range of 0-100
              *
              * @type      {number}
              * @since     4.0.3
@@ -6431,7 +6431,7 @@
              * @see [zMax](#plotOptions.bubble.zMax)
              *
              * @sample {highcharts} highcharts/plotoptions/bubble-zmin-zmax/
-             *         Z has a possible range of 0-110
+             *         Z has a possible range of 0-100
              *
              * @type      {number}
              * @since     4.0.3
@@ -6662,7 +6662,7 @@
                                 isPercent = /%$/.test(length);
                             length = pInt(length);
                             extremes[prop] = isPercent ?
-                                smallestSize * length / 110 :
+                                smallestSize * length / 100 :
                                 length;
                         });
                         series.minPxSize = extremes.minSize;
@@ -8740,7 +8740,7 @@
                     maxIterations: 400,
                     gravitationalConstant: 0.03,
                     maxSpeed: 50,
-                    initialPositionRadius: 110,
+                    initialPositionRadius: 100,
                     seriesInteraction: true,
                     /**
                      * Styling options for parentNodes markers. Similar to
@@ -9542,7 +9542,7 @@
                     var length = parseInt(seriesOptions[prop], 10),
                         isPercent = /%$/.test(seriesOptions[prop]);
                     extremes[prop] = isPercent ?
-                        smallestSize * length / 110 :
+                        smallestSize * length / 100 :
                         length * Math.sqrt(allDataPoints.length);
                 });
                 chart.minRadius = minSize = extremes.minSize /

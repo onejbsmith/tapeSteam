@@ -4030,7 +4030,7 @@ void 0,
                 point.total = point.stackTotal = pointStack.total;
                 point.percentage =
                     pointStack.total &&
-                        (point.y / pointStack.total * 110);
+                        (point.y / pointStack.total * 100);
                 point.stackY = yValue;
                 // Place the stack label
                 // in case of variwide series (where widths of points are

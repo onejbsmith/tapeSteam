@@ -108,7 +108,7 @@ BaseSeries.seriesType('timeline', 'line',
         /**
          * Whether to position data labels alternately. For example, if
          * [distance](#plotOptions.timeline.dataLabels.distance)
-         * is set equal to `110`, then data labels will be positioned
+         * is set equal to `100`, then data labels will be positioned
          * alternately (on both sides of the point) at a distance of 100px.
          *
          * @sample {highcharts} highcharts/series-timeline/alternate-disabled
@@ -147,7 +147,7 @@ BaseSeries.seriesType('timeline', 'line',
          * A pixel value defining the distance between the data label and
          * the point. Negative numbers puts the label on top of the point.
          */
-        distance: 110,
+        distance: 100,
         // eslint-disable-next-line valid-jsdoc
         /**
          * @type    {Highcharts.TimelineDataLabelsFormatterCallbackFunction}

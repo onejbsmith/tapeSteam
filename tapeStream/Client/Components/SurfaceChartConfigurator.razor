@@ -8,7 +8,6 @@
                     Seconds to Aggregate: &nbsp;[@seconds]&nbsp;
                     <b style="display:flex">
                         <RadzenNumeric Min="0" Max="60" @bind-Value=@seconds timerClock />
-                        <RadzenNumeric Min="200" Max="1500" @bind-Value=@height Step="100" timerClock />
                     </b>
                 </span>
                 <span>
@@ -38,7 +37,7 @@
                 </span>
                 <span>
                     Max # of Prices:&nbsp;
-                    <RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="10" Max="600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric>
+                    <RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="10" Max="600" Step="5" Style="margin:10px;width:100px"></RadzenNumeric>
                 </span>
                 <span>
                     Max Size Height:&nbsp;
@@ -49,8 +48,9 @@
                     <RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox>
                 </span>
                 <span>
-                    Chart Redraw:&nbsp;
-                    <RadzenCheckBox @bind-Value="@redrawChart" Style="margin:10px"></RadzenCheckBox>
+                    Short Long Seconds:&nbsp;
+                    <RadzenNumeric @bind-Value="@shortSeconds" TValue="int" Min="0" Max="120" Step="5" Style="margin:10px;width:100px"></RadzenNumeric>
+                    <RadzenNumeric @bind-Value="@longSeconds" TValue="int" Min="0" Max="3600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric>
                 </span>
             </div>
 
@@ -73,14 +73,14 @@
     .ui-spinner.ui-widget {
         width: 100px;
         position: relative;
-        top: 8px;
-        margin: 10px;
-        zoom:1.25;
-    }
+/*        top: 8px;
+*/        margin: 10px;
+/*        zoom:1.25;
+*/    }
 
     span {
         color: #333;
-        display: grid;
+        display:  inline-grid;
         grid-column-gap: 10px;
         background-color: gainsboro;
         margin-right: 10px;
@@ -88,6 +88,21 @@
         zoom:0.75;
     }
 
+    .ui-accordion-toggle-icon.pi  {
+        margin-right: 2px;
+        padding: 0px;
+    }
+
+    .material-icons {
+        margin-right: 5px;
+        padding: 0px;
+    }
+
+
+/*    .pi {
+        vertical-align: top;
+        font-size: 2rem;
+    }*/
 </style>
 @code {
 

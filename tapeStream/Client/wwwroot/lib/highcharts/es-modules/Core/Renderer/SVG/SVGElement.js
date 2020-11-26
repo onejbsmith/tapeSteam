@@ -1716,7 +1716,7 @@ var SVGElement = /** @class */ (function () {
      * filters.
      *
      * @example
-     * renderer.rect(10, 110, 110, 110)
+     * renderer.rect(10, 100, 100, 100)
      *     .attr({ fill: 'red' })
      *     .shadow(true);
      *

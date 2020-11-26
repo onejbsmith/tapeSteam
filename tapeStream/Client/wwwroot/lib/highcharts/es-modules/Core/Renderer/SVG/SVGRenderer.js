@@ -19,10 +19,10 @@ var addEvent = U.addEvent, attr = U.attr, createElement = U.createElement, css =
  * and applied with the {@link SVGElement#clip} function.
  *
  * @example
- * var circle = renderer.circle(110, 110, 110)
+ * var circle = renderer.circle(100, 100, 100)
  *     .attr({ fill: 'red' })
  *     .add();
- * var clipRect = renderer.clipRect(110, 110, 110, 110);
+ * var clipRect = renderer.clipRect(100, 100, 100, 100);
  *
  * // Leave only the lower right quarter visible
  * circle.clip(clipRect);
@@ -1119,7 +1119,7 @@ var SVGRenderer = /** @class */ (function () {
      * @function Highcharts.SVGRenderer#crispLine
      *
      * @param {Highcharts.SVGPathArray} points
-     *        The original points on the format `[['M', 0, 0], ['L', 110, 0]]`.
+     *        The original points on the format `[['M', 0, 0], ['L', 100, 0]]`.
      *
      * @param {number} width
      *        The width of the line.
@@ -1671,10 +1671,10 @@ var SVGRenderer = /** @class */ (function () {
      * function.
      *
      * @example
-     * var circle = renderer.circle(110, 110, 110)
+     * var circle = renderer.circle(100, 100, 100)
      *     .attr({ fill: 'red' })
      *     .add();
-     * var clipRect = renderer.clipRect(110, 110, 110, 110);
+     * var clipRect = renderer.clipRect(100, 100, 100, 100);
      *
      * // Leave only the lower right quarter visible
      * circle.clip(clipRect);

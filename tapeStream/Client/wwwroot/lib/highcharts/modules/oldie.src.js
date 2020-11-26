@@ -697,7 +697,7 @@
                 // y axis has the smallest priority in case of our charts
                 // (needs to be set because of stacking)
                 incrementY = 10,
-                incrementZ = 110,
+                incrementZ = 100,
                 zIndex = 0, 
                 // The 8 corners of the cube
                 pArr = [{
@@ -945,7 +945,7 @@
              */
             wrapper.setPaths = function (attribs) {
                 var paths = wrapper.renderer.arc3dPath(attribs),
-                    zIndex = paths.zTop * 110;
+                    zIndex = paths.zTop * 100;
                 wrapper.attribs = attribs;
                 wrapper.top.attr({ d: paths.top, zIndex: paths.zTop });
                 wrapper.inn.attr({ d: paths.inn, zIndex: paths.zInn });
@@ -1478,7 +1478,7 @@
                 })];
                 if (prop === 'filter') {
                     val = val.replace(/alpha\(opacity=([0-9]+)\)/, function (a, b) {
-                        return (b / 110);
+                        return (b / 100);
                     });
                 }
                 return val === '' ? 1 : pInt(val);
@@ -2306,7 +2306,7 @@
                                 markup = ['<fill colors="' + colors.join(',') +
                                         '" opacity="', opacity2, '" o:opacity2="',
                                     opacity1, '" type="', fillType, '" ', fillAttr,
-                                    'focus="110%" method="any" />'];
+                                    'focus="100%" method="any" />'];
                             createElement(renderer.prepVML(markup), null, null, elem);
                         };
                         // Extend from 0 to 1
@@ -2336,7 +2336,7 @@
                                 stopOpacity = 1;
                             }
                             // Build the color attribute
-                            colors.push((stop[0] * 110) + '% ' + stopColor);
+                            colors.push((stop[0] * 100) + '% ' + stopColor);
                             // Only start and end opacities are allowed, so we use the
                             // first and the last
                             if (!i) {

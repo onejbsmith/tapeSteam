@@ -20,6 +20,13 @@ namespace tapeStream.Server.Data
     /// </summary>
     public class TDAStreamerData
     {
+        //public static List<BookDataItem> lstAllAsks = new List<BookDataItem>();
+        //public static List<BookDataItem> lstAllBids = new List<BookDataItem>();
+        public static List<BookDataItem> lstAllSalesAtAsk = new List<BookDataItem>();
+        public static List<BookDataItem> lstAllSalesAtBid = new List<BookDataItem>();
+        public static List<BookDataItem> lstALLSalesAtAsk = new List<BookDataItem>();
+        public static List<BookDataItem> lstALLSalesAtBid = new List<BookDataItem>();
+
 
         public static string runDate;
         public static SimulatorSettings simulatorSettings { get; set; }
@@ -64,8 +71,11 @@ namespace tapeStream.Server.Data
 
         public static List<BookDataItem> lstAsks = new List<BookDataItem>();
         public static List<BookDataItem> lstBids = new List<BookDataItem>();
+
         public static List<BookDataItem> lstAllAsks = new List<BookDataItem>();
         public static List<BookDataItem> lstAllBids = new List<BookDataItem>();
+        public static List<BookDataItem> lstALLAsks = new List<BookDataItem>();
+        public static List<BookDataItem> lstALLBids = new List<BookDataItem>();
 
         private static List<OptionQuote_Response> _lstOptions = new List<OptionQuote_Response>();
 

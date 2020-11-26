@@ -124,7 +124,7 @@ BaseSeries.seriesType('xrange', 'column'
                 amount = amount.amount;
             }
             if (isNumber(amount) && amount > 0) {
-                return correctFloat(amount * 110) + '%';
+                return correctFloat(amount * 100) + '%';
             }
         },
         inside: true,

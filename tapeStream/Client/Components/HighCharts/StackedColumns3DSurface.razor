@@ -1,6 +1,8 @@
 ﻿@*<h3>Surface.StackedColumns3DSurface</h3>*@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Client.Components.HighCharts.Base
+@using MatBlazor
+@using tapeStream.Shared.Data
 
 
 @*@name;*@
@@ -15,8 +17,7 @@
 </style>
 
 <div style="width:100hw">
-    <div style="width:auto;display:flex">
-        <SurfaceChartConfigurator title=" — Level II + Time & Sales Surface" symbol="@symbol" />
+    <div style="width:auto;display:flex;zoom:.75">
         <MatChipSet Filter="true" @bind-SelectedChips="selectedChips" Choice="true">
             <MatChip Label="Front" IsCheckable="true" Value="0"></MatChip>
             <MatChip Label="Top" IsCheckable="true" Value="1"></MatChip>
@@ -25,12 +26,19 @@
             <MatChip Label="Back" IsCheckable="true" Value="4"></MatChip>
             <MatChip Label="Flip" IsCheckable="true" Value="5"></MatChip>
             <MatChip Label="Return" IsCheckable="true" Value="6"></MatChip>
-
         </MatChipSet>
         <span><RadzenButton Click="ResetXAxis">Reset X-Axis</RadzenButton></span>
+        <span>
+            Height: &nbsp;[@height]&nbsp;
 
+            <RadzenNumeric Style="zoom:1.25;margin:0" Min="300" Max="1500" Step="100" @bind-Value=@height timerClock />
+        </span>
+        <span>
+            Redraw:&nbsp;
+            <RadzenCheckBox @bind-Value="@SurfaceChartConfigurator.redrawChart" Style="zoom:1.25;width:50px"></RadzenCheckBox>
+        </span>
         <div>
-            <span>
+            <span style="visibility:hidden">
                 @foreach (var chip in selectedChips ?? new MatChip[0])
                 {
 
@@ -43,26 +51,62 @@
             </span>
         </div>
     </div>
-
-
-    <div style="height:80vh;">
-        @* Injects the data and redraws the chart *@
-        <HighChart id="@id"
-                   chartJson="@chart3Djson"
-                   chartSeriesJson="@chartSeriesJson"
-                   updateMode="@HighChart.DataUpdateMode.Replace"
-                   chartJsFilename="@chartJsFilename"
-                   redrawChart="SurfaceChartConfigurator.redrawChart" />
-
-    </div>
-
 </div>
+
+<div style="display:flex">
+    <SurfaceChartConfigurator title="" symbol="@symbol" />
+    <div style="float:right;display:inline-flex">
+        <MatPaper Elevation="24" style="background-color:@bidsLtColor;margin-left:10px"><h3>@(TDAChart.avgLtBuys.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksLtColor;"><h3>@(TDAChart.avgLtSells.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>@(TDAChart.avgBuys.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>@(TDAChart.avgSells.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>+@(TDAChart.countBuysUp.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>+@(TDAChart.countSellsUp.ToString("n0"))</h3> </MatPaper>
+    </div>
+    @*<MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>
+        <MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>*@
+    @*<div>
+        <tapeStream.Client.Components.HighCharts.ClockGauge />
+    </div>*@
+</div>
+
+<div class="resizer" style="min-width: 350px; min-height: 200px">
+    <div id="inner-resizer">
+        <div id="container">
+            <div>
+                @* Injects the data and redraws the chart *@
+                <HighChart id="@id"
+                           chartJson="@chart3Djson"
+                           chartSeriesJson="@chartSeriesJson"
+                           updateMode="@HighChart.DataUpdateMode.Replace"
+                           chartJsFilename="@chartJsFilename"
+                           redrawChart="SurfaceChartConfigurator.redrawChart" />
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*</div>*@
 <style>
-    #container {
-        /*height: 80vh;*/
-        /*min-width: 310px;
-        max-width: 100hw;*/
-        /*margin: 0 auto;*/
+
+    span {
+        display: inline-flex;
+    }
+
+    matpaper {
+        text-align: center;
+        margin: 5px 10px 5px 0px;
+        height: 52px;
+    }
+
+    h3 {
+        padding: 10px;
+        color: #EEEEEE;
+    }
+
+    .mat-layout-grid {
+        padding: 0;
     }
 </style>
 

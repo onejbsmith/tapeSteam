@@ -1921,7 +1921,7 @@
                 /**
                  * Color of the link between two nodes.
                  */
-                color: 'rgba(110, 110, 110, 0.5)',
+                color: 'rgba(100, 100, 100, 0.5)',
                 /**
                  * Width (px) of the link between two nodes.
                  */

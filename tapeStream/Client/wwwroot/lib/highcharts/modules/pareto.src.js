@@ -255,7 +255,7 @@
                             sumY += point;
                         }
                         else {
-                            percentPoint = (point / sum) * 110;
+                            percentPoint = (point / sum) * 100;
                             percentPoints.push([
                                 xValues[i],
                                 correctFloat(sumPercent + percentPoint)

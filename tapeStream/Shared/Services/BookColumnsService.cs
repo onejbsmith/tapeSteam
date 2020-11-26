@@ -50,9 +50,17 @@ namespace tapeStream.Shared.Services
         {
             AverageSizes values = new AverageSizes();
 
+#if tracing
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
-            values = await Http.GetFromJsonAsync<AverageSizes>($"{controllerUrl}getAverages/{seconds}" );
+#endif
+
+            values = await Http.GetFromJsonAsync<AverageSizes>($"{controllerUrl}getLtAverages/{seconds}" );
+
+#if tracing
+
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes values");
+#endif
+
             return values;
         }
 

@@ -126,12 +126,12 @@ namespace tapeStream.Server.Components
             simulatorStarted = true;
             StateHasChanged();
 
-            //TEMP
+            ////TEMP
             //FilesManager.MoveQFilesToDatedFolders();
             //return;
 
             /// Get all the feed file names for the TDAStreamerData.simulatorSettings
-            
+
             TDAStreamerData.runDate = TDAStreamerData.simulatorSettings.runDate;
             TDAStreamerData.simulatorSettings.isSimulated = true;
 

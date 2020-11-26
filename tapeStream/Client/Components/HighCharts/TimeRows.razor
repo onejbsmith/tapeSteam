@@ -1,0 +1,31 @@
+﻿@*<h3>TimeRows</h3>*@
+@*<h3>StackedColumns3D</h3>*@
+@using tapeStream.Client.Components.HighCharts
+@using tapeStream.Client.Components.HighCharts.Base
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject HttpClient _client
+
+<div class="resizer" style="min-width: 350px; min-height: 200px">
+    <div id="inner-resizer">
+        <div id="container">
+            <div style="display:grid">
+                <div>
+                    @* Injects the data and redraws the chart *@
+                    <HighChart chartJson="@chartJson"
+                               chartSeriesJson="@chartSeriesJson"
+                               updateMode="@HighChart.dataUpdateMode"
+                               chartJsFilename="@chartJsFilename"
+                               id="@id"
+                               redrawChart="ChartConfigure.redrawChart" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    span {
+        color: ActiveCaption;
+    }
+</style>
+

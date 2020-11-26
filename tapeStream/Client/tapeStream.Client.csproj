@@ -4,21 +4,18 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Components\HighCharts\highcharts\**" />
     <Compile Remove="NewFolder\**" />
-    <Compile Remove="wwwroot\js\highcharts\**" />
     <Content Remove="Components\HighCharts\highcharts\**" />
     <Content Remove="NewFolder\**" />
-    <Content Remove="wwwroot\js\highcharts\**" />
     <EmbeddedResource Remove="Components\HighCharts\highcharts\**" />
     <EmbeddedResource Remove="NewFolder\**" />
-    <EmbeddedResource Remove="wwwroot\js\highcharts\**" />
     <None Remove="Components\HighCharts\highcharts\**" />
     <None Remove="NewFolder\**" />
-    <None Remove="wwwroot\js\highcharts\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +23,6 @@
     <Compile Remove="Components\BookPieChart.razor.cs" />
     <Compile Remove="Components\Highchart.razor.cs" />
     <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
-    <Compile Remove="Components\HighCharts\ClockGauge.razor.cs" />
     <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
@@ -58,7 +54,6 @@
     <Content Remove="Components\Highchart.razor" />
     <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
     <Content Remove="Components\HighCharts\Base\HighChart3D.razor" />
-    <Content Remove="Components\HighCharts\ClockGauge.razor" />
     <Content Remove="Components\HighCharts\Columns3D.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
@@ -73,13 +68,10 @@
     <Content Remove="Pages\Filer.razor" />
     <Content Remove="Pages\TDAclient.razor" />
     <Content Remove="wwwroot\appsettings.json" />
-    <Content Remove="wwwroot\js\ClockGauge.chart.code.js" />
-    <Content Remove="wwwroot\js\ClockGauge.chart.js" />
     <Content Remove="wwwroot\js\JSInterop.js" />
     <Content Remove="wwwroot\js\JSInterop.min.js" />
     <Content Remove="wwwroot\js\StackedColumns-3D.razor.js" />
     <Content Remove="wwwroot\js\StackedColumns3D.razor.js" />
-    <Content Remove="wwwroot\web.config" />
   </ItemGroup>
 
   <ItemGroup>
@@ -138,6 +130,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Server Projects\JsConsole\JsConsole.csproj" />
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>
 

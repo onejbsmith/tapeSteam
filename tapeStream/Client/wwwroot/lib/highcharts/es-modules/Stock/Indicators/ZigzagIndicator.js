@@ -72,7 +72,7 @@ BaseSeries.seriesType('zigzag', 'sma',
     nameSuffixes: ['%'],
     nameBase: 'Zig Zag',
     getValues: function (series, params) {
-        var lowIndex = params.lowIndex, highIndex = params.highIndex, deviation = params.deviation / 110, deviations = {
+        var lowIndex = params.lowIndex, highIndex = params.highIndex, deviation = params.deviation / 100, deviations = {
             'low': 1 + deviation,
             'high': 1 - deviation
         }, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, zigzag = [], xData = [], yData = [], i, j, zigzagPoint, firstZigzagLow, firstZigzagHigh, directionUp, zigzagLen, exitLoop = false, yIndex = false;

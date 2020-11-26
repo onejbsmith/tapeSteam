@@ -1087,8 +1087,8 @@
                     xHigh = getExtremeIndexInArray(slicedY.map(function (elem) {
                         return pick(elem[high], elem);
                     }), 'max');
-                    aroonUp = (xHigh / period) * 110;
-                    aroonDown = (xLow / period) * 110;
+                    aroonUp = (xHigh / period) * 100;
+                    aroonDown = (xLow / period) * 100;
                     if (xVal[i + 1]) {
                         AR.push([xVal[i + 1], aroonUp, aroonDown]);
                         xData.push(xVal[i + 1]);
@@ -2718,7 +2718,7 @@
                             xVal[i - 3],
                             EMAlevels.prevLevel3 !== 0 ?
                                 correctFloat(EMAlevels.level3 - EMAlevels.prevLevel3) /
-                                    EMAlevels.prevLevel3 * 110 : null
+                                    EMAlevels.prevLevel3 * 100 : null
                         ];
                 }
                 return TRIXPoint;
@@ -4305,7 +4305,7 @@
                     negativeMoneyFlowSum = sumArray(negativeMoneyFlow);
                     positiveMoneyFlowSum = sumArray(positiveMoneyFlow);
                     moneyFlowRatio = positiveMoneyFlowSum / negativeMoneyFlowSum;
-                    MFIPoint = toFixed(110 - (110 / (1 + moneyFlowRatio)), decimals);
+                    MFIPoint = toFixed(100 - (100 / (1 + moneyFlowRatio)), decimals);
                     MFI.push([xVal[i], MFIPoint]);
                     xData.push(xVal[i]);
                     yData.push(MFIPoint);
@@ -4500,7 +4500,7 @@
                     return;
                 }
                 for (; i < atrLength; i++) {
-                    atrData.yData[i] = (atrData.values[i][1] / yVal[period][3] * 110);
+                    atrData.yData[i] = (atrData.values[i][1] / yVal[period][3] * 100);
                     atrData.values[i][1] = atrData.yData[i];
                     period++;
                 }
@@ -4964,7 +4964,7 @@
                     oscillator = correctFloat((SPE.yData[i + periodsOffset] -
                         LPE.yData[i]) /
                         LPE.yData[i] *
-                        110);
+                        100);
                     PPO.push([LPE.xData[i], oscillator]);
                     xData.push(LPE.xData[i]);
                     yData.push(oscillator);
@@ -5709,7 +5709,7 @@
             /* Calculated as:
 
                (Closing Price [today] - Closing Price [n days ago]) /
-                Closing Price [n days ago] * 110
+                Closing Price [n days ago] * 100
 
                Return y as null when avoiding division by zero */
             var nDaysAgoY,
@@ -5718,14 +5718,14 @@
                 // y data given as an array of values
                 nDaysAgoY = yVal[i - period];
                 rocY = nDaysAgoY ?
-                    (yVal[i] - nDaysAgoY) / nDaysAgoY * 110 :
+                    (yVal[i] - nDaysAgoY) / nDaysAgoY * 100 :
                     null;
             }
             else {
                 // y data given as an array of arrays and the index should be used
                 nDaysAgoY = yVal[i - period][index];
                 rocY = nDaysAgoY ?
-                    (yVal[i][index] - nDaysAgoY) / nDaysAgoY * 110 :
+                    (yVal[i][index] - nDaysAgoY) / nDaysAgoY * 100 :
                     null;
             }
             return [xVal[i], rocY];
@@ -5745,7 +5745,7 @@
          * Rate of change indicator (ROC). The indicator value for each point
          * is defined as:
          *
-         * `(C - Cn) / Cn * 110`
+         * `(C - Cn) / Cn * 100`
          *
          * where: `C` is the close value of the point of the same x in the
          * linked series and `Cn` is the close value of the point `n` periods
@@ -5816,7 +5816,7 @@
          * Rate of change indicator (ROC). The indicator value for each point
          * is defined as:
          *
-         * `(C - Cn) / Cn * 110`
+         * `(C - Cn) / Cn * 100`
          *
          * where: `C` is the close value of the point of the same x in the
          * linked series and `Cn` is the close value of the point `n` periods
@@ -5945,9 +5945,9 @@
                     avgGain = toFixed((avgGain * (period - 1) + gain) / period, decimals);
                     avgLoss = toFixed((avgLoss * (period - 1) + loss) / period, decimals);
                     // If average-loss is equal zero, then by definition RSI is set
-                    // to 110:
+                    // to 100:
                     if (avgLoss === 0) {
-                        RSIPoint = 110;
+                        RSIPoint = 100;
                         // If average-gain is equal zero, then by definition RSI is set
                         // to 0:
                     }
@@ -5955,7 +5955,7 @@
                         RSIPoint = 0;
                     }
                     else {
-                        RSIPoint = toFixed(110 - (110 / (1 + (avgGain / avgLoss))), decimals);
+                        RSIPoint = toFixed(100 - (100 / (1 + (avgGain / avgLoss))), decimals);
                     }
                     RSI.push([xVal[i], RSIPoint]);
                     xData.push(xVal[i]);
@@ -6127,7 +6127,7 @@
                     LL = extremes[0]; // Lowest low in %K periods
                     CL = yVal[i][close] - LL;
                     HL = extremes[1] - LL;
-                    K = CL / HL * 110;
+                    K = CL / HL * 100;
                     xData.push(xVal[i]);
                     yData.push([K, null]);
                     // Calculate smoothed %D, which is SMA of %K
@@ -7577,7 +7577,7 @@
                     LL = extremes[0];
                     HH = extremes[1];
                     CC = yVal[i][close];
-                    R = ((HH - CC) / (HH - LL)) * -110;
+                    R = ((HH - CC) / (HH - LL)) * -100;
                     if (xVal[i]) {
                         WR.push([xVal[i], R]);
                         xData.push(xVal[i]);
@@ -7829,7 +7829,7 @@
             getValues: function (series, params) {
                 var lowIndex = params.lowIndex,
                     highIndex = params.highIndex,
-                    deviation = params.deviation / 110,
+                    deviation = params.deviation / 100,
                     deviations = {
                         'low': 1 + deviation,
                         'high': 1 - deviation

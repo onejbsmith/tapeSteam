@@ -59,7 +59,7 @@ BaseSeries.seriesType('trix', 'tema',
                 xVal[i - 3],
                 EMAlevels.prevLevel3 !== 0 ?
                     correctFloat(EMAlevels.level3 - EMAlevels.prevLevel3) /
-                        EMAlevels.prevLevel3 * 110 : null
+                        EMAlevels.prevLevel3 * 100 : null
             ];
         }
         return TRIXPoint;

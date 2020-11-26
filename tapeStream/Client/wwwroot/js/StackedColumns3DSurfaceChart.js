@@ -2,30 +2,32 @@
 {
     chart: {
         type: 'column',
-            height: 1200,
-                backgroundColor: 'darkgray',
-                    options3d: {
+        //height: 600,
+        backgroundColor: 'darkgray',
+            animation: false,
+       options3d: {
             enabled: true,
-                alpha: 15,
-                    beta: 15,
-                        depth: 2500,
-                            panning: {
+            alpha: 15,
+            beta: 15,
+            depth: 600,
+            panning: {
                 enabled: true,
-                    type: 'xy'
+                type: 'xy'
             },
             panKey: 'shift',
-                viewDistance: 50,
-                    frame: {
+            viewDistance: 500,
+            frame: {
                 bottom: {
                     size: 1,
-                        color: 'rgba(0,0,0,0.05)'
+                    color: 'rgba(0,0,0,0.05)'
                 }
             }
         }
     },
+
     plotOptions: {
         series: {
-            animation: true,
+            animation: false,
                 groupZPadding: 1,
                     depth: 25,
                         groupPadding: 0,
@@ -33,7 +35,11 @@
         },
         column: {
             colorByPoint: true,
-                stacking: 'normal',
+                //stacking: 'normal',
+            //    animation: {  
+            //    defer: 0
+            //    duration: 0
+            //}
 
         }
     },
@@ -84,7 +90,7 @@
         min: 0,
             max: 10,
 
-                plotBands:
+plotBands:
         [
             {                               /// mark the weekend
                 color: '#FCFFC5',
@@ -108,7 +114,8 @@
             }]
     },
     zAxis: {
-        min: 0,
+        reversed: true,
+      min: 0,
             max: 100,
 
                 labels: {
@@ -123,7 +130,7 @@
     series:
     [
         {
-            data: [{ x: 0, y: 5, color: '#BF0B23' }],
+            data: [{ x: 0, y: 5, z: 0, color: '#BF0B23' }],
             selected: true
         }
 

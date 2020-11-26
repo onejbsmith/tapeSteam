@@ -128,7 +128,7 @@ BaseSeries.seriesType('mfi', 'sma',
             negativeMoneyFlowSum = sumArray(negativeMoneyFlow);
             positiveMoneyFlowSum = sumArray(positiveMoneyFlow);
             moneyFlowRatio = positiveMoneyFlowSum / negativeMoneyFlowSum;
-            MFIPoint = toFixed(110 - (110 / (1 + moneyFlowRatio)), decimals);
+            MFIPoint = toFixed(100 - (100 / (1 + moneyFlowRatio)), decimals);
             MFI.push([xVal[i], MFIPoint]);
             xData.push(xVal[i]);
             yData.push(MFIPoint);

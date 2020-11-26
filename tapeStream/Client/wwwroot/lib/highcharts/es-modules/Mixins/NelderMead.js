@@ -27,7 +27,7 @@ var getCentroid = function (simplex) {
  *         Returns the opimized position of a point.
  */
 var nelderMead = function nelderMead(fn, initial) {
-    var maxIterations = 110, sortByFx = function (a, b) {
+    var maxIterations = 100, sortByFx = function (a, b) {
         return a.fx - b.fx;
     }, pRef = 1, // Reflection parameter
     pExp = 2, // Expansion parameter

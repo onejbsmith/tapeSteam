@@ -100,6 +100,11 @@ namespace tapeStream.Server
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();
 
+                builder.WithOrigins("http://localhost:5000")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "HEAD", "POST")
+                    .AllowCredentials();
+
                 builder.WithOrigins("http://tapestreamclient.com")
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")

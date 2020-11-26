@@ -47,9 +47,18 @@ namespace tapeStream.Client.Components.HighCharts
         public string stacking { get; set; }
         public bool grouping { get; set; }
         public int depth { get; set; }
+
+        public Animation animation { get; set; }
+
     }
 
-    public class Series
+    public class Animation
+    { 
+        public int defer { get; set; }
+        public int duration { get; set; }
+    }
+
+public class Series
     {
         public bool animation { get; set; }
     }

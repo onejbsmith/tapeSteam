@@ -262,7 +262,7 @@
 
 				var n = parseFloat(this.value);
 				if ((this.value + '').match(/%$/)) {
-					n = n / 110.0;
+					n = n / 100.0;
 				}
 				return n;
 			}
@@ -406,7 +406,7 @@
 		svg.Font = new (function() {
 			this.Styles = 'normal|italic|oblique|inherit';
 			this.Variants = 'normal|small-caps|inherit';
-			this.Weights = 'normal|bold|bolder|lighter|110|200|300|400|500|600|700|800|900|inherit';
+			this.Weights = 'normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit';
 
 			this.CreateFont = function(fontStyle, fontVariant, fontWeight, fontSize, fontFamily, inherit) {
 				var f = inherit != null ? this.Parse(inherit) : this.CreateFont('', '', '', '', '', svg.ctx.font);
@@ -1078,8 +1078,8 @@
 				var width = svg.ViewPort.width();
 				var height = svg.ViewPort.height();
 
-				if (!this.attribute('width').hasValue()) this.attribute('width', true).value = '110%';
-				if (!this.attribute('height').hasValue()) this.attribute('height', true).value = '110%';
+				if (!this.attribute('width').hasValue()) this.attribute('width', true).value = '100%';
+				if (!this.attribute('height').hasValue()) this.attribute('height', true).value = '100%';
 				if (typeof(this.root) == 'undefined') {
 					width = this.attribute('width').toPixels('x');
 					height = this.attribute('height').toPixels('y');

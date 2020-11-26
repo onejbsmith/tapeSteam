@@ -1590,7 +1590,7 @@
                         smoothed: true,
                         // Day and week differs from plotOptions.series.dataGrouping
                         units: [
-                            ['millisecond', [1, 2, 5, 10, 20, 25, 50, 110, 200, 500]],
+                            ['millisecond', [1, 2, 5, 10, 20, 25, 50, 100, 200, 500]],
                             ['second', [1, 2, 5, 10, 15, 30]],
                             ['minute', [1, 2, 5, 10, 15, 30]],
                             ['hour', [1, 2, 3, 4, 6, 8, 12]],
@@ -5142,7 +5142,7 @@
             defaultDataGroupingUnits = H.defaultDataGroupingUnits = [
                 [
                     'millisecond',
-                    [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
+                    [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
                 ], [
                     'second',
                     [1, 2, 5, 10, 15, 30]
@@ -5716,7 +5716,7 @@
          * ```js
          * units: [[
          *     'millisecond', // unit name
-         *     [1, 2, 5, 10, 20, 25, 50, 110, 200, 500] // allowed multiples
+         *     [1, 2, 5, 10, 20, 25, 50, 100, 200, 500] // allowed multiples
          * ], [
          *     'second',
          *     [1, 2, 5, 10, 15, 30]
@@ -7025,7 +7025,7 @@
                         box.plotX = box.anchorX;
                         boxes.push(box);
                     });
-                    H.distribute(boxes, inverted ? yAxis.len : this.xAxis.len, 110);
+                    H.distribute(boxes, inverted ? yAxis.len : this.xAxis.len, 100);
                     points.forEach(function (point) {
                         var box = point.graphic && boxesMap[point.plotX];
                         if (box) {
@@ -9155,16 +9155,16 @@
          */
         /**
          * When [compare](#plotOptions.series.compare) is `percent`, this option
-         * dictates whether to use 0 or 110 as the base of comparison.
+         * dictates whether to use 0 or 100 as the base of comparison.
          *
          * @sample {highstock} stock/plotoptions/series-comparebase/
-         *         Compare base is 110
+         *         Compare base is 100
          *
          * @type       {number}
          * @default    0
          * @since      5.0.6
          * @product    highstock
-         * @validvalue [0, 110]
+         * @validvalue [0, 100]
          * @apioption  plotOptions.series.compareBase
          */
         /* eslint-disable no-invalid-this, valid-jsdoc */
@@ -9505,7 +9505,7 @@
          * @return {Highcharts.SVGPathArray}
          */
         SVGRenderer.prototype.crispPolyLine = function (points, width) {
-            // points format: [['M', 0, 0], ['L', 110, 0]]
+            // points format: [['M', 0, 0], ['L', 100, 0]]
             // normalize to a crisp line
             for (var i = 0; i < points.length; i = i + 2) {
                 var start = points[i],
@@ -9704,8 +9704,8 @@
                             // Compare percent
                         }
                         else {
-                            value = 110 * (value / compareValue) -
-                                (this.options.compareBase === 110 ? 0 : 110);
+                            value = 100 * (value / compareValue) -
+                                (this.options.compareBase === 100 ? 0 : 100);
                         }
                         // record for tooltip etc.
                         if (point) {

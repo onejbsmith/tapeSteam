@@ -557,7 +557,7 @@
          */
         var nelderMead = function nelderMead(fn,
             initial) {
-                var maxIterations = 110,
+                var maxIterations = 100,
             sortByFx = function (a,
             b) {
                     return a.fx - b.fx;
@@ -794,7 +794,7 @@
          * The highest number in the search range.
          * @param {number} [tolerance=1e-10]
          * The allowed difference between the returned value and root.
-         * @param {number} [maxIterations=110]
+         * @param {number} [maxIterations=100]
          * The maximum iterations allowed.
          * @return {number}
          * Root number.
@@ -806,7 +806,7 @@
             maxIterations) {
                 var fA = f(a),
             fB = f(b),
-            nMax = maxIterations || 110,
+            nMax = maxIterations || 100,
             tol = tolerance || 1e-10,
             delta = b - a,
             n = 1,

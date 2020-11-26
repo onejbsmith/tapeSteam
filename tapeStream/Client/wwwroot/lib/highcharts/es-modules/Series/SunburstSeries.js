@@ -73,7 +73,7 @@ var calculateLevelSizes = function calculateLevelSizes(levelOptions, params) {
             else if (unit === 'percentage') {
                 options.levelSize = {
                     unit: 'pixels',
-                    value: (value / 110) * diffRadius
+                    value: (value / 100) * diffRadius
                 };
                 remainingSize -= options.levelSize.value;
             }
@@ -491,7 +491,7 @@ var sunburstOptions = {
      * percentages or pixel values.
      *
      * @sample {highcharts} highcharts/plotoptions/pie-center/
-     *         Centered at 110, 110
+     *         Centered at 100, 100
      *
      * @type    {Array<number|string>}
      * @default ["50%", "50%"]

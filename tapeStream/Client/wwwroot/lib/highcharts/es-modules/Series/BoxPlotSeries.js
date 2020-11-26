@@ -425,7 +425,7 @@ Series.seriesType('boxplot', 'column', {
                     highPlot = highPlot + crispCorr;
                     lowPlot = lowPlot + crispCorr;
                     pointWiskerLength = (/%$/).test(whiskerLength) ?
-                        halfWidth * parseFloat(whiskerLength) / 110 :
+                        halfWidth * parseFloat(whiskerLength) / 100 :
                         whiskerLength / 2;
                     d = [
                         // High whisker

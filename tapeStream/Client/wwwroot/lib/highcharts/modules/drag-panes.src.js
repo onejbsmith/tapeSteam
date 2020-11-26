@@ -240,7 +240,7 @@
                     plotBottom = plotTop + plotHeight,
                     yDelta,
                     calculatePercent = function (value) {
-                        return value * 110 / plotHeight + '%';
+                        return value * 100 / plotHeight + '%';
                 }, normalize = function (val, min, max) {
                     return Math.round(clamp(val, min, max));
                 };
@@ -392,7 +392,7 @@
                  * @requires  modules/drag-panes
                  * @apioption yAxis.maxLength
                  */
-                maxLength: '110%',
+                maxLength: '100%',
                 /**
                  * Options for axis resizing. It adds a thick line between panes which
                  * the user can drag in order to resize the panes.

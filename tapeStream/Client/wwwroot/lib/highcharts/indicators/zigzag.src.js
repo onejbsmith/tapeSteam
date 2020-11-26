@@ -104,7 +104,7 @@
             getValues: function (series, params) {
                 var lowIndex = params.lowIndex,
                     highIndex = params.highIndex,
-                    deviation = params.deviation / 110,
+                    deviation = params.deviation / 100,
                     deviations = {
                         'low': 1 + deviation,
                         'high': 1 - deviation

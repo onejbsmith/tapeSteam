@@ -263,7 +263,7 @@
                 /**
                  * Allow the gauge to overshoot the end of the perimeter axis by this
                  * many degrees. Say if the gauge axis goes from 0 to 60, a value of
-                 * 110, or 1000, will show 5 degrees beyond the end of the axis when this
+                 * 100, or 1000, will show 5 degrees beyond the end of the axis when this
                  * option is set to 5.
                  *
                  * @type      {number}
@@ -280,7 +280,7 @@
                  *         Individual radius and innerRadius
                  *
                  * @type      {number|string}
-                 * @default   110
+                 * @default   100
                  * @since     4.1.6
                  * @product   highcharts
                  * @apioption plotOptions.solidgauge.radius
@@ -360,7 +360,7 @@
                             null,
                             true)),
                             radius = ((pInt(pick(point.options.radius,
-                            options.radius, 110)) * center[2]) / 200),
+                            options.radius, 100)) * center[2]) / 200),
                             innerRadius = ((pInt(pick(point.options.innerRadius,
                             options.innerRadius, 60)) * center[2]) / 200),
                             shapeArgs,

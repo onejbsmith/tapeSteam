@@ -392,7 +392,7 @@ BaseSeries.seriesType('flags', 'column'
                 box.plotX = box.anchorX;
                 boxes.push(box);
             });
-            H.distribute(boxes, inverted ? yAxis.len : this.xAxis.len, 110);
+            H.distribute(boxes, inverted ? yAxis.len : this.xAxis.len, 100);
             points.forEach(function (point) {
                 var box = point.graphic && boxesMap[point.plotX];
                 if (box) {

@@ -2,16 +2,16 @@
   "userId": "smith4035",
   "userCdDomainId": "A000000007860194",
   "primaryAccountId": "870018425",
-  "lastLoginTime": "2020-11-19T12:07:32+0000",
-  "tokenExpirationTime": "2020-11-19T12:37:32+0000",
-  "loginTime": "2020-11-19T12:07:32+0000",
+  "lastLoginTime": "2020-11-23T15:54:15+0000",
+  "tokenExpirationTime": "2020-11-23T16:24:15+0000",
+  "loginTime": "2020-11-23T15:54:15+0000",
   "accessLevel": "CUS",
   "stalePassword": false,
   "streamerInfo": {
     "streamerBinaryUrl": "streamer-bin.tdameritrade.com",
     "streamerSocketUrl": "streamer-ws.tdameritrade.com",
-    "token": "96f56c488cba1bcb89f78f9c1d96ca9cebae28bd",
-    "tokenTimestamp": "2020-11-19T12:10:09+0000",
+    "token": "e5195c1c44ca61703ebaf6c548b5240fd3e36290",
+    "tokenTimestamp": "2020-11-23T15:54:25+0000",
     "userGroup": "ACCT",
     "accessLevel": "ACCT",
     "acl": "AQBHBPC1DRDTESF7FUFXG1G3G5G7GKGLGRH1H3H5IPM1MAOSPNQSRFSDSVTBTETFTOTTUAWSXBXNXOD2D4D6D8E2E4E6E8F2F4F6H7I1",
@@ -30,7 +30,7 @@
   "streamerSubscriptionKeys": {
     "keys": [
       {
-        "key": "af444085951b181a13632e5bcf897f976f9a6a7c1d7eded8faacb4df03ebdc518"
+        "key": "a0db89e6eeb3094d83b277e3ec13636aef9a6a7c1d7eded8faacb4df03ebdc518"
       }
     ]
   },
