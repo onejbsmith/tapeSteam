@@ -75,6 +75,11 @@ namespace tapeStream.Client.Pages
             var avgStSizes = await bookColumnsService.getAverages(SurfaceChartConfigurator.shortSeconds, jsruntime);
             var avgLtSizes = await bookColumnsService.getAverages(0, jsruntime);
 
+            var avgRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.longSeconds, jsruntime);
+            var avgStRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.shortSeconds, jsruntime);
+            var avgLtRatios = await bookColumnsService.getRatios(0, jsruntime);
+
+
             TDAChart.bollingerBands = await chartService.getBollingerBands();
             TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
             TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
@@ -92,6 +97,21 @@ namespace tapeStream.Client.Pages
             TDAChart.avgSizes = avgSizes;
             TDAChart.avgStSizes = avgStSizes;
             TDAChart.avgLtSizes = avgLtSizes;
+
+            TDAChart.avgRatios = avgRatios;
+            TDAChart.avgStRatios = avgStRatios;
+            TDAChart.avgLtRatios = avgLtRatios;
+
+            var avgBuys = 0d;
+            if (avgSizes.averageSize.ContainsKey("buys"))
+                avgBuys = avgSizes.averageSize["buys"];
+
+            var avgSells = 0d;
+            if (avgSizes.averageSize.ContainsKey("sells"))
+                avgSells = avgSizes.averageSize["sells"];
+
+            TDAChart.countBuysRatioUp += avgBuys > avgSells ? 1 : 0;
+            TDAChart.countSellRatioUp += avgSells > avgBuys ? 1 : 0;
 
             //TDAChart.lastCandles = await chartService.getLastCandles(2);
             await Task.Delay(100);

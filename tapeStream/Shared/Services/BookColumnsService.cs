@@ -13,7 +13,7 @@ namespace tapeStream.Shared.Services
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
         //string controllerUrl = "http://localhost:55540/api/BookColumns/";
-        string controllerUrl = "http://tapestream.com/api/BookColumns/";
+        string controllerUrl = "http://tapestreamserver.com/api/BookColumns/";
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
@@ -64,10 +64,25 @@ namespace tapeStream.Shared.Services
             return values;
         }
 
-        public async Task<string> GetValue(int input)
+        public async Task<AverageSizes> getRatios(int seconds, IJSRuntime jSRuntime)
         {
-            var value = await Http.GetStringAsync(controllerUrl + input.ToString());
-            return value;
+            AverageSizes values = new AverageSizes();
+
+#if tracing
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+#endif
+            try
+            {
+                values = await Http.GetFromJsonAsync<AverageSizes>($"{controllerUrl}getLtRatios/{seconds}");
+            }
+            catch { }
+
+#if tracing
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes Ratios values");
+#endif
+
+            return values;
         }
 
     }

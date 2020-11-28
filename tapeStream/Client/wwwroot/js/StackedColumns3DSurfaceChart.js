@@ -4,7 +4,7 @@
         type: 'column',
         //height: 600,
         backgroundColor: 'darkgray',
-            animation: false,
+            animation: true,
        options3d: {
             enabled: true,
             alpha: 15,
@@ -27,7 +27,7 @@
 
     plotOptions: {
         series: {
-            animation: false,
+            animation: true,
                 groupZPadding: 1,
                     depth: 25,
                         groupPadding: 0,
@@ -87,8 +87,8 @@
             title: {
             text: 'Price',
         },
-        min: 0,
-            max: 10,
+        //min: 0,
+        //    max: 10,
 
 plotBands:
         [
@@ -114,7 +114,6 @@ plotBands:
             }]
     },
     zAxis: {
-        reversed: true,
       min: 0,
             max: 100,
 

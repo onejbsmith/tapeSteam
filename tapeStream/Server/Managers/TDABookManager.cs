@@ -12,16 +12,24 @@ using tapeStream.Shared.Data;
 
 namespace tapeStream.Server.Data
 {
+    /// <summary>
+    /// Need to measure the propensity of the market at the moment 
+    /// looking at the magnitude, range and frequency of buys above the spread and sells below the spread
+    /// </summary>
     public class TDABookManager
 
     {
-        public static List<BookEntry> lstBookEntry = new List<BookEntry>();
+        public static List<BookEntry> lstALLBookEntry = new List<BookEntry>();
 
         public static List<BookDataItem> lstAsks = new List<BookDataItem>();
         public static List<BookDataItem> lstBids = new List<BookDataItem>();
         public static List<BookDataItem> lstSalesAtAsk = new List<BookDataItem>();
         public static List<BookDataItem> lstSalesAtBid = new List<BookDataItem>();
 
+        public static List<Dictionary<string, BookDataItem[]>> lstALLBookedTimeSales =
+            new List<Dictionary<string, BookDataItem[]>>();
+
+        public static Dictionary<DateTime, AverageSizes> dictAverageSizes = new Dictionary<DateTime, AverageSizes>();
         public static object lstBookData { get; private set; }
 
         public static async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
@@ -102,6 +110,8 @@ namespace tapeStream.Server.Data
 
             return it;
         }
+
+
         public static async Task<AverageSizes> getAverages(int seconds)
         {
 
@@ -151,6 +161,7 @@ namespace tapeStream.Server.Data
 
             /// Get the book data for the number of seconds
             Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
+
             var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
             var avgSizes = new AverageSizes()
             {
@@ -173,7 +184,6 @@ namespace tapeStream.Server.Data
                         avgSize = items.Average(item => item.Size);
                     }
                     avgSizes.averageSize.Add(name, avgSize);
-
                 }
 
                 JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, avgSizes, "LT filled avgSizes");
@@ -184,8 +194,45 @@ namespace tapeStream.Server.Data
                 //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
 
             }
+
+            if (seconds > 0)
+                dictAverageSizes.Add(DateTime.Now, avgSizes);
+
             await Task.CompletedTask;
             return avgSizes;
+        }
+
+        public static async Task<AverageSizes> getLtRatios(int seconds)
+        {
+
+
+            /// Get the book data for the number of seconds
+            Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
+
+
+
+            var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
+            var ratioSizes = new AverageSizes()
+            {
+                averageSize = new Dictionary<string, double>()
+            };
+
+            // JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, dictBookDataItem, $"LT dictBookDataItem ({seconds} seconds)",false);
+            /// Calc average for each data type
+            try
+            {
+                var bids =
+                var buys = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
+                var sells = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
+
+                ratioSizes.averageSize.Add("buys", buys);
+
+                ratioSizes.averageSize.Add("sells",  sells);
+            }
+            catch { }
+
+            await Task.CompletedTask;
+            return ratioSizes;
         }
 
         private static BookDataItem[] getBookDataItemArray(int seconds, long now, List<BookDataItem> lstItems)
@@ -425,7 +472,7 @@ namespace tapeStream.Server.Data
                     /// This sb the last book entry before the last time and sales
                     if (lastSale != null)
                     {
-                        var bookEntries = lstBookEntry.Where(be => be.time < lastSale.time);
+                        var bookEntries = lstALLBookEntry.Where(be => be.time < lastSale.time);
                         if (bookEntries.Any())
                             lastTime = bookEntries.Last().time;
                         else
@@ -492,32 +539,30 @@ namespace tapeStream.Server.Data
                 JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.lstAllSalesAtAsk, $"lstAllSalesAtAsk", false);
 
                 JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.lstAllSalesAtBid, $"lstAllSalesAtBid", false);
+                Dictionary<string, BookDataItem[]> dictBook = getBookData();
+
+                lstALLBookedTimeSales.Add(dictBook);
+
+                var newBookEntry = new BookEntry()
+                {
+                    time = bidEntry.time,
+                    dateTime = bidEntry.dateTime,
+                    bid = (float)bidEntry.Price,
+                    bidSize = (int)bidEntry.Size,
+                    ask = (float)askEntry.Price,
+                    askSize = (int)askEntry.Size,
+                    printsSize = printsSizes
+                };
+                lstALLBookEntry.Add(newBookEntry);
 
                 if (!TDAStreamerData.simulatorSettings.isSimulated)
                 {
-                    Dictionary<string, BookDataItem[]> it = getBookData();
-
-
-                    string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(it);
+                    string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(dictBook);
                     await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
 
                     /// We need the sales by Price for the chart
                     /// Need two series, salesAtBid, salesAtAsk
                     ///
-
-                    var newBookEntry = new BookEntry()
-                    {
-                        time = bidEntry.time,
-                        dateTime = bidEntry.dateTime,
-                        bid = (float)bidEntry.Price,
-                        bidSize = (int)bidEntry.Size,
-                        ask = (float)askEntry.Price,
-                        askSize = (int)askEntry.Size,
-                        printsSize = printsSizes
-                    };
-                    lstBookEntry.Add(newBookEntry);
-
-
                     json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
                     await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
                 }

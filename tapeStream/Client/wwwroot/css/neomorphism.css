@@ -22745,8 +22745,8 @@ button.section-slack:focus {
 .navbar-brand {
     font-size: 0.875rem;
     font-weight: 600;
-    text-transform: uppercase;
-}
+/*    text-transform: uppercase;
+*/}
 
 .navbar-brand img {
     height: 20px;

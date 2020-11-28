@@ -79,26 +79,45 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                 else {
                                                     chartInDiv = $("#" + chartDivName).highcharts();
 
-                                                    //var series = window.chartObj.series;
-                                                    //for (var i = 0; i < series.length; i++)
-                                                    //{
-                                                    //    chartInDiv.series[i].setData(series[i].data, false);
-                                                    //};
-                                                    //chartInDiv.redraw();
 
-                                                    chartInDiv.update(window.chartObj[chartDivName]);
+                                                    //if (chartDivName == "Surface3D") {
+                                                    //    for (var i = 0; i < chart["Surface3D"].series.length; i++) {
+                                                    //        chartInDiv.series[i].data.options = window.chartObj["Surface3D"].series[i].data;
+                                                    //    }
+                                                    //    chartInDiv.redraw();
+                                                    //    //chartInDiv.redraw();
+                                                    //    //chart["Surface3D"] = chartInDiv;
+                                                    //    //chart["Surface3D"].redraw();
 
-                                                    //chartInDiv.series = window.chartObj.series;
+                                                    //}
+                                                    //else {
+                                                        //debugger;
+                                                        //var series = window.chartObj.series;
+                                                        //for (var i = 0; i < series.length; i++)
+                                                        //{
+                                                        //    chartInDiv.series[i].setData(series[i].data, false);
+                                                        //};
+                                                        //chartInDiv.redraw();
+                                                        console.log(`2. ${chartDivName} window.getChartJson`);
 
-                                                    //chartInDiv.series.update(window.chartObj.series);
-                                                    //chart.series = (window.chartObj);
-                                                    //chart.series = 
-                                                    //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
-                                                    // debugger;
+                                                        //var axes = chartInDiv.axes;
 
-                                                    chartInDiv.redraw();
-                                                    chartInDiv.reflow();
-                                                    chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
+                                                        chartInDiv.update(window.chartObj[chartDivName]);
+
+                                                        //chartInDiv.axes = axes;
+
+                                                        //chartInDiv.series = window.chartObj.series;
+
+                                                        //chartInDiv.series.update(window.chartObj.series);
+                                                        //chart.series = (window.chartObj);
+                                                        //chart.series = 
+                                                        //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
+                                                        // debugger;
+
+                                                        //chartInDiv.redraw();
+                                                    //}
+                                                    //chartInDiv.reflow();
+                                                    //chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
 
 
                                                 }
@@ -109,9 +128,8 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                 //if (isFirstTime)
                                                 if (isFirstTime) {
                                                     var json = JSON.stringify(window.chartObj[chartDivName]);
-                                                    console.log(`2. ${chartDivName} window.getChartJson`);
                                                     console.log(json);
-                                                    window.getChartJson(chartDivName,json);
+                                                    window.getChartJson(chartDivName, json);
                                                     return json;
                                                 }
 

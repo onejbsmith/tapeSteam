@@ -6,27 +6,56 @@
 @using tapeStream.Client.Components.HighCharts
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
-
-<div id="resizer" style="min-width: 350px; min-height: 200px">
+<!--<div id="resizer" style="min-width: 350px; min-height: 200px">
     <div id="inner-resizer">
         <div id="container">
             <div class="mat-layout-grid">
                 <div class="mat-layout-grid-inner">
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-                        <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
-                    </div>
-                    @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                            <ClockGauge />
-                        </div>
+                    </div>-->
+@*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+        <ClockGauge />
+    </div>
 
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3"></div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1"></div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8"></div>*@
-                </div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3"></div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1"></div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8"></div>*@
+<!--</div>
             </div>
         </div>
     </div>
-</div>
+</div>-->
+
+<MatAccordion Multi="true">
+
+
+    <MatExpansionPanel >
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <StackedColumns3D bookData="@bookColData" />
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <tapeStream.Client.Components.BookColumnsChart symbol="@symbol" bookData="@bookColData" />
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+</MatAccordion>
 
 @code {
     string symbol = "QQQ";

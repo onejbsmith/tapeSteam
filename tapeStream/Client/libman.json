@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0",
   "defaultProvider": "cdnjs",
   "libraries": [
@@ -13,6 +13,10 @@
     {
       "library": "jquery-resize@1.1",
       "destination": "wwwroot/lib/jquery-resize/"
+    },
+    {
+      "library": "jqwidgets@11.0.0",
+      "destination": "wwwroot/lib/jqwidgets/"
     }
   ]
 }

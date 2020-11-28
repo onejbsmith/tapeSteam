@@ -15,7 +15,7 @@ namespace tapeStream.Shared.Services
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
         //string controllerUrl = "http://localhost:55540/api/Charts/";
-        string controllerUrl = "http://tapestream.com/api/Charts/";
+        string controllerUrl = "http://tapestreamserver.com/api/Charts/";
         public async Task<TDAChart.Bollinger> getBollingerBands()
         {
             try

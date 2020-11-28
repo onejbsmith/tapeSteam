@@ -4,54 +4,49 @@
         <RadzenAccordionItem Text="@showTitle" Icon="account_balance_wallet" Style="display:inline-flex">
 
             <div style="display:flex">
-                <span>
+                <MatCard>
                     Seconds to Aggregate: &nbsp;[@seconds]&nbsp;
                     <b style="display:flex">
                         <RadzenNumeric Min="0" Max="60" @bind-Value=@seconds timerClock />
                     </b>
-                </span>
-                <span>
-                    Alpha: &nbsp;[@alpha]&nbsp;
+                </MatCard>
+                <MatCard>
+                    Alpha:
                     <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@alpha Style="" />
-                </span>
-                <span>
-                    Beta: &nbsp;[@beta]&nbsp;
-                    <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@beta timerClock />
-                </span>
-                <span>
-                    Chart Depth: &nbsp;[@chartDepth]&nbsp;
-                    <RadzenNumeric Min="0" Max="6000" Step="10" @bind-Value=@chartDepth timerClock />
-                </span>
-                <span>
-                    Series Depth: &nbsp;[@seriesDepth]&nbsp;
-                    <RadzenNumeric Min="0" Max="100" Step="10" @bind-Value=@seriesDepth timerClock />
-                </span>
-                <span>
-                    Flat Map: &nbsp;[@isFlat]&nbsp;
-                    <RadzenCheckBox @bind-Value=@isFlat Style="position:relative;top:8px;margin:10px" />
-                </span>
 
-                <span>
-                    Time &amp; Sales Only: &nbsp;[@isTimeSalesOnly]&nbsp;
+                    Beta: 
+                    <RadzenNumeric Min="-180" Max="180" Step="10" @bind-Value=@beta timerClock />
+                </MatCard>
+                <MatCard>
+                    Chart Depth: 
+                    <RadzenNumeric Min="0" Max="6000" Step="10" @bind-Value=@chartDepth timerClock />
+      
+                    Series Depth: 
+                    <RadzenNumeric Min="0" Max="100" Step="10" @bind-Value=@seriesDepth timerClock />
+                </MatCard>
+                @*<MatCard>
+                    Flat Map: 
+                    <RadzenCheckBox @bind-Value=@isFlat Style="position:relative;top:8px;margin:10px" />
+ 
+                    Time &amp; Sales Only: 
                     <RadzenCheckBox @bind-Value=@isTimeSalesOnly Style="position:relative;top:8px;margin:10px" />
-                </span>
-                <span>
+                </MatCard>
+                <MatCard>
                     Max # of Prices:&nbsp;
                     <RadzenNumeric @bind-Value="@xAxisMaxCategories" TTValue="int" Min="10" Max="600" Step="5" Style="margin:10px;width:100px"></RadzenNumeric>
-                </span>
-                <span>
-                    Max Size Height:&nbsp;
+                </MatCard>*@
+                <MatCard>
+                    Max Y-Axis:&nbsp;
                     <RadzenNumeric @bind-Value="@yAxisMax" TValue="int" Min="0" Max="100000" Step="5000" Style="margin:10px;width:100px"></RadzenNumeric>
-                </span>
-                <span>
-                    Auto YAxis Max:&nbsp;
+      
+                    Auto Max:&nbsp;
                     <RadzenCheckBox @bind-Value="@yAxisMaxAutoReset" Style="margin:10px"></RadzenCheckBox>
-                </span>
-                <span>
-                    Short Long Seconds:&nbsp;
+                </MatCard>
+                <MatCard>
+                    Short / Long Seconds:&nbsp;
                     <RadzenNumeric @bind-Value="@shortSeconds" TValue="int" Min="0" Max="120" Step="5" Style="margin:10px;width:100px"></RadzenNumeric>
                     <RadzenNumeric @bind-Value="@longSeconds" TValue="int" Min="0" Max="3600" Step="10" Style="margin:10px;width:100px"></RadzenNumeric>
-                </span>
+                </MatCard>
             </div>
 
 
@@ -78,14 +73,10 @@
 /*        zoom:1.25;
 */    }
 
-    span {
+    .span {
         color: #333;
         display:  inline-grid;
         grid-column-gap: 10px;
-        background-color: gainsboro;
-        margin-right: 10px;
-        padding:10px;
-        zoom:0.75;
     }
 
     .ui-accordion-toggle-icon.pi  {
@@ -98,6 +89,17 @@
         padding: 0px;
     }
 
+    .mdc-card {
+        background-color: gainsboro;
+        margin-right: 10px;
+        padding: 10px;
+        zoom: 0.75;
+    }
+
+/*    .mdc-chip__checkmark-svg {
+        position: relative;
+        bottom: 10px;
+    }*/
 
 /*    .pi {
         vertical-align: top;

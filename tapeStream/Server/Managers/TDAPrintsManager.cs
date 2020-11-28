@@ -128,7 +128,7 @@ namespace tapeStream.Server.Data
             {
                 /// t.Key is Quote date and time, we want last quote before t&s time
                 ///                 
-                var book = TDABookManager.lstBookEntry.Where(be => be.time < timeAndSales.time).Last();
+                var book = TDABookManager.lstALLBookEntry.Where(be => be.time < timeAndSales.time).Last();
 
                 //browserService._js.GroupTable(book,"book");
                 //          JsConsole.JsConsole.GroupTable(jSRuntime, book, "bbok");

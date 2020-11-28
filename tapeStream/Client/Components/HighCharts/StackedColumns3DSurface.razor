@@ -1,8 +1,8 @@
 ﻿@*<h3>Surface.StackedColumns3DSurface</h3>*@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Client.Components.HighCharts.Base
-@using MatBlazor
 @using tapeStream.Shared.Data
+@using tapeStream.Client.Managers
 
 
 @*@name;*@
@@ -29,9 +29,9 @@
         </MatChipSet>
         <span><RadzenButton Click="ResetXAxis">Reset X-Axis</RadzenButton></span>
         <span>
-            Height: &nbsp;[@height]&nbsp;
+            Height: &nbsp;[@Surface3dManager.height]&nbsp;
 
-            <RadzenNumeric Style="zoom:1.25;margin:0" Min="300" Max="1500" Step="100" @bind-Value=@height timerClock />
+            <RadzenNumeric Style="zoom:1.25;margin:0" Min="300" Max="1500" Step="100" @bind-Value=@Surface3dManager.height timerClock />
         </span>
         <span>
             Redraw:&nbsp;
@@ -61,16 +61,29 @@
         <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>@(TDAChart.avgBuys.ToString("n0"))</h3> </MatPaper>
         <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>@(TDAChart.avgSells.ToString("n0"))</h3> </MatPaper>
         <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>+@(TDAChart.countBuysUp.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>+@(TDAChart.countSellsUp.ToString("n0"))</h3> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>+@(TDAChart.countSellRatioUp.ToString("n0"))</h3> </MatPaper>
+    </div>  
+    @*<MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>
+        <MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>*@
+
+</div>
+<div style="display:flex">
+    <div style="float:right;display:inline-flex">
+        <MatPaper Elevation="24" style="background-color:@bidsLtColor;margin-left:10px"><h4>@(TDAChart.avgLtBuysRatio.ToString("n2"))</h4> </MatPaper>
+        @*<MatPaper Elevation="24" style="background-color:@asksLtColor;"><h4>@(TDAChart.avgLtSellsRatio.ToString("n2"))</h4> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h4>@(TDAChart.avgBuysRatio.ToString("n2"))</h4> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksColor;"><h4>@(TDAChart.avgSellsRatio.ToString("n2"))</h4> </MatPaper>*@
+        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h4>+@(TDAChart.countBuysRatioUp.ToString("n0"))</h4> </MatPaper>
+        <MatPaper Elevation="24" style="background-color:@asksColor;"><h4>+@(TDAChart.countSellsRatioUp.ToString("n0"))</h4> </MatPaper>
     </div>
     @*<MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>
         <MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>*@
 
 </div>
 
-<div class="resizer" style="min-width: 350px; min-height: 200px">
+@*<div class="resizer" style="min-width: 350px; min-height: 200px">
     <div id="inner-resizer">
-        <div id="container">
+        <div id="container">*@
             <div>
                 @* Injects the data and redraws the chart *@
                 <HighChart id="@id"
@@ -81,9 +94,9 @@
                            redrawChart="SurfaceChartConfigurator.redrawChart" />
 
             </div>
-        </div>
+        @*</div>
     </div>
-</div>
+</div>*@
 
 @*</div>*@
 <style>
@@ -106,6 +119,8 @@
     .mat-layout-grid {
         padding: 0;
     }
+
+
 </style>
 
 @code

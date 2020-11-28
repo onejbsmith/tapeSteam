@@ -116,8 +116,8 @@ namespace tapeStream.Client.Components.HighCharts
         {
              public string[] categories { get; set; }
            public Title2 title { get; set; }
-            public double min { get; set; }
-            public double max { get; set; }
+            //public double min { get; set; }
+            //public double max { get; set; }
             public Plotband[] plotBands { get; set; }
             public Plotline[] plotLines { get; set; }
             public bool reversed { get; set; }

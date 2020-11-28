@@ -11,6 +11,44 @@ namespace tapeStream.Shared.Data
         public static Chart_Content[] ohlcs;
         public static Chart_Content[] lastCandles;
 
+        public static double avgBuysRatio;
+        public static double avgSellsRatio;
+        public static double avgLtBuysRatio;
+        public static double avgLtSellsRatio;
+
+
+
+        private static AverageSizes _avgRatios;
+        public static AverageSizes avgRatios
+        {
+            get { return _avgRatios; }
+            set
+            {
+                _avgRatios = value;
+                if (value.averageSize.ContainsKey("buys"))
+                    avgBuysRatio = value.averageSize["buys"];
+                if (value.averageSize.ContainsKey("sells"))
+                    avgBuysRatio = value.averageSize["sells"];
+            }
+        }
+        private static AverageSizes _avgLtRatios;
+        public static AverageSizes avLtRatios
+        {
+            get { return _avgLtRatios; }
+            set
+            {
+                _avgLtRatios = value;
+                if (value.averageSize.ContainsKey("buys"))
+                    avgLtBuysRatio = value.averageSize["buys"];
+                if (value.averageSize.ContainsKey("sells"))
+                    avgLtSellsRatio = value.averageSize["sells"];
+            }
+        }
+        public static AverageSizes avgStRatios { get; set; }
+        public static AverageSizes avgLtRatios { get; set; }
+        public static int countBuysRatioUp;
+        public static int countSellsRatioUp;
+
         public static Chart_Content lastCandle { get; set; }
 
         public class Bollinger
@@ -43,7 +81,7 @@ namespace tapeStream.Shared.Data
         public static decimal avgLtSells { get; set; }
         public static decimal avgLtBuys { get; set; }
 
-        public static int countSellsUp { get; set; }
+        public static int countSellRatioUp { get; set; }
 
         public static int countBuysUp { get; set; }
 

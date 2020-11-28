@@ -73,6 +73,7 @@
     <Content Remove="wwwroot\js\JSInterop.min.js" />
     <Content Remove="wwwroot\js\StackedColumns-3D.razor.js" />
     <Content Remove="wwwroot\js\StackedColumns3D.razor.js" />
+    <Content Remove="wwwroot\web.config" />
   </ItemGroup>
 
   <ItemGroup>
@@ -98,6 +99,8 @@
     <PackageReference Include="Blazorise" Version="0.9.1.2" />
     
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.1.2" />
+    
+    <PackageReference Include="jQWidgets.Blazor" Version="1.2.0" />
     
     <PackageReference Include="MatBlazor" Version="2.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />

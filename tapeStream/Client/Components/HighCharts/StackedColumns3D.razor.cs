@@ -86,11 +86,14 @@ namespace tapeStream.Client.Components.HighCharts
             chart.plotOptions.column.grouping = false;
             chart.yAxis.max = ChartConfigure.yAxisHigh;
 
-            lstPrices = localStorage.GetItem<List<string>>("lstPrices").Skip(lstPrices.Count()-20).Take(20).ToList();
+            var local = localStorage.GetItem<List<string>>("lstPrices");
+            if (local != null && local.Count > 0)
+                lstPrices = local.Skip(lstPrices.Count() - 20).Take(20).ToList();
 
             //chart.plotOptions.series.pointWidth = 100;
 
             chartJson = JsonSerializer.Serialize<StackedColumns3DChart>(chart);
+            ChartConfigure.redrawChart = true;
 #if tracing            
             Console.WriteLine("2. Columns getChartJson");
 #endif
@@ -197,9 +200,9 @@ namespace tapeStream.Client.Components.HighCharts
 
         private static void Chart_AddSpreadPlotBand(Dictionary<string, BookDataItem[]> bookDataItems, string[] categories)
         {
-                   var highBidPrice = bookDataItems["bids"][0].Price;
+            var highBidPrice = bookDataItems["bids"][0].Price;
             var lowAskPrice = bookDataItems["asks"][0].Price;
-     var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
+            var highBid = categories.ToList().IndexOf(bookDataItems["bids"][0].Price.ToString("n2"));
             var lowAsk = categories.ToList().IndexOf(bookDataItems["asks"][0].Price.ToString("n2"));
 
             chart.xAxis.plotBands = new Plotband[]
