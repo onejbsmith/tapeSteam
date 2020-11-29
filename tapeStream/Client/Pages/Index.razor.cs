@@ -1,4 +1,4 @@
-﻿#define tracing
+﻿#undef tracing
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -22,6 +22,7 @@ namespace tapeStream.Client.Pages
 {
     public partial class Index
     {
+
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] ChartService chartService { get; set; }
@@ -67,6 +68,8 @@ namespace tapeStream.Client.Pages
 
         private async Task GetBookColumnsData(int seconds)
         {
+
+
             timerBookColumnsCharts.Stop();
             await Task.Yield();
             bookColData = await bookColumnsService.getBookColumnsData(seconds);
@@ -76,15 +79,20 @@ namespace tapeStream.Client.Pages
             var avgLtSizes = await bookColumnsService.getAverages(0, jsruntime);
 
             var avgRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.longSeconds, jsruntime);
-            var avgStRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.shortSeconds, jsruntime);
-            var avgLtRatios = await bookColumnsService.getRatios(0, jsruntime);
+            await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgRatios, "avgRatios");
 
+            var avgStRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.shortSeconds, jsruntime);
+            await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgStRatios, "avgStRatios");
+
+            var avgLtRatios = await bookColumnsService.getRatios(0, jsruntime);
+            await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgLtRatios, "avgLtRatios");
 
             TDAChart.bollingerBands = await chartService.getBollingerBands();
             TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
             TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
             TDAChart.svcDateTimeRaw = TDAChart.svcDateTimeRaw.Replace("\"", "");
             TDAChart.svcDateTime = Convert.ToDateTime(TDAChart.svcDateTimeRaw);
+            TDAChart.LongDateString = TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
 
             //foreach (var name in avgSizes.averageSize.Keys)
             //    if (avgSizes.averageSize[name] > 0)
@@ -103,15 +111,33 @@ namespace tapeStream.Client.Pages
             TDAChart.avgLtRatios = avgLtRatios;
 
             var avgBuys = 0d;
-            if (avgSizes.averageSize.ContainsKey("buys"))
-                avgBuys = avgSizes.averageSize["buys"];
+            if (avgRatios.averageSize.ContainsKey("buys"))
+            {
+                avgBuys = avgRatios.averageSize["buys"];
+                TDAChart.avgBuysRatio = avgBuys;
+            }
 
             var avgSells = 0d;
-            if (avgSizes.averageSize.ContainsKey("sells"))
-                avgSells = avgSizes.averageSize["sells"];
+            if (avgRatios.averageSize.ContainsKey("sells"))
+            {
+                avgSells = avgRatios.averageSize["sells"];
+                TDAChart.avgSellsRatio = avgSells;
+            }
+
+            if (avgLtRatios.averageSize.ContainsKey("buys"))
+            {
+                TDAChart.avgLtBuysRatio = avgLtRatios.averageSize["buys"];
+            }
+
+            if (avgLtRatios.averageSize.ContainsKey("sells"))
+            {
+                TDAChart.avgLtSellsRatio = avgLtRatios.averageSize["sells"];
+            }
+
+
 
             TDAChart.countBuysRatioUp += avgBuys > avgSells ? 1 : 0;
-            TDAChart.countSellRatioUp += avgSells > avgBuys ? 1 : 0;
+            TDAChart.countSellsRatioUp += avgSells > avgBuys ? 1 : 0;
 
             //TDAChart.lastCandles = await chartService.getLastCandles(2);
             await Task.Delay(100);

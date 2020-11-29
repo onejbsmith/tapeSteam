@@ -1,0 +1,29 @@
+﻿@*<h3>LinesChart</h3>*@
+
+
+@using tapeStream.Client.Components.HighCharts.Base
+@using MatBlazor
+@using tapeStream.Shared.Data
+
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject HttpClient _client
+
+<figure class="highcharts-figure">
+    <div id="container">
+        <HighChart id="@id"
+                   chartJson="@chartJson"
+                   updateMode="@HighChart.DataUpdateMode.Replace"
+                   chartJsFilename="@chartJsFilename"
+                   redrawChart="@redraw" />
+    </div>
+</figure>
+
+<style>
+    #LinesChart, .highcharts-container {
+        overflow: visible !important;
+    }
+</style>
+
+@code {
+
+}

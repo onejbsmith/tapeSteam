@@ -84,6 +84,8 @@ namespace tapeStream.Shared.Data
         public static int countSellRatioUp { get; set; }
 
         public static int countBuysUp { get; set; }
+        public static int countSellsUp { get; set; }
+        public static string LongDateString { get; set; }
 
         public class Chart_Content
         {

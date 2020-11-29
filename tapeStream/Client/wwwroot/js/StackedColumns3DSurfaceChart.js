@@ -2,24 +2,24 @@
 {
     chart: {
         type: 'column',
-        //height: 600,
-        backgroundColor: 'darkgray',
-            animation: true,
-       options3d: {
+            //height: 600,
+            backgroundColor: 'darkgray',
+                animation: true,
+                    options3d: {
             enabled: true,
-            alpha: 15,
-            beta: 15,
-            depth: 600,
-            panning: {
+                alpha: 15,
+                    beta: 15,
+                        depth: 600,
+                            panning: {
                 enabled: true,
-                type: 'xy'
+                    type: 'xy'
             },
             panKey: 'shift',
-            viewDistance: 500,
-            frame: {
+                viewDistance: 500,
+                    frame: {
                 bottom: {
                     size: 1,
-                    color: 'rgba(0,0,0,0.05)'
+                        color: 'rgba(0,0,0,0.05)'
                 }
             }
         }
@@ -90,7 +90,7 @@
         //min: 0,
         //    max: 10,
 
-plotBands:
+        plotBands:
         [
             {                               /// mark the weekend
                 color: '#FCFFC5',
@@ -114,7 +114,7 @@ plotBands:
             }]
     },
     zAxis: {
-      min: 0,
+        min: 0,
             max: 100,
 
                 labels: {

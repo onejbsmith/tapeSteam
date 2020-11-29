@@ -53,50 +53,28 @@
     </div>
 </div>
 
-<div style="display:flex">
-    <SurfaceChartConfigurator title="" symbol="@symbol" />
-    <div style="float:right;display:inline-flex">
-        <MatPaper Elevation="24" style="background-color:@bidsLtColor;margin-left:10px"><h3>@(TDAChart.avgLtBuys.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksLtColor;"><h3>@(TDAChart.avgLtSells.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>@(TDAChart.avgBuys.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>@(TDAChart.avgSells.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h3>+@(TDAChart.countBuysUp.ToString("n0"))</h3> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksColor;"><h3>+@(TDAChart.countSellRatioUp.ToString("n0"))</h3> </MatPaper>
-    </div>  
-    @*<MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>
-        <MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>*@
 
-</div>
-<div style="display:flex">
-    <div style="float:right;display:inline-flex">
-        <MatPaper Elevation="24" style="background-color:@bidsLtColor;margin-left:10px"><h4>@(TDAChart.avgLtBuysRatio.ToString("n2"))</h4> </MatPaper>
-        @*<MatPaper Elevation="24" style="background-color:@asksLtColor;"><h4>@(TDAChart.avgLtSellsRatio.ToString("n2"))</h4> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h4>@(TDAChart.avgBuysRatio.ToString("n2"))</h4> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksColor;"><h4>@(TDAChart.avgSellsRatio.ToString("n2"))</h4> </MatPaper>*@
-        <MatPaper Elevation="24" style="background-color:@bidsColor;"><h4>+@(TDAChart.countBuysRatioUp.ToString("n0"))</h4> </MatPaper>
-        <MatPaper Elevation="24" style="background-color:@asksColor;"><h4>+@(TDAChart.countSellsRatioUp.ToString("n0"))</h4> </MatPaper>
-    </div>
-    @*<MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>
-        <MatPaper Elevation="@avgLtBuys" style="background-color:@bidsLtColor;"><h3>24</h3> </MatPaper>*@
+<SurfaceChartConfigurator title="" symbol="@symbol" />
 
-</div>
 
 @*<div class="resizer" style="min-width: 350px; min-height: 200px">
     <div id="inner-resizer">
         <div id="container">*@
-            <div>
-                @* Injects the data and redraws the chart *@
-                <HighChart id="@id"
-                           chartJson="@chart3Djson"
-                           chartSeriesJson="@chartSeriesJson"
-                           updateMode="@HighChart.DataUpdateMode.Replace"
-                           chartJsFilename="@chartJsFilename"
-                           redrawChart="SurfaceChartConfigurator.redrawChart" />
+<Stats bookData="@bookData" />
+<div>
+    @* Injects the data and redraws the chart *@
+    <HighChart id="@id"
+               chartJson="@chart3Djson"
+               chartSeriesJson="@chartSeriesJson"
+               updateMode="@HighChart.DataUpdateMode.Replace"
+               chartJsFilename="@chartJsFilename"
+               redrawChart="SurfaceChartConfigurator.redrawChart" />
 
-            </div>
-        @*</div>
-    </div>
-</div>*@
+</div>
+
+@*</div>
+        </div>
+    </div>*@
 
 @*</div>*@
 <style>
@@ -104,23 +82,6 @@
     span {
         display: inline-flex;
     }
-
-    matpaper {
-        text-align: center;
-        margin: 5px 10px 5px 0px;
-        height: 52px;
-    }
-
-    h3 {
-        padding: 10px;
-        color: #EEEEEE;
-    }
-
-    .mat-layout-grid {
-        padding: 0;
-    }
-
-
 </style>
 
 @code

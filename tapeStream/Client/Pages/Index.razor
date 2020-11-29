@@ -1,35 +1,35 @@
 ﻿@page "/"
 
-
+@using tapeStream.Shared.Data
+@using tapeStream.Client.Managers
 @using MatBlazor;
 
 @using tapeStream.Client.Components.HighCharts
+@using tapeStream.Client.Components
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
-<!--<div id="resizer" style="min-width: 350px; min-height: 200px">
-    <div id="inner-resizer">
-        <div id="container">
-            <div class="mat-layout-grid">
-                <div class="mat-layout-grid-inner">
-                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-                    </div>-->
-@*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-        <ClockGauge />
-    </div>
-
-    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3"></div>
-    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1"></div>
-    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8"></div>*@
-<!--</div>
+@*<div id="resizer" style="min-width: 350px; min-height: 200px">
+        <div id="inner-resizer">
+            <div id="container">
             </div>
         </div>
-    </div>
-</div>-->
+    </div>*@
+
+
+
 
 <MatAccordion Multi="true">
 
+    @*<MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Stats</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <Stats />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>*@
 
-    <MatExpansionPanel >
+    <MatExpansionPanel>
         <MatExpansionPanelSummary>
             <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
         </MatExpansionPanelSummary>
@@ -52,12 +52,24 @@
             <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
         </MatExpansionPanelSummary>
         <MatExpansionPanelDetails>
-            <tapeStream.Client.Components.BookColumnsChart symbol="@symbol" bookData="@bookColData" />
+            <div class="mat-layout-grid">
+                <div class="mat-layout-grid-inner">
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                        <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
+                    </div>
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
+                        <LinesChart />
+                    </div>
+                </div>
+            </div>
         </MatExpansionPanelDetails>
     </MatExpansionPanel>
 </MatAccordion>
 
+
 @code {
     string symbol = "QQQ";
+
 
 }

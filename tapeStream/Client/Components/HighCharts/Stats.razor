@@ -1,0 +1,101 @@
+﻿@*<h3>Stats</h3>*@
+@using tapeStream.Client.Components.HighCharts.Base
+@using tapeStream.Shared.Data
+@using tapeStream.Client.Managers
+
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsLtColor"><h3>@(TDAChart.avgLtBuys.ToString("n0"))</h3> </MatCard>
+
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@asksLtColor"><h3>@(TDAChart.avgLtSells.ToString("n0"))</h3> </MatCard>
+
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsColor"><h3>@(TDAChart.avgBuys.ToString("n0"))</h3> </MatCard>
+
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@asksColor"><h3>@(TDAChart.avgSells.ToString("n0"))</h3> </MatCard>
+
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsColor"><h3>+@(TDAChart.countBuysUp.ToString("n0"))</h3> </MatCard>
+
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+
+            <MatCard Style="@asksColor"><h3>+@(TDAChart.countSellRatioUp.ToString("n0"))</h3> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6"></div>
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsLtColor"><h4>@(TDAChart.avgLtBuysRatio.ToString("n2"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@asksLtColor"><h4>@(TDAChart.avgLtSellsRatio.ToString("n2"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsColor"><h4>@(TDAChart.avgBuysRatio.ToString("n2"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@asksColor"><h4>@(TDAChart.avgSellsRatio.ToString("n2"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@bidsColor"><h4>+@(TDAChart.countBuysRatioUp.ToString("n0"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+            <MatCard Style="@asksColor"><h4>+@(TDAChart.countSellsRatioUp.ToString("n0"))</h4> </MatCard>
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6"></div>
+    </div>
+</div>
+
+<style>
+        /*    matcard {
+            text-align: center;
+            margin: 0px 5px 0px 0px;
+            height: 52px;
+        }*/
+
+        h3, h4 {
+            padding: 10px;
+            color: #EEEEEE;
+        }
+
+        .mat-layout-grid {
+            padding: 0;
+        }
+
+        .mdc-card {
+            /*        margin-right: 10px;
+            padding: 10px;
+    */ 
+            zoom: 0.75;
+            width: 90px;
+        }
+</style>
+@code {
+    string asksColor = "background-color:#8085e9"; //"background-color:#cb6992";
+    string bidsColor = "background-color:#0479cc";
+    string asksLtColor = "background-color:#5055b9"; //"background-color:#cb6992";
+    string bidsLtColor = "background-color:#0439ac";
+    string buysColor = "background-color:#90ed7d";
+    string sellsColor = "background-color:#f45b5b";
+    string spreadColor = "background-color:#8085e9";
+
+    [Parameter]
+    public Dictionary<string, BookDataItem[]> bookData
+    {
+        get { return _bookData; }
+        set
+        {
+            _bookData = value;
+            StateHasChanged();
+        }
+    }
+    private Dictionary<string, BookDataItem[]> _bookData;
+}

@@ -221,7 +221,6 @@ namespace tapeStream.Server.Data
             /// Calc average for each data type
             try
             {
-                var bids =
                 var buys = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
                 var sells = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
 

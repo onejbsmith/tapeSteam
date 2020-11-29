@@ -73,9 +73,9 @@ namespace tapeStream.Client.Components.HighCharts
             /// get the chart as a POCO 
 #if tracing
             Console.WriteLine("1. Columns getChartJson");
+            Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
 #endif
 
-            Console.WriteLine("getChartJson(string jsonResponse)"); /// to capture the chart object's json from js
             chart = JsonSerializer.Deserialize<StackedColumns3DChart>(jsonResponse);
 
             /// We set some static chart Properties here and pass back to js
@@ -414,7 +414,8 @@ namespace tapeStream.Client.Components.HighCharts
 
             var x = new List<string>();
             if (lstPrices.Count == 0)
-                lstPrices = localStorage.GetItem<List<string>>("lstPrices");
+                if (localStorage.ContainKey("lstPrices"))
+                    lstPrices = localStorage.GetItem<List<string>>("lstPrices");
             /// Set up the Categories list
             //var lstPrices = new List<string>();
             foreach (var name in seriesOrder)

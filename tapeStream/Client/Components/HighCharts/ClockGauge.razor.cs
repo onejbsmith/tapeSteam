@@ -1,4 +1,4 @@
-﻿#define tracing
+﻿#undef tracing
 
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;

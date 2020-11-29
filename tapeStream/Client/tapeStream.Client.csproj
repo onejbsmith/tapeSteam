@@ -68,7 +68,6 @@
     <Content Remove="Pages\Counter.razor" />
     <Content Remove="Pages\Filer.razor" />
     <Content Remove="Pages\TDAclient.razor" />
-    <Content Remove="wwwroot\appsettings.json" />
     <Content Remove="wwwroot\js\JSInterop.js" />
     <Content Remove="wwwroot\js\JSInterop.min.js" />
     <Content Remove="wwwroot\js\StackedColumns-3D.razor.js" />

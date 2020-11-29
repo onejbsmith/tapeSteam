@@ -198,8 +198,8 @@ namespace tapeStream.Client.Components.HighCharts
                 //Surface3dManager.chart.xAxis.max = categories.Count();
                 Surface3dManager.chart.xAxis.categories = categories;
 
-                Surface3dManager.chart.title.text = SurfaceChartConfigurator.showTitle;
-                Surface3dManager.chart.subtitle.text = TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
+                //Surface3dManager.chart.title.text = SurfaceChartConfigurator.showTitle;
+                Surface3dManager.chart.title.text = TDAChart.LongDateString;
 
 
                 //TDAChart.svcDateTime.ToLongDateString() + " " + TDAChart.svcDateTime.ToLongTimeString();
