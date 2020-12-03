@@ -56,17 +56,39 @@
                 <div class="mat-layout-grid-inner">
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
                         <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
-                    </div>
-                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />
-                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
-                        <LinesChart />
-                    </div>
+                    </div> 
+                    @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />*@
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                    @*<LinesChart />*@
+                    <RatiosChart ratioFrames="@_ratioFrames" buysField="buysTradeSizes" />
+                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysRatio" />
+                </div>
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                    @*<LinesChart />*@
+                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysPriceCount" />
+                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false"  buysField="asksBookSizes"/>
+                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysR" />
+                </div>
                 </div>
             </div>
         </MatExpansionPanelDetails>
     </MatExpansionPanel>
-</MatAccordion>
 
+
+
+</MatAccordion>
+<style>
+
+
+
+    .mdc-layout-grid__inner, .mat-layout-grid-inner {
+        display: grid;
+        margin: 0;
+        grid-gap: 4px;
+        /* grid-gap: var(--mdc-layout-grid-gutter-desktop, 4px); */
+        grid-template-columns: repeat(12, minmax(0, .072fr));
+    }
+</style>
 
 @code {
     string symbol = "QQQ";

@@ -16,7 +16,12 @@ namespace tapeStream.Shared.Data
         public static double avgLtBuysRatio;
         public static double avgLtSellsRatio;
 
+        public static List<float> lstMarkPrices { get; set; } = new List<float>();
+        public static List<float> lstBuysRatios { get; set; } = new List<float>();
+        public static List<float> lstSellsRatios { get; set; } = new List<float>();
+        public static List<string> lstSvcTimes { get; set; } = new List<string>();
 
+        public static string svcDate = DateTime.Now.ToLongDateString();
 
         private static AverageSizes _avgRatios;
         public static AverageSizes avgRatios
@@ -25,10 +30,13 @@ namespace tapeStream.Shared.Data
             set
             {
                 _avgRatios = value;
-                if (value.averageSize.ContainsKey("buys"))
-                    avgBuysRatio = value.averageSize["buys"];
-                if (value.averageSize.ContainsKey("sells"))
-                    avgBuysRatio = value.averageSize["sells"];
+                if (value.averageSize != null)
+                {
+                    if (value.averageSize.ContainsKey("buys"))
+                        avgBuysRatio = value.averageSize["buys"];
+                    if (value.averageSize.ContainsKey("sells"))
+                        avgBuysRatio = value.averageSize["sells"];
+                }
             }
         }
         private static AverageSizes _avgLtRatios;

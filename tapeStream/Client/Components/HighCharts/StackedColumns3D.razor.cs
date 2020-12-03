@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
+using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Components.HighCharts
@@ -452,18 +453,18 @@ namespace tapeStream.Client.Components.HighCharts
         private static Dictionary<string, string> SetSeriesColors()
         {
             Dictionary<string, string> dictSeriesColor = new Dictionary<string, string>();
-            string asksColor = "#8085e9"; //"#cb6992";
-            string bidsColor = "#0479cc";
-            string buysColor = "#90ed7d";
-            string sellsColor = "#f45b5b";
-            string spreadColor = "#8085e9";
+            //string asksColor = "#8085e9"; //"#cb6992";
+            //string bidsColor = "#0479cc";
+            //string buysColor = "#90ed7d";
+            //string sellsColor = "#f45b5b";
+            //string spreadColor = "#8085e9";
             dictSeriesColor = new Dictionary<string, string>()
             {
-                { "asks", asksColor } ,
-                { "bids", bidsColor } ,
-                { "salesAtAsk", buysColor } ,
-                { "salesAtBid", sellsColor },
-                { "spread", spreadColor }
+                { "asks", CONSTANTS.asksColor } ,
+                { "bids", CONSTANTS.bidsColor } ,
+                { "salesAtAsk", CONSTANTS.buysColor } ,
+                { "salesAtBid", CONSTANTS.sellsColor },
+                { "spread", CONSTANTS.spreadColor }
             };
             return dictSeriesColor;
         }

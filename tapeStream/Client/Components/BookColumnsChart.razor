@@ -1,6 +1,7 @@
 ﻿@*<h3>BookColumnsChart</h3>*@
 @using tapeStream.Client.Data
 @using tapeStream.Shared.Data
+@using tapeStream.Shared
 
 <div style="margin-bottom:10px;font-weight:800;">
     <span>@TDAChart.LongDateString</span>
@@ -26,15 +27,17 @@
                 GaugeTickPosition tickPosition = GaugeTickPosition.Inside;
             }*@
     </div>
-    <tapeStream.Client.Components.HighCharts.Stats bookData="@bookData" />
+    <div class="ratioStats">
+        <tapeStream.Client.Components.HighCharts.Stats bookData="@bookData" />
+    </div>
     <RadzenChart @ref="myChart">
         <RadzenColumnSeries Title="Bidders&nbsp;&nbsp;" Data="@bidData" CategoryProperty="Price" LineType="LineType.Solid"
-                            ValueProperty="Size" />
-        <RadzenColumnSeries Title="Sellers&nbsp;&nbsp;" Data="@salesAtBidData" CategoryProperty="Price" Fill="crimson"
+                            ValueProperty="Size" Fill="@CONSTANTS.bidsColor" />
+        <RadzenColumnSeries Title="Sellers&nbsp;&nbsp;" Data="@salesAtBidData" CategoryProperty="Price" Fill="@CONSTANTS.sellsColor"
                             ValueProperty="Size" />        <RadzenCategoryAxis FormatString="{0:n2}" StrokeWidth="6" />
-        <RadzenColumnSeries Title="Buyers&nbsp;&nbsp;" Data="@salesAtAskData" CategoryProperty="Price" Fill="limegreen"
+        <RadzenColumnSeries Title="Buyers&nbsp;&nbsp;" Data="@salesAtAskData" CategoryProperty="Price" Fill="@CONSTANTS.buysColor"
                             ValueProperty="Size" />        <RadzenCategoryAxis FormatString="{0:n2}" StrokeWidth="6" />
-        <RadzenColumnSeries Title="Askers" Data="@askData" CategoryProperty="Price"
+        <RadzenColumnSeries Title="Askers" Data="@askData" CategoryProperty="Price" Fill="@CONSTANTS.asksColor"
                             ValueProperty="Size" />
 
 
@@ -58,6 +61,20 @@
 
 </div>
 
+<style>
+
+    /*    span {
+        display: inline-flex;
+    }*/
+
+    .ratioStats > .mat-layout-grid > .mat-layout-grid-inner {
+        display: grid;
+        margin: 0;
+        grid-gap: 4px;
+        /* grid-gap: var(--mdc-layout-grid-gutter-desktop, 4px); */
+        grid-template-columns: repeat(12, minmax(0, .072fr));
+    }
+</style>
 @*@if (!isPrintsSize)
     {
     <div style="white-space: nowrap;">

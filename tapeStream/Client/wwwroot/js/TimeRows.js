@@ -1,6 +1,6 @@
 ﻿{
     chart: {
-        type: 'column'
+        type: 'line'
     },
     title: {
         text: 'Live Data (Rows JSON)'

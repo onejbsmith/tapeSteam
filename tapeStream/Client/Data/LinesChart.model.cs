@@ -111,16 +111,16 @@ namespace tapeStream.Client.Data
 
         public class Yaxi1
         {
-            public Labels1 labels { get; set; }
+            public int gridLineWidth { get; set; }
             public Title1 title { get; set; }
+            public Labels1 labels { get; set; }
             public bool opposite { get; set; }
             public int index { get; set; }
-            public int gridLineWidth { get; set; }
         }
 
-        public class Labels1
+        public class Title1
         {
-            public string format { get; set; }
+            public string text { get; set; }
             public Style style { get; set; }
         }
 
@@ -129,9 +129,9 @@ namespace tapeStream.Client.Data
             public string color { get; set; }
         }
 
-        public class Title1
+        public class Labels1
         {
-            public string text { get; set; }
+            public string format { get; set; }
             public Style1 style { get; set; }
         }
 
@@ -160,7 +160,6 @@ namespace tapeStream.Client.Data
         {
             public bool enabled { get; set; }
         }
-
 
     }
 }

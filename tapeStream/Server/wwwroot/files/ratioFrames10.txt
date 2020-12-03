@@ -1,0 +1,2 @@
+﻿dateTime,buysRatio,markPrice,sellsRatio
+09-30-41-05,2.120612352062043,298.11,3.3509700176366843

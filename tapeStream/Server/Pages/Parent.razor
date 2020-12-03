@@ -1,0 +1,10 @@
+﻿[Parent.razor]
+@page "/ParentComponent"
+
+<h1>Parent Component</h1>
+
+<ChildComponent1 @bind-value:event:="_password" />
+
+@code {
+    private string _password;
+}

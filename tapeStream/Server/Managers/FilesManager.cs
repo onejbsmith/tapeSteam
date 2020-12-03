@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using CsvHelper;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using tapeStream.Server.Data.classes;
 
@@ -140,8 +142,40 @@ namespace tapeStream.Server.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="dataType"></param>
         /// <param name="symbol"></param>
-        public static void CreateCSVFile<T>(string dataType, string symbol)
-        { }
+
+        public static void WriteNewCsvFile<T>(string path, List<T> data)
+        {
+            using (StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(true)))
+            using (CsvWriter cw = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                cw.WriteHeader<T>();
+                cw.NextRecord();
+                foreach (T item in data)
+                {
+                    cw.WriteRecord<T>(item);
+                    cw.NextRecord();
+                }
+            }
+        }
+
+        public static string GetNewCsvString<T>(List<T> data)
+        {
+            var ms = new MemoryStream();
+            using (StreamWriter sw = new StreamWriter(ms))
+            using (CsvWriter cw = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                cw.WriteHeader<T>();
+                cw.NextRecord();
+                foreach (T item in data)
+                {
+                    cw.WriteRecord<T>(item);
+                    cw.NextRecord();
+                }
+            }
+            StreamReader reader = new StreamReader(ms);
+            string text = reader.ReadToEnd();
+            return text;
+        }
 
         //public static AppendCSVFile
         public static string GetCSVHeader<T>(T anObject)

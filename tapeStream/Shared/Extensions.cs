@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CLRConsole = System.Console;
 
@@ -105,12 +106,20 @@ public static class IntExtensions
     public static DateTime FromUnixTime(this long unixTime)
     {
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        return epoch.AddSeconds(unixTime);
+        return epoch.AddMilliseconds(unixTime);
     }
 
     public static long ToUnixTime(this DateTime date)
     {
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         return Convert.ToInt64((date - epoch).TotalSeconds);
+    }
+}
+
+public static class SplitCamelCaseExtension
+{
+    public static string SplitCamelCase(this string str)
+    {
+        return Regex.Replace(Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
     }
 }

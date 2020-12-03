@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿#undef dev
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,8 +13,11 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        //string controllerUrl = "http://localhost:55540/api/BookColumns/";
+#if dev
+        string controllerUrl = "http://localhost:55540/api/BookColumns/";
+#else
         string controllerUrl = "http://tapestreamserver.com/api/BookColumns/";
+#endif 
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
@@ -53,9 +57,18 @@ namespace tapeStream.Shared.Services
 #if tracing
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
 #endif
+            var url = $"{controllerUrl}getLtAverages/{seconds}";
+            try
+            {
 
-            values = await Http.GetFromJsonAsync<AverageSizes>($"{controllerUrl}getLtAverages/{seconds}" );
+                values = await Http.GetFromJsonAsync<AverageSizes>(url);
 
+            }
+            //catch { }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception($"Check that tapeStream Server {controllerUrl} is running.", ex);
+            }
 #if tracing
 
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes values");
@@ -85,5 +98,57 @@ namespace tapeStream.Shared.Services
             return values;
         }
 
+        public Task getRatioFrames(int longSeconds, object ratiosDepth, IJSRuntime jsruntime)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<List<RatioFrame>> getListLtRatios(int seconds, int last, IJSRuntime jSRuntime)
+        {
+
+            var route = $"getListLtRatios/{seconds}/{last}";
+
+            List<RatioFrame>  values = new List<RatioFrame>();
+
+#if tracing
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+#endif
+            try
+            {
+                values = await Http.GetFromJsonAsync<List<RatioFrame>>($"{controllerUrl}{route}");
+            }
+            catch { }
+
+#if tracing
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes Ratios values");
+#endif
+
+            return values;
+        }
+
+       public async Task<List<RatioFrame>> getRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
+        {
+
+            var route = $"getRatioFrames/{seconds}/{last}";
+
+            List<RatioFrame>  values = new List<RatioFrame>();
+
+#if tracing
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+#endif
+            try
+            {
+                values = await Http.GetFromJsonAsync<List<RatioFrame>>($"{controllerUrl}{route}");
+            }
+            catch { }
+
+#if tracing
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes Ratios values");
+#endif
+
+            return values;
+        }
     }
 }

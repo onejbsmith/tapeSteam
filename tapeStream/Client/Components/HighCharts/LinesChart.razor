@@ -5,7 +5,7 @@
 @using MatBlazor
 @using tapeStream.Shared.Data
 
-@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@inject Microsoft.JSInterop.IJSRuntime jsruntime
 @inject HttpClient _client
 
 <figure class="highcharts-figure">
@@ -21,6 +21,11 @@
 <style>
     #LinesChart, .highcharts-container {
         overflow: visible !important;
+    }
+
+    .highcharts-root {
+        position: relative;
+        right: 0px !important;
     }
 </style>
 

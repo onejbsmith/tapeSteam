@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Client.Managers;
+using tapeStream.Shared;
 using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Components.HighCharts
@@ -502,37 +503,37 @@ namespace tapeStream.Client.Components.HighCharts
                     {
                     new Surface.Plotline()
                     {  value=avgSells, // asks want to sell, sold at bid
-                        color=asksColor,
+                        color=CONSTANTS.asksColor,
                         width=8,
                         zIndex = 1
                     },
                     new Surface.Plotline()
                     {  value= avgBuys,  // bids want to buy, bought at ask
-                        color=bidsColor,
+                        color=CONSTANTS.bidsColor,
                         width=8,
                         zIndex = 1
                     },
                     new Surface.Plotline()
                     {  value=avgStSells,
-                        color =sellsColor,
+                        color =CONSTANTS.sellsColor,
                         width=4,
                         zIndex = 2
                     },
                     new Surface.Plotline()
                     {  value=avgStBuys,
-                        color=buysColor,
+                        color=CONSTANTS.buysColor,
                         width=4,
                         zIndex = 2
                     },
                       new Surface.Plotline()
                     {  value=avgLtSells,
-                        color =asksLtColor,
+                        color =CONSTANTS.asksLtColor,
                         width=12,
                         zIndex =0
                     },
                     new Surface.Plotline()
                     {  value=avgLtBuys,
-                        color=bidsLtColor,
+                        color=CONSTANTS.bidsLtColor,
                         width=12,
                         zIndex = 0
                     },
@@ -540,7 +541,7 @@ namespace tapeStream.Client.Components.HighCharts
             }
             catch (Exception ex)
             {
-                jsruntime.Confirm(ex.Message);
+                jsruntime.Confirm(ex.ToString());
             }
 
 #if bollinger
@@ -779,13 +780,13 @@ namespace tapeStream.Client.Components.HighCharts
         double? minX = 9999999, maxX = 0;
 
 
-        static string asksColor = "#8085e9"; //"#cb6992";
-        static string bidsColor = "#0479cc";
-        static string asksLtColor = "#5055b9"; //"#cb6992";
-        static string bidsLtColor = "#0439ac";
-        static string buysColor = "#90ed7d";
-        static string sellsColor = "#f45b5b";
-        static string spreadColor = "#8085e9";
+        //static string asksColor = "#8085e9"; //"#cb6992";
+        //static string bidsColor = "#0479cc";
+        //static string asksLtColor = "#5055b9"; //"#cb6992";
+        //static string bidsLtColor = "#0439ac";
+        //static string buysColor = "#90ed7d";
+        //static string sellsColor = "#f45b5b";
+        //static string spreadColor = "#8085e9";
 
 
         private static Dictionary<string, string> SetSeriesColors()
@@ -794,11 +795,11 @@ namespace tapeStream.Client.Components.HighCharts
 
             dictSeriesColor = new Dictionary<string, string>()
             {
-                { "asks", asksColor } ,
-                { "bids", bidsColor } ,
-                { "salesAtAsk", buysColor } ,
-                { "salesAtBid", sellsColor },
-                { "spread", spreadColor }
+                { "asks",  CONSTANTS.asksColor } ,
+                { "bids", CONSTANTS.bidsColor } ,
+                { "salesAtAsk", CONSTANTS.buysColor } ,
+                { "salesAtBid", CONSTANTS.sellsColor },
+                { "spread", CONSTANTS.spreadColor }
             };
             return dictSeriesColor;
         }

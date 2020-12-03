@@ -10,12 +10,16 @@
   <ItemGroup>
     <Compile Remove="Components\HighCharts\highcharts\**" />
     <Compile Remove="NewFolder\**" />
+    <Compile Remove="wwwroot\lib\**" />
     <Content Remove="Components\HighCharts\highcharts\**" />
     <Content Remove="NewFolder\**" />
+    <Content Remove="wwwroot\lib\**" />
     <EmbeddedResource Remove="Components\HighCharts\highcharts\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
     <None Remove="Components\HighCharts\highcharts\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +28,7 @@
     <Compile Remove="Components\Highchart.razor.cs" />
     <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
     <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
+    <Compile Remove="Components\HighCharts\LinesChart.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
     <Compile Remove="Components\HubMonitor.razor.cs" />
@@ -41,6 +46,7 @@
     <Compile Remove="Data\classes\Trades.cs" />
     <Compile Remove="Data\DataItem.cs" />
     <Compile Remove="Data\Extensions.cs" />
+    <Compile Remove="Data\FilesManager.cs" />
     <Compile Remove="Data\TDABook.cs" />
     <Compile Remove="Data\TDAPrints.cs" />
     <Compile Remove="Pages\Chat.razor.cs" />
@@ -56,6 +62,7 @@
     <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
     <Content Remove="Components\HighCharts\Base\HighChart3D.razor" />
     <Content Remove="Components\HighCharts\Columns3D.razor" />
+    <Content Remove="Components\HighCharts\LinesChart.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
     <Content Remove="Components\HighCharts\xSurface.StackedColumns3DSurface.razor" />

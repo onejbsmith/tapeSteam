@@ -11,27 +11,31 @@
 
                     <RadzenCard Style="width:600px;background-color:gainsboro">
                         <div class="grid-container">
-                            
+
                             <h3 style="text-align:left;grid-column-end: span 2"><RadzenIcon Icon="settings" />&nbsp;Simulator Settings </h3>
                             <span>Available Dates: </span>
                             <RadzenDropDown TValue="string"
                                             Data="@lstFeedDates"
                                             Change="@(args => FeedDateChange(args, "DropDown"))" />
                             <span>Start Time:  </span>
+
+
                             <RadzenDropDown TValue="string"
                                             @bind-Value="@startTime"
                                             Data="@lstFeedTimes"
-                                            Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date)"
+                                            Disabled="@(simulatorSettings.runDateDate.Date == new DateTime().Date)"
                                             Change="@(args => StartTimeChange(args, "DropDown"))" />
                             <span>End Time: </span>
                             <RadzenDropDown TValue="string"
                                             @bind-Value="@endTime"
                                             Data="@lstFeedTimes"
                                             Change="@(args => EndTimeChange(args, "DropDown"))"
-                                            Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date)" />
+                                            Disabled="@(simulatorSettings.runDateDate.Date == new DateTime().Date)" />
+
                         </div>
 
                     </RadzenCard>
+
                 </div>
             </RadzenAccordionItem>
         </Items>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿#undef dev
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,8 +15,11 @@ namespace tapeStream.Shared.Services
     {
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-        //string controllerUrl = "http://localhost:55540/api/Charts/";
+#if dev
+        string controllerUrl = "http://localhost:55540/api/Charts/";
+#else
         string controllerUrl = "http://tapestreamserver.com/api/Charts/";
+#endif
         public async Task<TDAChart.Bollinger> getBollingerBands()
         {
             try
@@ -51,7 +55,15 @@ namespace tapeStream.Shared.Services
         public async Task<TDAChart.Chart_Content> GetTDAChartLastCandle(int input)
         {
             var json = await Http.GetStringAsync(controllerUrl + input.ToString());
-            var chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(json);
+            var chartEntry = new TDAChart.Chart_Content();
+            try
+            {
+                chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(json);
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception($"Check that tapeStream Server {controllerUrl} is running.", ex);
+            }
             return chartEntry;
         }
         public async Task<string> GetSvcDate()

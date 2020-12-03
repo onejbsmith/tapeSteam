@@ -42,7 +42,7 @@ namespace tapeStream.Client.Components.HighCharts
         }
         Dictionary<string, BookDataItem[]> _bookData = new Dictionary<string, BookDataItem[]>();
 
-        string chartJsFilename = "js/TimeRows.js?x=22";
+        string chartJsFilename = "js/TimeRows.js?x=23";
 
         static string chartJson = "";
 

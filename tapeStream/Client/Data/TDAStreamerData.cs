@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using tapeStream.Client.Services;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
+using tapeStream.Shared.Managers    ;
 
 namespace tapeStream.Client.Data
 {
@@ -72,7 +73,7 @@ namespace tapeStream.Client.Data
         public static string chain { get; set; } //
         public static DateTime expiryDate { get; set; } //
         public static double strike { get; set; } //
-        public static List<string> timeAndSalesFields { get; set; } = FilesManager.GetCSVHeader(new TimeSales_Content()).Split(',').ToList();
+        public static List<string> timeAndSalesFields { get; set; } = CsvFilesManager.GetCSVHeader(new TimeSales_Content()).Split(',').ToList();
 
         public static string bidPrice { get; set; }
         public static string askPrice { get; set; }

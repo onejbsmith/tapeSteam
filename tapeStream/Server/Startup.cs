@@ -14,6 +14,7 @@ using tapeStream.Shared;
 using tapeStream.Server.Data;
 using tapeStream.Server.Hubs;
 
+
 namespace tapeStream.Server
 {
     public class Startup
@@ -37,6 +38,7 @@ namespace tapeStream.Server
            { options.ChangeTextOnKeyPress = true; }).AddBootstrapProviders().AddFontAwesomeIcons();
             // other services      
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -92,13 +94,16 @@ namespace tapeStream.Server
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             // Make sure the CORS middleware is ahead of SignalR.
             app.UseCors(builder =>
             {
+                 
                 builder.WithOrigins("http://localhost:53911")
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();
+
 
                 builder.WithOrigins("http://localhost:59788")
                     .AllowAnyHeader()

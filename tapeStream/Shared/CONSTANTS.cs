@@ -17,6 +17,29 @@ namespace tapeStream.Shared
             "average10min"
         };
 
+        public static string buysRatio = "buysRatio";
+        public static string buysAltRatio = "buysAltRatio";
+        public static string buysInSpread = "buysInSpread";
+        public static string buysAbove = "buysAbove";
+        public static string buysBelow = "buysBelow";
+        public static string asksBookSizes = "asksBookSizes";
+        public static string buysSumSizes = "buysSumSizes";
+        public static string sellsSumSizes = "sellsSumSizes";
+        public static string buysPriceCount = "buysPriceCount";
+        public static string buysTradeSizes = "buysTradeSizes";
+        public static string buysR = "buysR";
+
+
+        public static string sellsRatio = "sellsRatio";
+        public static string sellsAltRatio = "sellsAltRatio";
+        public static string sellsInSpread = "sellsInSpread";
+        public static string sellsAbove = "sellsAbove";
+        public static string sellsBelow = "sellsBelow";
+        public static string bidsBookSizes = "bidsBookSizes";
+        public static string sellsPriceCount = "sellsPriceCount";
+        public static string sellsTradeSizes = "sellsTradeSizes";
+        public static string sellsR = "sellsR";
+
         public static DataItem newDataItem =
          new DataItem()
          {
@@ -50,12 +73,24 @@ namespace tapeStream.Shared
               { "salesAtAsk", new BookDataItem[] { new BookDataItem { Price = 0, Size = 0, time = now, dateTime = DateTime.Now } }}
             };
 
-//public static readonly IEnumerable<object> printSeconds;
+        //public static readonly IEnumerable<object> printSeconds;
 
-static public int[]
-        printSeconds
+        static public int[]
+                printSeconds
         { get; set; } = new int[] { 5, 10, 30, 60, 120, 240, 600 };
 
 
+        /// <summary>
+        /// "#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"
+        /// </summary>
+
+        public static string asksColor = "#e7934c"; //  "#e4d354";
+        public static string bidsColor = "#0479cc";
+        public static string buysColor = "#90ed7d";
+        public static string asksLtColor = "#5055b9"; //"#cb6992";
+        public static string bidsLtColor = "#0439ac";
+
+        public static string sellsColor = "#f45b5b";
+        public static string spreadColor = "#8085e9";
     }
 }

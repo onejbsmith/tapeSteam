@@ -13,6 +13,8 @@ namespace tapeStream.Client.Components
     {
         [Inject] BookColumnsService bookColumnsService { get; set; }
 
+        ElementReference ratioStats;
+
         public string timeOfDay;
 
         RadzenChart myChart = new RadzenChart() { };

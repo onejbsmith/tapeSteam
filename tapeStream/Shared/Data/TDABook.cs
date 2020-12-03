@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,10 +19,58 @@ namespace tapeStream.Shared.Data
         public Dictionary<string, double> averageSize { get; set; }
     }
 
+    public class RatioFrame
+    {
+        public double sellsAbove { get; set; }
+        public double bidsBookSizes { get; set; }
+        public double buysSumSizes { get; set; }
+        public double sellsSumSizes { get; set; }
+        public double sellsInSpread { get; set; }
+        public double sellsBelow { get; set; }
+        public double buysInSpread { get; set; }
+        public double buysAbove { get; set; }
+        public double buysBelow { get; set; }
+        public double asksBookSizes { get; set; }
+
+        public DateTime dateTime { get; set; }
+        public double buysRatio { get; set; }
+        public double buysAltRatio { get; set; }
+        public double sellsRatio { get; set; }
+        public double sellsAltRatio { get; set; }
+        public decimal markPrice { get; set; }
+        public double sellsR { get; set; }
+        public double buysR { get; set; }
+        public double buysTradeSizes { get; set; }
+        public double sellsTradeSizes { get; set; }
+        public int buysPriceCount { get; set; }
+        public int sellsPriceCount { get; set; }
+
+
+
+        [NotMapped]
+        public int seconds { get; set; }
+        [NotMapped]
+        public object this[string propertyName]
+        {
+            get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
+            set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
+        }
+
+    }
+
+    public class JsonArrayOfArrays
+    {
+        public object[][] datum { get; set; }
+    }
 
     public class TDABook
     {
 
+        public static List<RatioFrame> lstRatioFrames = new List<RatioFrame>();
+
+
+
+        public static int ratiosDepth = 100;
 
         //public static Dictionary<string,BookDataItem[]> getBookColumnsData()
         //{

@@ -1,0 +1,121 @@
+﻿@*<h3>RatiosChart</h3>*@
+@using tapeStream.Shared.Data
+@using tapeStream.Shared
+
+@*<h1>Radzen Blazor Chart with line series</h1>*@
+
+<div>
+    <div style="width:100%">
+
+
+        @if(showPrice==true)
+        {
+        <div class="shrink">
+
+            <h4 style="display:inline-block;color:forestgreen;" @onclick="@OpenDialog">QQQ Price</h4>
+            <RadzenChart>
+                <RadzenLineSeries Smooth="@smooth" Data="@ratioFrames" CategoryProperty="dateTime" Title="Price" ValueProperty="markPrice" Stroke="forestgreen">
+                    <RadzenMarkers MarkerType="MarkerType.Circle" Size="0" />
+                </RadzenLineSeries>
+
+                <RadzenCategoryAxis Padding="20" FormatString="{0:HH:mm}">
+                    <RadzenAxisTitle Text="@currentPrice" />
+                    <RadzenGridLines Visible="true" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Mark" />
+                </RadzenValueAxis>
+            </RadzenChart>
+            <br />
+        </div>            
+        }
+
+
+    <div class="shrink">
+
+        <div>
+            <h4 style="display:inline-block;color:blueviolet;" @onclick="@OpenDialog"> @(string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1)) ) </h4>
+            <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:blueviolet;position: relative;top:5px;right:25px"> </MatIconButton>
+        </div>
+        <RadzenChart>
+            <RadzenLineSeries Smooth="@smooth" Data="@ratioFrames" CategoryProperty="dateTime" Title="@(buysTitle.Split(' ')[0])" LineType="LineType.Solid" ValueProperty="@buysField" Stroke="@CONSTANTS.asksColor">
+                <RadzenMarkers MarkerType="MarkerType.Square" Size="0" />
+            </RadzenLineSeries>
+            <RadzenLineSeries Smooth="@smooth" Data="@ratioFrames" CategoryProperty="dateTime" Title="@(sellsTitle.Split(' ')[0])" ValueProperty="@sellsField" Stroke="@CONSTANTS.bidsColor">
+                <RadzenMarkers MarkerType="MarkerType.Square" Size="0" />
+            </RadzenLineSeries>
+            <RadzenValueAxis Formatter="@FormatAsUSD">
+                <RadzenGridLines Visible="true" />
+                <RadzenAxisTitle Text="Ratio" />
+            </RadzenValueAxis>
+
+            <RadzenCategoryAxis Padding="20" FormatString="{0:HH:mm}">
+                <RadzenAxisTitle Text="@( buysTitle + ' ' + sellsTitle)" />
+                <RadzenGridLines Visible="true" />
+            </RadzenCategoryAxis>
+        </RadzenChart>
+        <br />
+    </div>
+
+
+        <MatDialog @bind-IsOpen="@dialogIsOpen">
+            @*<MatDialogTitle>Hi @name</MatDialogTitle>*@
+            <MatDialogContent>
+                @*<p>What's your favorite animal?</p>
+                    <MatSelect TValue="string" Label="Title">
+                        <MatOptionString></MatOptionString>
+                        <MatOptionString Value="dr">Dr.</MatOptionString>
+                        <MatOptionString Value="prof">Prof.</MatOptionString>
+                    </MatSelect>
+                    <MatTextField @bind-Value="@dialogAnimal"></MatTextField>*@
+                <div>
+                    <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
+                    <Radzen.Blazor.RadzenSlider TValue="int" Min="50" Max="600" Step="10" @bind-Value="@TDABook.ratiosDepth" />
+                    <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosDepth</h4>
+                </div>
+                <div>
+                    <h4 style="display:inline-block;color:blueviolet">∑ Ticks</h4>
+                    <Radzen.Blazor.RadzenSlider TValue="int" Min="50" Max="600" Step="10" @bind-Value="@TDABook.ratiosDepth" />
+                    <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosDepth</h4>
+                </div>
+                @(string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1)))
+            <MatChipSet Filter="true" @bind-SelectedChips="selectedBuysChips" Choice="true">
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.buysTradeSizes"></MatChip>
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.asksBookSizes"></MatChip>
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.buysSumSizes"></MatChip>
+                <MatChip Label="%" IsCheckable="true" Value="@CONSTANTS.buysRatio"></MatChip>
+                <MatChip Label="%2" IsCheckable="true" Value="@CONSTANTS.buysAltRatio"></MatChip>
+                <MatChip Label="<>" IsCheckable="true" Value="@CONSTANTS.buysInSpread"></MatChip>
+                <MatChip Label=">" IsCheckable="true" Value="@CONSTANTS.buysAbove"></MatChip>
+                <MatChip Label="<" IsCheckable="true" Value="@CONSTANTS.buysBelow"></MatChip>
+                <MatChip Label="#" IsCheckable="true" Value="@CONSTANTS.buysPriceCount"></MatChip>
+                <MatChip Label="r" IsCheckable="true" Value="@CONSTANTS.buysR"></MatChip>
+            </MatChipSet>
+
+            </MatDialogContent>
+            <MatDialogActions>
+                <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+                <MatButton OnClick="@OkClick">OK</MatButton>
+            </MatDialogActions>
+        </MatDialog>
+    </div>
+</div>
+@*∑∆∏∂⌠⌡√≤≥*@
+
+<style>
+    .shrink {
+        /*        -webkit-transform: scale(0.95);
+        -moz-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        transform: scale(0.95);*/
+        box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
+        margin: 15px 10px;
+        border-radius: 5px;
+        padding:0px 10px;
+    }
+</style>
+@code {
+
+
+}

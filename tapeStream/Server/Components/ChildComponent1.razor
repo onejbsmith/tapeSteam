@@ -1,0 +1,31 @@
+﻿[ChildComponent.razor]
+<h1>Child Component</h1>
+
+Password:
+
+<input @oninput="OnPasswordChanged"
+       required
+       type="@(_showPassword ? "text" : "password")"
+       value="@Password" />
+
+<button class="btn btn-primary" @onclick="ToggleShowPassword">
+    Show password
+</button>
+@code {
+    private bool _showPassword;
+    [Parameter]
+    public string Password { get; set; }
+    [Parameter]
+    public EventCallback<string> PasswordChanged { get; set; }
+
+    private Task OnPasswordChanged(ChangeEventArgs e)
+    {
+        Password = e.Value.ToString();
+
+        return PasswordChanged.InvokeAsync(Password);
+    }
+    private void ToggleShowPassword()
+    {
+        _showPassword = !_showPassword;
+    }
+}

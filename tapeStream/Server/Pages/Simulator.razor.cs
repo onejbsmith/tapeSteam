@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 using System.IO;
 using tapeStream.Server.Data;
 using tapeStream.Server.Data.classes;
+using Microsoft.AspNetCore.Components;
 
 namespace tapeStream.Server.Pages
 {
     public partial class Simulator
     {
+        [Parameter]
+        public bool hasStarted { get; set; }
+
         List<string> lstFeedDates = new List<string>();
         List<string> lstFeedTimes = new List<string>();
 

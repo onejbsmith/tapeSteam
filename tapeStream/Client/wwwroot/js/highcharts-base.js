@@ -14,14 +14,14 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                 function () {
                     loadScript("https://code.highcharts.com/highcharts-more.js").then(
                         function () {
-                            loadScript("https://code.highcharts.com/modules/exporting.js").then(
+                            loadScript("https://code.highcharts.com/modules/data.js").then(
                                 function () {
                                     loadScript("https://code.highcharts.com/highcharts-3d.js").then(
                                         function () {
                                             waitForGlobal("Highcharts", function () {
                                                 /// if window.chartObj is empty it's our first time rendering the chart
-
-                                                //if (chartDivName=="ClockGauge")
+                                                tracing = chartDivName == "LinesChart";
+                                                //if (chartDivName =="LinesChart")
                                                 //    debugger;
                                                 if (tracing)
                                                     console.log(`0. ${chartDivName} window.loadHighchart`);
@@ -100,12 +100,20 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     //    chartInDiv.series[i].setData(series[i].data, false);
                                                     //};
                                                     //chartInDiv.redraw();
-                                                    if (tracing)
-                                                        console.log(`2. ${chartDivName} window.getChartJson`);
+                                                    if (tracing) {
+                                                        console.log(`2. ${chartDivName} chartInDiv`);
+                                                        console.table(chartInDiv);
+                                                    }
 
                                                     //var axes = chartInDiv.axes;
 
                                                     chartInDiv.update(window.chartObj[chartDivName]);
+
+                                                    if (tracing) {
+                                                        console.log(`3. ${chartDivName} chartInDiv`);
+                                                        console.table(chartInDiv);
+                                                    }
+
 
                                                     //chartInDiv.axes = axes;
 
@@ -117,10 +125,10 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
                                                     // debugger;
 
-                                                    //chartInDiv.redraw();
+                                                    chartInDiv.redraw();
                                                     //}
-                                                    //chartInDiv.reflow();
-                                                    //chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
+                                                    chartInDiv.reflow();
+                                                    chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
 
 
                                                 }
@@ -133,7 +141,7 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     var json = JSON.stringify(window.chartObj[chartDivName]);
                                                     if (tracing)
                                                         console.log(json);
-                                                    window.getChartJson(chartDivName, json);
+                                                    window.getChartJson(chartDivName, json, tracing);
                                                     return json;
                                                 }
 
@@ -148,7 +156,12 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
         function () { })
 }
 
-window.Initialize = function (dotNetObj, chartDivName) {
+window.setCsvDataContent = function (pre_Id, text) {
+    var dataPre = window.document.getElementById(pre_Id);
+    dataPre.innerHTML = text;
+}
+
+window.Initialize = function (dotNetObj, chartDivName, tracing) {
     window.dotNetObject[chartDivName] = dotNetObj;
     if (tracing)
         console.log(`0. ${chartDivName} window.Initialize`);

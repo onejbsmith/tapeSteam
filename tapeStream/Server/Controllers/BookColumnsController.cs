@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using tapeStream.Server.Data;
@@ -43,6 +44,23 @@ namespace tapeStream.Server.Controllers
         public async Task<AverageSizes> getLtRatios(int seconds)
         {
             return await TDABookManager.getLtRatios(seconds);
+        }
+
+        [Route("getListLtRatios/{seconds}/{last}")]
+        public async Task<List<RatioFrame>> getListLtRatios(int seconds, int last)
+        {
+            return await TDABookManager.getListLtRatios(seconds, last);
+        }
+
+        [Route("getRatioFrames/{seconds}/{last}")]
+        public async Task<List<RatioFrame>> getRatioFrames(int seconds, int last)
+        {
+            return await TDABookManager.getRatioFrames(seconds, last);
+        }
+        [Route("getRatioFramesCSV/{seconds}/{last}")]
+        public async Task<string> getRatioFramesCsv(int seconds, int last)
+        {
+            return await TDABookManager.getRatioFramesCSV(seconds, last);
         }
     }
 }

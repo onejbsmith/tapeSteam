@@ -89,6 +89,6 @@ namespace tapeStream.Client.Components
 
 
         internal static int shortSeconds = 5;
-        internal static int longSeconds = 15;
+        internal static int longSeconds = 30;
     }
 }
