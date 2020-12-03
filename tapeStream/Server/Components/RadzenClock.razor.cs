@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace tapeStream.Server.Components
 {
     public partial class RadzenClock
     {
-        private DateTime _now = DateTime.Now;
+        private DateTime _now = DateTime.MaxValue;
 
         [Parameter]
         public DateTime date
@@ -22,7 +22,7 @@ namespace tapeStream.Server.Components
                 minutes = _now.Minute * minorStep + _now.Second * 12 / 3600.0;
                 seconds = _now.Second * minorStep;
 
-                StateHasChanged();
+                InvokeAsync(StateHasChanged);
             }
         }
 
@@ -31,7 +31,7 @@ namespace tapeStream.Server.Components
         public double scale { get; set; } = 0.5;
 
 
-        //System.Threading.Timer timer;
+        System.Threading.Timer timer;
         double hours;
         double minutes;
         double seconds;
@@ -44,22 +44,21 @@ namespace tapeStream.Server.Components
 
         protected override void OnInitialized()
         {
-            //timer = new System.Threading.Timer(state =>
-            //{
-            //    var now = DateTime.Now;
+            if (date == DateTime.MaxValue)
+            {
+                timer = new System.Threading.Timer(state =>
+                {
+                    date = DateTime.Now;
 
-            //    hours = now.Hour + now.Minute / 60.0;
-
-            //    minutes = now.Minute * minorStep + now.Second * 12 / 3600.0;
-            //    seconds = now.Second * minorStep;
-
-            //    InvokeAsync(StateHasChanged);
-            //}, null, 0, 1000);
+                    InvokeAsync(StateHasChanged);
+                }, null, 0, 1000);
+            }
         }
 
         public void Dispose()
         {
-            //timer.Dispose();
+            if (timer != null)
+                timer.Dispose();
         }
     }
 }

@@ -29,17 +29,17 @@ namespace tapeStream.Server.Data
         /// </summary>
         /// <param name="TDAStreamerData.simulatorSettings"></param>
         /// <returns></returns>
-        internal static Dictionary<DateTime, string> GetFeedFileNames(SimulatorSettings simulatorSettings)
+        internal static Dictionary<DateTime, string> GetFeedFileNames(string symbol,SimulatorSettings simulatorSettings)
         {
             /// Get all file times, names into one dictionary
             var dictAllFileNames = new Dictionary<DateTime, string>();
-            var folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            var folderPath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{symbol}\\{TDAStreamerData.simulatorSettings.runDate}\\";
             FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
-            folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{symbol}\\{TDAStreamerData.simulatorSettings.runDate}\\";
             FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
-            folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\{TDAStreamerData.simulatorSettings.runDate}\\";
+            folderPath = $"D:\\MessageQs\\Inputs\\NASDAQ_BOOK\\{symbol}\\{TDAStreamerData.simulatorSettings.runDate}\\";
             FeedAddFiles(folderPath, dictAllFileNames, TDAStreamerData.simulatorSettings);
 
 
@@ -87,9 +87,9 @@ namespace tapeStream.Server.Data
             return fileText;
         }
 
-        internal static List<string> GetFeedDates()
+        internal static List<string> GetFeedDates(string symbol)
         {
-            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\";
+            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{symbol}\\";
             var folderNames = Directory.GetDirectories(folderPath).ToList();
             var lstFileDates = new List<string>();
             foreach (var folderName in folderNames)
@@ -101,10 +101,10 @@ namespace tapeStream.Server.Data
             }
             return lstFileDates;
         }
-        internal static List<string> GetFeedTimes(string runDate)
+        internal static List<string> GetFeedTimes(string symbol, string runDate)
         {
             var runDateDate = Convert.ToDateTime(runDate);
-            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{runDate}";
+            var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{symbol}\\{runDate}";
             var fileNames = Directory.GetFiles(folderPath).ToList();
             var lstFileTimes = new List<string>();
             foreach (var fileName in fileNames)
@@ -224,13 +224,12 @@ namespace tapeStream.Server.Data
         /// <param name="svcDateTime"></param>
         /// <param name="svcFieldedJson"></param>
         /// <returns></returns>
-        internal static async Task SendToMessageQueue(string svcName, DateTime svcDateTime, string svcFieldedJson)
+        internal static async Task SendToMessageQueue(string symbol, string svcName, DateTime svcDateTime, string svcFieldedJson)
         {
             string fileName = svcName + svcDateTime.ToString(".yyMMdd.HHmm.ss.ff");
             string svcDate = svcDateTime.ToString("MMMM dd, yyyy");
-            string folderPath = $"D:\\MessageQs\\Inputs\\{svcName}\\{svcDate}\\";
-
-            string filePath = $"D:\\MessageQs\\Inputs\\{svcName}\\{svcDate}\\{fileName}.json";
+            string folderPath = $"D:\\MessageQs\\Inputs\\{svcName}\\{symbol}\\{svcDate}\\";
+            string filePath = $"{folderPath}{fileName}.json";
 
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
@@ -295,12 +294,12 @@ namespace tapeStream.Server.Data
 
         }
 
-        public static List<string> GetChartEntries(int nCloses)
+        public static List<string> GetChartEntries(string symbol, int nCloses)
         {
             var entries = new List<string>();
             string svcDate = TDAStreamerData.runDate;
 
-            string filePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{svcDate}\\";
+            string filePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\{symbol}\\{svcDate}\\";
 
             /// Get's all the files in this day's CHART_EQUITY folder
             /// which works in real time, giving you the latest candles...

@@ -1,10 +1,12 @@
 ﻿#undef tracing
-
+#define UsingSignalHub
+#define dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +25,7 @@ namespace tapeStream.Client.Pages
     public partial class Index
     {
 
+        SignalRBase signalRBase { get; set; } = new SignalRBase();
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] ChartService chartService { get; set; }
@@ -48,14 +51,19 @@ namespace tapeStream.Client.Pages
             /// Init parameters so don't get "null" error
             await InitializeData();
 
+#if UsingSignalHub
+            await signalRBase.InitHub();
+#endif
             InitializeTimers();
 
         }
 
         private void InitializeTimers()
         {
+#if !UsingSignalHub
             timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender, e);
             timerBookColumnsCharts.Start();
+#endif
         }
         private async Task InitializeData()
         {
@@ -64,18 +72,25 @@ namespace tapeStream.Client.Pages
 
             //await AppendLineChartData();
         }
+
+#if !UsingSignalHub
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
             await GetBookColumnsData(ChartConfigure.seconds);
         }
-
+#endif
         private async Task GetBookColumnsData(int seconds)
         {
 
 #if tracing
             JsConsole.JsConsole.GroupTable(jsruntime, seconds, $"0. Index GetBookColumnsData seconds");
 #endif
+
+
+#if !UsingSignalHub
             timerBookColumnsCharts.Stop();
+#endif
+
             try
             {
                 await Task.Yield();
@@ -218,7 +233,9 @@ namespace tapeStream.Client.Pages
 
                 JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
             }
+#if !UsingSignalHub
             timerBookColumnsCharts.Start();
+#endif
             await Task.CompletedTask;
         }
     }

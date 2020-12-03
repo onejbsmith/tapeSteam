@@ -11,8 +11,9 @@ namespace tapeStream.Server.Pages
 {
     public partial class Simulator
     {
-        [Parameter]
-        public bool hasStarted { get; set; }
+
+
+        public string symbol { get; set; } = "QQQ";
 
         List<string> lstFeedDates = new List<string>();
         List<string> lstFeedTimes = new List<string>();
@@ -25,11 +26,11 @@ namespace tapeStream.Server.Pages
         protected override async Task OnInitializedAsync()
         {
             /// Fill in the dropdown of Available Feed Dates
-            lstFeedDates = FilesManager.GetFeedDates().OrderByDescending(fileDate=>fileDate).ToList();
+            lstFeedDates = FilesManager.GetFeedDates(symbol).OrderByDescending(fileDate=>fileDate).ToList();
             await Task.CompletedTask;
         }
 
-        void FeedDateChange(object value, string name)
+        void FeedDateChange( object value, string name, string symbol)
         {
             /// Got the Run Date
             var dateVal = value.ToString().Split('(')[0].Trim();
@@ -41,7 +42,7 @@ namespace tapeStream.Server.Pages
             TDAStreamerData.simulatorSettings = simulatorSettings;
 
             //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings1");
-            lstFeedTimes = FilesManager.GetFeedTimes(dateVal);
+            lstFeedTimes = FilesManager.GetFeedTimes(symbol, dateVal);
 
             StateHasChanged();
         }

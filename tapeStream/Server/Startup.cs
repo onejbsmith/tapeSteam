@@ -44,6 +44,10 @@ namespace tapeStream.Server
 
             services.AddTransient<TDAApiService>();
             services.AddSignalR();
+
+
+
+
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = Microsoft.AspNetCore.ResponseCompression.ResponseCompressionDefaults.MimeTypes.Concat(

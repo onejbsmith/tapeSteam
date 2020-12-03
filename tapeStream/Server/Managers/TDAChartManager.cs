@@ -51,7 +51,7 @@ namespace tapeStream.Server.Managers
 
             /// Just in case this hits before TDAPrintsManager update
             if (closes.Count() == 0)
-                SeedCloses();
+                SeedCloses(symbol);
 
             /// Overwrite last entry with final close for minute
             closes[closes.Count() - 1] = chartEntry.close;
@@ -70,11 +70,11 @@ namespace tapeStream.Server.Managers
         }
 
 
-        public static void SeedCloses()
+        public static void SeedCloses(string symbol)
         { var chartEntry = new TDAChart.Chart_Content();
             closes.Clear();
             /// Read the last 25 chart entries from CHART_EQUITY Inputs
-            var files = FilesManager.GetChartEntries(25);
+            var files = FilesManager.GetChartEntries(symbol, 25);
             foreach (var file in files)
             {
                 var svcJsonObject = JObject.Parse(file);
@@ -84,7 +84,7 @@ namespace tapeStream.Server.Managers
                 foreach (var contentObj in contents)
                 {
                     var content = contentObj.ToString();
-                    var symbol = contentObj["key"].ToString();
+                    //var symbolId = contentObj["key"].ToString();
 
                     chartEntry = JsonSerializer.Deserialize<TDAChart.Chart_Content>(content);
                     if (chartEntry.close > 0)
@@ -99,14 +99,16 @@ namespace tapeStream.Server.Managers
 
         public static async Task<Bollinger> GetBollingerBands()
         {
-            SeedCloses();
 
             var symbol = Data.TDAStreamerData.timeSales.Keys.Last();
+            SeedCloses(symbol);
             closes.Add(Data.TDAStreamerData.timeSales[symbol].Last().price);
             System.Diagnostics.Debug.Print("Last Close=" + closes[closes.Count() - 1].ToString());
 
+#if tracing
             DateTime.Now.Dump();
             closes.Dump();
+#endif
             //var x = new TDAStreamer();
             //x.ConsoleLog("Hello World");
             //x.Dispose();

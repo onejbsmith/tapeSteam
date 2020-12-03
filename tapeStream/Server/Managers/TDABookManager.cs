@@ -245,7 +245,7 @@ namespace tapeStream.Server.Data
                 var buysPriceCount = dictBookDataItem["salesAtAsk"].GroupBy(t => t.Price).Count() + dictBookDataItem["asks"].GroupBy(t => t.Price).Count();
                 var buysTradeSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size);
 
-                var sellsPriceCount = dictBookDataItem["salesAtBid"].GroupBy(t=>t.Price).Count() + dictBookDataItem["bids"].GroupBy(t => t.Price).Count();
+                var sellsPriceCount = dictBookDataItem["salesAtBid"].GroupBy(t => t.Price).Count() + dictBookDataItem["bids"].GroupBy(t => t.Price).Count();
                 var sellsTradeSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size);
                 /// Trades outside of spread added to other side
                 /// 
@@ -284,7 +284,7 @@ namespace tapeStream.Server.Data
                         buysAltRatio = buysAltRatio,
                         sellsAltRatio = sellsAltRatio,
                         buysSumSizes = buysSumSizes,
-                        sellsSumSizes =sellsSumSizes
+                        sellsSumSizes = sellsSumSizes
 
                     };
 
@@ -308,7 +308,7 @@ namespace tapeStream.Server.Data
                     TDABook.lstRatioFrames.Last().sellsR = rSells;
                     TDABook.lstRatioFrames.Last().buysR = rBuys;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
                 }
@@ -675,13 +675,13 @@ namespace tapeStream.Server.Data
                 if (!TDAStreamerData.simulatorSettings.isSimulated)
                 {
                     string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(dictBook);
-                    await FilesManager.SendToMessageQueue("BookedTimeSales", DateTime.Now, json);
+                    await FilesManager.SendToMessageQueue(symbol, "BookedTimeSales", DateTime.Now, json);
 
                     /// We need the sales by Price for the chart
                     /// Need two series, salesAtBid, salesAtAsk
                     ///
                     json = JsonSerializer.Serialize<BookEntry>(newBookEntry);
-                    await FilesManager.SendToMessageQueue("NasdaqBook", DateTime.Now, json);
+                    await FilesManager.SendToMessageQueue(symbol, "NasdaqBook", DateTime.Now, json);
                 }
             }
             catch { }  // in case 

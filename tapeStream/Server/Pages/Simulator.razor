@@ -4,6 +4,9 @@
 @using tapeStream.Server.Data.classes
 
 <div class="flex-container">
+
+
+
     <RadzenAccordion Style="background-color:transparent;width:100%">
         <Items>
             <RadzenAccordionItem Text="TDA Streaming Hub Simulator" Icon="waves" Style="width:100%" Selected="true">
@@ -11,12 +14,18 @@
 
                     <RadzenCard Style="width:600px;background-color:gainsboro">
                         <div class="grid-container">
+                            <h3 style="text-align:left;grid-column-end: span 2">
 
-                            <h3 style="text-align:left;grid-column-end: span 2"><RadzenIcon Icon="settings" />&nbsp;Simulator Settings </h3>
+
+                                <RadzenIcon Icon="settings" />&nbsp;Simulator Settings
+                            </h3>
+                            <span>Symbol: </span>
+                            <RadzenLabel Text="@symbol" Style="font-weight:600;font-size:larger;position:relative;top:0px" />
+
                             <span>Available Dates: </span>
                             <RadzenDropDown TValue="string"
                                             Data="@lstFeedDates"
-                                            Change="@(args => FeedDateChange(args, "DropDown"))" />
+                                            Change="@(args => FeedDateChange(args, "DropDown", symbol))" />
                             <span>Start Time:  </span>
 
 
@@ -40,7 +49,17 @@
             </RadzenAccordionItem>
         </Items>
     </RadzenAccordion>
+
 </div>
+<RadzenAccordion Style="background-color:transparent;width:100%">
+    <Items>
+        <RadzenAccordionItem Text="Select Symbol" Icon="settings" Style="width:100%;zoom:0.75;padding-bottom:10px" >
+            <Radzen.Blazor.RadzenCard>
+                <span>NASDAQ Symbol:&nbsp; <Radzen.Blazor.RadzenTextBox @bind-Value="@symbol" /></span>
+            </Radzen.Blazor.RadzenCard>
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
 <TDAStreamer simulate="true" simulatorSettings="@simulatorSettings" />
 
 

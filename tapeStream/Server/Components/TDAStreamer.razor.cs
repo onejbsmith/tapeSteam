@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿#define UsingSignalHub
+#define dev
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
@@ -34,7 +36,17 @@ namespace tapeStream.Server.Components
 
         #region Variables
         [Parameter]
-        public string symbol { get; set; }
+
+        public string symbol
+        {
+            get { return _symbol; }
+            set { 
+                _symbol = value;
+            
+            }
+        }
+            private string _symbol = "QQQ";
+         
 
         [Parameter]
         public bool simulate { get; set; }
@@ -107,7 +119,7 @@ namespace tapeStream.Server.Components
             switch (buttonName)
             {
                 case "Start":
-                    Simulator_Start();
+                    Simulator_Start(symbol);
                     break;
                 case "Pause":
                     Simulator_Pause();
@@ -121,7 +133,7 @@ namespace tapeStream.Server.Components
             }
             StateHasChanged();
         }
-        private async Task Simulator_Start()
+        private async Task Simulator_Start(string symbol)
         {
             simulatorStarted = true;
             StateHasChanged();
@@ -135,8 +147,8 @@ namespace tapeStream.Server.Components
             TDAStreamerData.runDate = TDAStreamerData.simulatorSettings.runDate;
             TDAStreamerData.simulatorSettings.isSimulated = true;
 
-            Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(TDAStreamerData.simulatorSettings);
-            
+            Dictionary<DateTime, string> feedFilesList = FilesManager.GetFeedFileNames(symbol, TDAStreamerData.simulatorSettings);
+
             /// Process each file
             foreach (var feedFile in feedFilesList)
             {
@@ -219,8 +231,9 @@ namespace tapeStream.Server.Components
             timer.Elapsed += async (sender, e) => await Timer_ElapsedAsync();
             timer.Start();
 
-            //await Init();
-
+#if UsingSignalHub
+            await Init();
+#endif
 
             /// This is fired by Decode_TimeSales
             TDAStreamerData.OnTimeSalesStatusChanged += sendTimeSalesData;
@@ -235,7 +248,7 @@ namespace tapeStream.Server.Components
 
             TDAStreamerData.simulatorSettings = new SimulatorSettings(); ;
 
-            JsConsole. JsConsole .Warn(TDAStreamerJs, $"tapeStream.Server.Components TDAStreamer OnInitializedAsync {TDAStreamerData .runDate}");
+            JsConsole.JsConsole.Warn(TDAStreamerJs, $"tapeStream.Server.Components TDAStreamer OnInitializedAsync {TDAStreamerData.runDate}");
             await Task.CompletedTask;
         }
 
@@ -521,7 +534,7 @@ namespace tapeStream.Server.Components
                 /// Need to NOT reswnd 
                 dictTopicCounts[svcName] += 1;
                 if (!simulate)
-                    await FilesManager.SendToMessageQueue(svcName, svcDateTime, svcFieldedJson);
+                    await FilesManager.SendToMessageQueue(symbol, svcName, svcDateTime, svcFieldedJson);
                 //await Send(svcName, svcFieldedJson);
                 StateHasChanged();
             }
@@ -570,11 +583,16 @@ namespace tapeStream.Server.Components
         }
         #endregion
 
+#if UsingSignalHub
         #region SignalR Client
 
         private async Task Init()
         {
-            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestream.com/tdahub").Build();
+#if dev
+            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
+#else
+            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
+#endif
 
             hubConnection.On("ReceiveMessage", (Action<string, string>)((user, message) =>
             {
@@ -644,6 +662,7 @@ namespace tapeStream.Server.Components
             _ = hubConnection.DisposeAsync();
         }
 
-        #endregion
-    }
+#endregion
+#endif
+        }
 }
