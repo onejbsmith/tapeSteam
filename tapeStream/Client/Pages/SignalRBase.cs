@@ -29,6 +29,7 @@ namespace tapeStream.Client.Pages
         private HubConnection hubConnection;
         private System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>();
 
+
         /// <summary>
         /// Method to test if hub connection is alive
         /// </summary>
@@ -299,11 +300,11 @@ namespace tapeStream.Client.Pages
         void Receive(string topic, string content)
         {
             // Show the topic text (last 1000 lines)
-            logTopicsb.Insert(0, "\n" + topic + ":" + content.Replace("\r", "").Replace("\n", ""));
-            logTopics = string.Join('\n', logTopicsb.ToString().Split('\n'));
+            //logTopicsb.Insert(0, "\n" + topic + ":" + content.Replace("\r", "").Replace("\n", ""));
+            //logTopics = string.Join('\n', logTopicsb.ToString().Split('\n'));
 
             // Update topic's Stats count
-            dictTopicCounts[topic] += 1;
+            //dictTopicCounts[topic] += 1;
 
             //var svcJsonObject = JObject.Parse(content);
             //var svcName = svcJsonObject["service"].ToString();
@@ -330,6 +331,13 @@ namespace tapeStream.Client.Pages
             {
 
                 Receive(topic, message);
+
+                /// The message is the TDAStreamerData.timeAndSales.time.ToString()
+                /// 
+                JsConsole.JsConsole.Log(jsruntime, message);
+
+
+
                 //var timeAndSales = System.Text.Json.JsonSerializer.Deserialize<TimeSales_Content>(message);
                 //DateTime retention = DateTime.Now.AddSeconds(-600);
                 //TDAStreamerData.timeSales[symbol].RemoveAll(t => t.TimeDate < retention);

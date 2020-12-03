@@ -1,4 +1,4 @@
-﻿#define dev
+﻿#undef dev
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@
             plotBackgroundColor: null,
                 plotBackgroundImage: null,
                     plotBorderWidth: 0,
-                        plotShadow: false,
+                        plotShadow: true,
                             height: '150px'
     },
 

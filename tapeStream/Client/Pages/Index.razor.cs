@@ -25,7 +25,7 @@ namespace tapeStream.Client.Pages
     public partial class Index
     {
 
-        SignalRBase signalRBase { get; set; } = new SignalRBase();
+
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] ChartService chartService { get; set; }
@@ -45,6 +45,35 @@ namespace tapeStream.Client.Pages
         }
         Dictionary<string, BookDataItem[]> _bookColData;
 
+        Dictionary<string, int> dictTopicCounts = new Dictionary<string, int>();
+
+        static string clockFormat = "h:mm:ss MMM d, yyyy";
+
+
+        bool logHub;
+
+        private string topicInput;
+        private string messageInput;
+
+        string clock;
+        string logTopics;
+
+        System.Text.StringBuilder logTopicsb = new System.Text.StringBuilder();  /// Called from Javascript
+
+        private HubConnection hubConnection;
+        private System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>();
+
+
+        /// <summary>
+        /// Method to test if hub connection is alive
+        /// </summary>
+        /// 
+
+        public bool IsConnected =>
+            hubConnection != null
+            && hubConnection.State == HubConnectionState.Connected;
+
+
         protected override async Task OnInitializedAsync()
         {
 
@@ -52,18 +81,98 @@ namespace tapeStream.Client.Pages
             await InitializeData();
 
 #if UsingSignalHub
-            await signalRBase.InitHub();
+
+            foreach (var name in CONSTANTS.valuesName)
+                dictTopicCounts.Add(name, 0);
+
+            await InitHub();
 #endif
+
+
             InitializeTimers();
 
+        }
+        public void Dispose()
+        {
+            _ = hubConnection.DisposeAsync();
+        }
+        public async System.Threading.Tasks.Task InitHub()
+        {
+            /// Init the SignalR Hub
+            /// 
+            try
+            {
+
+#if dev
+                hubConnection = new HubConnectionBuilder()
+             .WithUrl("http://localhost:55540/tdahub")
+             .Build();
+#else
+                hubConnection = new HubConnectionBuilder()
+             .WithUrl("http://tapestreamserver.com/tdahub")
+             .Build();
+#endif
+                /// Set up Hub Subscriptions -- Don't really need any anymore
+                /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
+                await SetupHub();
+
+                await hubConnection.StartAsync();
+
+                /// Show Hub Status in lamp color
+                var color = IsConnected ? "green" : "red";
+                Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+
+            }
+            catch (System.Exception ex)
+            {
+                JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
+            }
+        }
+
+
+        private async Task SetupHub()
+        {
+            hubConnection.On("TimeAndSales", (System.Action<string, string>)(async (topic, message) =>
+            {
+
+                Receive(topic, message);
+                var dateTime = DateTime.FromOADate(Convert.ToDouble(message));
+                /// Fire event here
+                TDAChart.isActive = true;
+                Data.TDAStreamerData.hubStatus = $"./images/green.gif";
+                JsConsole.JsConsole.Log(jsruntime, dateTime);
+
+                //await TimerBookColumnsCharts_Elapsed(null, null);
+
+            }));
+        }
+
+        void Receive(string topic, string content)
+        {
+            clock = System.DateTime.Now.ToString(clockFormat);
+            // Show the topic text (last 1000 lines)
+            //logTopicsb.Insert(0, "\n" + topic + ":" + content.Replace("\r", "").Replace("\n", ""));
+            //logTopics = string.Join('\n', logTopicsb.ToString().Split('\n'));
+
+            // Update topic's Stats count
+            //dictTopicCounts[topic] += 1;
+
+            //var svcJsonObject = JObject.Parse(content);
+            //var svcName = svcJsonObject["service"].ToString();
+            //var contents = svcJsonObject["content"];
+            ////var timeStamp = Convert.ToInt64(svcJsonObject["timestamp"]);
+            //GetServiceTime(svcJsonObject);
+
+            //StateHasChanged();
         }
 
         private void InitializeTimers()
         {
-#if !UsingSignalHub
+
             timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender, e);
             timerBookColumnsCharts.Start();
-#endif
+
+
         }
         private async Task InitializeData()
         {
@@ -73,12 +182,17 @@ namespace tapeStream.Client.Pages
             //await AppendLineChartData();
         }
 
-#if !UsingSignalHub
+
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await GetBookColumnsData(ChartConfigure.seconds);
+            Data.TDAStreamerData.hubStatus = $"./images/blue.png";
+            if (TDAChart.isActive == true)
+            {
+                await GetBookColumnsData(ChartConfigure.seconds);
+                TDAChart.isActive = false;
+            }
         }
-#endif
+
         private async Task GetBookColumnsData(int seconds)
         {
 
@@ -87,9 +201,8 @@ namespace tapeStream.Client.Pages
 #endif
 
 
-#if !UsingSignalHub
             timerBookColumnsCharts.Stop();
-#endif
+
 
             try
             {
@@ -233,9 +346,9 @@ namespace tapeStream.Client.Pages
 
                 JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
             }
-#if !UsingSignalHub
+
             timerBookColumnsCharts.Start();
-#endif
+
             await Task.CompletedTask;
         }
     }

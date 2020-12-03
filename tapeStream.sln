@@ -5,21 +5,11 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Client", "tapeStream\Client\tapeStream.Client.csproj", "{99904DE7-B222-4347-AA13-32B352E70372}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighchartsUsingBlazor", "..\..\HighCharts\HighchartsUsingBlazor\HighchartsUsingBlazor.csproj", "{D559F4E9-011E-4BBA-AFED-85713D98FFB6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTrader", "..\..\BlazorTrader\BlazorTrader.csproj", "{834F17A9-F536-4272-BD63-293AEDAC22DB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.HighCharts", "..\..\Libaries\HighCharts\Blazor.HighCharts\Blazor.HighCharts.csproj", "{2A52A773-8D90-42B1-9417-AC48577B0C5E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighCharts.Charts.Basic", "..\Components\HighCharts\HighCharts.Charts.Basic\HighCharts.Charts.Basic.csproj", "{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsConsole", "..\..\Server Projects\JsConsole\JsConsole.csproj", "{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Shared", "tapeStream\Shared\tapeStream.Shared.csproj", "{7FFBD3A4-499C-49E5-BFCC-9B086B5D12E0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Host", "tapeStream\Host\tapeStream.Host.csproj", "{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Server", "tapeStream\Server\tapeStream.Server.csproj", "{2F540FDD-0FE5-4A57-86EF-07964E001E3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,22 +21,6 @@ Global
 		{99904DE7-B222-4347-AA13-32B352E70372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D559F4E9-011E-4BBA-AFED-85713D98FFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D559F4E9-011E-4BBA-AFED-85713D98FFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D559F4E9-011E-4BBA-AFED-85713D98FFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D559F4E9-011E-4BBA-AFED-85713D98FFB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{834F17A9-F536-4272-BD63-293AEDAC22DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{834F17A9-F536-4272-BD63-293AEDAC22DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{834F17A9-F536-4272-BD63-293AEDAC22DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{834F17A9-F536-4272-BD63-293AEDAC22DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A52A773-8D90-42B1-9417-AC48577B0C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A52A773-8D90-42B1-9417-AC48577B0C5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A52A773-8D90-42B1-9417-AC48577B0C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A52A773-8D90-42B1-9417-AC48577B0C5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9A443F4-FD96-4581-95D9-0DB83DF60FE8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,10 +33,6 @@ Global
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F540FDD-0FE5-4A57-86EF-07964E001E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F540FDD-0FE5-4A57-86EF-07964E001E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F540FDD-0FE5-4A57-86EF-07964E001E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F540FDD-0FE5-4A57-86EF-07964E001E3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

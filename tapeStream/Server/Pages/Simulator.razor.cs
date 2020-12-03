@@ -26,7 +26,7 @@ namespace tapeStream.Server.Pages
         protected override async Task OnInitializedAsync()
         {
             /// Fill in the dropdown of Available Feed Dates
-            lstFeedDates = FilesManager.GetFeedDates(symbol).OrderByDescending(fileDate=>fileDate).ToList();
+            lstFeedDates = FilesManager.GetFeedDates(symbol);
             await Task.CompletedTask;
         }
 

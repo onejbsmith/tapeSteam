@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using tapeStream.Server.Components;
 using tapeStream.Server.Managers;
 using tapeStream.Shared;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Server.Data
 {
@@ -156,6 +157,7 @@ namespace tapeStream.Server.Data
                     timeAndSales.time = now;
                 }
 
+                TDAChart.svcDateTime = timeAndSales.TimeDate;
                 timeAndSales.bidIncr = timeAndSales.bid - prevTimeAndSales.bid;
                 timeAndSales.askIncr = timeAndSales.ask - prevTimeAndSales.ask;
                 timeAndSales.priceIncr = timeAndSales.price - prevTimeAndSales.price;

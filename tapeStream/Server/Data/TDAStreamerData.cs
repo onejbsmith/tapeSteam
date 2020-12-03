@@ -679,6 +679,7 @@ namespace tapeStream.Server.Data
                 {
                     case "TIMESALE_EQUITY":
                         await TDAPrintsManager.Decode(symbol, content);
+                        TimeSalesStatusChanged();
                         break;
                     case "QUOTE":
                         await Decode_Quote(content);

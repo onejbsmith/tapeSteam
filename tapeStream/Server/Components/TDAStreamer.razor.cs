@@ -40,13 +40,14 @@ namespace tapeStream.Server.Components
         public string symbol
         {
             get { return _symbol; }
-            set { 
+            set
+            {
                 _symbol = value;
-            
+
             }
         }
-            private string _symbol = "QQQ";
-         
+        private string _symbol = "QQQ";
+
 
         [Parameter]
         public bool simulate { get; set; }
@@ -388,13 +389,31 @@ namespace tapeStream.Server.Components
             //}
         }
 
+        static DateTime lastSvcTime;
         private void sendTimeSalesData()
         {
+            if (TDAChart.svcDateTime != lastSvcTime)
+            {
+                //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
+
+                //if (lastSvcTime == null)
+                //    lastSvcTime = TDAChart.svcDateTime;
+                //else if (TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds >= 500)
+                //{
+                JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
+                var msg = TDAChart.svcDateTime.ToOADate().ToString();
+                Send("TimeAndSales", msg);
+                lastSvcTime = TDAChart.svcDateTime;
+                StateHasChanged();
+                //}
+            }
             //Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
             //sendPrintsData();
-            dictTopicCounts["TimeAndSales"] += 1;
+            //Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
 
-            StateHasChanged();
+
+            //dictTopicCounts["TimeAndSales"] += 1;
+
 
         }
 
@@ -662,7 +681,7 @@ namespace tapeStream.Server.Components
             _ = hubConnection.DisposeAsync();
         }
 
-#endregion
+        #endregion
 #endif
-        }
+    }
 }

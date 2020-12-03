@@ -1,0 +1,43 @@
+﻿
+@using System.Threading;
+@implements IDisposable
+<div class="shrink">
+    <RadzenRadialGauge>
+        <RadzenRadialGaugeScale Step="1" Min="0" Max="12" StartAngle="0" EndAngle="360" ShowFirstTick="false"
+                                MinorStep=@minorStep
+                                TickLength="20"
+                                MinorTickLength="10"
+                                TickLabelOffset="40"
+                                TickPosition="GaugeTickPosition.Inside">
+            <RadzenRadialGaugeScalePointer Value=@hours Length="0.6" ShowValue="false" />
+            <RadzenRadialGaugeScalePointer Value=@seconds Length="0.9" Fill="red" Width="2" ShowValue="false" />
+            <RadzenRadialGaugeScalePointer Value=@minutes Length="0.8" ShowValue="false" />
+        </RadzenRadialGaugeScale>
+    </RadzenRadialGauge>
+
+    @*<h2>@date.ToLongDateString()</h2>*@
+</div>
+<style>
+
+    .rz-scale-line {
+        fill: #ffffff;
+        stroke-width: 4;
+    }
+
+        svg rz-tick-text {
+            font-size: 64pt;
+        }
+
+       body svg {
+            font-weight: 900;
+        }
+
+    .shrink {
+        -webkit-transform: scale(@scale);
+        -moz-transform: scale(@scale);
+        -ms-transform: scale(@scale);
+        transform: scale(@scale);
+    }
+</style>
+@code {
+}

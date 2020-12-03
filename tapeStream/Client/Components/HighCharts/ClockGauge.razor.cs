@@ -26,6 +26,7 @@ namespace tapeStream.Client.Components.HighCharts
         }
         private DateTime _clockDateTime = DateTime.Now;
 
+
         static string chartJsFilename = $"js/highcharts/ClockGauge.chart.js?id={DateTime.Now.ToOADate()}";
         static string chartJson = "";
         static string id = "ClockGauge";

@@ -29,7 +29,7 @@ namespace tapeStream.Server.Data
         /// </summary>
         /// <param name="TDAStreamerData.simulatorSettings"></param>
         /// <returns></returns>
-        internal static Dictionary<DateTime, string> GetFeedFileNames(string symbol,SimulatorSettings simulatorSettings)
+        internal static Dictionary<DateTime, string> GetFeedFileNames(string symbol, SimulatorSettings simulatorSettings)
         {
             /// Get all file times, names into one dictionary
             var dictAllFileNames = new Dictionary<DateTime, string>();
@@ -89,15 +89,25 @@ namespace tapeStream.Server.Data
 
         internal static List<string> GetFeedDates(string symbol)
         {
+            var dictAllFileNames = new Dictionary<DateTime, string>();
+
             var folderPath = $"D:\\MessageQs\\Inputs\\TIMESALE_EQUITY\\{symbol}\\";
             var folderNames = Directory.GetDirectories(folderPath).ToList();
             var lstFileDates = new List<string>();
             foreach (var folderName in folderNames)
             {
+
                 var filesCount = Directory.GetFiles(folderName).Count().ToString("n0");
                 var fileDate = $"{ Path.GetFileName(folderName)} ({filesCount})";
-                if (!lstFileDates.Contains(fileDate))
-                    lstFileDates.Add(fileDate);
+                dictAllFileNames.Add(Directory.GetCreationTime(folderName), fileDate);
+            }
+
+            var lstAllTimes = dictAllFileNames.Keys.ToList();
+            lstAllTimes = lstAllTimes.OrderByDescending(t=>t.Date).ToList();
+
+            foreach (var time in lstAllTimes)
+            {
+                lstFileDates.Add(dictAllFileNames[time]);
             }
             return lstFileDates;
         }
@@ -271,7 +281,7 @@ namespace tapeStream.Server.Data
             var tsPath = $"D:\\MessageQs\\Inputs\\BookedTimeSales\\";
             var nbPath = $"D:\\MessageQs\\Inputs\\NasdaqBook\\";
             //var cePath = $"D:\\MessageQs\\Inputs\\CHART_EQUITY\\";
-            var paths = new List<string>() {  nbPath, tsPath };
+            var paths = new List<string>() { nbPath, tsPath };
             foreach (var path in paths)
             {
                 /// Get the filenames in the path
