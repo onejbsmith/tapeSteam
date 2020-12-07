@@ -877,6 +877,8 @@ namespace tapeStream.Client.Data
         }
 
         private static Dictionary<string, OptionQuote_Response> dictOptions = new Dictionary<string, OptionQuote_Response>();
+        internal static string hubStatusMessage;
+
         public static async Task Decode_Option(string content)
         {
 

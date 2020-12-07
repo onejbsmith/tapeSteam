@@ -1,4 +1,5 @@
-﻿#define tracing
+﻿#undef tracing
+using MatBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
@@ -14,7 +15,18 @@ namespace tapeStream.Client.Components.HighCharts
 {
     public partial class LinesChart
     {
-        private List<RatioFrame> _ratioFrames;
+        [Parameter]
+        public bool showPrice { get; set; } = false;
+
+        [Parameter]
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        private string _id;
+
+
         [Parameter]
         public List<RatioFrame> ratioFrames
         {
@@ -25,9 +37,25 @@ namespace tapeStream.Client.Components.HighCharts
 #if tracing
                 Console.WriteLine($"1. {id} UpdateLinesChart");
 #endif
-                UpdateLinesChart(_ratioFrames);
+                if (_ratioFrames.Count > 0)
+                    UpdateLinesChart(_ratioFrames);
             }
         }
+        private List<RatioFrame> _ratioFrames;
+
+
+        [Parameter]
+        public string buysField
+        {
+            get { return _buysField; }
+            set
+            {
+                _buysField = value;
+                sellsField = _buysField.Replace("buys", "sells").Replace("asks", "bids");
+
+            }
+        }
+        private string _buysField = "buysTradeSizes";
 
         public static List<float> lstBuysRatios { get; set; }
 
@@ -40,8 +68,8 @@ namespace tapeStream.Client.Components.HighCharts
         public static List<float> lstMarkPrices { get; set; }
 
         static string chartJson = "";
-        static string id = "LinesChart";
-        static string chartJsFilename = $"js/highcharts/{id}.chart.js?id={DateTime.Now.ToOADate()}";
+        static string idName = "LinesChart";
+        static string chartJsFilename = $"js/highcharts/{idName}.chart.js?id={DateTime.Now.ToOADate()}";
         static bool redraw = true;
 
         static LinesChartData.Rootobject chart = new LinesChartData.Rootobject();
@@ -68,7 +96,12 @@ namespace tapeStream.Client.Components.HighCharts
 
             chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
 
-            chart.subtitle.text = TDAChart.LongDateString;
+            chart.subtitle.text = ratioFrames.First().dateTime.ToLongDateString();// TDAChart.LongDateString;
+            chart.yAxis[0].gridLineWidth = 1;
+            chart.yAxis[1].gridLineWidth = 1;
+            chart.series[1].data = new float[0];
+
+
 
 #if tracing
             JsConsole.JsConsole.GroupCollapsed(jsruntime, $"0.2 {id} getChartJson");
@@ -78,9 +111,9 @@ namespace tapeStream.Client.Components.HighCharts
 
             /// We set some static chart Properties here and pass back to js
 
-            //redraw = true;
-            //chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
-            //StateHasChanged();
+            redraw = true;
+            chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
+            StateHasChanged();
 
             //#if tracing
             //            Console.WriteLine($"2. {id} getChartJson");
@@ -93,6 +126,10 @@ namespace tapeStream.Client.Components.HighCharts
         {
             try
             {
+                if (chart == null || chart.series == null) return;
+
+                Chart_SetCategories(ratioFrames);
+
                 await Chart_BuildSeriesData(ratioFrames);
             }
             catch (Exception ex)
@@ -101,39 +138,99 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
-
-
         private async Task Chart_BuildSeriesData(List<RatioFrame> ratioFrames)
         {
-            if (chart == null || chart.series == null) return;
-
-            List<string> categories = new List<string>();
-            for (int i = 0; i < chart.series.Length; i++)
-            {
-                chart.series[i].data = new float[ratioFrames.Count];
-                for (int j = 0; j < ratioFrames.Count; j++)
-                {
-                    var frame = ratioFrames[j];
-                    switch (i)
-                    {
-                        case 1:
-                            chart.series[i].data[j] = (float)frame.buysRatio;
-                            categories.Add(frame.dateTime);
-                            break;
-                        //case 1: chart.series[i].data[j] = (float)frame.markPrice; break;
-                        case 0: chart.series[i].data[j] = (float)frame.sellsRatio; break;
-                    }
-                }
-            }
-            chart.xAxis[0].categories = categories.ToArray();
 #if tracing
             JsConsole.JsConsole.GroupTable(jsruntime, chart, $"5. {id} Chart_BuildSeriesDataCSVs chart", false);
-#endif             
+#endif
+
+            /// Replace current series data with new 
+            /// This is brute force
+            /// Ideally call a js method to add the new points to each series 
+            /// and remove the stale points
+            /// 
+
+            /// Get the buys, sells and marks into float []
+            /// 
+            var _sellsField = SellsField(_buysField);
+
+           
+
+            var lstBuys = ratioFrames.Select(item => (float)Convert.ToDouble(item[_buysField])).ToList();
+            var lstSells = ratioFrames.Select(item => (float)Convert.ToDouble(item[_sellsField])).ToList();
+            var lstMarks = ratioFrames.Select(item => (float)Convert.ToDouble(item.markPrice)).ToList();
+
+            chart.series[0].data = lstBuys.ToArray();
+            chart.series[2].data = lstSells.ToArray();
+
+            redraw = true;
             chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
 
+            await Task.CompletedTask;
+        }
+
+        private static void Chart_SetCategories(List<RatioFrame> ratioFrames)
+        {
+            List<string> categories = new List<string>();
+            foreach (var frame in ratioFrames)
+                categories.Add(frame.dateTime.ToString("h:mm:ss"));
+
+            chart.xAxis[0].categories = categories.ToArray();
         }
 
         //redraw = true;
+
+        #region Chart Dialog and Title Stuff
+
+
+        string sellsField = "sellsTradeSizes";
+
+        //string buysTitle = $"Buys - {sumBuys}";
+        //string sellsTitle = $"Sells - {sumSells}";
+
+        bool dialogIsOpen = false;
+        bool priceDialogIsOpen = false;
+
+        MatChip[] selectedBuysChips = null;
+        MatChip selectedBuyChip = null;
+
+        MatChip[] selectedSellsChips = null;
+        MatChip selectedSellChip = null;
+
+
+        string chartTitle()
+        {
+            return string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1));
+        }
+        void OpenDialog()
+        {
+            dialogIsOpen = true;
+        }
+
+        void OkClick()
+        {
+            dialogIsOpen = false;
+        }
+
+        string ProcessChips()
+        {
+            foreach (var chip in selectedBuysChips ?? new MatChip[0])
+            {
+                if ((chip.IsSelected))
+                {
+                    buysField = (string)chip.Value;
+                    sellsField = SellsField(buysField);
+                }
+            }
+            return "";
+        }
+
+        private string SellsField(string buysField)
+        {
+            return buysField.Replace("buys", "sells").Replace("asks", "bids"); ;
+        }
+
+        #endregion
 
 
     }

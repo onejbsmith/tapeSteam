@@ -20,6 +20,7 @@ namespace tapeStream.Server.Data
     /// </summary>
     public class TDAStreamerData
     {
+        
         //public static List<BookDataItem> lstAllAsks = new List<BookDataItem>();
         //public static List<BookDataItem> lstAllBids = new List<BookDataItem>();
         public static List<BookDataItem> lstAllSalesAtAsk = new List<BookDataItem>();

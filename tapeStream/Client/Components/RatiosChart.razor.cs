@@ -10,9 +10,13 @@ namespace tapeStream.Client.Components
 {
     public partial class RatiosChart
     {
+
+        Radzen.Blazor.RadzenChart radzenChart;
+
         [Parameter]
         public bool showPrice { get; set; } = true;
 
+        private  List<RatioFrame> passedRatioFrames  { get; set; }= new  List<RatioFrame>();
         private List<RatioFrame> _ratioFrames;
         [Parameter]
         public List<RatioFrame> ratioFrames
@@ -23,18 +27,22 @@ namespace tapeStream.Client.Components
                 _ratioFrames = value;
 
                 var now = TDAChart.svcDateTime;
-                var secs = SurfaceChartConfigurator.longSeconds;
+                var secs = TDABook.ratiosBack;
                 try
                 {
                     if (_ratioFrames.Count > 0)
                     {
+
+                        //_ratioFrames = _ratioFrames.ToList();
+                        passedRatioFrames = _ratioFrames.TakeLast(secs).ToList();
+
                         sumBuys = _ratioFrames.Where(t => now.Subtract(t.dateTime).Seconds < secs).Sum(t => t.buysRatio);
                         sumSells = _ratioFrames.Sum(t => t.sellsRatio);
 
                         buysTitle = $"Buys - {sumBuys.ToString("n0")}";
                         sellsTitle = $"Sells - {sumSells.ToString("n0")}";
-
                         currentPrice = ratioFrames.LastOrDefault().markPrice.ToString("c2");
+
                         StateHasChanged();
                     }
                 }
@@ -46,8 +54,19 @@ namespace tapeStream.Client.Components
                 Console.WriteLine($"1. {id} UpdateLinesChart");
 #endif
                 //UpdateLinesChart(_ratioFrames);
+
+                StateHasChanged();
             }
         }
+
+
+
+        string currentPrice;
+
+        bool smooth = true;
+
+        static double sumBuys = 0;
+        static double sumSells = 0;
 
         private string _buysField = "buysTradeSizes";
         [Parameter]
@@ -64,18 +83,11 @@ namespace tapeStream.Client.Components
 
         string sellsField = "sellsTradeSizes";
 
-
-        string currentPrice;
-
-        bool smooth = true;
-
-        static double sumBuys = 0;
-        static double sumSells = 0;
-
         string buysTitle = $"Buys - {sumBuys}";
         string sellsTitle = $"Sells - {sumSells}";
 
         bool dialogIsOpen = false;
+        bool priceDialogIsOpen = false;
 
         MatChip[] selectedBuysChips = null;
         MatChip selectedBuyChip = null;
@@ -84,13 +96,26 @@ namespace tapeStream.Client.Components
         MatChip selectedSellChip = null;
 
 
-
+        string chartTitle()
+        {
+            return string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1));
+        }
         void OpenDialog()
         {
             dialogIsOpen = true;
         }
 
         void OkClick()
+        {
+            dialogIsOpen = false;
+        }
+
+        void OpenPriceDialog()
+        {
+            priceDialogIsOpen = true;
+        }
+
+        void OkPriceClick()
         {
             dialogIsOpen = false;
         }
@@ -104,7 +129,7 @@ namespace tapeStream.Client.Components
 
         }
 
-        void ProcessChips()
+        string ProcessChips()
         {
             foreach (var chip in selectedBuysChips ?? new MatChip[0])
             {
@@ -114,7 +139,7 @@ namespace tapeStream.Client.Components
                     sellsField = buysField.Replace("buys", "sells").Replace("asks", "bids"); ;
                 }
             }
-
+            return "";
         }
 
     }

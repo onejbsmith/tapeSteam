@@ -24,7 +24,17 @@ namespace tapeStream.Client.Components.HighCharts.Base
         [Parameter]
         public string id { get; set; } //= "Highchart" + Guid.NewGuid().ToString();
 
-        [Parameter] public string chartJson { get; set; }
+        [Parameter] 
+        public string chartJson
+        {
+            get { return _chartJson; }
+            set { _chartJson = value;
+                redrawChart = true;
+               DrawChart();
+            }
+        }
+        private string _chartJson;
+
 
         [Parameter]
         public string chartSeriesJson
@@ -68,8 +78,9 @@ namespace tapeStream.Client.Components.HighCharts.Base
         /// Get the chart json from the passed in filename
         protected override async Task OnInitializedAsync()
         {
-            chartJson = await _client.GetStringAsync(chartJsFilename);
-
+            var text = await _client.GetStringAsync(chartJsFilename);
+            chartJson = text;
+            chartJson.Dump();
             StateHasChanged();
 
             //Console.WriteLine($"OnInitializedAsync chartJson => " + chartJson);
@@ -79,11 +90,16 @@ namespace tapeStream.Client.Components.HighCharts.Base
         {
             if (!string.IsNullOrEmpty(chartJson))
             {
-                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart});
-               // if (redrawChart2 == false) redrawChart2 = true;
+                await DrawChart();
+                // if (redrawChart2 == false) redrawChart2 = true;
             }
 
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task DrawChart()
+        {
+            await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart });
         }
 
         private async Task updateHighchartSeries()

@@ -13,7 +13,7 @@ using System.Linq;
 using tapeStream.Shared;
 using tapeStream.Server.Data;
 using tapeStream.Server.Hubs;
-
+using Microsoft.AspNetCore.Http.Connections;
 
 namespace tapeStream.Server
 {
@@ -139,8 +139,17 @@ namespace tapeStream.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
-                endpoints.MapHub<ChatHub>("/chathub");
-                endpoints.MapHub<TDAHub>("/tdahub");
+                endpoints.MapHub<ChatHub>("/chathub", options =>
+                {
+                    options.Transports =
+                        HttpTransportType.WebSockets ;
+                });
+
+                endpoints.MapHub<TDAHub>("/tdahub", options =>
+                {
+                    options.Transports =
+                        HttpTransportType.WebSockets ;
+                });
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

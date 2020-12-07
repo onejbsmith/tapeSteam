@@ -7,6 +7,8 @@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Client.Components
 
+
+
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @*<div id="resizer" style="min-width: 350px; min-height: 200px">
         <div id="inner-resizer">
@@ -28,46 +30,56 @@
             </MatExpansionPanelDetails>
         </MatExpansionPanel>*@
 
-    <MatExpansionPanel>
-        <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
-        </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
-        </MatExpansionPanelDetails>
-    </MatExpansionPanel>
+    @*<MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Surface</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <StackedColumns3DSurface bookData="@bookColData" symbol="@symbol" />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
 
-    <MatExpansionPanel>
-        <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
-        </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            <StackedColumns3D bookData="@bookColData" />
-        </MatExpansionPanelDetails>
-    </MatExpansionPanel>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Column</MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <StackedColumns3D bookData="@bookColData" />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>*@
 
-    <MatExpansionPanel>
+
+    <div style="display:none">
+        <ChartConfigure symbol="@symbol" title="Configure Columns" />
+        <SurfaceChartConfigurator symbol="@symbol" title="Configure Surface" />
+        @*<div style="background-color:#F0F0F0;padding:10px">
+            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+        </div>*@
+    </div>    
+    <MatExpansionPanel Expanded="true">
         <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Flat</MatExpansionPanelHeader>
+            <MatExpansionPanelHeader>Indicators</MatExpansionPanelHeader>
         </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            <div class="mat-layout-grid">
-                <div class="mat-layout-grid-inner">
+        <MatExpansionPanelDetails  Style="width:120%;padding-top:0 !important">
+            <div class="mat-layout-grid" style="width:110%;padding:0 !important ">
+                <div class="mat-layout-grid-inner" style="width:100%;padding:0 !important">
+                    @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />*@
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                        @*<LinesChart />*@
+                        @*<h1>@(ratioFrames.Count.ToString())</h1>*@
+                        <RatiosChart ratioFrames="@ratioFrames" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysRatio" />
+                    </div>
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6 rightside">
+                        @*<LinesChart />*@
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysPriceCount" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="asksBookSizes" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysR" />
+                    </div>
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
                         <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
-                    </div> 
-                    @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />*@
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                    @*<LinesChart />*@
-                    <RatiosChart ratioFrames="@_ratioFrames" buysField="buysTradeSizes" />
-                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysRatio" />
-                </div>
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                    @*<LinesChart />*@
-                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysPriceCount" />
-                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false"  buysField="asksBookSizes"/>
-                    <RatiosChart ratioFrames="@_ratioFrames" showPrice="false" buysField="buysR" />
-                </div>
+                    </div>
+
                 </div>
             </div>
         </MatExpansionPanelDetails>
@@ -76,8 +88,13 @@
 
 
 </MatAccordion>
-<style>
 
+
+<style>
+    .rightside {
+        position: relative;
+        right: 13%;
+    }
 
 
     .mdc-layout-grid__inner, .mat-layout-grid-inner {

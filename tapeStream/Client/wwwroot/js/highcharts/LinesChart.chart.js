@@ -2,65 +2,69 @@
     chart: {
         zoomType: 'xy'
     },
-
     title: {
-        text: 'Price Against Buys and Sells Ratios 8',
+        text: null,
             align: 'left'
     },
     subtitle: {
-        text: '', // This will be a date
+        text: '!',
             align: 'left'
     },
     xAxis: [{
-        categories: [], /// These will be times
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         crosshair: true
     }],
-        yAxis: [{ // Tertiary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'Mark Price',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            labels: {
-                format: '${value}',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            opposite: true
-        }, { // Primary yAxis
+        yAxis: [{ // Primary yAxis
             labels: {
                 format: '{value}',
                 style: {
-                    color: Highcharts.getOptions().colors[2]
+                    color: Highcharts.getOptions().colors[0]
                 }
             },
             title: {
-                text: 'Buys Ratio',
+                text: 'Size or Ratio',
                 style: {
-                    color: Highcharts.getOptions().colors[2]
+                    color: Highcharts.getOptions().colors[0]
                 }
             },
-            opposite: true
+            opposite: false
 
-        }, { // Secondary yAxis
+        },
+            //{ // Secondary yAxis
+            //gridLineWidth: 0,
+            //title: {
+            //    text: 'Sells',
+            //    style: {
+            //        color: Highcharts.getOptions().colors[0]
+            //    }
+            //},
+            //labels: {
+            //    format: '{value}',
+            //    style: {
+            //        color: Highcharts.getOptions().colors[0]
+            //    }
+            //}
+
+            //},
+
+            { // Tertiary yAxis
             gridLineWidth: 0,
             title: {
-                text: 'Sells Ratio',
+                text: 'Mark',
                 style: {
-                    color: Highcharts.getOptions().colors[0]
+                    color: Highcharts.getOptions().colors[1]
                 }
             },
             labels: {
                 format: '{value}',
                 style: {
-                    color: Highcharts.getOptions().colors[0]
+                    color: Highcharts.getOptions().colors[1]
                 }
+            },
+            opposite: true
             }
-
-        }],
+        ],
             tooltip: {
         shared: true
     },
@@ -71,43 +75,49 @@
                     verticalAlign: 'top',
                         y: 55,
                             floating: true,
-                                backgroundColor:
-        Highcharts.defaultOptions.legend.backgroundColor || // theme
-            'rgba(255,255,255,0.25)'
+                                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'rgba(255,255,255,0.25)'
     },
     series: [{
-        name: 'Sells Ratio',
+        name: 'Sells',
         type: 'spline',
-        yAxis: 1,
-        data: [],
+        yAxis: 0,
+        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+        marker: {
+            enabled: false
+        },
         tooltip: {
-            valueSuffix: ' '
+            valueSuffix: ' mm'
         }
 
-    },
-    {
-        name: 'Mark Price',
-        type: 'line',
-        data: [],
+    }, {
+        name: 'Mark',
+        type: 'spline',
+        yAxis: 1,
+        data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
         marker: {
             enabled: false
         },
         dashStyle: 'shortdot',
         tooltip: {
-            valueSuffix: ' '
+            valueSuffix: ' mb'
         }
 
-    },
-
-    {
-        name: 'Buys Ratio',
+    }, {
+        name: 'Buys',
         type: 'spline',
-        yAxis: 2,
-        data: [],
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+        marker: {
+            enabled: false
+        },
         tooltip: {
-            valueSuffix: ''
+            valueSuffix: ' °C'
         }
-    }],
+        }],
+        plotOptions: {
+        series: {
+            animation: false
+        }
+    },
         responsive: {
         rules: [{
             condition: {

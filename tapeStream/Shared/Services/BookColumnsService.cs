@@ -1,4 +1,4 @@
-﻿#undef dev
+﻿#define dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace tapeStream.Shared.Services
 #endif 
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
+            await Task.Yield();
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
             {
@@ -38,6 +39,7 @@ namespace tapeStream.Shared.Services
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
             {
+                await Task.Yield();
                 if (seconds == 0)
                     values = await Http.GetFromJsonAsync<Dictionary<string, BookDataItem[]>>(controllerUrl);
                 else
@@ -52,6 +54,7 @@ namespace tapeStream.Shared.Services
 
         public async Task<AverageSizes> getAverages(int seconds, IJSRuntime jSRuntime)
         {
+            await Task.Yield();
             AverageSizes values = new AverageSizes();
 
 #if tracing
@@ -77,8 +80,9 @@ namespace tapeStream.Shared.Services
             return values;
         }
 
-        public async Task<AverageSizes> getRatios(int seconds, IJSRuntime jSRuntime)
+        public async Task<AverageSizes> getLtRatios(int seconds, IJSRuntime jSRuntime)
         {
+            await Task.Yield();
             AverageSizes values = new AverageSizes();
 
 #if tracing
@@ -105,10 +109,35 @@ namespace tapeStream.Shared.Services
 
         public async Task<List<RatioFrame>> getListLtRatios(int seconds, int last, IJSRuntime jSRuntime)
         {
+            await Task.Yield();
 
             var route = $"getListLtRatios/{seconds}/{last}";
 
-            List<RatioFrame>  values = new List<RatioFrame>();
+            List<RatioFrame> values = new List<RatioFrame>();
+
+#if tracing
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+#endif
+            try
+            {
+                values = await Http.GetFromJsonAsync<List<RatioFrame>>($"{controllerUrl}{route}");
+            }
+            catch { }
+
+#if tracing
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes Ratios values");
+#endif
+
+            return values;
+        }
+        public async Task<List<RatioFrame>> getRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
+        {
+            await Task.Yield();
+
+            var route = $"getRatioFrames/{seconds}/{last}";
+
+            List<RatioFrame> values = new List<RatioFrame>();
 
 #if tracing
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
@@ -127,19 +156,20 @@ namespace tapeStream.Shared.Services
             return values;
         }
 
-       public async Task<List<RatioFrame>> getRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
+        public async Task<RatioFrame> getIncrementalRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
         {
+            await Task.Yield();
 
-            var route = $"getRatioFrames/{seconds}/{last}";
+            var route = $"getIncrementalRatioFrames/{seconds}/{last}";
 
-            List<RatioFrame>  values = new List<RatioFrame>();
+            RatioFrame values = new RatioFrame();
 
 #if tracing
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
 #endif
             try
             {
-                values = await Http.GetFromJsonAsync<List<RatioFrame>>($"{controllerUrl}{route}");
+                values = await Http.GetFromJsonAsync<RatioFrame>($"{controllerUrl}{route}");
             }
             catch { }
 

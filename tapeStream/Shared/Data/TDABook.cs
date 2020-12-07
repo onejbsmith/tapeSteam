@@ -70,7 +70,8 @@ namespace tapeStream.Shared.Data
 
 
 
-        public static int ratiosDepth = 100;
+        public static int ratiosDepth = 50;
+        public static int ratiosBack = 30;
 
         //public static Dictionary<string,BookDataItem[]> getBookColumnsData()
         //{

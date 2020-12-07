@@ -1,0 +1,17 @@
+﻿@*<h3>DualLineChart</h3>*@
+@using tapeStream.Client.Components.HighCharts.Base
+@using MatBlazor
+@using tapeStream.Shared.Data
+
+@inject Microsoft.JSInterop.IJSRuntime jsruntime
+@inject HttpClient _client
+
+<figure class="highcharts-figure">
+    <div id="container" style="zoom:0.8">
+        <HighChart id="@id"
+                   chartJson="@chartJson"
+                   updateMode="@HighChart.DataUpdateMode.Replace"
+                   chartJsFilename="@chartJsFilename"
+                   redrawChart="@redraw" />
+    </div>
+</figure>

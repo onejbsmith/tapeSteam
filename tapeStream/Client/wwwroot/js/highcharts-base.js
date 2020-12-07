@@ -5,7 +5,7 @@ window.chartObj = {}
 window.chart = {}
 window.dotNetObject = {}
 
-window.tracing = false;
+window.tracing = true;
 
 window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
     loadScript("https://code.highcharts.com/highcharts.js").then(
@@ -125,10 +125,10 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                     //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
                                                     // debugger;
 
-                                                    chartInDiv.redraw();
-                                                    //}
-                                                    chartInDiv.reflow();
-                                                    chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
+                                                    //chartInDiv.redraw();
+                                                    ////}
+                                                    //chartInDiv.reflow();
+                                                    //chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
 
 
                                                 }

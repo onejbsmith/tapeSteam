@@ -1,59 +1,68 @@
 ﻿@using tapeStream.Server.Data;
 @using tapeStream.Server.Components;
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+    <div style="height:100vh; background-repeat:no-repeat;background-size:cover;
+background-image: url('@url');
+">
+        <img src="/images/TickerTapeIcon.png" />
+        <h1 style="color:gold;display:inline-block">@number</h1>
+    </div>
+    @page "/"
 
-
-@page "/"
-
-@code
+    @code
 {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
 
-        navigationManager.NavigateTo("streamer");
+        static Random rnd = new Random();
+        static int number = rnd.Next(1, 10);
+        string url = $"/images/Sunsets/Sunset{number}.jpg";
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+
+            //navigationManager.NavigateTo("streamer");
+        }
     }
-}
 
-@*<BookPieChart isPrintsSize="false" seconds="5" symbol="SPY" />*@
-
-
-@*<PrintsDashboard symbol="SPY" />*@
-
-@*<h1>Welcome to BT</h1>
-
-    <div id="chartDiv" style="width: 100%; height: 400px;"></div>
-
-    tapeStream.Server, BT, is designed to let you place several credit spread orders with a single click.
-    <br />
-    You pick
-    <ul>
-        <li>
-            the strikes
-        </li>
-        <li>
-            call or put spread
-        </li>
-        <li>
-            the # and price at each strike
-        </li>
-        <li>
-            the target premium at each strike
-        </li>
-    </ul>
-
-    It then places all your orders and then also places GTC closing orders for every order that executes.
-    <br />
-    <br />
-    In fully automated mode, BT will figure out which orders to place the automatically, picking strikes, et al., without user intervention.
-    <br />
-    You don't have to pick anything.
-
-    <br />
-    Should handle placing the same orders across multiple accounts and multi-tenancy.
+    @*<BookPieChart isPrintsSize="false" seconds="5" symbol="SPY" />*@
 
 
+    @*<PrintsDashboard symbol="SPY" />*@
 
-    <SurveyPrompt Title="How is Blazor working for you?" />*@
+    @*<h1>Welcome to BT</h1>
+
+        <div id="chartDiv" style="width: 100%; height: 400px;"></div>
+
+        tapeStream.Server, BT, is designed to let you place several credit spread orders with a single click.
+        <br />
+        You pick
+        <ul>
+            <li>
+                the strikes
+            </li>
+            <li>
+                call or put spread
+            </li>
+            <li>
+                the # and price at each strike
+            </li>
+            <li>
+                the target premium at each strike
+            </li>
+        </ul>
+
+        It then places all your orders and then also places GTC closing orders for every order that executes.
+        <br />
+        <br />
+        In fully automated mode, BT will figure out which orders to place the automatically, picking strikes, et al., without user intervention.
+        <br />
+        You don't have to pick anything.
+
+        <br />
+        Should handle placing the same orders across multiple accounts and multi-tenancy.
+
+
+
+        <SurveyPrompt Title="How is Blazor working for you?" />*@
 
 
 

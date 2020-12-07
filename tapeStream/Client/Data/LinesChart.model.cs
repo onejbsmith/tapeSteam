@@ -18,9 +18,20 @@ namespace tapeStream.Client.Data
             public Tooltip tooltip { get; set; }
             public Legend legend { get; set; }
             public Series[] series { get; set; }
+            public Plotoptions plotOptions { get; set; }
+
             public Responsive responsive { get; set; }
         }
 
+        public class Plotoptions
+        {
+            public Series1 series { get; set; }
+        }
+
+        public class Series1
+        {
+            public bool animation { get; set; }
+        }
         public class Chart
         {
             public string zoomType { get; set; }
@@ -92,6 +103,8 @@ namespace tapeStream.Client.Data
             public Labels labels { get; set; }
             public bool showLastLabel { get; set; }
             public bool visible { get; set; }
+
+
         }
 
         public class Labels

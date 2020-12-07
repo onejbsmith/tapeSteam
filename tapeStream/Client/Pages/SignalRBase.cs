@@ -248,13 +248,24 @@ namespace tapeStream.Client.Pages
             /// 
        
 #endif
-
-        // <summary>
-        /// Process message received from Hub
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="message"></param>
-
+        public async System.Threading.Tasks.Task Subscribe(string Topic, string idCreator, Func<Task> callback )
+        {
+            // <summary>
+            /// Send message to Hub to start a Topic 
+            /// Set up the receiver for the Topic to execute the callback
+            /// </summary>
+            /// <param name="user"></param>
+            /// <param name="message"></param>
+        }
+        public async System.Threading.Tasks.Task Unsubscribe(string Topic, Func<Task> callback )
+        {
+            // <summary>
+            /// Process message received from Hub
+            /// Send message to Hub to stop a Topic
+            /// </summary>
+            /// <param name="user"></param>
+            /// <param name="message"></param>
+        }
 
         public async System.Threading.Tasks.Task InitHub()
         {
@@ -288,6 +299,7 @@ namespace tapeStream.Client.Pages
                 JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
             }
         }
+
 
         /// <summary>
         /// Runs once, when this page is first loaded

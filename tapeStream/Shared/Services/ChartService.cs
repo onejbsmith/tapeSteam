@@ -1,4 +1,4 @@
-﻿#undef dev
+﻿#define dev
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,7 @@ namespace tapeStream.Shared.Services
         {
             try
             {
+                await Task.Yield();
                 var x = await Http.GetFromJsonAsync<TDAChart.Bollinger>(controllerUrl);
                 return x;
             }
@@ -37,6 +38,7 @@ namespace tapeStream.Shared.Services
 
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData(int seconds)
         {
+            await Task.Yield();
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
             {
@@ -54,6 +56,7 @@ namespace tapeStream.Shared.Services
 
         public async Task<TDAChart.Chart_Content> GetTDAChartLastCandle(int input)
         {
+            await Task.Yield();
             var json = await Http.GetStringAsync(controllerUrl + input.ToString());
             var chartEntry = new TDAChart.Chart_Content();
             try

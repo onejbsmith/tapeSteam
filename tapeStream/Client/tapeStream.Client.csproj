@@ -28,10 +28,11 @@
     <Compile Remove="Components\Highchart.razor.cs" />
     <Compile Remove="Components\Highcharts3DMarketColumnChart.razor.cs" />
     <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
-    <Compile Remove="Components\HighCharts\LinesChart.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
-    <Compile Remove="Components\HubMonitor.razor.cs" />
+    <Compile Remove="Components\HighCharts\StackedColumns3D.razor.cs" />
+    <Compile Remove="Components\HighCharts\StackedColumns3DSurface.razor.cs" />
+    <Compile Remove="Components\HighCharts\TimeRows.razor.cs" />
     <Compile Remove="Components\HubMonitorOld.razor.cs" />
     <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
     <Compile Remove="Components\PrintLinesGauge___Copy.razor.cs" />
@@ -51,7 +52,6 @@
     <Compile Remove="Data\TDAPrints.cs" />
     <Compile Remove="Pages\Chat.razor.cs" />
     <Compile Remove="Pages\Filer.razor.cs" />
-    <Compile Remove="Pages\SignalRBase.cs" />
     <Compile Remove="Pages\TDAclient.razor.cs" />
     <Compile Remove="Shared\xNavMenu.razor.cs" />
   </ItemGroup>
@@ -63,11 +63,13 @@
     <Content Remove="Components\Highcharts3DMarketColumnChart.razor" />
     <Content Remove="Components\HighCharts\Base\HighChart3D.razor" />
     <Content Remove="Components\HighCharts\Columns3D.razor" />
-    <Content Remove="Components\HighCharts\LinesChart.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
+    <Content Remove="Components\HighCharts\StackedColumns3D.razor" />
+    <Content Remove="Components\HighCharts\StackedColumns3DSurface.razor" />
+    <Content Remove="Components\HighCharts\Stats.razor" />
+    <Content Remove="Components\HighCharts\TimeRows.razor" />
     <Content Remove="Components\HighCharts\xSurface.StackedColumns3DSurface.razor" />
-    <Content Remove="Components\HubMonitor.razor" />
     <Content Remove="Components\HubMonitorOld.razor" />
     <Content Remove="Components\PrintArcGaugeChart.razor" />
     <Content Remove="Components\PrintLinesGauge___Copy.razor" />

@@ -18,6 +18,7 @@ namespace tapeStream.Client.Shared
         private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
         string hubStatus = "";
+        string hubStatusMessage = "tapeStream Hub Connection Status";
 
         public string timeOfDay;
 
@@ -41,6 +42,8 @@ namespace tapeStream.Client.Shared
         public void HubStatusChanged()
         {
             hubStatus = TDAStreamerData.hubStatus;
+            hubStatusMessage =  TDAStreamerData.hubStatusMessage;
+
             StateChangedAsync();
         }
 

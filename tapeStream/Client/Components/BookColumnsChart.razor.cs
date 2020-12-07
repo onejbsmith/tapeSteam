@@ -65,6 +65,7 @@ namespace tapeStream.Client.Components
 
         private void ScaleChartAxes(float xWidth, float yCeilingScale)
         {
+           
             float xMin = 999999, xMax = 0, yMax = 0;
             foreach (var element in bookData)
             {

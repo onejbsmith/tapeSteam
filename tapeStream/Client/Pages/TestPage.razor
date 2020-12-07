@@ -1,24 +1,162 @@
 ﻿@page "/testpage"
+@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@using tapeStream.Client.Components
+@using tapeStream.Client.Components.HighCharts
 @*"#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"*@
 
 
-<MatCard Style="background-color:#7cb5ec;width:32px"><div>7cb5ec</div> </MatCard>
-<MatCard Style="background-color:#434348;width:32px"><div>434348</div> </MatCard>
-<MatCard Style="background-color:#90ed7d;width:32px"><div>90ed7d</div> </MatCard>
-<MatCard Style="background-color:#f7a35c;width:32px"><div>f7a35c</div> </MatCard>
-<MatCard Style="background-color:#8085e9;width:32px"><div>8085e9</div> </MatCard>
-<MatCard Style="background-color:#f15c80;width:32px"><div>f15c80</div> </MatCard>
-<MatCard Style="background-color:#e4d354;width:32px"><div>e4d354</div> </MatCard>
-<MatCard Style="background-color:#2b908f;width:32px"><div>2b908f</div> </MatCard>
-<MatCard Style="background-color:#f45b5b;width:32px"><div>f45b5b</div> </MatCard>
-<MatCard Style="background-color:#91e8e1;width:32px"><div>91e8e1</div> </MatCard>
+@*<MatCard Style="background-color:#7cb5ec;width:32px"><div>7cb5ec</div> </MatCard>
+    <MatCard Style="background-color:#434348;width:32px"><div>434348</div> </MatCard>
+    <MatCard Style="background-color:#90ed7d;width:32px"><div>90ed7d</div> </MatCard>
+    <MatCard Style="background-color:#f7a35c;width:32px"><div>f7a35c</div> </MatCard>
+    <MatCard Style="background-color:#8085e9;width:32px"><div>8085e9</div> </MatCard>
+    <MatCard Style="background-color:#f15c80;width:32px"><div>f15c80</div> </MatCard>
+    <MatCard Style="background-color:#e4d354;width:32px"><div>e4d354</div> </MatCard>
+    <MatCard Style="background-color:#2b908f;width:32px"><div>2b908f</div> </MatCard>
+    <MatCard Style="background-color:#f45b5b;width:32px"><div>f45b5b</div> </MatCard>
+    <MatCard Style="background-color:#91e8e1;width:32px"><div>91e8e1</div> </MatCard>*@
 
-<h3>TestPage</h3>
+<!--<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+    </div>
+    <img class="card-img-bottom" src=".../100px180/?text=Image cap" alt="Card image cap">
+
+</div>
+
+<h3>TestPage</h3>-->
 @*<div id="container">
 
     </div>
-    <tapeStream.Client.Components.HighCharts.TimeRows />*@
-@*<tapeStream.Client.Components.HighCharts.ClockGauge />*@
-@code {
+    <TimeRows />*@
+@*<ClockGauge />*@
+<!--<h1 @ref=MyElementReference>Hello, world!</h1>
+Welcome to your new app.
 
+Enter your name:
+<input autofocus />
+
+
+Enter your name
+<input @ref=ReferenceToInputControl />-->
+<div style="background-color:#F0F0F0;padding:10px">
+    <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+</div>
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+            <LinesChart id="LinesChart1"  ratioFrames="@ratioFrames"  />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
+            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" buysField="buysRatio" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" buysField="buysPriceCount" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
+            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" buysField="asksBookSizes"  />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" buysField="buysBelow" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
+            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" buysField="buysAbove" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
+    </div>
+</div>
+
+@*<table>
+        <tr class="flex-grid-thirds">
+            <td class="col"> <LinesChart id="LinesChart1" /></td>
+            <td class="col"> <LinesChart id="LinesChart2" /></td>
+            <td class="col"> <LinesChart id="LinesChart3" /></td>
+        </tr>
+    </table>*@
+
+<style>
+/*.flex-grid-thirds {
+  display: flex;
+  justify-content: space-between;
 }
+.flex-grid-thirds .col {
+  width: 32%;
+}*/
+
+@*@media (max-width: 400px) {
+  .flex-grid,
+  .flex-grid-thirds {
+    display: block;
+    .col {
+      width: 100%;
+      margin: 0 0 10px 0;
+    }
+  }
+}*@
+
+
+
+    .highcharts-container {
+        overflow: visible !important;
+        height:100%;
+        width:90%;
+    }
+
+    #container {
+/*        width: -moz-max-content;
+        width: -webkit-max-content;
+        width: max-content;*/
+        height: -moz-max-content;
+        height: -webkit-max-content;
+        height: max-content;
+    }
+
+        #container > div {
+            overflow: visible !important;
+            height: -moz-max-content;
+            height: -webkit-max-content;
+            height: max-content;
+        }
+
+
+            #container > div > div {
+                overflow: visible !important;
+                height: -moz-max-content;
+                height: -webkit-max-content;
+                height: max-content;
+            }
+
+
+    .highcharts-root {
+        position: relative;
+        right: 0px !important;
+    }
+
+    .mdc-layout-grid__inner, .mat-layout-grid-inner {
+        display: grid;
+        margin: 0;
+        grid-gap: 10px;
+        /* grid-gap: var(--mdc-layout-grid-gutter-desktop, 4px); */
+        grid-template-columns: repeat(12, minmax(0, .0825fr));
+    }
+
+    .rightside {
+        position: relative;
+        right: 6%;
+    }
+
+    .mat-layout-grid
+    {
+        padding:0;
+    }
+
+</style>

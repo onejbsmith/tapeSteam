@@ -4,12 +4,18 @@
 @using tapeStream.Client.Components.HighCharts.Base
 @using MatBlazor
 @using tapeStream.Shared.Data
+@using tapeStream.Shared
 
 @inject Microsoft.JSInterop.IJSRuntime jsruntime
 @inject HttpClient _client
 
+<div>
+    <h4 style="display:inline-block;color:blueviolet;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h4>
+    <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:blueviolet;position: relative;top:5px;right:5px"> </MatIconButton>
+    <h6 class="float-right" style="position:relative;top:25px; color:blueviolet">@(ratioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
+</div>
 <figure class="highcharts-figure">
-    <div id="container">
+    <div id="container" style="zoom:0.8">
         <HighChart id="@id"
                    chartJson="@chartJson"
                    updateMode="@HighChart.DataUpdateMode.Replace"
@@ -18,17 +24,51 @@
     </div>
 </figure>
 
-<style>
-    #LinesChart, .highcharts-container {
-        overflow: visible !important;
-    }
 
-    .highcharts-root {
-        position: relative;
-        right: 0px !important;
+
+<MatDialog @bind-IsOpen="@dialogIsOpen">
+    @*<MatDialogTitle>Hi @name</MatDialogTitle>*@
+    <MatDialogContent>
+        <MatCard style="margin-bottom:10px">
+
+            @(string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1)))
+            <MatChipSet Filter="true" @bind-SelectedChips="selectedBuysChips" Choice="true">
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.buysTradeSizes"></MatChip>
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.asksBookSizes"></MatChip>
+                <MatChip Label="∑" IsCheckable="true" Value="@CONSTANTS.buysSumSizes"></MatChip>
+                <MatChip Label="%" IsCheckable="true" Value="@CONSTANTS.buysRatio"></MatChip>
+                <MatChip Label="%2" IsCheckable="true" Value="@CONSTANTS.buysAltRatio"></MatChip>
+                <MatChip Label="<>" IsCheckable="true" Value="@CONSTANTS.buysInSpread"></MatChip>
+                <MatChip Label=">" IsCheckable="true" Value="@CONSTANTS.buysAbove"></MatChip>
+                <MatChip Label="<" IsCheckable="true" Value="@CONSTANTS.buysBelow"></MatChip>
+                <MatChip Label="#" IsCheckable="true" Value="@CONSTANTS.buysPriceCount"></MatChip>
+                <MatChip Label="r" IsCheckable="true" Value="@CONSTANTS.buysR"></MatChip>
+            </MatChipSet>
+        </MatCard>
+        <span>
+            @(ProcessChips())
+        </span>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@OkClick">OK</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<style>
+    /*    #LinesChart, .highcharts-container {
+            overflow: visible !important;
+        }
+
+        .highcharts-root {
+            position: relative;
+            right: 0px !important;
+        }*/
+
+    .mat-card, .mdc-card {
+        width: 110%;
     }
 </style>
-
 @code {
 
 }

@@ -20,6 +20,7 @@ using FilesManager = tapeStream.Server.Data.FilesManager;
 using TDAApiService = tapeStream.Server.Data.TDAApiService;
 using TDAConstants = tapeStream.Server.Data.TDAConstants;
 using JsConsole;
+using System.Text.Json;
 
 namespace tapeStream.Server.Components
 {
@@ -390,19 +391,43 @@ namespace tapeStream.Server.Components
         }
 
         static DateTime lastSvcTime;
+        static int i = 0;
+        static DateTime prevRatioFrameDateTime = DateTime.Now;
         private void sendTimeSalesData()
         {
             if (TDAChart.svcDateTime != lastSvcTime)
             {
                 //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
-
+                i++;
                 //if (lastSvcTime == null)
                 //    lastSvcTime = TDAChart.svcDateTime;
                 //else if (TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds >= 500)
                 //{
+
+                async Task sendData()
+                {
+                    var ratioFrame = await TDABookManager.getIncrementalRatioFrames(30);
+                    /// So we don't send the same frame more than once
+                    if (ratioFrame.dateTime != prevRatioFrameDateTime)
+                    {
+                        System.Diagnostics.Debug.Print(ratioFrame.dateTime.ToLongTimeString() );
+                        prevRatioFrameDateTime = ratioFrame.dateTime;
+                        var msg = JsonSerializer.Serialize<RatioFrame>(ratioFrame);
+                        await Send("getIncrementalRatioFrames", msg);
+                    }
+                }
+
                 JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
                 var msg = TDAChart.svcDateTime.ToOADate().ToString();
-                Send("TimeAndSales", msg);
+
+
+                sendData();
+                //Send("TimeAndSales", JsonSerializer.Serialize<Data.TimeSales_Content>(TDAStreamerData.timeAndSales));
+
+
+
+
+                // Send("TimeAndSales", msg);
                 lastSvcTime = TDAChart.svcDateTime;
                 StateHasChanged();
                 //}
@@ -632,7 +657,7 @@ namespace tapeStream.Server.Components
             hubConnection.On("ACTIVES_NYSE", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("ACTIVES_NASDAQ", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("ACTIVES_OPTIONS", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
-            hubConnection.On("TimeAndSales", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
+            hubConnection.On("getIncrementalRatioFrames", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("GaugeScore", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("BookColsData", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("BookPiesData", (Action<string, string>)((topic, message) => { Receive(topic, message); }));

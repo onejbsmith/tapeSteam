@@ -57,7 +57,7 @@ namespace tapeStream.Shared
 
         public static readonly string[] valuesName = new string[]
         { "ALL", "NASDAQ_BOOK", "TIMESALE_EQUITY", "CHART_EQUITY", "OPTION",
-          "QUOTE", "ACTIVES_NYSE", "ACTIVES_NASDAQ", "ACTIVES_OPTIONS", "TimeAndSales",
+          "QUOTE", "ACTIVES_NYSE", "ACTIVES_NASDAQ", "ACTIVES_OPTIONS", "getIncrementalRatioFrames",
           "GaugeScore","PrintsPies","BookColsData","BookPiesData","BookBigPieData" };
 
         public static string TIMESALE_EQUITY = valuesName[2];
