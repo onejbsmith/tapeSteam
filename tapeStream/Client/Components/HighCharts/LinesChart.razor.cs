@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Client.Data;
+using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
 
@@ -55,22 +56,22 @@ namespace tapeStream.Client.Components.HighCharts
 
             }
         }
-        private string _buysField = "buysTradeSizes";
+        private string _buysField;
 
-        public static List<float> lstBuysRatios { get; set; }
+        public  List<float> lstBuysRatios { get; set; }
 
-        public static List<float> lstSellsRatios { get; set; }
+        public  List<float> lstSellsRatios { get; set; }
 
-        public static List<string> lstSvcTimes { get; set; } = new List<string>();
+        public  List<string> lstSvcTimes { get; set; } = new List<string>();
 
-        public static string svcDate { get; set; }
+        public  string svcDate { get; set; }
 
-        public static List<float> lstMarkPrices { get; set; }
+        public  List<float> lstMarkPrices { get; set; }
 
-        static string chartJson = "";
-        static string idName = "LinesChart";
-        static string chartJsFilename = $"js/highcharts/{idName}.chart.js?id={DateTime.Now.ToOADate()}";
-        static bool redraw = true;
+        string chartJson = "";
+        string idName = "LinesChart";
+        string chartJsFilename = $"js/highcharts/LinesChart.chart.js?id={DateTime.Now.ToOADate()}";
+        bool redraw = true;
 
         static LinesChartData.Rootobject chart = new LinesChartData.Rootobject();
 
@@ -99,7 +100,7 @@ namespace tapeStream.Client.Components.HighCharts
             chart.subtitle.text = ratioFrames.First().dateTime.ToLongDateString();// TDAChart.LongDateString;
             chart.yAxis[0].gridLineWidth = 1;
             chart.yAxis[1].gridLineWidth = 1;
-            chart.series[1].data = new float[0];
+
 
 
 
@@ -162,6 +163,9 @@ namespace tapeStream.Client.Components.HighCharts
 
             chart.series[0].data = lstBuys.ToArray();
             chart.series[2].data = lstSells.ToArray();
+            chart.series[0].color = CONSTANTS.asksColor;
+            chart.series[2].color = CONSTANTS.bidsColor;
+            chart.yAxis[0].gridLineWidth = 1;
 
             redraw = true;
             chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
@@ -169,7 +173,7 @@ namespace tapeStream.Client.Components.HighCharts
             await Task.CompletedTask;
         }
 
-        private static void Chart_SetCategories(List<RatioFrame> ratioFrames)
+        private  void Chart_SetCategories(List<RatioFrame> ratioFrames)
         {
             List<string> categories = new List<string>();
             foreach (var frame in ratioFrames)

@@ -168,6 +168,7 @@ namespace tapeStream.Client.Data
         public class Series
         {
             public string name { get; set; }
+            public string color { get; set; }
             public string type { get; set; }
             public int yAxis { get; set; }
             public float[] data { get; set; }

@@ -56,7 +56,7 @@ namespace tapeStream.Client.Pages
         public bool IsConnected => hubConnection != null && hubConnection.State == HubConnectionState.Connected;
         #endregion
 
-        Timer timerBookColumnsCharts = new Timer(1000);
+        Timer timerBookColumnsCharts = new Timer(500);
 
         protected override async Task OnInitializedAsync()
         {
@@ -86,13 +86,14 @@ namespace tapeStream.Client.Pages
             //if (TDAChart.isActive == true)
             {
                 //JsConsole.JsConsole.Time(jsruntime, "TimerBookColumnsCharts_Elapsed");
-                timerBookColumnsCharts.Stop();
+                
+                //timerBookColumnsCharts.Stop();
 
                 var frames = TDABook.ratiosDepth;
                 ratioFrames = new List<RatioFrame>();
                 ratioFrames.AddRange(allRatioFrames.TakeLast(frames));
 
-                timerBookColumnsCharts.Start();
+                //timerBookColumnsCharts.Start();
 
 
                 //var ratioFrame = await bookColumnsService.getIncrementalRatioFrames(SurfaceChartConfigurator.longSeconds, TDABook.ratiosDepth, jsruntime);

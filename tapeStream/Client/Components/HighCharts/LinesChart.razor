@@ -10,9 +10,9 @@
 @inject HttpClient _client
 
 <div>
-    <h4 style="display:inline-block;color:blueviolet;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h4>
-    <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:blueviolet;position: relative;top:5px;right:5px"> </MatIconButton>
-    <h6 class="float-right" style="position:relative;top:25px; color:blueviolet">@(ratioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
+    <h4 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h4>
+    <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:#e7934c;position: relative;top:5px;right:5px"> </MatIconButton>
+    <h6 class="float-right" style="position:relative;top:25px; color:#e7934c">@(ratioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
 </div>
 <figure class="highcharts-figure">
     <div id="container" style="zoom:0.8">

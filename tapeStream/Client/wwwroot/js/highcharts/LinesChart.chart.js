@@ -1,7 +1,7 @@
 ﻿{
     chart: {
         zoomType: 'xy',
-            animation: false
+            animation: false,
 
     },
     title: {
@@ -21,13 +21,13 @@
             labels: {
                 format: '{value}',
                 style: {
-                    color: Highcharts.getOptions().colors[0]
+                    color: Highcharts.getOptions().colors[1]
                 }
             },
             title: {
                 text: 'Size or Ratio',
                 style: {
-                    color: Highcharts.getOptions().colors[0]
+                    color: Highcharts.getOptions().colors[1]
                 }
             },
             opposite: false
@@ -82,6 +82,7 @@
     series: [{
         name: 'Sells',
         type: 'spline',
+        backgroundColor: 'darkgray',
         yAxis: 0,
         data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
         marker: {
@@ -117,7 +118,52 @@
         tooltip: {
             valueSuffix: ''
         }
-    }],
+    },
+    {
+        showInLegend: false,
+        name: 'fourth',
+        type: 'spline',
+        yAxis: 0,
+        data: [],
+        marker: {
+            enabled: true
+        },
+        dashStyle: 'shortdot',
+        tooltip: {
+            valueSuffix: ''
+        }
+
+        },
+        {
+            showInLegend: false,
+            name: 'fifth',
+            type: 'spline',
+            yAxis: 0,
+            data: [],
+            marker: {
+                enabled: true
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
+
+        },
+        {
+            showInLegend: false,
+            name: 'sixth',
+            type: 'spline',
+            yAxis: 0,
+            data: [],
+            marker: {
+                enabled: true
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
+        }
+    ],
         plotOptions: {
         series: {
             animation: false,
