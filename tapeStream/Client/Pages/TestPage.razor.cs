@@ -116,9 +116,6 @@ namespace tapeStream.Client.Pages
             _ = hubConnection.DisposeAsync();
         }
 
-        static int countIn = 0;
-        static int collectEvery = 5;
-        static List<RatioFrame> stagingRatioFrames = new List<RatioFrame>();
         public async System.Threading.Tasks.Task HubConnection_Initialize()
         {
 #if tracing

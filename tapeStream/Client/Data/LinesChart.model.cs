@@ -26,8 +26,16 @@ namespace tapeStream.Client.Data
         public class Plotoptions
         {
             public Series1 series { get; set; }
+
+           public  Line line { get; set; }
+
         }
 
+        public class Line
+        {
+            public long pointInterval { get; set; }
+            public long pointStart { get; set; }
+        }
         public class Series1
         {
             public bool animation { get; set; }
@@ -35,6 +43,9 @@ namespace tapeStream.Client.Data
         public class Chart
         {
             public string zoomType { get; set; }
+            public bool animation { get; set; }
+
+
         }
 
         public class Title
@@ -120,6 +131,7 @@ namespace tapeStream.Client.Data
             public bool crosshair { get; set; }
             public int index { get; set; }
             public bool isX { get; set; }
+            public string type { get; set; }
         }
 
         public class Yaxi1
@@ -162,6 +174,9 @@ namespace tapeStream.Client.Data
             public Tooltip1 tooltip { get; set; }
             public Marker marker { get; set; }
             public string dashStyle { get; set; }
+
+            public bool showInLegend { get; set; }
+
         }
 
         public class Tooltip1

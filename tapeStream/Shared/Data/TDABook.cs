@@ -70,8 +70,11 @@ namespace tapeStream.Shared.Data
 
 
 
-        public static int ratiosDepth = 50;
+        public static int ratiosDepth = 60;
         public static int ratiosBack = 30;
+        public static bool? isCurrentEndTime = true;
+        public static DateTime? startTime = DateTime.Now;
+        public static DateTime? endTime = DateTime.Now;
 
         //public static Dictionary<string,BookDataItem[]> getBookColumnsData()
         //{

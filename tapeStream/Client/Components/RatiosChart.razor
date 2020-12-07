@@ -17,7 +17,7 @@
                 <MatCard>
                     <div style="display:inline-block;color:forestgreen;cursor:pointer" @onclick="@OpenPriceDialog">
                         <h4 style="display:inline-block;color:forestgreen;">QQQ Price</h4>
-                        <h4 class="float-right" style="position:relative;top:17px; color:forestgreen;">@(passedRatioFrames.Count.ToString("n0")):@(TDABook.ratiosBack.ToString())</h4>
+                        <h6 class="float-right" style="position:relative;top:27px; color:forestgreen;">@(allRatioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
                         <MatIconButton Icon="settings" OnClick="@OpenPriceDialog" Raised="true" Style="position: relative;top:5px;right:5px" />                         
 
                     </div>
@@ -120,13 +120,25 @@
         <MatCard>
             <div style="zoom:0.90">
                 <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
-                <Radzen.Blazor.RadzenSlider TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@TDABook.ratiosDepth" />
+                <Radzen.Blazor.RadzenNumeric TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@TDABook.ratiosDepth" />
                 <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosDepth</h4>
             </div>
             <div style="zoom:0.90">
                 <h4 style="display:inline-block;color:blueviolet">∑ Ticks</h4>
-                <Radzen.Blazor.RadzenSlider TValue="int" Min="10" Max="1000" Step="10" @bind-Value="@TDABook.ratiosBack" />
+                <Radzen.Blazor.RadzenNumeric  TValue="int" Min="10" Max="1000" Step="10" @bind-Value="@TDABook.ratiosBack" />
                 <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosBack</h4>
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">Start Time</h4>
+                <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Change=@(args => OnChange(args, "Start Time", "HH:mm")) />
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">End Time</h4>
+                <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Change=@(args => OnChange(args, "End Time", "HH:mm")) />
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">End Time Current</h4>
+                <RadzenCheckBox TValue="bool"  Change=@(args => OnChange(args, "End Time Current", "")) />
             </div>
         </MatCard>
     </MatDialogContent>
@@ -148,8 +160,13 @@
         border-radius: 5px;
         padding: 0px 10px;
     }
+    .rz-axis-title > text
+    {
+        stroke:#808080 !important;
+    }
 </style>
 @code {
+
 
 
 }

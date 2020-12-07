@@ -12,11 +12,13 @@ namespace tapeStream.Client.Components
     {
 
         Radzen.Blazor.RadzenChart radzenChart;
+        [Parameter]
+        public List<RatioFrame> allRatioFrames { get; set; }
 
         [Parameter]
         public bool showPrice { get; set; } = true;
 
-        private  List<RatioFrame> passedRatioFrames  { get; set; }= new  List<RatioFrame>();
+        private List<RatioFrame> passedRatioFrames { get; set; } = new List<RatioFrame>();
         private List<RatioFrame> _ratioFrames;
         [Parameter]
         public List<RatioFrame> ratioFrames
@@ -27,7 +29,7 @@ namespace tapeStream.Client.Components
                 _ratioFrames = value;
 
                 var now = TDAChart.svcDateTime;
-                var secs = TDABook.ratiosBack;
+                var secs = TDABook.ratiosDepth;
                 try
                 {
                     if (_ratioFrames.Count > 0)
@@ -68,14 +70,17 @@ namespace tapeStream.Client.Components
         static double sumBuys = 0;
         static double sumSells = 0;
 
+        private string buysField = "buysTradeSizes";
+
         private string _buysField = "buysTradeSizes";
         [Parameter]
-        public string buysField
+        public string initialBuysField
         {
             get { return _buysField; }
             set
             {
                 _buysField = value;
+                buysField = value;
                 sellsField = _buysField.Replace("buys", "sells").Replace("asks", "bids");
 
             }
@@ -95,6 +100,28 @@ namespace tapeStream.Client.Components
         MatChip[] selectedSellsChips = null;
         MatChip selectedSellChip = null;
 
+        int ratiosBack = TDABook.ratiosBack;
+        int ratiosDepth = TDABook.ratiosDepth;
+        DateTime? endTime = TDABook.endTime;
+        DateTime? startTime = TDABook.startTime;
+        bool? isCurrentEndTime = TDABook.isCurrentEndTime;
+        void OnChange(object value, string name, string format)
+        {
+            switch (name)
+            {
+                case "Start Time":
+                    startTime = value as DateTime?;
+                    break;
+
+                case "End Time":
+                    endTime = value as DateTime?;
+
+                    break;
+                case "End Time Current":
+                    isCurrentEndTime = value as bool?;
+                    break;
+            }
+        }
 
         string chartTitle()
         {
@@ -107,6 +134,13 @@ namespace tapeStream.Client.Components
 
         void OkClick()
         {
+
+            TDABook.ratiosDepth = ratiosDepth;
+            TDABook.ratiosBack = ratiosBack;
+            TDABook.endTime = endTime;
+            TDABook.startTime = startTime;
+            TDABook.isCurrentEndTime = isCurrentEndTime;
+
             dialogIsOpen = false;
         }
 

@@ -2,6 +2,7 @@
 #define UsingSignalHub
 #define dev
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace tapeStream.Client.Pages
 #if UsingSignalHub
         Dictionary<string, int> dictTopicCounts = new Dictionary<string, int>();
 
-        static string clockFormat = "h:mm:ss MMM d, yyyy";
+        static string clockFormat = "h:mm:ss dddd MMMM d, yyyy";
 
 
         bool logHub;
@@ -89,7 +90,9 @@ namespace tapeStream.Client.Pages
             foreach (var name in CONSTANTS.valuesName)
                 dictTopicCounts.Add(name, 0);
 
-            await InitHub();
+            //await InitHub();
+            await HubConnection_Initialize();
+
             //await signalRBase.Subscribe("TimeAndSales", incrementTimeAndSales);
             //await signalRBase.Unsubscribe("TimeAndSales", incrementTimeAndSales);
 
@@ -100,7 +103,7 @@ namespace tapeStream.Client.Pages
 #endif
         }
 
-        private void incrementTimeAndSales()
+        private void incrementTimeSales()
         { }
 
 #if UsingSignalHub
@@ -108,67 +111,113 @@ namespace tapeStream.Client.Pages
         {
             _ = hubConnection.DisposeAsync();
         }
+        static int  countIn;
 
-        static int countIn = 0;
-        public async System.Threading.Tasks.Task InitHub()
+        public async System.Threading.Tasks.Task HubConnection_Initialize()
         {
-            JsConsole.JsConsole.Warn(jsruntime, $"InitHub: ");
-
+#if tracing
+            JsConsole.JsConsole.Warn(jsruntime, $"HubConnection_Initialize: ");
+#endif
             /// Init the SignalR Hub
             /// 
             try
             {
 #if dev
-                hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
+                hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
+                {
+                    options.Transports = HttpTransportType.WebSockets;
+                }).Build();
 #else
-                        hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
+                hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
+                {
+                    options.Transports =  HttpTransportType.WebSockets;
+                }).Build();
 #endif
                 /// Set up Hub Subscriptions -- Don't really need any anymore
                 /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
-                //hubConnection.On("getIncrementalRatioFrames", (Action<string, string>)((topic, message) =>
-                //{
-                //    //var newRatioFrame = System.Text.Json.JsonSerializer.Deserialize<RatioFrame>(message);
-                //    //allRatioFrames.Add(newRatioFrame);
+                hubConnection.On("getIncrementalRatioFrames", (Action<string, string>)((topic, message) =>
+                {
 
-                //    //countIn++;
-                //    //if (countIn % 10 == 0)
-                //    //{
-                //    //    ratioFrames = new List<RatioFrame>();
-                //    //    ratioFrames.AddRange(allRatioFrames);
-                //    //}
+                    var newRatioFrame = System.Text.Json.JsonSerializer.Deserialize<RatioFrame>(message);
+                    allRatioFrames.Add(newRatioFrame);
+                    clock = newRatioFrame.dateTime.ToString(clockFormat);
+                    countIn += 1;
+                    if (countIn % 1 == 0)
+                    {
+                        ratioFrames = new List<RatioFrame>();
+                        ratioFrames.AddRange(allRatioFrames);
+                    }
+                    Task.Yield();
+                    Receive(topic, message);
+                    StateHasChanged();
 
-                //    Receive(topic, message);
-                //    StateHasChanged();
+                }));
 
-                //}));
+                hubConnection.Reconnected += HubConnection_Reconnected;
+                hubConnection.Closed += HubConnection_Closed;
+                hubConnection.Reconnecting += HubConnection_Reconnecting;
 
-                await hubConnection.StartAsync();
-
-                /// Show Hub Status in lamp color
-                var color = IsConnected ? "green" : "red";
-                Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+                await HubConnection_Start();
 
             }
             catch (System.Exception ex)
             {
-                JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
+
             }
+        }
+
+        private async Task HubConnection_Start()
+        {
+            await hubConnection.StartAsync();
+
+            /// Show Hub Status in lamp color
+            var color = IsConnected ? "green" : "red";
+            Data.TDAStreamerData.hubStatusMessage = "HubConnection Started";
+            Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+        }
+
+        private Task HubConnection_Reconnecting(Exception arg)
+        {
+            Data.TDAStreamerData.hubStatusMessage = "HubConnection Reconnecting";
+            Data.TDAStreamerData.hubStatus = $"./images/yellow.gif";
+            return Task.CompletedTask;
+        }
+
+        private async Task HubConnection_Closed(Exception arg)
+        {
+            var color = IsConnected ? "green" : "red";
+            Data.TDAStreamerData.hubStatusMessage = "HubConnection Closed";
+            Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+
+            /// Restart
+            await HubConnection_Start();
+            Data.TDAStreamerData.hubStatusMessage = "HubConnection Restarted";
+            Data.TDAStreamerData.hubStatus = Data.TDAStreamerData.hubStatus;
+        }
+
+        private Task HubConnection_Reconnected(string arg)
+        {
+            var color = IsConnected ? "green" : "red";
+            Data.TDAStreamerData.hubStatusMessage = "HubConnection Reconnected";
+            Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+            return Task.CompletedTask;
         }
 
         void Receive(string topic, string content)
         {
-            JsConsole.JsConsole.Warn(jsruntime, $"Receive: {topic}:{content}");
-            clock = System.DateTime.Now.ToString(clockFormat);
+            //JsConsole.JsConsole.Warn(jsruntime, $"Receive: {topic}:{content}");
+            //clock = System.DateTime.Now.ToString(clockFormat);
 
             // Show the topic text (last 1000 lines)
-            logTopicsb.Insert(0, "\n" + topic + ":" + content.Replace("\r", "").Replace("\n", ""));
-            logTopics = string.Join('\n', logTopicsb.ToString().Split('\n'));
+            //logTopicsb.Insert(0, "\n" + topic + ":" + content.Replace("\r", "").Replace("\n", ""));
+            //logTopics = string.Join('\n', logTopicsb.ToString().Split('\n'));
 
-            //jsruntime.count("TimeAndSales");
-            Task.Yield();
+            ////jsruntime.count("TimeAndSales");
+            //Task.Yield();
             // Update topic's Stats count
             dictTopicCounts[topic] += 1;
 
+            Task.Yield();
 
             StateHasChanged();
             //var svcJsonObject = JObject.Parse(content);
@@ -221,10 +270,15 @@ namespace tapeStream.Client.Pages
                 bookColData = await bookColumnsService.getBookColumnsData(seconds);
                 await Task.Yield();
 
-                var ratioFrame = await bookColumnsService.getIncrementalRatioFrames(SurfaceChartConfigurator.longSeconds, TDABook.ratiosDepth, jsruntime);
-                allRatioFrames.Add(ratioFrame);
-                ratioFrames = new List<RatioFrame>();
-                ratioFrames.AddRange(allRatioFrames);
+                //var frames = TDABook.ratiosDepth;
+                //ratioFrames = new List<RatioFrame>();
+                //ratioFrames.AddRange(allRatioFrames);
+
+
+                //var ratioFrame = await bookColumnsService.getIncrementalRatioFrames(SurfaceChartConfigurator.longSeconds, TDABook.ratiosDepth, jsruntime);
+                //allRatioFrames.Add(ratioFrame);
+                //ratioFrames = new List<RatioFrame>();
+                //ratioFrames.AddRange(allRatioFrames);
 
                 //await Task.Yield();
                 //await bookColumnsService.getLtRatios(SurfaceChartConfigurator.longSeconds, jsruntime);

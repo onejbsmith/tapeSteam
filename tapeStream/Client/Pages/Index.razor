@@ -52,29 +52,31 @@
     <div style="display:none">
         <ChartConfigure symbol="@symbol" title="Configure Columns" />
         <SurfaceChartConfigurator symbol="@symbol" title="Configure Surface" />
-        @*<div style="background-color:#F0F0F0;padding:10px">
-            <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
-        </div>*@
-    </div>    
-    <MatExpansionPanel Expanded="true">
+
+    </div>
+   <MatExpansionPanel Expanded="true">
         <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Indicators</MatExpansionPanelHeader>
+            <MatExpansionPanelHeader>
+                <div style="background-color:#F0F0F0;padding:10px 0 0 0">
+                    <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+                </div>
+            </MatExpansionPanelHeader>
         </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails  Style="width:120%;padding-top:0 !important">
+        <MatExpansionPanelDetails Style="width:120%;padding-top:0 !important">
             <div class="mat-layout-grid" style="width:110%;padding:0 !important ">
                 <div class="mat-layout-grid-inner" style="width:100%;padding:0 !important">
                     @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4" />*@
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
                         @*<LinesChart />*@
                         @*<h1>@(ratioFrames.Count.ToString())</h1>*@
-                        <RatiosChart ratioFrames="@ratioFrames" />
-                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysRatio" />
+                        <RatiosChart ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" initialBuysField="buysBelow" />
                     </div>
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6 rightside">
                         @*<LinesChart />*@
-                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysPriceCount" />
-                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="asksBookSizes" />
-                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" buysField="buysR" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" initialBuysField="buysPriceCount" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" initialBuysField="asksBookSizes" />
+                        <RatiosChart ratioFrames="@ratioFrames" showPrice="false" initialBuysField="buysAbove" />
                     </div>
                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
                         <BookColumnsChart symbol="@symbol" bookData="@bookColData" />
