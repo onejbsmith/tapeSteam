@@ -2,15 +2,15 @@
 
 @using tapeStream.Client.Data;
 @using System.Timers;
-<div class="h-100">
-    <RadzenCheckBox @bind-Value="@logHub" TValue="bool" Change="@(args => logHubChange(args, ""))" />
-    <RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;" Component="CheckBox4" />
-    <Badge IsPill="true" class="alert-dark" title="Time of last data received">@clock</Badge>
-    @foreach (var name in valuesName.Skip(1))
-    {
-        <Badge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[name].ToString("n0")' title="@name" /></Badge>
-    }
-    <RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
+<div class="h-100" style="padding:10px">
+<RadzenCheckBox @bind-Value="@logHub" TValue="bool" Change="@(args => logHubChange(args, ""))" />
+<RadzenLabel Text="tapeStream Hub" Style="margin-left: 5px;color:darkmagenta; font-weight:800" Component="CheckBox4" />
+<Badge IsPill="true" class="alert-dark" title="Time of last data received">@clock</Badge>
+@foreach (var name in valuesName.Skip(1))
+{
+    <Badge class="alert-primary"><RadzenLabel Text='@dictTopicCounts[name].ToString("n0")' title="@name" /></Badge>
+}
+<RadzenTextArea Visible="@((bool)logHub)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logTopics" />
 </div>
 @code {
     [Parameter]

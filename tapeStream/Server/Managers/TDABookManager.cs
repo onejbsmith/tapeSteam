@@ -371,8 +371,8 @@ namespace tapeStream.Server.Data
                 var sellsSumSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size) + dictBookDataItem["asks"].GroupBy(t => t.Price).Count();
                 var buysSumSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size) + dictBookDataItem["bids"].GroupBy(t => t.Price).Count();
 
-                buysRatio = (buysInSpread + sellsBelow) / asks;
-                sellsRatio = (sellsInSpread + buysAbove) / bids;
+                sellsRatio = (buysInSpread + sellsBelow) / asks;
+                buysRatio = (sellsInSpread + buysAbove) / bids;
 
                 ratioSizes.averageSize.Add("buys", buysRatio);
                 ratioSizes.averageSize.Add("sells", sellsRatio);

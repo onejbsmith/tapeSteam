@@ -81,7 +81,7 @@ namespace tapeStream.Client.Components
             {
                 _buysField = value;
                 buysField = value;
-                sellsField = _buysField.Replace("buys", "sells").Replace("asks", "bids");
+                sellsField = _buysField.Replace("buys", "sells").Replace("bids", "asks");
 
             }
         }
@@ -151,7 +151,7 @@ namespace tapeStream.Client.Components
 
         void OkPriceClick()
         {
-            dialogIsOpen = false;
+            priceDialogIsOpen = false;
         }
 
         string FormatAsUSD(object value)
@@ -170,7 +170,7 @@ namespace tapeStream.Client.Components
                 if ((chip.IsSelected))
                 {
                     buysField = (string)chip.Value;
-                    sellsField = buysField.Replace("buys", "sells").Replace("asks", "bids"); ;
+                    sellsField = buysField.Replace("buys", "sells").Replace("bids", "asks"); ;
                 }
             }
             return "";

@@ -18,15 +18,9 @@ namespace tapeStream.Client.Pages
 {
     public partial class TestPage
     {
+        #region Variables
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
-
-        LinesChart LinesChart1;
-        LinesChart LinesChart2;
-        LinesChart LinesChart3;
-        LinesChart LinesChart4;
-        LinesChart LinesChart5;
-        LinesChart LinesChart6;
 
         public List<RatioFrame> allRatioFrames = new List<RatioFrame>();
 
@@ -39,6 +33,17 @@ namespace tapeStream.Client.Pages
             }
         }
         private List<RatioFrame> _ratioFrames = new List<RatioFrame>();
+
+        public Dictionary<string, BookDataItem[]> bookColData
+        {
+            get { return _bookColData; }
+            set
+            {
+                _bookColData = value;
+            }
+        }
+        Dictionary<string, BookDataItem[]> _bookColData;
+
 
         #region Hub Vars
         Dictionary<string, int> dictTopicCounts = new Dictionary<string, int>() { };
@@ -56,7 +61,52 @@ namespace tapeStream.Client.Pages
         public bool IsConnected => hubConnection != null && hubConnection.State == HubConnectionState.Connected;
         #endregion
 
+        #region Dialog Vars
         Timer timerBookColumnsCharts = new Timer(500);
+        bool priceDialogIsOpen = false;
+        int ratiosBack = TDABook.ratiosBack;
+        int ratiosDepth = TDABook.ratiosDepth;
+        DateTime? endTime = TDABook.endTime;
+        DateTime? startTime = TDABook.startTime;
+        bool? isCurrentEndTime = TDABook.isCurrentEndTime;
+        bool isChartTimeFrameNew = true;
+        #endregion
+
+        #endregion
+
+        #region Dialog methods
+        void OpenPriceDialog()
+        {
+            priceDialogIsOpen = true;
+        }
+
+        void Dialog_OkClick()
+        {
+            TDABook.ratiosDepth = ratiosDepth;
+            TDABook.ratiosBack = ratiosBack;
+            TDABook.endTime = endTime;
+            TDABook.startTime = startTime;
+            TDABook.isCurrentEndTime = isCurrentEndTime;
+            priceDialogIsOpen = false;
+        }
+        void OnChange(object value, string name, string format)
+        {
+            switch (name)
+            {
+                case "Start Time":
+                    startTime = value as DateTime?;
+                    break;
+
+                case "End Time":
+                    endTime = value as DateTime?;
+
+                    break;
+                case "End Time Current":
+                    isCurrentEndTime = value as bool?;
+                    break;
+            }
+        }
+        #endregion
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,6 +114,8 @@ namespace tapeStream.Client.Pages
                 dictTopicCounts.Add(name, 0);
 
             await HubConnection_Initialize();
+
+            bookColData = await bookColumnsService.getBookColumnsData(ChartConfigure.seconds);
 
             InitializeTimers();
 
@@ -79,6 +131,9 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Start();
         }
 
+        /// <summary>
+        /// This makes the UI responsive. Events picked up every half second
+        /// </summary>
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
             //JsConsole.JsConsole.Error(jsruntime, $"TimerBookColumnsCharts_Elapsed");
@@ -86,12 +141,14 @@ namespace tapeStream.Client.Pages
             //if (TDAChart.isActive == true)
             {
                 //JsConsole.JsConsole.Time(jsruntime, "TimerBookColumnsCharts_Elapsed");
-                
+
                 //timerBookColumnsCharts.Stop();
 
-                var frames = TDABook.ratiosDepth;
-                ratioFrames = new List<RatioFrame>();
-                ratioFrames.AddRange(allRatioFrames.TakeLast(frames));
+
+
+                //var frames = TDABook.ratiosDepth;
+                //ratioFrames = new List<RatioFrame>();
+                //ratioFrames.AddRange(allRatioFrames.TakeLast(frames));
 
                 //timerBookColumnsCharts.Start();
 
@@ -110,8 +167,10 @@ namespace tapeStream.Client.Pages
                 //JsConsole.JsConsole.TimeEnd(jsruntime, "TimerBookColumnsCharts_Elapsed");
                 //         TDAChart.isActive = false;
             }
+            await Task.Yield();
         }
 
+        #region Hub Events
         public void Dispose()
         {
             _ = hubConnection.DisposeAsync();
@@ -129,7 +188,7 @@ namespace tapeStream.Client.Pages
 #if dev
                 hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
                 {
-                    options.Transports = HttpTransportType.WebSockets;
+                    options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
                 }).Build();
 #else
                 hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
@@ -141,25 +200,14 @@ namespace tapeStream.Client.Pages
                 /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
                 hubConnection.On("getIncrementalRatioFrames", (Action<string, string>)((topic, message) =>
                 {
-
-                    var newRatioFrame = System.Text.Json.JsonSerializer.Deserialize<RatioFrame>(message);
-                    allRatioFrames.Add(newRatioFrame);
-                    clock = newRatioFrame.dateTime.ToString(clockFormat);
-                    //countIn++;
-                    //if (countIn % 10 == 0)
-                    //{
-                    //    ratioFrames = new List<RatioFrame>();
-                    //    ratioFrames.AddRange(allRatioFrames);
-                    //}
-
-                    Receive(topic, message);
-                    StateHasChanged();
+                    Chart_ProcessHubData(topic, message);
 
                 }));
 
                 hubConnection.Reconnected += HubConnection_Reconnected;
                 hubConnection.Closed += HubConnection_Closed;
                 hubConnection.Reconnecting += HubConnection_Reconnecting;
+
 
                 await HubConnection_Start();
 
@@ -168,6 +216,40 @@ namespace tapeStream.Client.Pages
             {
 
             }
+        }
+
+        private void Chart_ProcessHubData(string topic, string message)
+        {
+            var newRatioFrame = System.Text.Json.JsonSerializer.Deserialize<RatioFrame>(message);
+            clock = newRatioFrame.dateTime.ToString(clockFormat);
+            var alwaysUpdate = allRatioFrames.Count<60;
+            allRatioFrames.Add(newRatioFrame);
+
+            //if (isChartTimeFrameNew == true || alwaysUpdate)
+            //{
+                /// Resetting ratioFrames updates the whole chart
+                ratioFrames = allRatioFrames.TakeLast(TDABook.ratiosDepth).ToList();
+                //StateHasChanged();
+                isChartTimeFrameNew = false;
+            //}
+            //else
+            //{
+            //    /// Resetting ratioFrames to 1 item appends new data points to the chart
+            //    ratioFrames = new List<RatioFrame>();
+            //    ratioFrames.Add( newRatioFrame);
+            //    StateHasChanged();
+            //}
+
+            /// 
+            //countIn++;
+            //if (countIn % 10 == 0)
+            //{
+            //    ratioFrames = new List<RatioFrame>();
+            //    ratioFrames.AddRange(allRatioFrames);
+            //}
+
+            Receive(topic, message);
+            StateHasChanged();
         }
 
         private async Task HubConnection_Start()
@@ -222,7 +304,7 @@ namespace tapeStream.Client.Pages
             dictTopicCounts[topic] += 1;
 
 
-            StateHasChanged();
+            //StateHasChanged();
             //var svcJsonObject = JObject.Parse(content);
             //var svcName = svcJsonObject["service"].ToString();
             //var contents = svcJsonObject["content"];
@@ -230,6 +312,6 @@ namespace tapeStream.Client.Pages
             //GetServiceTime(svcJsonObject);
 
         }
-
+        #endregion
     }
 }

@@ -1,7 +1,9 @@
-﻿@page "/testpage"
+﻿@page "/"
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @using tapeStream.Client.Components
 @using tapeStream.Client.Components.HighCharts
+@using tapeStream.Shared.Data
+@using tapeStream.Shared
 @*"#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"*@
 
 
@@ -43,17 +45,20 @@ Enter your name:
 
 Enter your name
 <input @ref=ReferenceToInputControl />-->
-<div style="background-color:#F0F0F0;padding:10px">
+<div style="background-color:ThreeDFace;display:inline-flex">
     <HubMonitor clock="@clock" dictTopicCounts="@dictTopicCounts" logTopics="@logTopics" />
+    <MatIconButton Icon="settings" OnClick="@OpenPriceDialog" Raised="true" Style="color:darkmagenta" />
+    <h6 class="float-right" style="padding:0 20px; position:relative;top:20px; color:darkmagenta">@(allRatioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
 </div>
-<div class="mat-layout-grid">
+<div class="mat-layout-grid" >
     <div class="mat-layout-grid-inner">
+    
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart1"  ratioFrames="@ratioFrames"  buysField="buysTradeSizes"  />
+            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" buysField="buysTradeSizes" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" buysField="buysRatio" />
+            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" buysField="asksBookSizes" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
@@ -61,7 +66,7 @@ Enter your name
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" buysField="asksBookSizes"  />
+            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" buysField="buysRatio" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
@@ -75,6 +80,39 @@ Enter your name
     </div>
 </div>
 
+<MatDialog @bind-IsOpen="@priceDialogIsOpen">
+    @*<MatDialogTitle>Hi @name</MatDialogTitle>*@
+    <MatDialogContent>
+        <MatCard>
+            <div style="zoom:0.90">
+                <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
+                <Radzen.Blazor.RadzenNumeric TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@ratiosDepth" />
+                <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosDepth</h4>
+            </div>
+            <div style="zoom:0.90">
+                <h4 style="display:inline-block;color:blueviolet">∑ Ticks</h4>
+                <Radzen.Blazor.RadzenNumeric TValue="int" Min="10" Max="1000" Step="10" @bind-Value="@ratiosBack" />
+                <h4 style="display:inline-block;color:blueviolet">@TDABook.ratiosBack</h4>
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">Start Time</h4>
+                <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Change=@(args => OnChange(args, "Start Time", "HH:mm")) />
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">End Time</h4>
+                <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Change=@(args => OnChange(args, "End Time", "HH:mm")) />
+            </div>
+            <div>
+                <h4 style="margin-top: 40px">End Time Current</h4>
+                <RadzenCheckBox TValue="bool" Change=@(args => OnChange(args, "End Time Current", "")) />
+            </div>
+        </MatCard>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { priceDialogIsOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@Dialog_OkClick">OK</MatButton>
+    </MatDialogActions>
+</MatDialog>
 @*<table>
         <tr class="flex-grid-thirds">
             <td class="col"> <LinesChart id="LinesChart1" /></td>
@@ -157,6 +195,7 @@ Enter your name
     .mat-layout-grid
     {
         padding:0;
+        zoom:0.8;
     }
 
 </style>

@@ -10,16 +10,18 @@
 @inject HttpClient _client
 
 <div>
-    <h4 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h4>
+    <h6 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h6>
     <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:#e7934c;position: relative;top:5px;right:5px"> </MatIconButton>
-    <h6 class="float-right" style="position:relative;top:25px; color:#e7934c">@(ratioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
 </div>
 <figure class="highcharts-figure">
     <div id="container" style="zoom:0.8">
         <HighChart id="@id"
                    chartJson="@chartJson"
-                   updateMode="@HighChart.DataUpdateMode.Replace"
+                   chartSeriesJson="@chartSeriesJson"
+
+                   updateMode="@HighChart.DataUpdateMode.Append"
                    chartJsFilename="@chartJsFilename"
+
                    redrawChart="@redraw" />
     </div>
 </figure>

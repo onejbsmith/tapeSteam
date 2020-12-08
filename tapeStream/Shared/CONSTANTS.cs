@@ -28,6 +28,7 @@ namespace tapeStream.Shared
         public static string buysPriceCount = "buysPriceCount";
         public static string buysTradeSizes = "buysTradeSizes";
         public static string buysR = "buysR";
+        public static string markPrice = "buysTradeSizes";
 
 
         public static string sellsRatio = "sellsRatio";

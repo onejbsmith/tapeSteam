@@ -24,13 +24,15 @@ namespace tapeStream.Client.Components.HighCharts.Base
         [Parameter]
         public string id { get; set; } //= "Highchart" + Guid.NewGuid().ToString();
 
-        [Parameter] 
+        [Parameter]
         public string chartJson
         {
             get { return _chartJson; }
-            set { _chartJson = value;
+            set
+            {
+                _chartJson = value;
                 redrawChart = true;
-               DrawChart();
+                DrawChart();
             }
         }
         private string _chartJson;
@@ -45,7 +47,6 @@ namespace tapeStream.Client.Components.HighCharts.Base
                 if (value != seriesJson)
                 {
                     seriesJson = value;
-                    updateHighchartSeries();
                 }
             }
         }
@@ -72,7 +73,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
         protected async override Task OnParametersSetAsync()
         {
             base.OnParametersSet();
-            StateHasChanged();
+           // StateHasChanged();
         }
 
         /// Get the chart json from the passed in filename
@@ -81,7 +82,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
             var text = await _client.GetStringAsync(chartJsFilename);
             chartJson = text;
             chartJson.Dump();
-            StateHasChanged();
+            //StateHasChanged();
 
             //Console.WriteLine($"OnInitializedAsync chartJson => " + chartJson);
         }
@@ -99,9 +100,23 @@ namespace tapeStream.Client.Components.HighCharts.Base
 
         private async Task DrawChart()
         {
-            await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart });
+            //if (chartSeriesJson.Length > 0)
+            //{
+            //    await appendHighchartSeries();
+            //    chartSeriesJson = "";
+            //}
+            //else
+                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart });
         }
 
+        private async Task appendHighchartSeries()
+        {
+            if (!string.IsNullOrEmpty(seriesJson))
+            {
+                /// Display the chart with new series data
+                await jsruntime.InvokeAsync<string>("appendHighchartSeries", new object[] { id, seriesJson, redrawChart });
+            }
+        }
         private async Task updateHighchartSeries()
         {
             if (!string.IsNullOrEmpty(seriesJson))
@@ -113,7 +128,6 @@ namespace tapeStream.Client.Components.HighCharts.Base
                     await jsruntime.InvokeAsync<string>("appendHighchartSeries", new object[] { seriesJson, updateMode == DataUpdateMode.Shift });
             }
         }
-
     }
 
 }

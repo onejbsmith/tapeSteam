@@ -39,6 +39,7 @@ namespace tapeStream.Client.Data
         public class Series1
         {
             public bool animation { get; set; }
+            public int lineWidth { get; set; }
         }
         public class Chart
         {

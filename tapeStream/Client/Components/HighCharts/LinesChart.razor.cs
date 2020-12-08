@@ -17,7 +17,7 @@ namespace tapeStream.Client.Components.HighCharts
     public partial class LinesChart
     {
         [Parameter]
-        public bool showPrice { get; set; } = false;
+        public bool showPrice { get; set; } = true;
 
         [Parameter]
         public string id
@@ -36,14 +36,18 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 _ratioFrames = value;
 #if tracing
-                Console.WriteLine($"1. {id} UpdateLinesChart");
+                Console.WriteLine($"1. {id} Chart_Update");
 #endif
-                if (_ratioFrames.Count > 0)
-                    UpdateLinesChart(_ratioFrames);
+                //if (chart == null) return;
+                //var isNewChart = chart.series[0].data.Length == 0;
+                if (_ratioFrames.Count == 0) return;
+                //if (_ratioFrames.Count == 1 && chartJson!=null)
+                //    Chart_AppendData(_ratioFrames[0]);
+                //else
+                    Chart_Update(_ratioFrames);
             }
         }
-        private List<RatioFrame> _ratioFrames;
-
+        private List<RatioFrame> _ratioFrames = new List<RatioFrame>();
 
         [Parameter]
         public string buysField
@@ -58,17 +62,18 @@ namespace tapeStream.Client.Components.HighCharts
         }
         private string _buysField;
 
-        public  List<float> lstBuysRatios { get; set; }
+        public List<float> lstBuysRatios { get; set; }
 
-        public  List<float> lstSellsRatios { get; set; }
+        public List<float> lstSellsRatios { get; set; }
 
-        public  List<string> lstSvcTimes { get; set; } = new List<string>();
+        public List<string> lstSvcTimes { get; set; } = new List<string>();
 
-        public  string svcDate { get; set; }
+        public string svcDate { get; set; }
 
-        public  List<float> lstMarkPrices { get; set; }
+        public List<float> lstMarkPrices { get; set; }
 
         string chartJson = "";
+        string chartSeriesJson = "";
         string idName = "LinesChart";
         string chartJsFilename = $"js/highcharts/LinesChart.chart.js?id={DateTime.Now.ToOADate()}";
         bool redraw = true;
@@ -95,6 +100,18 @@ namespace tapeStream.Client.Components.HighCharts
             JsConsole.JsConsole.GroupEnd(jsruntime);
 #endif
 
+            Chart_Initialize(jsonResponse);
+           // StateHasChanged();
+
+            //#if tracing
+            //            Console.WriteLine($"2. {id} getChartJson");
+            //            Console.WriteLine(chartJson); /// to capture the chart object's json from js
+            //#endif
+            await Task.Yield();
+        }
+
+        private void Chart_Initialize(string jsonResponse)
+        {
             chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
 
             chart.subtitle.text = ratioFrames.First().dateTime.ToLongDateString();// TDAChart.LongDateString;
@@ -114,16 +131,9 @@ namespace tapeStream.Client.Components.HighCharts
 
             redraw = true;
             chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
-            StateHasChanged();
-
-            //#if tracing
-            //            Console.WriteLine($"2. {id} getChartJson");
-            //            Console.WriteLine(chartJson); /// to capture the chart object's json from js
-            //#endif
-            await Task.Yield();
         }
 
-        private async Task UpdateLinesChart(List<RatioFrame> ratioFrames)
+        private async Task Chart_Update(List<RatioFrame> ratioFrames)
         {
             try
             {
@@ -132,6 +142,9 @@ namespace tapeStream.Client.Components.HighCharts
                 Chart_SetCategories(ratioFrames);
 
                 await Chart_BuildSeriesData(ratioFrames);
+
+                redraw = true;
+                chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
             }
             catch (Exception ex)
             {
@@ -150,30 +163,39 @@ namespace tapeStream.Client.Components.HighCharts
             /// Ideally call a js method to add the new points to each series 
             /// and remove the stale points
             /// 
+            /// Should only need to refesh whole series when the time axis is reset
+            /// 
+
 
             /// Get the buys, sells and marks into float []
             /// 
             var _sellsField = SellsField(_buysField);
 
-           
+
 
             var lstBuys = ratioFrames.Select(item => (float)Convert.ToDouble(item[_buysField])).ToList();
             var lstSells = ratioFrames.Select(item => (float)Convert.ToDouble(item[_sellsField])).ToList();
             var lstMarks = ratioFrames.Select(item => (float)Convert.ToDouble(item.markPrice)).ToList();
 
             chart.series[0].data = lstBuys.ToArray();
+            chart.series[1].data = lstMarks.ToArray();
             chart.series[2].data = lstSells.ToArray();
             chart.series[0].color = CONSTANTS.asksColor;
             chart.series[2].color = CONSTANTS.bidsColor;
             chart.yAxis[0].gridLineWidth = 1;
+            chart.yAxis[1].gridLineWidth = 1;
 
-            redraw = true;
-            chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
 
             await Task.CompletedTask;
         }
 
-        private  void Chart_SetCategories(List<RatioFrame> ratioFrames)
+        private async Task Chart_AppendData(RatioFrame ratioFrame)
+        {
+            var lstData = new List<float> { (float)Convert.ToDouble(ratioFrame[buysField]), (float)Convert.ToDouble(ratioFrame.markPrice), (float)Convert.ToDouble(ratioFrame[sellsField]) };
+            chartSeriesJson = JsonSerializer.Serialize<float[]>(lstData.ToArray());
+        }
+
+        private void Chart_SetCategories(List<RatioFrame> ratioFrames)
         {
             List<string> categories = new List<string>();
             foreach (var frame in ratioFrames)
@@ -204,8 +226,29 @@ namespace tapeStream.Client.Components.HighCharts
 
         string chartTitle()
         {
-            return string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1));
+            return TranslateChartTitle(string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1)));
         }
+
+        /// <summary>
+        /// This shuld supply Y-Axis label and values format, too
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        private string TranslateChartTitle(string v)
+        {
+            string s = "";
+            switch (v)
+            {
+                case "Trade Sizes": s = "Time & Sales — Prints — The Tape"; break;
+                case "Book Sizes": s = "Level II — The NASDAQ Book"; break;
+                case "Price Count": s = "Level II Price Ranges"; break;
+                case "Ratio": s = "Print Size / Book Size Ratio"; break;
+                case "Below": s = "Prints Below Spread"; break;
+                case "Above": s = "Prints Above Spread"; break;
+            }
+            return s;
+        }
+
         void OpenDialog()
         {
             dialogIsOpen = true;
