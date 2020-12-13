@@ -11,6 +11,7 @@ using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
+    
 
 namespace tapeStream.Server.Data
 {
@@ -83,7 +84,6 @@ namespace tapeStream.Server.Data
 
             return it;
         }
-
 
         static Dictionary<string, BookDataItem[]> getLTBookData(int seconds)
         {
@@ -227,8 +227,8 @@ namespace tapeStream.Server.Data
                 var buysAltRatio = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
                 var sellsAltRatio = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
 
-                var highBidPrice = dictBookDataItem["bids"].FirstOrDefault().Price;
-                var lowAskPrice = dictBookDataItem["asks"].FirstOrDefault().Price;
+                var highBidPrice = dictBookDataItem["bids"].LastOrDefault().Price;
+                var lowAskPrice = dictBookDataItem["asks"].LastOrDefault().Price;
 
                 var bids = dictBookDataItem["bids"].Sum(t => t.Size);
                 var asks = dictBookDataItem["asks"].Sum(t => t.Size);
@@ -264,7 +264,7 @@ namespace tapeStream.Server.Data
                 {
                     var ratioFrame = new RatioFrame()
                     {
-                        dateTime = dictBookDataItem["bids"].FirstOrDefault().time.FromUnixTime().ToLocalTime(),
+                        dateTime = dictBookDataItem["bids"].LastOrDefault().time.FromUnixTime().ToLocalTime(),
                         buysRatio = buysRatio,
                         sellsRatio = sellsRatio,
                         markPrice = (highBidPrice + lowAskPrice) / 2,
@@ -287,28 +287,28 @@ namespace tapeStream.Server.Data
                         sellsSumSizes = sellsSumSizes
 
                     };
-
-                    // Calc correlation coeffiecients
-                    var _ratioFrames = TDABook.lstRatioFrames;
-                    var n = _ratioFrames.Count;
-                    var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
-                    var sumXBuys = _ratioFrames.Sum(t => t.buysRatio);
-                    var sumXSells = _ratioFrames.Sum(t => t.sellsRatio);
-                    var sumXYBuys = _ratioFrames.Sum(t => t.buysRatio * (double)t.markPrice);
-                    var sumXYSells = _ratioFrames.Sum(t => t.sellsRatio * (double)t.markPrice);
-                    var sumX2Buys = _ratioFrames.Sum(t => t.buysRatio * t.buysRatio);
-                    var sumX2Sells = _ratioFrames.Sum(t => t.sellsRatio * t.sellsRatio);
-                    var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
-
-                    var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
-                    var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
-
-
                     TDABook.lstRatioFrames.Add(ratioFrame);
-                    TDABook.lstRatioFrames.Last().sellsR = rSells;
-                    TDABook.lstRatioFrames.Last().buysR = rBuys;
+
+                    //// Calc correlation coeffiecients
+                    //var _ratioFrames = TDABook.lstRatioFrames;
+                    //var n = _ratioFrames.Count;
+                    //var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
+                    //var sumXBuys = _ratioFrames.Sum(t => t.buysRatio);
+                    //var sumXSells = _ratioFrames.Sum(t => t.sellsRatio);
+                    //var sumXYBuys = _ratioFrames.Sum(t => t.buysRatio * (double)t.markPrice);
+                    //var sumXYSells = _ratioFrames.Sum(t => t.sellsRatio * (double)t.markPrice);
+                    //var sumX2Buys = _ratioFrames.Sum(t => t.buysRatio * t.buysRatio);
+                    //var sumX2Sells = _ratioFrames.Sum(t => t.sellsRatio * t.sellsRatio);
+                    //var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
+
+                    //var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
+                    //var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
+
+
+                    //TDABook.lstRatioFrames.Last().sellsR = rSells;
+                    //TDABook.lstRatioFrames.Last().buysR = rBuys;
                 }
-                catch 
+                catch
                 {
                     //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
                 }
@@ -321,12 +321,14 @@ namespace tapeStream.Server.Data
             return ratioSizes;
         }
 
-        public static async Task<RatioFrame> getIncrementalRatioFrames(int seconds)
+        public static async Task<RatioFrame[]> getIncrementalRatioFrames(int seconds)
         {
             /// Get the book data for the number of seconds
             Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
 
             RatioFrame ratioFrame = new RatioFrame();
+            RatioFrame coefficientFrame = new RatioFrame();
+            RatioFrame diffCoefficientFrame = new RatioFrame();
 
             var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
             var ratioSizes = new AverageSizes()
@@ -339,14 +341,16 @@ namespace tapeStream.Server.Data
             try
             {
 
+
+
                 var buysRatio = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
                 var sellsRatio = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
 
                 var buysAltRatio = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
                 var sellsAltRatio = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
 
-                var highBidPrice = dictBookDataItem["bids"].FirstOrDefault()?.Price;
-                var lowAskPrice = dictBookDataItem["asks"].FirstOrDefault()?.Price;
+                var highBidPrice = dictBookDataItem["bids"].LastOrDefault()?.Price;
+                var lowAskPrice = dictBookDataItem["asks"].LastOrDefault()?.Price;
 
                 var bids = dictBookDataItem["bids"].Sum(t => t.Size);
                 var asks = dictBookDataItem["asks"].Sum(t => t.Size);
@@ -377,69 +381,178 @@ namespace tapeStream.Server.Data
                 ratioSizes.averageSize.Add("buys", buysRatio);
                 ratioSizes.averageSize.Add("sells", sellsRatio);
 
-
-                try
-                {
-                    ratioFrame = new RatioFrame()
+                var it = dictBookDataItem["bids"].LastOrDefault();
+                if (it != null)
+                    try
                     {
-                        dateTime = dictBookDataItem["bids"].FirstOrDefault().time.FromUnixTime().ToLocalTime(),
-                        buysRatio = buysRatio,
-                        sellsRatio = sellsRatio,
-                        markPrice = ((decimal)highBidPrice + (decimal)lowAskPrice) / 2,
-                        seconds = seconds,
-                        bidsBookSizes = bids,
-                        sellsInSpread = sellsInSpread,
-                        sellsBelow = sellsBelow,
-                        sellsAbove = sellsAbove,
-                        asksBookSizes = asks,
-                        buysInSpread = buysInSpread,
-                        buysAbove = buysAbove,
-                        buysBelow = buysBelow,
-                        buysTradeSizes = buysTradeSizes,
-                        buysPriceCount = buysPriceCount,
-                        sellsTradeSizes = sellsTradeSizes,
-                        sellsPriceCount = sellsPriceCount,
-                        buysAltRatio = buysAltRatio,
-                        sellsAltRatio = sellsAltRatio,
-                        buysSumSizes = buysSumSizes,
-                        sellsSumSizes = sellsSumSizes
-
-                    };
-
-                    // Calc correlation coeffiecients
-                    var _ratioFrames = TDABook.lstRatioFrames;
-                    var n = _ratioFrames.Count;
-                    var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
-                    var sumXBuys = _ratioFrames.Sum(t => t.buysRatio);
-                    var sumXSells = _ratioFrames.Sum(t => t.sellsRatio);
-                    var sumXYBuys = _ratioFrames.Sum(t => t.buysRatio * (double)t.markPrice);
-                    var sumXYSells = _ratioFrames.Sum(t => t.sellsRatio * (double)t.markPrice);
-                    var sumX2Buys = _ratioFrames.Sum(t => t.buysRatio * t.buysRatio);
-                    var sumX2Sells = _ratioFrames.Sum(t => t.sellsRatio * t.sellsRatio);
-                    var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
-
-                    var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
-                    var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
+                        var now = it.time.FromUnixTime().ToLocalTime();
 
 
-                    TDABook.lstRatioFrames.Add(ratioFrame);
-                    TDABook.lstRatioFrames.Last().sellsR = rSells;
-                    TDABook.lstRatioFrames.Last().buysR = rBuys;
-                }
-                catch
-                {
-                    //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
-                }
+                        ratioFrame = new RatioFrame()
+                        {
+                            dateTime = now,
+                            buysRatio = buysRatio,
+                            sellsRatio = sellsRatio,
+                            markPrice = ((decimal)highBidPrice + (decimal)lowAskPrice) / 2,
+                            seconds = seconds,
+                            bidsBookSizes = bids,
+                            sellsInSpread = sellsInSpread,
+                            sellsBelow = sellsBelow,
+                            sellsAbove = sellsAbove,
+                            asksBookSizes = asks,
+                            buysInSpread = buysInSpread,
+                            buysAbove = buysAbove,
+                            buysBelow = buysBelow,
+                            buysTradeSizes = buysTradeSizes,
+                            buysPriceCount = buysPriceCount,
+                            sellsTradeSizes = sellsTradeSizes,
+                            sellsPriceCount = sellsPriceCount,
+                            buysAltRatio = buysAltRatio,
+                            sellsAltRatio = sellsAltRatio,
+                            buysSumSizes = buysSumSizes,
+                            sellsSumSizes = sellsSumSizes
+
+                        };
+                        TDABook.lstRatioFrames.Add(ratioFrame);
+
+
+                        coefficientFrame = new RatioFrame()
+                        {
+                            dateTime = now,
+                            buysRatio = CalcCorrelationCoeffiecients("buysRatio", seconds),
+                            sellsRatio = CalcCorrelationCoeffiecients("sellsRatio", seconds),
+                            bidsBookSizes = CalcCorrelationCoeffiecients("bidsBookSizes", seconds),
+                            sellsInSpread = CalcCorrelationCoeffiecients("sellsInSpread", seconds),
+                            sellsBelow = CalcCorrelationCoeffiecients("sellsBelow", seconds),
+                            sellsAbove = CalcCorrelationCoeffiecients("sellsAbove", seconds),
+                            asksBookSizes = CalcCorrelationCoeffiecients("asksBookSizes", seconds),
+                            buysInSpread = CalcCorrelationCoeffiecients("buysInSpread", seconds),
+                            buysAbove = CalcCorrelationCoeffiecients("buysAbove", seconds),
+                            buysBelow = CalcCorrelationCoeffiecients("buysBelow", seconds),
+                            buysTradeSizes = CalcCorrelationCoeffiecients("buysTradeSizes", seconds),
+                            buysPriceCount = (int)CalcCorrelationCoeffiecients("buysPriceCount", seconds),
+                            sellsTradeSizes = CalcCorrelationCoeffiecients("sellsTradeSizes", seconds),
+                            sellsPriceCount = (int)CalcCorrelationCoeffiecients("sellsPriceCount", seconds),
+                            buysAltRatio = CalcCorrelationCoeffiecients("buysAltRatio", seconds),
+                            sellsAltRatio = CalcCorrelationCoeffiecients("sellsAltRatio", seconds),
+                            buysSumSizes = CalcCorrelationCoeffiecients("buysSumSizes", seconds),
+                            sellsSumSizes = CalcCorrelationCoeffiecients("sellsSumSizes", seconds)
+                        };
+
+                        //diffCoefficientFrame = new RatioFrame()
+                        //{
+                        //    dateTime = now,
+                        //    buysRatio = CalcDiffCorrelationCoeffiecients("buysRatio", seconds),
+                        //    asksBookSizes = CalcDiffCorrelationCoeffiecients("asksBookSizes", seconds),
+                        //    buysInSpread = CalcDiffCorrelationCoeffiecients("buysInSpread", seconds),
+                        //    buysAbove = CalcDiffCorrelationCoeffiecients("buysAbove", seconds),
+                        //    buysBelow = CalcDiffCorrelationCoeffiecients("buysBelow", seconds),
+                        //    buysTradeSizes = CalcDiffCorrelationCoeffiecients("buysTradeSizes", seconds),
+                        //    buysPriceCount = (int)CalcDiffCorrelationCoeffiecients("buysPriceCount", seconds),
+                        //    buysSumSizes = CalcDiffCorrelationCoeffiecients("buysSumSizes", seconds),
+                        //    buysAltRatio = CalcDiffCorrelationCoeffiecients("buysAltRatio", seconds),
+
+                        //    bidsBookSizes = SumDiffs("bidsBookSizes", seconds),
+                        //    sellsRatio = SumDiffs("sellsRatio", seconds),
+                        //    sellsInSpread = SumDiffs("sellsInSpread", seconds),
+                        //    sellsBelow = SumDiffs("sellsBelow", seconds),
+                        //    sellsAbove = SumDiffs("sellsAbove", seconds),
+                        //    sellsTradeSizes = SumDiffs("sellsTradeSizes", seconds),
+                        //    sellsPriceCount = (int)SumDiffs("sellsPriceCount", seconds),
+                        //    sellsAltRatio = SumDiffs("sellsAltRatio", seconds),
+                        //    sellsSumSizes = SumDiffs("sellsSumSizes", seconds)
+                        //};
+                        //// Calc correlation coeffiecients
+
+
+                        //var _ratioFrames = TDABook.lstRatioFrames;
+                        //var n = _ratioFrames.Count;
+                        //var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
+                        //var sumXBuys = _ratioFrames.Sum(t => t.buysRatio);
+                        //var sumXSells = _ratioFrames.Sum(t => t.sellsRatio);
+                        //var sumXYBuys = _ratioFrames.Sum(t => t.buysRatio * (double)t.markPrice);
+                        //var sumXYSells = _ratioFrames.Sum(t => t.sellsRatio * (double)t.markPrice);
+                        //var sumX2Buys = _ratioFrames.Sum(t => t.buysRatio * t.buysRatio);
+                        //var sumX2Sells = _ratioFrames.Sum(t => t.sellsRatio * t.sellsRatio);
+                        //var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
+
+                        //var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
+                        //var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
+
+                        //var (rBuys, rSells) = CalcCorrelationCoeffiecients("buysRatio");
+
+                        //TDABook.lstRatioFrames.Last().sellsR = rSells;
+                        //TDABook.lstRatioFrames.Last().buysR = rBuys;
+                    }
+                    catch
+                    {
+                        //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
+                    }
                 //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDABook.lstRatioFrames, "TDABook.lstRatioFrames");
 
             }
             catch { }
 
             await Task.CompletedTask;
-            return ratioFrame;
+            return new RatioFrame[] { ratioFrame, coefficientFrame, diffCoefficientFrame };
         }
 
+        private static double SumDiffs(string sellsField, int seconds)
+        {
+            var buysField =sellsField.Replace("bids","asks" ).Replace("sells", "buys");
+            var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
+            var sumXBuys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField]));
 
+            return sumXBuys;
+        }
+
+        /// <summary>
+        /// Calc correlation coeffiecients
+        /// </summary>
+        /// <param name="buysField"></param>
+        /// <returns></returns>
+        public static double CalcCorrelationCoeffiecients(string buysField, int seconds, int lead = 0)
+        {
+            /// get frames in the last n seconds 
+            var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
+            var n = _ratioFrames.Count;
+
+            var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
+            var sumXBuys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]));
+            //var sumXSells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]));
+            var sumXYBuys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]) * (double)t.markPrice);
+            //var sumXYSells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]) * (double)t.markPrice);
+            var sumX2Buys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]) * Convert.ToDouble(t[buysField]));
+            //var sumX2Sells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]) * Convert.ToDouble(t[sellsField]));
+            var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
+
+            var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
+            //var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
+            if (Double.IsNaN(rBuys)) rBuys = 0;
+            return 100 * rBuys;
+        }
+        public static double CalcDiffCorrelationCoeffiecients(string buysField, int seconds, int lead = 0)
+        {
+            /// get frames in the last n seconds 
+
+            var sellsField = buysField.Replace("asks", "bids").Replace("buys", "sells");
+            var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
+            var n = _ratioFrames.Count;
+
+            var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
+            var sumXBuys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField]));
+            //var sumXSells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]));
+            var sumXYBuys = _ratioFrames.Sum(t => (Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField])) * (double)t.markPrice);
+            //var sumXYSells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]) * (double)t.markPrice);
+            var sumX2Buys = _ratioFrames.Sum(t => (Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField])) * (Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField])));
+            //var sumX2Sells = _ratioFrames.Sum(t => Convert.ToDouble(t[sellsField]) * Convert.ToDouble(t[sellsField]));
+            var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
+
+            var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
+            //var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
+            if (Double.IsNaN(rBuys)) rBuys = 0;
+            return 100 * rBuys;
+        }
         public static async Task<List<RatioFrame>> getListLtRatios(int seconds, int last)
         {
             var takeLast = last == 0 ? TDABook.lstRatioFrames.Count : last;
@@ -468,6 +581,13 @@ namespace tapeStream.Server.Data
             await Task.CompletedTask;
             return text;
         }
+
+        internal static async Task<string> getAllRatioFrames(string symbol, DateTime svcDateTime)
+        {
+            var text = await FilesManager.GetMessageQueueFiles(symbol, "AllRatioFrames", svcDateTime);
+            return "[" + text + "]";
+        }
+
         private static BookDataItem[] getBookDataItemArray(int seconds, long now, List<BookDataItem> lstItems)
         {
 
@@ -791,7 +911,7 @@ namespace tapeStream.Server.Data
                 };
                 lstALLBookEntry.Add(newBookEntry);
 
-                if (!TDAStreamerData.simulatorSettings.isSimulated)
+                if (!(bool)TDAStreamerData.simulatorSettings.isSimulated)
                 {
                     string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(dictBook);
                     await FilesManager.SendToMessageQueue(symbol, "BookedTimeSales", DateTime.Now, json);
@@ -827,6 +947,7 @@ namespace tapeStream.Server.Data
             public float size { get; set; }
             public DateTime dateTime { get; set; }
         }
+
 
 
 

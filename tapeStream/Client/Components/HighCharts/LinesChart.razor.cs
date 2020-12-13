@@ -11,6 +11,9 @@ using tapeStream.Client.Data;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
+using static tapeStream.Client.Data.LinesChartData;
+using MathNet.Numerics;
+
 
 namespace tapeStream.Client.Components.HighCharts
 {
@@ -29,7 +32,10 @@ namespace tapeStream.Client.Components.HighCharts
 
 
         [Parameter]
-        public List<RatioFrame> ratioFrames
+        public List<RatioFrame[]> allRatioFrames { get; set; }
+
+        [Parameter]
+        public List<RatioFrame[]> ratioFrames
         {
             get { return _ratioFrames; }
             set
@@ -44,10 +50,10 @@ namespace tapeStream.Client.Components.HighCharts
                 //if (_ratioFrames.Count == 1 && chartJson!=null)
                 //    Chart_AppendData(_ratioFrames[0]);
                 //else
-                    Chart_Update(_ratioFrames);
+                Chart_Update(_ratioFrames);
             }
         }
-        private List<RatioFrame> _ratioFrames = new List<RatioFrame>();
+        private List<RatioFrame[]> _ratioFrames = new List<RatioFrame[]>();
 
         [Parameter]
         public string buysField
@@ -62,15 +68,19 @@ namespace tapeStream.Client.Components.HighCharts
         }
         private string _buysField;
 
-        public List<float> lstBuysRatios { get; set; }
+        private string newBuysField;
+        private string newSellsField;
 
-        public List<float> lstSellsRatios { get; set; }
+
+        public List<float?> lstBuysRatios { get; set; }
+
+        public List<float?> lstSellsRatios { get; set; }
 
         public List<string> lstSvcTimes { get; set; } = new List<string>();
 
         public string svcDate { get; set; }
 
-        public List<float> lstMarkPrices { get; set; }
+        public List<float?> lstMarkPrices { get; set; }
 
         string chartJson = "";
         string chartSeriesJson = "";
@@ -101,7 +111,7 @@ namespace tapeStream.Client.Components.HighCharts
 #endif
 
             Chart_Initialize(jsonResponse);
-           // StateHasChanged();
+            // StateHasChanged();
 
             //#if tracing
             //            Console.WriteLine($"2. {id} getChartJson");
@@ -114,10 +124,10 @@ namespace tapeStream.Client.Components.HighCharts
         {
             chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
 
-            chart.subtitle.text = ratioFrames.First().dateTime.ToLongDateString();// TDAChart.LongDateString;
-            chart.yAxis[0].gridLineWidth = 1;
-            chart.yAxis[1].gridLineWidth = 1;
+            chart.subtitle.text = ratioFrames.First()[0].dateTime.ToLongDateString();// TDAChart.LongDateString;
 
+            chart.yAxis[0].title.text = "";
+            chart.yAxis[0].title.style.color = "black";
 
 
 
@@ -133,7 +143,7 @@ namespace tapeStream.Client.Components.HighCharts
             chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
         }
 
-        private async Task Chart_Update(List<RatioFrame> ratioFrames)
+        private async Task Chart_Update(List<RatioFrame[]> ratioFrames)
         {
             try
             {
@@ -152,7 +162,78 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
 
-        private async Task Chart_BuildSeriesData(List<RatioFrame> ratioFrames)
+        private void Chart_SetCategories(List<RatioFrame[]> ratioFrames)
+        {
+
+
+            List<string> categories = new List<string>();
+            foreach (var frame in ratioFrames)
+            {
+                categories.Add(frame[0].dateTime.ToString("h:mm:ss"));
+            }
+            chart.xAxis[0].categories = categories.ToArray();
+
+            Chart_PlotBands(ratioFrames, categories);
+
+        }
+
+        private static void Chart_PlotBands(List<RatioFrame[]> ratioFrames, List<string> categories)
+        {
+            try
+            {
+                var index = 0;
+                /// Pick up even minutes for plot bands
+                List<DateTime> lstEvenMinutesStart = new List<DateTime>();
+                List<DateTime> lstEvenMinutesEnd = new List<DateTime>();
+                var prevDateTime = DateTime.Now;
+                foreach (var frames in ratioFrames)
+                {
+                    var frame = frames[0];
+                    var isNewEvenMinute = frame.dateTime.Minute % 2 == 0 && frame.dateTime.Minute != prevDateTime.Minute;
+
+                    if (isNewEvenMinute)
+                    {
+                        lstEvenMinutesStart.Add(frame.dateTime);
+                    }
+                    var isNewOddMinute = frame.dateTime.Minute % 2 == 1 && frame.dateTime.Minute != prevDateTime.Minute;
+                    if (isNewOddMinute)
+                        lstEvenMinutesEnd.Add(prevDateTime);
+
+                    prevDateTime = frame.dateTime;
+                    index += 1;
+                }
+                if (lstEvenMinutesStart.Count > lstEvenMinutesEnd.Count)
+                    lstEvenMinutesEnd.Add(prevDateTime);
+
+
+                var evenMinutesPlotBands = new List<LinesChartData.Plotband>();
+                for (int i = 0; i < lstEvenMinutesEnd.Count; i++)
+                {
+                    if (lstEvenMinutesStart == null || i > lstEvenMinutesStart.Count) return;
+                    var evenMinute = lstEvenMinutesStart[i];
+                    var evenMinuteEnd = lstEvenMinutesEnd[i];
+                    var plotBand = new LinesChartData.Plotband()
+                    {
+                        from = categories.IndexOf(evenMinute.ToString("h:mm:ss")),
+                        to = categories.IndexOf(evenMinuteEnd.ToString("h:mm:ss")),
+                        color = "lavender",
+                        label = new LabelPlotline()
+                        {
+                            text = evenMinute.ToString("h:mm"),
+                            style = new CSSObject()
+                            {
+                                fontSize = "15px"
+                            }
+                        }
+                    };
+                    evenMinutesPlotBands.Add(plotBand);
+                }
+
+                chart.xAxis[0].plotBands = evenMinutesPlotBands.ToArray();
+            }
+            catch { }
+        }
+        private async Task Chart_BuildSeriesData(List<RatioFrame[]> ratioFrames)
         {
 #if tracing
             JsConsole.JsConsole.GroupTable(jsruntime, chart, $"5. {id} Chart_BuildSeriesDataCSVs chart", false);
@@ -167,42 +248,130 @@ namespace tapeStream.Client.Components.HighCharts
             /// 
 
 
-            /// Get the buys, sells and marks into float []
+            /// Get the buys, sells and marks into float? []
             /// 
             var _sellsField = SellsField(_buysField);
 
+            var lstBuys = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_buysField])).ToList();
+            var lstSells = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_sellsField])).ToList();
+
+            var lstMarks = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0].markPrice)).ToList();
+
+            var minMark = allRatioFrames.Min(item => (float?)Convert.ToDouble(item[0].markPrice));
+            var lstMinMarks = ratioFrames.Select(item => minMark).ToList();
+            var maxMark = allRatioFrames.Max(item => (float?)Convert.ToDouble(item[0].markPrice));
+            var lstMaxMarks = ratioFrames.Select(item => maxMark).ToList();
+
+            var lstBuysRs = ratioFrames.Select(item => (float?)Convert.ToDouble(item[1][_buysField])).ToList(); ;
+            var lstSellsRs = ratioFrames.Select(item => (float?)Convert.ToDouble(item[1][sellsField])).ToList(); ;
 
 
-            var lstBuys = ratioFrames.Select(item => (float)Convert.ToDouble(item[_buysField])).ToList();
-            var lstSells = ratioFrames.Select(item => (float)Convert.ToDouble(item[_sellsField])).ToList();
-            var lstMarks = ratioFrames.Select(item => (float)Convert.ToDouble(item.markPrice)).ToList();
+            if (TDABook.showRegressionCurves==true)
+            {
+                var lstBuysD = ratioFrames.Select(item => (double)Convert.ToDouble(item[0][_buysField])).ToList();
+                var lstSellsD = ratioFrames.Select(item => (double)Convert.ToDouble(item[0][_sellsField])).ToList();
 
-            chart.series[0].data = lstBuys.ToArray();
+                var xData = ratioFrames.Select(item => (double)ratioFrames.IndexOf(item)).ToArray();
+                /// Fitting a fifth degree polynomial to the data can have up to 4 curves
+                var cb = Fit.Polynomial(xData, lstBuysD.ToArray(), 5).Select(t => (float?)t).ToList();
+                var cs = Fit.Polynomial(xData, lstSellsD.ToArray(), 5).Select(t => (float?)t).ToList();
+
+                chart.series[0].data = xData.Select(x=> (float?)cb[0] + (float?)(5 * cb[1]*x) + (float?)(10*cb[2]*(x*x)) + (float?)(10*cb[3] * (x*x*x)) + (float?)(5 * cb[4] * (x * x * x* x)) + (float?)( cb[5] * (x * x * x * x * x))).ToArray();
+                chart.series[2].data = xData.Select(x=> (float?)cs[0] + (float?)(5 * cs[1]*x) + (float?)(10* cs[2]*(x*x)) + (float?)(10*cs[3] * (x*x*x)) + (float?)(5 * cs[4] * (x * x * x * x)) + (float?)(cs[5] * (x * x * x * x * x))).ToArray();
+            }
+            else
+            {
+                chart.series[0].data = lstBuys.ToArray();
+                chart.series[2].data = lstSells.ToArray();
+            }
+
             chart.series[1].data = lstMarks.ToArray();
-            chart.series[2].data = lstSells.ToArray();
-            chart.series[0].color = CONSTANTS.asksColor;
-            chart.series[2].color = CONSTANTS.bidsColor;
+            //chart.series[3].data = lstBuysRs.ToArray();
+            //chart.series[4].data = lstSellsRs.ToArray();
+            chart.series[0].color = CONSTANTS.buysColor;
+            chart.series[2].color = CONSTANTS.sellsColor;
+            //chart.series[3].color = CONSTANTS.buysColor;
+            //chart.series[4].color = CONSTANTS.sellsColor;
+
+            if (buysField.StartsWith("asks") || buysField == "buysPriceCount" || buysField.EndsWith("Ratio"))
+            {
+                chart.series[0].color = CONSTANTS.asksColor;
+                chart.series[2].color = CONSTANTS.bidsColor;
+
+                chart.series[0].name = "Asks";
+                chart.series[2].name = "Bids";
+                //chart.series[3].color = CONSTANTS.asksColor;
+                //chart.series[4].color = CONSTANTS.bidsColor;
+            }
+
             chart.yAxis[0].gridLineWidth = 1;
             chart.yAxis[1].gridLineWidth = 1;
+            chart.yAxis[2].gridLineWidth = 1;
+            chart.xAxis[0].gridLineWidth = 1;
+            chart.yAxis[0].title.text = ((float)(lstMarks.LastOrDefault())).ToString("n2");
 
+
+            Chart_PlotLines(minMark, maxMark);
+
+            var maxSells = ratioFrames.Max(item => (float?)Convert.ToDouble(item[0][buysField]));
+            if (maxSells > 10000)
+                chart.yAxis[1].labels.format = "{value:,.0f}";
+            else
+                chart.yAxis[1].labels.format = "{value}";
+
+            var date = ratioFrames.First()[0].dateTime.ToLongDateString();
+            try
+            {
+                var predSellsR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
+                var predBuysR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
+                var sellsR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
+                var buysR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
+
+                var sumValues = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][sellsField]))).ToString("n0");
+                var diffR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][buysField]))).ToString("n0");
+
+                chart.title.text = $"Diff r All {ratioFrames.Count} secs: {diffR}  Sum All: {sumValues} | All ({TDABook.ratiosBack} secs) r [ {buysR} {sellsR} ]  | Prediction:(ahead {10} secs) r  [ {predBuysR} {predSellsR} ]"; ;// TDAChart.LongDateString;
+            }
+            catch { }
 
             await Task.CompletedTask;
         }
 
+        private static void Chart_PlotLines(float? minMark, float? maxMark)
+        {
+            chart.yAxis[0].plotLines = new LinesChartData.Plotline[]
+            {
+                new LinesChartData.Plotline()
+                {
+                    color="red",
+                    dashStyle = "shortdot",
+                    value = (decimal)minMark,
+                    label= new LinesChartData.LabelPlotline()
+                        {
+                            text = ((float)minMark).ToString("n2")
+                        },
+                    width=2
+                },
+                new LinesChartData.Plotline()
+                {
+                    color="green",
+                    dashStyle = "shortdot",
+                    value = (decimal)maxMark,
+                    label= new LinesChartData.LabelPlotline()
+                        {
+                            text = ((float)maxMark).ToString("n2")
+                        },
+                    width=2
+                }
+            };
+        }
+
         private async Task Chart_AppendData(RatioFrame ratioFrame)
         {
-            var lstData = new List<float> { (float)Convert.ToDouble(ratioFrame[buysField]), (float)Convert.ToDouble(ratioFrame.markPrice), (float)Convert.ToDouble(ratioFrame[sellsField]) };
-            chartSeriesJson = JsonSerializer.Serialize<float[]>(lstData.ToArray());
+            var lstData = new List<float?> { (float?)Convert.ToDouble(ratioFrame[buysField]), (float?)Convert.ToDouble(ratioFrame.markPrice), (float?)Convert.ToDouble(ratioFrame[sellsField]) };
+            chartSeriesJson = JsonSerializer.Serialize<float?[]>(lstData.ToArray());
         }
 
-        private void Chart_SetCategories(List<RatioFrame> ratioFrames)
-        {
-            List<string> categories = new List<string>();
-            foreach (var frame in ratioFrames)
-                categories.Add(frame.dateTime.ToString("h:mm:ss"));
-
-            chart.xAxis[0].categories = categories.ToArray();
-        }
 
         //redraw = true;
 
@@ -249,14 +418,16 @@ namespace tapeStream.Client.Components.HighCharts
             return s;
         }
 
-        void OpenDialog()
+        void Dialog_Open()
         {
             dialogIsOpen = true;
         }
 
-        void OkClick()
+        void Dialog_OkClick()
         {
             dialogIsOpen = false;
+            buysField = newBuysField;
+            StateHasChanged();
         }
 
         string ProcessChips()
@@ -265,8 +436,7 @@ namespace tapeStream.Client.Components.HighCharts
             {
                 if ((chip.IsSelected))
                 {
-                    buysField = (string)chip.Value;
-                    sellsField = SellsField(buysField);
+                    newBuysField = (string)chip.Value;
                 }
             }
             return "";

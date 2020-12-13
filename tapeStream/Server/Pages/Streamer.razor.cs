@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using tapeStream.Server.Data;
+using JSconsoleExtension;
+using Microsoft.JSInterop;
 
 namespace tapeStream.Server.Pages
 {
     public partial class Streamer
     {
+        [Inject] public IJSRuntime console { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -21,6 +24,8 @@ namespace tapeStream.Server.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            //console.alert("Okay!");
+            //console.title("Hello!");
 
             /// Listen for WebSocket Events
             WebsocketService.OnMessage += MessageReceived;

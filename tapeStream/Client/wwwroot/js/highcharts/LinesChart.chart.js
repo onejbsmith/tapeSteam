@@ -14,57 +14,80 @@
     },
     xAxis: [{
         categories: [],
-        crosshair: true
-    }],
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            title: {
-                text: 'Size or Ratio',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: false
-
+        gridLineWidth: 1,
+        crosshair: true,
+        labels: {
+            style: {
+                fontSize: "15px"
+            }
         },
-            //{ // Secondary yAxis
-            //gridLineWidth: 0,
-            //title: {
-            //    text: 'Sells',
-            //    style: {
-            //        color: Highcharts.getOptions().colors[0]
-            //    }
-            //},
-            //labels: {
-            //    format: '{value}',
-            //    style: {
-            //        color: Highcharts.getOptions().colors[0]
-            //    }
-            //}
-
-            //},
+        type: "datetime",
+        
+    }],
+        yAxis: [
 
             { // Tertiary yAxis
-            gridLineWidth: 1,
+                gridLineWidth: 1,
+                title: {
+                    text: 'Mark',
+                    style: {
+                        color: 'forestgreen',
+                        fontSize: "15px"
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: 'forestgreen',
+                        fontSize: "15px"
+                    }
+                },
+                opposite: true,
+                plotLines: [
+                    {
+                        color: 'red', // Color value
+                        dashStyle: 'shortdot', // Style of the plot line. Default to solid
+                        value: 0, // Value of where the line will appear
+                        width: 0 // Width of the line    
+                    }
+                ]
+            },
+            { // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0],
+                        fontSize: "15px"
+                    }
+                },
+                title: {
+                    text: null,
+                    style: {
+                        color: Highcharts.getOptions().colors[0],
+                        fontSize: "15px"
+                    }
+                },
+                opposite: true
+
+            },
+            { // Secondary yAxis
+            gridLineWidth: 0,
             title: {
-                text: 'Mark',
+                text: null,
                 style: {
-                    color: 'forestgreen'
+                    color: Highcharts.getOptions().colors[1]
                 }
             },
             labels: {
                 format: '{value}',
                 style: {
-                    color: 'forestgreen'
+                    color: Highcharts.getOptions().colors[1]
                 }
-            },
-            opposite: true
             }
+
+            },
+
+
         ],
             tooltip: {
         shared: true
@@ -78,10 +101,12 @@
                             floating: true,
                                 backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'rgba(255,255,255,0.25)'
     },
-    series: [{
-        name: 'Sells',
+    series: [
+
+        {
+        name: 'Buys',
         type: 'spline',
-        yAxis: 0,
+        yAxis: 1,
         data: [],
         marker: {
             enabled: false
@@ -95,7 +120,7 @@
         //showInLegend: false,
         name: 'Mark',
         type: 'spline',
-        yAxis: 1,
+        yAxis: 0,
         color: 'forestgreen',
         data: [],
         marker: {
@@ -108,9 +133,10 @@
 
     }
         , {
-        name: 'Buys',
+        name: 'Sells',
         type: 'spline',
         data: [],
+        yAxis: 1,
         marker: {
             enabled: false
         },
@@ -122,6 +148,36 @@
         showInLegend: false,
         name: 'fourth',
         type: 'spline',
+        yAxis: 2,
+        data: [],
+        marker: {
+            enabled: false
+        },
+        dashStyle: 'shortdash',
+        tooltip: {
+            valueSuffix: ''
+        }
+
+    },
+    {
+        showInLegend: false,
+        name: 'fifth',
+        type: 'spline',
+        yAxis: 2,
+        data: [],
+        marker: {
+            enabled: false
+        },
+        dashStyle: 'shortdash',
+        tooltip: {
+            valueSuffix: ''
+        }
+
+    },
+    {
+        showInLegend: false,
+        name: 'sixth',
+        type: 'spline',
         yAxis: 0,
         data: [],
         marker: {
@@ -131,43 +187,13 @@
         tooltip: {
             valueSuffix: ''
         }
-
-        },
-        {
-            showInLegend: false,
-            name: 'fifth',
-            type: 'spline',
-            yAxis: 0,
-            data: [],
-            marker: {
-                enabled: false
-            },
-            dashStyle: 'shortdot',
-            tooltip: {
-                valueSuffix: ''
-            }
-
-        },
-        {
-            showInLegend: false,
-            name: 'sixth',
-            type: 'spline',
-            yAxis: 0,
-            data: [],
-            marker: {
-                enabled: false
-            },
-            dashStyle: 'shortdot',
-            tooltip: {
-                valueSuffix: ''
-            }
-        }
+    }
     ],
         plotOptions: {
         series: {
             lineWidth: 4,
-           animation: false,
-                line: {
+                animation: false,
+                    line: {
                 pointInterval: 10000
             }
 

@@ -30,8 +30,6 @@
     <Compile Remove="Components\HighCharts\Columns3D.razor.cs" />
     <Compile Remove="Components\HighCharts\Market3DColumns.razor.cs" />
     <Compile Remove="Components\HighCharts\MarketDataToChartData.razor.cs" />
-    <Compile Remove="Components\HighCharts\StackedColumns3D.razor.cs" />
-    <Compile Remove="Components\HighCharts\StackedColumns3DSurface.razor.cs" />
     <Compile Remove="Components\HighCharts\TimeRows.razor.cs" />
     <Compile Remove="Components\HubMonitorOld.razor.cs" />
     <Compile Remove="Components\PrintArcGaugeChart.razor.cs" />
@@ -65,8 +63,6 @@
     <Content Remove="Components\HighCharts\Columns3D.razor" />
     <Content Remove="Components\HighCharts\Market3DColumns.razor" />
     <Content Remove="Components\HighCharts\MarketDataToChartData.razor" />
-    <Content Remove="Components\HighCharts\StackedColumns3D.razor" />
-    <Content Remove="Components\HighCharts\StackedColumns3DSurface.razor" />
     <Content Remove="Components\HighCharts\Stats.razor" />
     <Content Remove="Components\HighCharts\TimeRows.razor" />
     <Content Remove="Components\HighCharts\xSurface.StackedColumns3DSurface.razor" />
@@ -112,6 +108,8 @@
     <PackageReference Include="jQWidgets.Blazor" Version="1.2.0" />
     
     <PackageReference Include="MatBlazor" Version="2.7.0" />
+    
+    <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />

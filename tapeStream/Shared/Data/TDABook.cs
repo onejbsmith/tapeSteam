@@ -6,62 +6,7 @@ using System.Threading.Tasks;
 
 namespace tapeStream.Shared.Data
 {
-    public class BookDataItem
-    {
-        public decimal Price { get; set; }
-        public double Size { get; set; }
-        public long time { get; set; }
-        public DateTime dateTime { get; set; }
-    }
 
-    public class AverageSizes
-    {
-        public Dictionary<string, double> averageSize { get; set; }
-    }
-
-    public class RatioFrame
-    {
-        public double sellsAbove { get; set; }
-        public double bidsBookSizes { get; set; }
-        public double buysSumSizes { get; set; }
-        public double sellsSumSizes { get; set; }
-        public double sellsInSpread { get; set; }
-        public double sellsBelow { get; set; }
-        public double buysInSpread { get; set; }
-        public double buysAbove { get; set; }
-        public double buysBelow { get; set; }
-        public double asksBookSizes { get; set; }
-
-        public DateTime dateTime { get; set; }
-        public double buysRatio { get; set; }
-        public double buysAltRatio { get; set; }
-        public double sellsRatio { get; set; }
-        public double sellsAltRatio { get; set; }
-        public decimal markPrice { get; set; }
-        public double sellsR { get; set; }
-        public double buysR { get; set; }
-        public double buysTradeSizes { get; set; }
-        public double sellsTradeSizes { get; set; }
-        public int buysPriceCount { get; set; }
-        public int sellsPriceCount { get; set; }
-
-
-
-        [NotMapped]
-        public int seconds { get; set; }
-        [NotMapped]
-        public object this[string propertyName]
-        {
-            get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
-            set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
-        }
-
-    }
-
-    public class JsonArrayOfArrays
-    {
-        public object[][] datum { get; set; }
-    }
 
     public class TDABook
     {
@@ -70,11 +15,13 @@ namespace tapeStream.Shared.Data
 
 
 
-        public static int ratiosDepth = 60;
+        public static int ratiosDepth = 150;
         public static int ratiosBack = 30;
         public static bool? isCurrentEndTime = true;
         public static DateTime? startTime = DateTime.Now;
         public static DateTime? endTime = DateTime.Now;
+        public static int seconds = 30;
+        public static bool? showRegressionCurves;
 
         //public static Dictionary<string,BookDataItem[]> getBookColumnsData()
         //{
@@ -151,4 +98,61 @@ namespace tapeStream.Shared.Data
         //}
 
     }
+    public class BookDataItem
+    {
+        public decimal Price { get; set; }
+        public double Size { get; set; }
+        public long time { get; set; }
+        public DateTime dateTime { get; set; }
+    }
+
+    public class AverageSizes
+    {
+        public Dictionary<string, double> averageSize { get; set; }
+    }
+
+    public class RatioFrame
+    {
+        public double sellsAbove { get; set; }
+        public double bidsBookSizes { get; set; }
+        public double buysSumSizes { get; set; }
+        public double sellsSumSizes { get; set; }
+        public double sellsInSpread { get; set; }
+        public double sellsBelow { get; set; }
+        public double buysInSpread { get; set; }
+        public double buysAbove { get; set; }
+        public double buysBelow { get; set; }
+        public double asksBookSizes { get; set; }
+
+        public DateTime dateTime { get; set; }
+        public double buysRatio { get; set; }
+        public double buysAltRatio { get; set; }
+        public double sellsRatio { get; set; }
+        public double sellsAltRatio { get; set; }
+        public decimal markPrice { get; set; }
+        //public double sellsR { get; set; }
+        //public double buysR { get; set; }
+        public double buysTradeSizes { get; set; }
+        public double sellsTradeSizes { get; set; }
+        public int buysPriceCount { get; set; }
+        public int sellsPriceCount { get; set; }
+
+
+
+        [NotMapped]
+        public int seconds { get; set; }
+        [NotMapped]
+        public object this[string propertyName]
+        {
+            get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
+            set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
+        }
+
+    }
+
+    public class JsonArrayOfArrays
+    {
+        public object[][] datum { get; set; }
+    }
+
 }

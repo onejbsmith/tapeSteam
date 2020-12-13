@@ -123,6 +123,10 @@ namespace tapeStream.Server
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")
                     .AllowCredentials();
+                builder.WithOrigins("http://192.168.1.143")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "HEAD", "POST")
+                    .AllowCredentials();                
                 builder.WithOrigins("http://localhost:5000")
                     .AllowAnyHeader()
                     .WithMethods("GET", "HEAD", "POST")
@@ -141,14 +145,14 @@ namespace tapeStream.Server
                 endpoints.MapBlazorHub();
                 endpoints.MapHub<ChatHub>("/chathub", options =>
                 {
-                    options.Transports =
-                        HttpTransportType.WebSockets ;
+                    //options.Transports =
+                    //    HttpTransportType.WebSockets ;
                 });
 
                 endpoints.MapHub<TDAHub>("/tdahub", options =>
                 {
-                    options.Transports =
-                        HttpTransportType.WebSockets ;
+                    //options.Transports =
+                    //    HttpTransportType.WebSockets ;
                 });
                 endpoints.MapFallbackToPage("/_Host");
             });

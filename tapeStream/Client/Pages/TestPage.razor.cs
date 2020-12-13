@@ -21,10 +21,34 @@ namespace tapeStream.Client.Pages
         #region Variables
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
+        [Inject] NavigationManager navigationManager { get; set; }
 
-        public List<RatioFrame> allRatioFrames = new List<RatioFrame>();
 
-        public List<RatioFrame> ratioFrames
+        string symbol = "QQQ";
+
+        bool simulating;
+
+        private int _seconds;
+
+        public int seconds
+        {
+            get { return _seconds; }
+            set
+            {
+                _seconds = value;
+                TDABook.seconds = seconds;
+                /// Send to Server
+                /// 
+                Send("SetBookDataSeconds", _seconds.ToString());
+                dictTopicCounts["BookPiesData"] = TDABook.seconds;
+
+            }
+        }
+
+
+        public List<RatioFrame[]> allRatioFrames = new List<RatioFrame[]>();
+
+        public List<RatioFrame[]> ratioFrames
         {
             get { return _ratioFrames; }
             set
@@ -32,7 +56,7 @@ namespace tapeStream.Client.Pages
                 _ratioFrames = value;
             }
         }
-        private List<RatioFrame> _ratioFrames = new List<RatioFrame>();
+        private List<RatioFrame[]> _ratioFrames = new List<RatioFrame[]>();
 
         public Dictionary<string, BookDataItem[]> bookColData
         {
@@ -70,6 +94,7 @@ namespace tapeStream.Client.Pages
         DateTime? startTime = TDABook.startTime;
         bool? isCurrentEndTime = TDABook.isCurrentEndTime;
         bool isChartTimeFrameNew = true;
+        bool? showRegressionCurves = true;
         #endregion
 
         #endregion
@@ -87,6 +112,7 @@ namespace tapeStream.Client.Pages
             TDABook.endTime = endTime;
             TDABook.startTime = startTime;
             TDABook.isCurrentEndTime = isCurrentEndTime;
+            TDABook.showRegressionCurves = showRegressionCurves;
             priceDialogIsOpen = false;
         }
         void OnChange(object value, string name, string format)
@@ -99,10 +125,14 @@ namespace tapeStream.Client.Pages
 
                 case "End Time":
                     endTime = value as DateTime?;
-
                     break;
+
                 case "End Time Current":
                     isCurrentEndTime = value as bool?;
+                    break;
+
+                case "Regression Curves":
+                    showRegressionCurves = value as bool?;
                     break;
             }
         }
@@ -113,12 +143,27 @@ namespace tapeStream.Client.Pages
             foreach (var name in CONSTANTS.valuesName)
                 dictTopicCounts.Add(name, 0);
 
-            await HubConnection_Initialize();
 
-            bookColData = await bookColumnsService.getBookColumnsData(ChartConfigure.seconds);
+            //bookColData = await bookColumnsService.getBookColumnsData(ChartConfigure.seconds);
+
+            /// TODO: Get symbol and date derived
+            /// 
+            var todaysDate = Math.Floor(DateTime.Now.ToOADate());
+
+
+            await HubConnection_Initialize();
 
             InitializeTimers();
 
+            //if (mode == "simulate")
+            //{ }
+            //else
+
+            allRatioFrames = await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
+
+            dictTopicCounts["BookPiesData"] = TDABook.seconds;
+
+            //await jsruntime.InvokeAsync<string>("BlazorSetTitle", new object[] { "Hello Dali!" });
         }
 
         private void InitializeTimers()
@@ -188,13 +233,17 @@ namespace tapeStream.Client.Pages
 #if dev
                 hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
                 {
-                    options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
+                    //options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
                 }).Build();
 #else
                 hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
                 {
                     options.Transports =  HttpTransportType.WebSockets;
                 }).Build();
+#endif
+
+#if tracing
+                JsConsole.JsConsole.Warn(jsruntime, $"hubConnection: {hubConnection.State}");
 #endif
                 /// Set up Hub Subscriptions -- Don't really need any anymore
                 /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
@@ -220,17 +269,23 @@ namespace tapeStream.Client.Pages
 
         private void Chart_ProcessHubData(string topic, string message)
         {
-            var newRatioFrame = System.Text.Json.JsonSerializer.Deserialize<RatioFrame>(message);
-            clock = newRatioFrame.dateTime.ToString(clockFormat);
-            var alwaysUpdate = allRatioFrames.Count<60;
-            allRatioFrames.Add(newRatioFrame);
+            var newRatioFrames = System.Text.Json.JsonSerializer.Deserialize<RatioFrame[]>(message);
+
+            /// To fix drop outs
+            if (newRatioFrames[0].markPrice == 0)
+                newRatioFrames[0].markPrice = allRatioFrames.Last()[0].markPrice;
+
+            clock = newRatioFrames[0].dateTime.ToString(clockFormat);
+            var alwaysUpdate = allRatioFrames.Count < 60;
+            allRatioFrames.Add(newRatioFrames);
 
             //if (isChartTimeFrameNew == true || alwaysUpdate)
             //{
-                /// Resetting ratioFrames updates the whole chart
-                ratioFrames = allRatioFrames.TakeLast(TDABook.ratiosDepth).ToList();
-                //StateHasChanged();
-                isChartTimeFrameNew = false;
+            /// Resetting ratioFrames updates the whole chart
+            ratioFrames = allRatioFrames.TakeLast(TDABook.ratiosDepth).ToList();
+            //StateHasChanged();
+            isChartTimeFrameNew = false;
+
             //}
             //else
             //{
@@ -264,6 +319,9 @@ namespace tapeStream.Client.Pages
 
         private Task HubConnection_Reconnecting(Exception arg)
         {
+#if tracing
+            JsConsole.JsConsole.Warn(jsruntime, $"HubConnection_Reconnecting: {hubConnection.State}");
+#endif      
             Data.TDAStreamerData.hubStatusMessage = "HubConnection Reconnecting";
             Data.TDAStreamerData.hubStatus = $"./images/yellow.gif";
             return Task.CompletedTask;
@@ -274,19 +332,30 @@ namespace tapeStream.Client.Pages
             var color = IsConnected ? "green" : "red";
             Data.TDAStreamerData.hubStatusMessage = "HubConnection Closed";
             Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
+#if tracing
+            JsConsole.JsConsole.Warn(jsruntime, $"HubConnection_Closed: {hubConnection.State}");
+#endif       
 
             /// Restart
-            await HubConnection_Start();
-            Data.TDAStreamerData.hubStatusMessage = "HubConnection Restarted";
-            Data.TDAStreamerData.hubStatus = Data.TDAStreamerData.hubStatus;
+            ///
+            while (hubConnection.State == HubConnectionState.Disconnected)
+            {
+                await HubConnection_Start();
+                Data.TDAStreamerData.hubStatusMessage = "HubConnection Restarted";
+                Data.TDAStreamerData.hubStatus = Data.TDAStreamerData.hubStatus;
+            }
         }
 
         private Task HubConnection_Reconnected(string arg)
         {
+
             var color = IsConnected ? "green" : "red";
             Data.TDAStreamerData.hubStatusMessage = "HubConnection Reconnected";
             Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
             return Task.CompletedTask;
+#if tracing
+            JsConsole.JsConsole.Warn(jsruntime, $"HubConnection_Reconnected: {hubConnection.State}");
+#endif       
         }
 
         void Receive(string topic, string content)
@@ -312,6 +381,10 @@ namespace tapeStream.Client.Pages
             //GetServiceTime(svcJsonObject);
 
         }
+
+        Task Send(string userInput, string messageInput) =>
+            hubConnection.SendAsync("SendTopic", userInput, messageInput);
+
         #endregion
     }
 }

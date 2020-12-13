@@ -81,7 +81,7 @@ namespace tapeStream.Client.Components.HighCharts.Base
         {
             var text = await _client.GetStringAsync(chartJsFilename);
             chartJson = text;
-            chartJson.Dump();
+            //chartJson.Dump();
             //StateHasChanged();
 
             //Console.WriteLine($"OnInitializedAsync chartJson => " + chartJson);
