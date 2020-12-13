@@ -115,7 +115,8 @@ namespace tapeStream.Server.Data
                 TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
 
             /// Get current time and sales from streamer content
-            var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content);
+            var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content); 
+            TDAChart.svcDateTime = timeAndSales.TimeDate.AddHours(-1);
 
             var prevTimeAndSales = timeAndSales;
             if (TDAStreamerData.timeSales[symbol].Count > 0)
@@ -141,12 +142,13 @@ namespace tapeStream.Server.Data
                 timeAndSales.bidSize = book.bidSize;
                 timeAndSales.bookTime = book.time;
 
+                var  timeNow= book.time.FromUnixTime().ToLocalTime();
                 if (TDAStreamerData.simulatorSettings.isSimulated)
-                {
 
+                { 
                     JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, timeAndSales, "timeAndSales");
 
-                    TDAStreamerData.simulatorSettings.currentSimulatedTime = timeAndSales.TimeDate;
+                    TDAStreamerData.simulatorSettings.currentSimulatedTime =timeNow;
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.isSimulated, "TDAStreamerData.simulatorSettings.isSimulated");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.runDate, "TDAStreamerData.simulatorSettings.runDate");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.startTime, "TDAStreamerData.simulatorSettings.startTime");
@@ -157,7 +159,6 @@ namespace tapeStream.Server.Data
                     timeAndSales.time = now;
                 }
 
-                TDAChart.svcDateTime = timeAndSales.TimeDate;
                 timeAndSales.bidIncr = timeAndSales.bid - prevTimeAndSales.bid;
                 timeAndSales.askIncr = timeAndSales.ask - prevTimeAndSales.ask;
                 timeAndSales.priceIncr = timeAndSales.price - prevTimeAndSales.price;

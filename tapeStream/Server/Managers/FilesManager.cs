@@ -253,6 +253,40 @@ namespace tapeStream.Server.Data
             await Task.CompletedTask;
         }
 
+        internal static async Task AppendToMessageQueue(string symbol, string svcName, DateTime svcDateTime, string svcFieldedJson)
+        {
+            string fileName = svcName;
+            string svcDate = svcDateTime.ToString("MMMM dd, yyyy");
+            string folderPath = $"D:\\MessageQs\\Inputs\\{svcName}\\{symbol}\\{svcDate}\\";
+            string filePath = $"{folderPath}{fileName}.json";
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var delim = "";
+            if (File.Exists(filePath))
+                delim=",";
+
+            System.IO.File.AppendAllText(filePath, delim + svcFieldedJson);
+            //if (svcName == "QUOTE")
+            //{
+            //    filePath = filePath = $"D:\\MessageQs\\Inputs\\{CONSTANTS.TIMESALE_EQUITY}\\{fileName}.json";
+            //    System.IO.File.WriteAllText(filePath, svcFieldedJson);
+            //}
+            await Task.CompletedTask;
+        }
+
+      internal static async Task<string> GetMessageQueueFiles(string symbol, string svcName, DateTime svcDateTime)
+        {
+            string fileName = svcName;
+            string svcDate = svcDateTime.ToString("MMMM dd, yyyy");
+            string folderPath = $"D:\\MessageQs\\Inputs\\{svcName}\\{symbol}\\{svcDate}\\";
+            string filePath = $"{folderPath}{fileName}.json";
+
+            var txt = System.IO.File.ReadAllText(filePath);
+            return txt;
+        }
+
         internal static async Task SendToMessageQueueDated(string svcName, DateTime svcDateTime, string svcFieldedJson)
         {
             string fileName = svcName + svcDateTime.ToString(".yyMMdd.HHmm.ss.ff");

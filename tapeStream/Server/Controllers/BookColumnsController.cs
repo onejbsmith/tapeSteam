@@ -57,13 +57,21 @@ namespace tapeStream.Server.Controllers
         public async Task<RatioFrame> getIncrementalRatioFrames(int seconds, int last)
         {
             await TDABookManager.getLtRatios(seconds);
-            return await TDABookManager.getIncrementalRatioFrames(seconds);
-        }        
-        
+            var ratioFrames = await TDABookManager.getIncrementalRatioFrames(seconds);
+            return ratioFrames[0];
+        }
+
         [Route("getRatioFramesCSV/{seconds}/{last}")]
         public async Task<string> getRatioFramesCsv(int seconds, int last)
         {
             return await TDABookManager.getRatioFramesCSV(seconds, last);
+        }
+
+        [Route("getAllRatioFrames/{symbol}/{svcOADate}")]
+        public async Task<string> getAllRatioFrames(string symbol, int svcOADate)
+        {
+            var svcDateTime = DateTime.FromOADate(svcOADate);
+            return await TDABookManager.getAllRatioFrames(symbol, svcDateTime);
         }
     }
 }

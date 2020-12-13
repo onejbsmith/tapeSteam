@@ -98,7 +98,7 @@ namespace tapeStream.Client.Components.HighCharts
 #if tracing            
             Console.WriteLine("2. Columns getChartJson");
 #endif
-            Console.WriteLine(chartJson); /// to capture the chart object's json from js
+           // Console.WriteLine(chartJson); /// to capture the chart object's json from js
             await Task.Yield();
         }
 

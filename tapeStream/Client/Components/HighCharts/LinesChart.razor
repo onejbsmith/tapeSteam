@@ -10,8 +10,8 @@
 @inject HttpClient _client
 
 <div>
-    <h6 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@OpenDialog"> @(chartTitle())</h6>
-    <MatIconButton Icon="settings" OnClick="@OpenDialog" Raised="true" Style="color:#e7934c;position: relative;top:5px;right:5px"> </MatIconButton>
+    <h6 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@Dialog_Open"> @(chartTitle())</h6>
+    <MatIconButton Icon="settings" OnClick="@Dialog_Open" Raised="true" Style="color:#e7934c;position: relative;top:5px;right:5px"> </MatIconButton>
 </div>
 <figure class="highcharts-figure">
     <div id="container" style="zoom:0.8">
@@ -53,7 +53,7 @@
     </MatDialogContent>
     <MatDialogActions>
         <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
-        <MatButton OnClick="@OkClick">OK</MatButton>
+        <MatButton OnClick="@Dialog_OkClick">OK</MatButton>
     </MatDialogActions>
 </MatDialog>
 

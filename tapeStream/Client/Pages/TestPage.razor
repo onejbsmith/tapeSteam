@@ -50,31 +50,31 @@ Enter your name
     <MatIconButton Icon="settings" OnClick="@OpenPriceDialog" Raised="true" Style="color:darkmagenta" />
     <h6 class="float-right" style="padding:0 20px; position:relative;top:20px; color:darkmagenta">@(allRatioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
 </div>
-<div class="mat-layout-grid" >
+<div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
-    
+
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" buysField="buysTradeSizes" />
+            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysTradeSizes" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" buysField="asksBookSizes" />
+            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="asksBookSizes" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" buysField="buysPriceCount" />
+            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysRatio" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" buysField="buysRatio" />
+            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysPriceCount" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" buysField="buysBelow" />
+            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysBelow" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" buysField="buysAbove" />
+            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysAbove" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
     </div>
@@ -84,6 +84,16 @@ Enter your name
     @*<MatDialogTitle>Hi @name</MatDialogTitle>*@
     <MatDialogContent>
         <MatCard>
+            <h4 style="display:inline-block;color:blueviolet">
+                Seconds to Aggregate: &nbsp;[@TDABook.seconds]&nbsp;
+            </h4>
+            <RadzenNumeric Min="0" Max="60" @bind-Value=@seconds />
+            <h4 style="display:inline-block;color:blueviolet">@TDABook.seconds</h4>
+
+            <div>
+                <h4 style="margin-top: 40px">Regression Curves</h4>
+                <RadzenCheckBox TValue="bool" Change=@(args => OnChange(args, "Regression Curves", "")) />
+            </div>            
             <div style="zoom:0.90">
                 <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
                 <Radzen.Blazor.RadzenNumeric TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@ratiosDepth" />
@@ -199,3 +209,4 @@ Enter your name
     }
 
 </style>
+

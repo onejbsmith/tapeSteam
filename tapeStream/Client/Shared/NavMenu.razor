@@ -8,7 +8,7 @@
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="">
+    <a class="navbar-brand" href="" @onclick="ToggleNavMenu">
         <img src="favicon.ico" style="width:16px;" /> &nbsp;<i style="color:@CONSTANTS.bidsColor"><b>tape</b></i><b style="color:@CONSTANTS.asksColor">Stream</b> 
         <img src="@hubStatus" style="width:16px;" title="@hubStatusMessage" />
     </a>
@@ -28,12 +28,12 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-signal" aria-hidden="true"></span> Columns
+                <span class="oi oi-signal" aria-hidden="true"></span> Home
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="chartest">
-                <span class="oi oi-plus" aria-hidden="true"></span> Surface
+                <span class="oi oi-plus" aria-hidden="true"></span> Columns
             </NavLink>
         </li>
         <li class="nav-item px-3">

@@ -27,7 +27,7 @@ namespace tapeStream.Client.Data
         {
             public Series1 series { get; set; }
 
-           public  Line line { get; set; }
+            public Line line { get; set; }
 
         }
 
@@ -59,6 +59,7 @@ namespace tapeStream.Client.Data
         {
             public string text { get; set; }
             public string align { get; set; }
+
         }
 
         public class Tooltip
@@ -133,6 +134,13 @@ namespace tapeStream.Client.Data
             public int index { get; set; }
             public bool isX { get; set; }
             public string type { get; set; }
+            public int gridLineWidth { get; set; }
+            public Title1 title { get; set; }
+            public Labels1 labels { get; set; }
+
+            public Plotband[] plotBands { get; set; }
+            public Plotline[] plotLines { get; set; }
+
         }
 
         public class Yaxi1
@@ -142,8 +150,50 @@ namespace tapeStream.Client.Data
             public Labels1 labels { get; set; }
             public bool opposite { get; set; }
             public int index { get; set; }
+            public Plotband[] plotBands { get; set; }
+            public Plotline[] plotLines { get; set; }
         }
 
+        public class Plotline
+        {
+            public string color { get; set; }
+            public string dashStyle { get; set; }
+            public decimal value { get; set; }
+            public int width { get; set; }
+            public int zIndex { get; set; }
+            public LabelPlotline label { get; set; }
+        }
+
+        public class Plotband
+        {
+            public string color { get; set; }
+            public int from { get; set; }
+            public int to { get; set; }
+            public LabelPlotline label { get; set; }
+            public int zIndex { get; set; }
+        }
+
+        public class LabelPlotline
+        {
+            public string text { get; set; }
+            public string align { get; set; }
+            public CSSObject style { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
+            public bool useHTML { get; set; }
+        }
+
+        public class CSSObject
+        {
+            public string color { get; set; }
+            public string fontWeight { get; set; }
+            public string fontSize { get; set; }
+        }
+        public class Label
+        {
+            public double y { get; set; }
+            public int rotation { get; set; }
+        }
         public class Title1
         {
             public string text { get; set; }
@@ -153,6 +203,7 @@ namespace tapeStream.Client.Data
         public class Style
         {
             public string color { get; set; }
+            public string fontSize { get; set; }
         }
 
         public class Labels1
@@ -164,6 +215,7 @@ namespace tapeStream.Client.Data
         public class Style1
         {
             public string color { get; set; }
+            public string fontSize { get; set; }
         }
 
         public class Series
@@ -172,7 +224,7 @@ namespace tapeStream.Client.Data
             public string color { get; set; }
             public string type { get; set; }
             public int yAxis { get; set; }
-            public float[] data { get; set; }
+            public float?[] data { get; set; }
             public Tooltip1 tooltip { get; set; }
             public Marker marker { get; set; }
             public string dashStyle { get; set; }

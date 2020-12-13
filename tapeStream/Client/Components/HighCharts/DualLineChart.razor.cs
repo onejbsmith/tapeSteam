@@ -119,7 +119,7 @@ namespace tapeStream.Client.Components.HighCharts
             List<string> categories = new List<string>();
             for (int i = 0; i < chart.series.Length; i++)
             {
-                chart.series[i].data = new float[ratioFrames.Count];
+                chart.series[i].data = new float?[ratioFrames.Count];
                 for (int j = 0; j < ratioFrames.Count; j++)
                 {
                     var frame = ratioFrames[j];

@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared.Data;
 
@@ -172,6 +173,33 @@ namespace tapeStream.Shared.Services
                 values = await Http.GetFromJsonAsync<RatioFrame>($"{controllerUrl}{route}");
             }
             catch { }
+
+#if tracing
+
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "AverageSizes Ratios values");
+#endif
+
+            return values;
+        }
+        public async Task<List<RatioFrame[]>> getAllRatioFrames(string symbol, double OADate, IJSRuntime jSRuntime)
+        {
+            await Task.Yield();
+
+            var route = $"getAllRatioFrames/{symbol}/{OADate}";
+
+            List<RatioFrame[]> values = new List<RatioFrame[]>();
+
+#if tracing
+            JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
+#endif
+            try
+            {
+                var json = await Http.GetFromJsonAsync<string>($"{controllerUrl}{route}");
+                values = JsonSerializer.Deserialize<List<RatioFrame[]>>(json);
+            }
+            catch (System.Exception ex)
+            { 
+            }
 
 #if tracing
 

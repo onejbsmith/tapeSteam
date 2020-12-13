@@ -24,7 +24,6 @@ namespace tapeStream.Shared
         public static string buysBelow = "buysBelow";
         public static string asksBookSizes = "asksBookSizes";
         public static string buysSumSizes = "buysSumSizes";
-        public static string sellsSumSizes = "sellsSumSizes";
         public static string buysPriceCount = "buysPriceCount";
         public static string buysTradeSizes = "buysTradeSizes";
         public static string buysR = "buysR";
@@ -37,6 +36,7 @@ namespace tapeStream.Shared
         public static string sellsAbove = "sellsAbove";
         public static string sellsBelow = "sellsBelow";
         public static string bidsBookSizes = "bidsBookSizes";
+        public static string sellsSumSizes = "sellsSumSizes";
         public static string sellsPriceCount = "sellsPriceCount";
         public static string sellsTradeSizes = "sellsTradeSizes";
         public static string sellsR = "sellsR";

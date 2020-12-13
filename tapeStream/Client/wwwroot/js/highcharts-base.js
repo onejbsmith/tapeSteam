@@ -251,7 +251,6 @@ function loadHighchart(n, t) {
 
 function looseJsonParse(n) {
     try {
-        console.warn(n);
         return Function('"use strict";return (' + n + ")")()
     }
     catch (err) {

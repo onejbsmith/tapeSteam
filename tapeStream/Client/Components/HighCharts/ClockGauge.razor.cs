@@ -54,7 +54,7 @@ namespace tapeStream.Client.Components.HighCharts
 #endif
 
             chart = JsonSerializer.Deserialize<ClockGaugeData.HighchartChart>(jsonResponse);
-            JsConsole.JsConsole.GroupTable(jsruntime, chart, "getChartJson chart");
+            //JsConsole.JsConsole.GroupTable(jsruntime, chart, "getChartJson chart");
 
             /// We set some static chart Properties here and pass back to js
 
