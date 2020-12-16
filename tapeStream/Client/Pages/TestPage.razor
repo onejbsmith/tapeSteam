@@ -1,4 +1,6 @@
 ﻿@page "/"
+@page "/{mode}"
+
 @inject Microsoft.JSInterop.IJSRuntime jsruntime;
 @using tapeStream.Client.Components
 @using tapeStream.Client.Components.HighCharts
@@ -54,7 +56,7 @@ Enter your name
     <div class="mat-layout-grid-inner">
 
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysTradeSizes" />
+            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysTradeSizes" showBollinger="true" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
@@ -93,7 +95,7 @@ Enter your name
             <div>
                 <h4 style="margin-top: 40px">Regression Curves</h4>
                 <RadzenCheckBox TValue="bool" Change=@(args => OnChange(args, "Regression Curves", "")) />
-            </div>            
+            </div>
             <div style="zoom:0.90">
                 <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
                 <Radzen.Blazor.RadzenNumeric TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@ratiosDepth" />

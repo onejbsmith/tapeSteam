@@ -11,7 +11,12 @@ using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
-    
+using MathNet.Numerics;
+using static tapeStream.Shared.Data.TDAChart;
+
+using JSconsoleExtensionsLib;
+
+
 
 namespace tapeStream.Server.Data
 {
@@ -22,6 +27,7 @@ namespace tapeStream.Server.Data
     public class TDABookManager
 
     {
+
         public static List<BookEntry> lstALLBookEntry = new List<BookEntry>();
 
         public static List<BookDataItem> lstAsks = new List<BookDataItem>();
@@ -51,6 +57,9 @@ namespace tapeStream.Server.Data
 
         static Dictionary<string, BookDataItem[]> getBookData()
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+
             var asksData = lstAsks.ToArray();
 
             var bidsData = lstBids.ToArray();
@@ -68,6 +77,7 @@ namespace tapeStream.Server.Data
 
         static Dictionary<string, BookDataItem[]> getBookData(int seconds)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
 
             var asksData = getBookDataItemArray(seconds, now, TDAStreamerData.lstAllAsks);
@@ -87,8 +97,14 @@ namespace tapeStream.Server.Data
 
         static Dictionary<string, BookDataItem[]> getLTBookData(int seconds)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
 
+            DateTime timeNow = DateTime.Now;
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
+            {
+                timeNow = TDAChart.svcDateTime;
+            }
 
             var asksData = TDAStreamerData.lstALLAsks.ToArray();
 
@@ -100,10 +116,10 @@ namespace tapeStream.Server.Data
 
             if (seconds > 0)
             {
-                asksData = TDAStreamerData.lstALLAsks.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).ToArray();
-                bidsData = TDAStreamerData.lstALLBids.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).ToArray();
-                salesAtAskData = TDAStreamerData.lstALLSalesAtAsk.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).ToArray();
-                salesAtBidData = TDAStreamerData.lstALLSalesAtBid.Where(t => t.dateTime >= DateTime.Now.AddSeconds(-seconds)).ToArray();
+                asksData = TDAStreamerData.lstALLAsks.Where(t => t.dateTime >= timeNow.AddSeconds(-seconds)).ToArray();
+                bidsData = TDAStreamerData.lstALLBids.Where(t => t.dateTime >= timeNow.AddSeconds(-seconds)).ToArray();
+                salesAtAskData = TDAStreamerData.lstALLSalesAtAsk.Where(t => t.dateTime >= timeNow.AddSeconds(-seconds)).ToArray();
+                salesAtBidData = TDAStreamerData.lstALLSalesAtBid.Where(t => t.dateTime >= timeNow.AddSeconds(-seconds)).ToArray();
             }
 
             var it = new Dictionary<string, BookDataItem[]>()
@@ -117,6 +133,7 @@ namespace tapeStream.Server.Data
         public static async Task<AverageSizes> getAverages(int seconds)
         {
 
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             /// Get the book data for the number of seconds
             Dictionary<string, BookDataItem[]> dictBookDataItem = getBookData(seconds);
             var seriesOrder = new string[] { "salesAtBid", "bids", "salesAtAsk", "asks" };
@@ -161,6 +178,7 @@ namespace tapeStream.Server.Data
         public static async Task<AverageSizes> getLtAverages(int seconds)
         {
 
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             /// Get the book data for the number of seconds
             Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
 
@@ -207,6 +225,7 @@ namespace tapeStream.Server.Data
 
         public static async Task<AverageSizes> getLtRatios(int seconds)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             /// Get the book data for the number of seconds
             Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
 
@@ -308,7 +327,7 @@ namespace tapeStream.Server.Data
                     //TDABook.lstRatioFrames.Last().sellsR = rSells;
                     //TDABook.lstRatioFrames.Last().buysR = rBuys;
                 }
-                catch
+                catch (Exception ex)
                 {
                     //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
                 }
@@ -324,6 +343,7 @@ namespace tapeStream.Server.Data
         public static async Task<RatioFrame[]> getIncrementalRatioFrames(int seconds)
         {
             /// Get the book data for the number of seconds
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             Dictionary<string, BookDataItem[]> dictBookDataItem = getLTBookData(seconds);
 
             RatioFrame ratioFrame = new RatioFrame();
@@ -342,18 +362,20 @@ namespace tapeStream.Server.Data
             {
 
 
+                var bids = dictBookDataItem["bids"].Sum(t => t.Size);
+                var asks = dictBookDataItem["asks"].Sum(t => t.Size);
+                var buysTradeSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size);
+                var sellsTradeSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size);
 
-                var buysRatio = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
-                var sellsRatio = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
+                var buysRatio = 100 * buysTradeSizes / asks;
+                var sellsRatio = 100 * sellsTradeSizes / bids;
 
-                var buysAltRatio = 100 * dictBookDataItem["salesAtAsk"].Sum(t => t.Size) / dictBookDataItem["bids"].Sum(t => t.Size);
-                var sellsAltRatio = 100 * dictBookDataItem["salesAtBid"].Sum(t => t.Size) / dictBookDataItem["asks"].Sum(t => t.Size);
+                var buysAltRatio = 100 * buysTradeSizes / bids;
+                var sellsAltRatio = 100 * sellsTradeSizes / asks;
 
                 var highBidPrice = dictBookDataItem["bids"].LastOrDefault()?.Price;
                 var lowAskPrice = dictBookDataItem["asks"].LastOrDefault()?.Price;
 
-                var bids = dictBookDataItem["bids"].Sum(t => t.Size);
-                var asks = dictBookDataItem["asks"].Sum(t => t.Size);
 
                 var buysInSpread = dictBookDataItem["salesAtAsk"].Where(r => r.Price > highBidPrice && r.Price < lowAskPrice).Sum(t => t.Size);
                 var buysAbove = dictBookDataItem["salesAtAsk"].Where(r => r.Price >= lowAskPrice).Sum(t => t.Size);
@@ -365,21 +387,26 @@ namespace tapeStream.Server.Data
                 var buysBelow = dictBookDataItem["salesAtAsk"].Where(r => r.Price < highBidPrice).Sum(t => t.Size);
 
                 var buysPriceCount = dictBookDataItem["salesAtAsk"].GroupBy(t => t.Price).Count() + dictBookDataItem["asks"].GroupBy(t => t.Price).Count();
-                var buysTradeSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size);
 
                 var sellsPriceCount = dictBookDataItem["salesAtBid"].GroupBy(t => t.Price).Count() + dictBookDataItem["bids"].GroupBy(t => t.Price).Count();
-                var sellsTradeSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size);
+
                 /// Trades outside of spread added to other side
                 /// 
 
                 var sellsSumSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size) + dictBookDataItem["asks"].GroupBy(t => t.Price).Count();
                 var buysSumSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size) + dictBookDataItem["bids"].GroupBy(t => t.Price).Count();
 
+
                 sellsRatio = (buysInSpread + sellsBelow) / asks;
                 buysRatio = (sellsInSpread + buysAbove) / bids;
 
                 ratioSizes.averageSize.Add("buys", buysRatio);
                 ratioSizes.averageSize.Add("sells", sellsRatio);
+
+                var bollingers =
+                await TDAChartManager.GetBollingerBands();
+
+
 
                 var it = dictBookDataItem["bids"].LastOrDefault();
                 if (it != null)
@@ -410,33 +437,107 @@ namespace tapeStream.Server.Data
                             buysAltRatio = buysAltRatio,
                             sellsAltRatio = sellsAltRatio,
                             buysSumSizes = buysSumSizes,
-                            sellsSumSizes = sellsSumSizes
-
+                            sellsSumSizes = sellsSumSizes,
+                            bollingerHigh = bollingers.high,
+                            bollingerLow = bollingers.low,
+                            bollingerMid = bollingers.mid
                         };
                         TDABook.lstRatioFrames.Add(ratioFrame);
 
 
                         coefficientFrame = new RatioFrame()
                         {
+                            //dateTime = now,
+                            //buysRatio = CalcCorrelationCoeffiecients("buysRatio", seconds),
+                            //sellsRatio = CalcCorrelationCoeffiecients("sellsRatio", seconds),
+                            //bidsBookSizes = CalcCorrelationCoeffiecients("bidsBookSizes", seconds),
+                            //sellsInSpread = CalcCorrelationCoeffiecients("sellsInSpread", seconds),
+                            //sellsBelow = CalcCorrelationCoeffiecients("sellsBelow", seconds),
+                            //sellsAbove = CalcCorrelationCoeffiecients("sellsAbove", seconds),
+                            //asksBookSizes = CalcCorrelationCoeffiecients("asksBookSizes", seconds),
+                            //buysInSpread = CalcCorrelationCoeffiecients("buysInSpread", seconds),
+                            //buysAbove = CalcCorrelationCoeffiecients("buysAbove", seconds),
+                            //buysBelow = CalcCorrelationCoeffiecients("buysBelow", seconds),
+                            //buysTradeSizes = CalcCorrelationCoeffiecients("buysTradeSizes", seconds),
+                            //buysPriceCount = (int)CalcCorrelationCoeffiecients("buysPriceCount", seconds),
+                            //sellsTradeSizes = CalcCorrelationCoeffiecients("sellsTradeSizes", seconds),
+                            //sellsPriceCount = (int)CalcCorrelationCoeffiecients("sellsPriceCount", seconds),
+                            //buysAltRatio = CalcCorrelationCoeffiecients("buysAltRatio", seconds),
+                            //sellsAltRatio = CalcCorrelationCoeffiecients("sellsAltRatio", seconds),
+                            //buysSumSizes = CalcCorrelationCoeffiecients("buysSumSizes", seconds),
+                            //sellsSumSizes = CalcCorrelationCoeffiecients("sellsSumSizes", seconds)
+                        };
+
+                        var secondsBack = TDABook.ratiosDepth;
+                        coefficientFrame = new RatioFrame()
+                        {
                             dateTime = now,
-                            buysRatio = CalcCorrelationCoeffiecients("buysRatio", seconds),
-                            sellsRatio = CalcCorrelationCoeffiecients("sellsRatio", seconds),
-                            bidsBookSizes = CalcCorrelationCoeffiecients("bidsBookSizes", seconds),
-                            sellsInSpread = CalcCorrelationCoeffiecients("sellsInSpread", seconds),
-                            sellsBelow = CalcCorrelationCoeffiecients("sellsBelow", seconds),
-                            sellsAbove = CalcCorrelationCoeffiecients("sellsAbove", seconds),
-                            asksBookSizes = CalcCorrelationCoeffiecients("asksBookSizes", seconds),
-                            buysInSpread = CalcCorrelationCoeffiecients("buysInSpread", seconds),
-                            buysAbove = CalcCorrelationCoeffiecients("buysAbove", seconds),
-                            buysBelow = CalcCorrelationCoeffiecients("buysBelow", seconds),
-                            buysTradeSizes = CalcCorrelationCoeffiecients("buysTradeSizes", seconds),
-                            buysPriceCount = (int)CalcCorrelationCoeffiecients("buysPriceCount", seconds),
-                            sellsTradeSizes = CalcCorrelationCoeffiecients("sellsTradeSizes", seconds),
-                            sellsPriceCount = (int)CalcCorrelationCoeffiecients("sellsPriceCount", seconds),
-                            buysAltRatio = CalcCorrelationCoeffiecients("buysAltRatio", seconds),
-                            sellsAltRatio = CalcCorrelationCoeffiecients("sellsAltRatio", seconds),
-                            buysSumSizes = CalcCorrelationCoeffiecients("buysSumSizes", seconds),
-                            sellsSumSizes = CalcCorrelationCoeffiecients("sellsSumSizes", seconds)
+                            buysRatio = SumField("buysRatio", seconds, secondsBack),
+                            sellsRatio = SumField("sellsRatio", seconds, secondsBack),
+                            bidsBookSizes = SumField("bidsBookSizes", seconds, secondsBack),
+                            sellsInSpread = SumField("sellsInSpread", seconds, secondsBack),
+                            sellsBelow = SumField("sellsBelow", seconds, secondsBack),
+                            sellsAbove = SumField("sellsAbove", seconds, secondsBack),
+                            asksBookSizes = SumField("asksBookSizes", seconds, secondsBack),
+                            buysInSpread = SumField("buysInSpread", seconds, secondsBack),
+                            buysAbove = SumField("buysAbove", seconds, secondsBack),
+                            buysBelow = SumField("buysBelow", seconds, secondsBack),
+                            buysTradeSizes = SumField("buysTradeSizes", seconds, secondsBack),
+                            buysPriceCount = (int)SumField("buysPriceCount", seconds, secondsBack),
+                            sellsTradeSizes = SumField("sellsTradeSizes", seconds, secondsBack),
+                            sellsPriceCount = (int)SumField("sellsPriceCount", seconds, secondsBack),
+                            buysAltRatio = SumField("buysAltRatio", seconds, secondsBack),
+                            sellsAltRatio = SumField("sellsAltRatio", seconds, secondsBack),
+                            buysSumSizes = SumField("buysSumSizes", seconds, secondsBack),
+                            sellsSumSizes = SumField("sellsSumSizes", seconds, secondsBack)
+                        };
+
+
+                        diffCoefficientFrame = new RatioFrame()
+                        {
+                            //dateTime = now,
+                            //buysRatio = CalcPolynomialRegression("buysRatio", seconds),
+                            //sellsRatio = CalcPolynomialRegression("sellsRatio", seconds),
+                            //bidsBookSizes = CalcPolynomialRegression("bidsBookSizes", seconds),
+                            //sellsInSpread = CalcPolynomialRegression("sellsInSpread", seconds),
+                            //sellsBelow = CalcPolynomialRegression("sellsBelow", seconds),
+                            //sellsAbove = CalcPolynomialRegression("sellsAbove", seconds),
+                            //asksBookSizes = CalcPolynomialRegression("asksBookSizes", seconds),
+                            //buysInSpread = CalcPolynomialRegression("buysInSpread", seconds),
+                            //buysAbove = CalcPolynomialRegression("buysAbove", seconds),
+                            //buysBelow = CalcPolynomialRegression("buysBelow", seconds),
+                            //buysTradeSizes = CalcPolynomialRegression("buysTradeSizes", seconds),
+                            //buysPriceCount = (int)CalcPolynomialRegression("buysPriceCount", seconds),
+                            //sellsTradeSizes = CalcPolynomialRegression("sellsTradeSizes", seconds),
+                            //sellsPriceCount = (int)CalcPolynomialRegression("sellsPriceCount", seconds),
+                            //buysAltRatio = CalcPolynomialRegression("buysAltRatio", seconds),
+                            //sellsAltRatio = CalcPolynomialRegression("sellsAltRatio", seconds),
+                            //buysSumSizes = CalcPolynomialRegression("buysSumSizes", seconds),
+                            //sellsSumSizes = CalcPolynomialRegression("sellsSumSizes", seconds)
+                        };
+
+                        secondsBack = TDABook.ratiosBack;
+                        diffCoefficientFrame = new RatioFrame()
+                        {
+                            dateTime = now,
+                            buysRatio = SumField("buysRatio", seconds, secondsBack),
+                            sellsRatio = SumField("sellsRatio", seconds, secondsBack),
+                            bidsBookSizes = SumField("bidsBookSizes", seconds, secondsBack),
+                            sellsInSpread = SumField("sellsInSpread", seconds, secondsBack),
+                            sellsBelow = SumField("sellsBelow", seconds, secondsBack),
+                            sellsAbove = SumField("sellsAbove", seconds, secondsBack),
+                            asksBookSizes = SumField("asksBookSizes", seconds, secondsBack),
+                            buysInSpread = SumField("buysInSpread", seconds, secondsBack),
+                            buysAbove = SumField("buysAbove", seconds, secondsBack),
+                            buysBelow = SumField("buysBelow", seconds, secondsBack),
+                            buysTradeSizes = SumField("buysTradeSizes", seconds, secondsBack),
+                            buysPriceCount = (int)SumField("buysPriceCount", seconds, secondsBack),
+                            sellsTradeSizes = SumField("sellsTradeSizes", seconds, secondsBack),
+                            sellsPriceCount = (int)SumField("sellsPriceCount", seconds, secondsBack),
+                            buysAltRatio = SumField("buysAltRatio", seconds, secondsBack),
+                            sellsAltRatio = SumField("sellsAltRatio", seconds, secondsBack),
+                            buysSumSizes = SumField("buysSumSizes", seconds, secondsBack),
+                            sellsSumSizes = SumField("sellsSumSizes", seconds, secondsBack)
                         };
 
                         //diffCoefficientFrame = new RatioFrame()
@@ -465,28 +566,11 @@ namespace tapeStream.Server.Data
                         //// Calc correlation coeffiecients
 
 
-                        //var _ratioFrames = TDABook.lstRatioFrames;
-                        //var n = _ratioFrames.Count;
-                        //var sumY = (double)_ratioFrames.Sum(t => t.markPrice);
-                        //var sumXBuys = _ratioFrames.Sum(t => t.buysRatio);
-                        //var sumXSells = _ratioFrames.Sum(t => t.sellsRatio);
-                        //var sumXYBuys = _ratioFrames.Sum(t => t.buysRatio * (double)t.markPrice);
-                        //var sumXYSells = _ratioFrames.Sum(t => t.sellsRatio * (double)t.markPrice);
-                        //var sumX2Buys = _ratioFrames.Sum(t => t.buysRatio * t.buysRatio);
-                        //var sumX2Sells = _ratioFrames.Sum(t => t.sellsRatio * t.sellsRatio);
-                        //var sumY2 = (double)_ratioFrames.Sum(t => t.markPrice * t.markPrice);
 
-                        //var rBuys = (n * sumXYBuys - sumXBuys * sumY) / (Math.Sqrt((n * sumX2Buys - sumXBuys * sumXBuys) * (n * sumY2 - sumY * sumY)));
-                        //var rSells = (n * sumXYSells - sumXSells * sumY) / (Math.Sqrt((n * sumX2Sells - sumXSells * sumXSells) * (n * sumY2 - sumY * sumY)));
-
-                        //var (rBuys, rSells) = CalcCorrelationCoeffiecients("buysRatio");
-
-                        //TDABook.lstRatioFrames.Last().sellsR = rSells;
-                        //TDABook.lstRatioFrames.Last().buysR = rBuys;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        //JsConsole.JsConsole.Confirm(TDAStreamerData.jSRuntime, ex.ToString());
+                        TDAStreamerData.jSRuntime.confirm(ex.ToString());
                     }
                 //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDABook.lstRatioFrames, "TDABook.lstRatioFrames");
 
@@ -497,13 +581,27 @@ namespace tapeStream.Server.Data
             return new RatioFrame[] { ratioFrame, coefficientFrame, diffCoefficientFrame };
         }
 
+        private static double CalcPolynomialRegression(string v, int seconds)
+        {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            return TDABook.CalcPolynomialRegression(v, seconds);
+        }
+
         private static double SumDiffs(string sellsField, int seconds)
         {
-            var buysField =sellsField.Replace("bids","asks" ).Replace("sells", "buys");
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            var buysField = sellsField.Replace("bids", "asks").Replace("sells", "buys");
             var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
             var sumXBuys = _ratioFrames.Sum(t => Convert.ToDouble(t[buysField]) - Convert.ToDouble(t[sellsField]));
 
             return sumXBuys;
+        }
+
+        private static double SumField(string fieldName, int seconds, int secondsBack)
+        {
+            var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= secondsBack).ToList();
+            var sum = _ratioFrames.Sum(t => Convert.ToDouble(t[fieldName]));
+            return sum;
         }
 
         /// <summary>
@@ -513,6 +611,7 @@ namespace tapeStream.Server.Data
         /// <returns></returns>
         public static double CalcCorrelationCoeffiecients(string buysField, int seconds, int lead = 0)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             /// get frames in the last n seconds 
             var _ratioFrames = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
             var n = _ratioFrames.Count;
@@ -533,6 +632,7 @@ namespace tapeStream.Server.Data
         }
         public static double CalcDiffCorrelationCoeffiecients(string buysField, int seconds, int lead = 0)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             /// get frames in the last n seconds 
 
             var sellsField = buysField.Replace("asks", "bids").Replace("buys", "sells");
@@ -555,6 +655,7 @@ namespace tapeStream.Server.Data
         }
         public static async Task<List<RatioFrame>> getListLtRatios(int seconds, int last)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var takeLast = last == 0 ? TDABook.lstRatioFrames.Count : last;
             await Task.CompletedTask;
             return TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds).TakeLast(takeLast).ToList();
@@ -562,6 +663,7 @@ namespace tapeStream.Server.Data
 
         public static async Task<List<RatioFrame>> getRatioFrames(int seconds, int last)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var takeLast = last == 0 ? TDABook.lstRatioFrames.Count : last;
 
             var data = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds).TakeLast(takeLast).ToList();
@@ -573,6 +675,7 @@ namespace tapeStream.Server.Data
 
         public static async Task<string> getRatioFramesCSV(int seconds, int last)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var takeLast = last == 0 ? TDABook.lstRatioFrames.Count : last;
             var data = TDABook.lstRatioFrames.Where(frame => frame.seconds == seconds).TakeLast(takeLast).ToList();
 
@@ -584,6 +687,7 @@ namespace tapeStream.Server.Data
 
         internal static async Task<string> getAllRatioFrames(string symbol, DateTime svcDateTime)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var text = await FilesManager.GetMessageQueueFiles(symbol, "AllRatioFrames", svcDateTime);
             return "[" + text + "]";
         }
@@ -591,6 +695,7 @@ namespace tapeStream.Server.Data
         private static BookDataItem[] getBookDataItemArray(int seconds, long now, List<BookDataItem> lstItems)
         {
 
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var lstBookItems = lstItems;
             if (seconds > 0)
                 lstBookItems.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-seconds));
@@ -613,6 +718,7 @@ namespace tapeStream.Server.Data
         }
         private static BookDataItem[] getLtBookDataItemArray(List<BookDataItem> lstItems)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             var lstBookItemsData = lstItems
                 .GroupBy(lstBookItems => lstBookItems.Price)
@@ -632,6 +738,7 @@ namespace tapeStream.Server.Data
         }
         public static async Task<Dictionary<string, BookDataItem[]>> getBookPiesData()
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             Dictionary<string, BookDataItem[]> dictBookPies = new Dictionary<string, BookDataItem[]>();
             foreach (var seconds in CONSTANTS.printSeconds)
             {
@@ -663,6 +770,7 @@ namespace tapeStream.Server.Data
 
         private static async Task<BookDataItem[]> getBookPieData(int seconds)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var bookData = new BookDataItem[2];
 
             TDAStreamerData.lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
@@ -693,6 +801,7 @@ namespace tapeStream.Server.Data
         }
         public static async Task<BookDataItem[]> getBookCompositePieData()
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var bookData = new BookDataItem[]
             {
                  CONSTANTS.newBookDataItem,
@@ -743,6 +852,7 @@ namespace tapeStream.Server.Data
 
         public static async Task Decode(string symbol, string content)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var all = JObject.Parse(content);
             var bids = all["2"];
             var asks = all["3"];
@@ -780,7 +890,7 @@ namespace tapeStream.Server.Data
                 if (Math.Abs(price - baseBidPrice) < 0.30m)
                 {
 
-                    var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
+                    var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = now.FromUnixTime().ToLocalTime() };
 
                     /// Collect the bid
                     lstBids.Add(bid);
@@ -799,7 +909,7 @@ namespace tapeStream.Server.Data
                 var size = Convert.ToDouble(((Newtonsoft.Json.Linq.JValue)asks[i]["1"]).Value);
                 if (Math.Abs(price - baseAskPrice) < 0.30m)
                 {
-                    var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = DateTime.Now };
+                    var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = now.FromUnixTime().ToLocalTime() };
 
                     /// Collect the ask
                     lstAsks.Add(ask);
@@ -813,11 +923,11 @@ namespace tapeStream.Server.Data
             try
             {
 
-                var maxBid = lstBids.Max(bids => bids.Price);
-                var bidEntry = lstBids.Where(bid => bid.Price == maxBid).First();
+                var bidEntry = lstBids.First();
+                //var maxBid = lstBids.Max(bids => bids.Price);
 
-                var minAsk = lstAsks.Min(asks => asks.Price);
-                var askEntry = lstAsks.Where(ask => ask.Price == minAsk).First();
+                //var minAsk = lstAsks.Min(asks => asks.Price);
+                var askEntry = lstAsks.First();
 
                 var lastTime = 0d;
                 var lastSale = TDAStreamerData.timeSales[symbol].Last();
@@ -842,6 +952,16 @@ namespace tapeStream.Server.Data
                 /// Sum the sales by level and distribute sales from the middle level to the 2 levels on either side of the middle.
                 int[] printsSizes = new int[5];
                 var prints = TDAStreamerData.timeSales[symbol].Where(ts => ts.bookTime >= lastTime && ts.bookTime < bidEntry.time);
+
+                TDAStreamerData.jSRuntime.groupCollapsed("TDAStreamerData.timeSales[symbol]");
+                TDAStreamerData.jSRuntime.table(TDAStreamerData.timeSales[symbol]);
+                TDAStreamerData.jSRuntime.groupEnd();
+
+                TDAStreamerData.jSRuntime.groupCollapsed("prints");
+                TDAStreamerData.jSRuntime.table(prints);
+                TDAStreamerData.jSRuntime.log($"lastTime: {lastTime} | bidEntry.time: {bidEntry.time}");
+                TDAStreamerData.jSRuntime.groupEnd();
+
                 var printsByPriceAtLevel = prints.GroupBy(sale => new { sale.price, sale.level, sale.TimeDate })
                 .Select(sales => new PrintSale()
                 {
@@ -849,6 +969,10 @@ namespace tapeStream.Server.Data
                     level = sales.Key.level,
                     size = sales.Sum(sale => sale.size)
                 });
+
+                TDAStreamerData.jSRuntime.groupCollapsed("printsByPriceAtLevel");
+                TDAStreamerData.jSRuntime.table(printsByPriceAtLevel);
+                TDAStreamerData.jSRuntime.groupEnd();
 
                 var salesAtMid = printsByPriceAtLevel.Where(sale => sale.level == 3);
 
@@ -863,7 +987,7 @@ namespace tapeStream.Server.Data
                 .Select(sales => new BookDataItem
                 {
                     Price = (decimal)sales.Key,
-                    dateTime = DateTime.Now,
+                    dateTime = TDAChart.svcDateTime,
                     Size = sales.Sum(sale => sale.size)
                 }).ToList();
                 TDAStreamerData.lstAllSalesAtBid.AddRange(lstSalesAtBid);
@@ -880,7 +1004,7 @@ namespace tapeStream.Server.Data
                 .Select(sales => new BookDataItem
                 {
                     Price = (decimal)sales.Key,
-                    dateTime = DateTime.Now,
+                    dateTime = TDAChart.svcDateTime,
                     Size = sales.Sum(sale => sale.size)
                 }).ToList();
                 TDAStreamerData.lstAllSalesAtAsk.AddRange(lstSalesAtAsk);
@@ -911,7 +1035,7 @@ namespace tapeStream.Server.Data
                 };
                 lstALLBookEntry.Add(newBookEntry);
 
-                if (!(bool)TDAStreamerData.simulatorSettings.isSimulated)
+                if (!TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
                 {
                     string json = JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(dictBook);
                     await FilesManager.SendToMessageQueue(symbol, "BookedTimeSales", DateTime.Now, json);

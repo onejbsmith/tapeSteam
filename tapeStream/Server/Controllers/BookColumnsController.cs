@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Server.Data;
 using tapeStream.Shared.Data;
@@ -71,7 +73,20 @@ namespace tapeStream.Server.Controllers
         public async Task<string> getAllRatioFrames(string symbol, int svcOADate)
         {
             var svcDateTime = DateTime.FromOADate(svcOADate);
-            return await TDABookManager.getAllRatioFrames(symbol, svcDateTime);
+
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
+                svcDateTime = TDAStreamerData.simulatorSettings.runDateDate;
+
+            var json =  await TDABookManager.getAllRatioFrames(symbol, svcDateTime);
+
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
+            {
+                var earliestTime = TDAStreamerData.simulatorSettings.currentSimulatedTime;
+                var values = JsonSerializer.Deserialize<List<RatioFrame[]>>(json).Where(item => item[0].dateTime <= earliestTime);
+                json = JsonSerializer.Serialize(values);
+            }
+
+            return json;
         }
     }
 }

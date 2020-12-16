@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using MathNet.Numerics;
 
 namespace tapeStream.Shared.Data
 {
@@ -15,13 +16,39 @@ namespace tapeStream.Shared.Data
 
 
 
-        public static int ratiosDepth = 150;
-        public static int ratiosBack = 30;
+        public static int ratiosDepth = 300;
+        public static int ratiosBack = 150;
         public static bool? isCurrentEndTime = true;
         public static DateTime? startTime = DateTime.Now;
         public static DateTime? endTime = DateTime.Now;
         public static int seconds = 30;
         public static bool? showRegressionCurves;
+
+
+        public static double CalcPolynomialRegression(string buysField, int seconds, int degrees = 1)
+        {
+            /// get frames in the last n seconds 
+            var ratioFrames = lstRatioFrames.DistinctBy(frame => frame.dateTime).Where(frame => frame.seconds == seconds && TDAChart.svcDateTime.Subtract(frame.dateTime).TotalSeconds <= seconds).ToList();
+            var n = ratioFrames.Count;
+
+            var lstBuysD = ratioFrames.Select(item => (double)Convert.ToDouble(item[buysField])).ToList();
+
+            var xData = ratioFrames.Select(item => (double)ratioFrames.IndexOf(item)).ToArray();
+            /// Fitting a fifth degree polynomial to the data can have up to 4 curves
+            /// 
+            var cb = Fit.Polynomial(xData, lstBuysD.ToArray(), degrees).Select(t => (float?)t).ToList();
+
+            var x = (double)xData.Last();
+            var buysPoly = 0d;
+            for (int i = 0; i < degrees; i++)
+            {
+                var xx = Math.Pow(x, i);
+                buysPoly += (double)(cb[i] * xx);
+            }
+
+            return (double)buysPoly;
+
+        }
 
         //public static Dictionary<string,BookDataItem[]> getBookColumnsData()
         //{
@@ -137,6 +164,10 @@ namespace tapeStream.Shared.Data
         public int buysPriceCount { get; set; }
         public int sellsPriceCount { get; set; }
 
+        public double bollingerHigh { get; set; }
+        public double bollingerMid { get; set; }
+        public double bollingerLow { get; set; }
+
 
 
         [NotMapped]
@@ -150,9 +181,18 @@ namespace tapeStream.Shared.Data
 
     }
 
+
     public class JsonArrayOfArrays
     {
         public object[][] datum { get; set; }
     }
 
+}
+
+public static class LinqExtensions
+{
+    public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> items, Func<T, TKey> property)
+    {
+        return items.GroupBy(property).Select(x => x.First());
+    }
 }

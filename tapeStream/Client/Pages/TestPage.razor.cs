@@ -26,7 +26,8 @@ namespace tapeStream.Client.Pages
 
         string symbol = "QQQ";
 
-        bool simulating;
+        [Parameter]
+        public string mode { get; set; }
 
         private int _seconds;
 
@@ -155,13 +156,15 @@ namespace tapeStream.Client.Pages
 
             InitializeTimers();
 
+            dictTopicCounts["BookPiesData"] = TDABook.seconds;
+            
+           
             //if (mode == "simulate")
             //{ }
             //else
 
             allRatioFrames = await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
 
-            dictTopicCounts["BookPiesData"] = TDABook.seconds;
 
             //await jsruntime.InvokeAsync<string>("BlazorSetTitle", new object[] { "Hello Dali!" });
         }
@@ -272,8 +275,8 @@ namespace tapeStream.Client.Pages
             var newRatioFrames = System.Text.Json.JsonSerializer.Deserialize<RatioFrame[]>(message);
 
             /// To fix drop outs
-            if (newRatioFrames[0].markPrice == 0)
-                newRatioFrames[0].markPrice = allRatioFrames.Last()[0].markPrice;
+            if (newRatioFrames[0].markPrice == 0) return;
+                //newRatioFrames[0].markPrice = allRatioFrames.Last()[0].markPrice;
 
             clock = newRatioFrames[0].dateTime.ToString(clockFormat);
             var alwaysUpdate = allRatioFrames.Count < 60;
@@ -313,7 +316,7 @@ namespace tapeStream.Client.Pages
 
             /// Show Hub Status in lamp color
             var color = IsConnected ? "green" : "red";
-            Data.TDAStreamerData.hubStatusMessage = "HubConnection Started";
+            Data.TDAStreamerData.hubStatusMessage = $"HubConnection Started";
             Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
         }
 

@@ -351,15 +351,16 @@ namespace tapeStream.Server.Data
             /// So what is the runtime -- need to add to simulator settings and pass to 
             var lstFiles = Directory.GetFiles(filePath);
 
-            if ((bool)TDAStreamerData.simulatorSettings.isSimulated)
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
             {
-                lstFiles = lstFiles.Where(file => File.GetCreationTime(file) <= TDAStreamerData.simulatorSettings.currentSimulatedTime).ToArray();
+                var runStartDateTime = TDAStreamerData.simulatorSettings.runDateDate.Add(TDAStreamerData.simulatorSettings.currentSimulatedTime.TimeOfDay);
+                lstFiles = lstFiles.Where(file => File.GetCreationTime(file) <= runStartDateTime).ToArray();
             }
 
-            if (lstFiles.Length < nCloses) nCloses = 0;
+            //if (lstFiles.Length < nCloses) nCloses = 0;
 
-            var ourFiles = lstFiles.ToList().Skip(lstFiles.Length - nCloses);
-            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings");
+            var ourFiles = lstFiles.TakeLast(nCloses);
+            //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings");
             foreach (var fileName in ourFiles)
             {
                 var text = File.ReadAllText(fileName);
