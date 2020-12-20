@@ -115,6 +115,7 @@ namespace tapeStream.Server.Data
 
             if (!TDAStreamerData.timeSales.ContainsKey(symbol))
                 TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
+            /// Add Run table row and set runId static
 
             /// Get current time and sales from streamer content
             var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content); 
@@ -123,6 +124,7 @@ namespace tapeStream.Server.Data
             var prevTimeAndSales = timeAndSales;
             if (TDAStreamerData.timeSales[symbol].Count > 0)
                 prevTimeAndSales = TDAStreamerData.timeSales[symbol].Last();
+            /// Add Streamed table row and set streamId static
 
             /// Combine bid/ask with time & sales and write to database
             /// Need to match time of print and time of quote to get accuarate buys/sells
@@ -186,6 +188,10 @@ namespace tapeStream.Server.Data
             // Update the Chart last close value
 
             TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+            /// Add to Buys / Sells tables
+            /// if 1 or 2 goes to sells (sold at or below bid)
+            /// if 4 or 5 goes to buys (bought at or above ask)
+            /// if 3 then split 1/2 (bought or sold in spread, between bid and ask)
 
             // string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
             //await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);

@@ -13,15 +13,18 @@ using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
 using static tapeStream.Client.Data.LinesChartData;
 using MathNet.Numerics;
+using JSconsoleExtensionsLib;
 
 
 namespace tapeStream.Client.Components.HighCharts
 {
     public partial class LinesChart
     {
+        [Inject] Microsoft.JSInterop.IJSRuntime console { get; set; }
+
         [Parameter]
-         public bool showBollinger { get; set; } = false;
-       
+        public bool showBollinger { get; set; } = false;
+
 
         [Parameter]
         public bool showPrice { get; set; } = true;
@@ -60,11 +63,26 @@ namespace tapeStream.Client.Components.HighCharts
         private List<RatioFrame[]> _ratioFrames = new List<RatioFrame[]>();
 
         [Parameter]
+        public tapeStream.Client.Pages.TestPage parent { get; set; }
+
+
         public string buysField
         {
-            get { return _buysField; }
+            get
+            {
+                var chars = _id.ToArray<char>();
+                var i = Convert.ToInt32(chars.Last().ToString()) - 1;
+                if (chars[chars.Length - 2] == '1')
+                    i += 10;
+
+                var parentBuysField = parent.buyFields[i];
+                _buysField = parentBuysField;
+                return _buysField;
+            }
             set
             {
+                var i = Convert.ToInt32(_id.ToArray<char>().Last().ToString()) - 1;
+                parent.buyFields[i] = value;
                 _buysField = value;
                 sellsField = _buysField.Replace("buys", "sells").Replace("asks", "bids");
 
@@ -157,13 +175,45 @@ namespace tapeStream.Client.Components.HighCharts
 
                 await Chart_BuildSeriesData(ratioFrames);
 
+                //  Chart_SetTitle(ratioFrames);
+
+
                 redraw = true;
                 chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
             }
             catch (Exception ex)
             {
-                JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
+                console.confirm(ex.ToString(), true);
             }
+        }
+
+
+        void Chart_SetTitle(List<RatioFrame[]> ratioFrames)
+        {
+            try
+            {
+                var lastBuys = ratioFrames.Last()[0][_buysField];
+                var lastSells = ratioFrames.Last()[0][sellsField];
+                chart.title.text = $"{lastBuys}  |  {lastSells} ";
+                //var predSellsR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
+                //var predBuysR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
+                //var sellsR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
+                //var buysR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
+
+                //var sumValues = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][sellsField]))).ToString("n0");
+                //var diffR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][buysField]))).ToString("n0");
+
+                //chart.title.text = $"Diff r All {ratioFrames.Count} secs: {diffR}  Sum All: {sumValues} | All ({TDABook.ratiosBack} secs) r [ {buysR} {sellsR} ]  | Prediction:(ahead {10} secs) r  [ {predBuysR} {predSellsR} ]"; ;// TDAChart.LongDateString;
+
+                //var sumBuys = Convert.ToDouble(ratioFrames.Last()[1][buysField]).ToString("n0");
+                //var sumSells = Convert.ToDouble(ratioFrames.Last()[1][sellsField]).ToString("n0");
+                //var sumTotal = (Convert.ToDouble(ratioFrames.Last()[1][buysField]) + Convert.ToDouble(ratioFrames.Last()[1][sellsField])).ToString("n0");
+                //var sumTotalBack = (Convert.ToDouble(ratioFrames.Last()[2][buysField]) + Convert.ToDouble(ratioFrames.Last()[2][sellsField])).ToString("n0");
+                //var sumTotalRecent = (Convert.ToDouble(ratioFrames.Last()[3][buysField]) + Convert.ToDouble(ratioFrames.Last()[3][sellsField])).ToString("n0");
+                //if (sumBuys + sumSells != "00")
+                //    chart.title.text = $"{sumTotal}  |  {sumTotalBack}  |  {sumTotalRecent} :({30})  ";
+            }
+            catch { }
         }
 
         private void Chart_SetCategories(List<RatioFrame[]> ratioFrames)
@@ -182,7 +232,7 @@ namespace tapeStream.Client.Components.HighCharts
             //}
             //chart.xAxis[0].categories = categories.ToArray();
 
-              Chart_PlotBands(ratioFrames, lstDateTimes.ToList());
+            Chart_PlotBands(ratioFrames, lstDateTimes.ToList());
 
         }
 
@@ -264,6 +314,25 @@ namespace tapeStream.Client.Components.HighCharts
             var lstBuys = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_buysField])).ToList();
             var lstSells = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_sellsField])).ToList();
 
+            /// This shows both above and below sums on one chart for easy observe crossovers, for ratiosDepth secs
+            //if (buysField == "buysBelow")
+            //{
+            //    lstBuys = ratioFrames.Select(item => (float?)(Convert.ToDouble(item[2][_buysField]) + Convert.ToDouble(item[2][_sellsField]))).ToList();
+            //    lstSells = ratioFrames.Select(item => (float?)(Convert.ToDouble(item[2]["buysAbove"]) + Convert.ToDouble(item[2]["sellsAbove"]))).ToList();
+            //}
+
+            ///// This shows both above and below sums on one chart for easy observe crossovers, for ratiosBack secs
+            //else if (buysField == "buysAbove")
+            //{
+            //    lstBuys = ratioFrames.Select(item => (float?)(Convert.ToDouble(item[3]["buysBelow"]) + Convert.ToDouble(item[3]["sellsBelow"]))).ToList();
+            //    lstSells = ratioFrames.Select(item => (float?)(Convert.ToDouble(item[3][_buysField]) + Convert.ToDouble(item[3][_sellsField]))).ToList();
+            //}
+            //else
+            //{
+            //    lstBuys = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_buysField])).ToList();
+            //    lstSells = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0][_sellsField])).ToList();
+            //}
+
             var lstMarks = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0].markPrice)).ToList();
 
             var minMark = allRatioFrames.Min(item => (float?)Convert.ToDouble(item[0].markPrice));
@@ -306,7 +375,7 @@ namespace tapeStream.Client.Components.HighCharts
             //chart.series[3].color = CONSTANTS.buysColor;
             //chart.series[4].color = CONSTANTS.sellsColor;
 
-            if (showBollinger==true)
+            if (showBollinger == true)
             {
                 chart.series[3].data = ratioFrames.Select(item => (float?)Convert.ToDouble(item[0].bollingerHigh)).ToArray();
                 chart.series[3].color = "red";
@@ -319,9 +388,9 @@ namespace tapeStream.Client.Components.HighCharts
             }
             else
             {
-                chart.series[3].data =null;
-                chart.series[4].data =null;
-                chart.series[5].data =null;
+                chart.series[3].data = null;
+                chart.series[4].data = null;
+                chart.series[5].data = null;
             }
 
             if (buysField.StartsWith("asks") || buysField == "buysPriceCount" || buysField.EndsWith("Ratio"))
@@ -333,13 +402,32 @@ namespace tapeStream.Client.Components.HighCharts
                 chart.series[2].name = "Bids";
                 //chart.series[3].color = CONSTANTS.asksColor;
                 //chart.series[4].color = CONSTANTS.bidsColor;
+                chart.series[0].type = "spline";
+                chart.series[2].type = "spline";
+            }
+            else if (buysField.Contains("Above") || buysField.Contains("Below") || buysField.Contains("Sprread"))
+            {
+                chart.series[0].type = "spline";
+                chart.series[2].type = "spline";
+                chart.series[0].name = "Below";
+                chart.series[2].name = "Above";
             }
             else
             {
                 chart.series[0].name = "Buys";
                 chart.series[2].name = "Sells";
 
+                chart.series[0].type = "spline";
+                chart.series[2].type = "spline";
             }
+
+
+            //else
+            //{
+            //    chart.series[0].type = "spline";
+            //    chart.series[2].type = "spline";
+            //}
+
 
             chart.yAxis[0].gridLineWidth = 1;
             chart.yAxis[1].gridLineWidth = 1;
@@ -358,28 +446,9 @@ namespace tapeStream.Client.Components.HighCharts
                 chart.yAxis[1].labels.format = "{value}";
 
             var date = ratioFrames.First()[0].dateTime.ToLongDateString();
-            try
-            {
-                //var predSellsR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
-                //var predBuysR = Convert.ToDouble(ratioFrames.SkipLast(Math.Min(10, ratioFrames.Count)).TakeLast(TDABook.ratiosBack).Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
-                //var sellsR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][sellsField]))).ToString("n0");
-                //var buysR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[1][buysField]))).ToString("n0");
-
-                //var sumValues = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][sellsField]))).ToString("n0");
-                //var diffR = Convert.ToDouble(ratioFrames.Average(item => Convert.ToDouble(item[2][buysField]))).ToString("n0");
-
-                //chart.title.text = $"Diff r All {ratioFrames.Count} secs: {diffR}  Sum All: {sumValues} | All ({TDABook.ratiosBack} secs) r [ {buysR} {sellsR} ]  | Prediction:(ahead {10} secs) r  [ {predBuysR} {predSellsR} ]"; ;// TDAChart.LongDateString;
-
-                var sumBuys = Convert.ToDouble(ratioFrames.Last()[1][buysField]).ToString("n0");
-                var sumSells = Convert.ToDouble(ratioFrames.Last()[1][sellsField]).ToString("n0");
-                var sumTotal = (Convert.ToDouble(ratioFrames.Last()[1][buysField]) +  Convert.ToDouble(ratioFrames.Last()[1][sellsField])).ToString("n0");
-                var sumTotalBack = (Convert.ToDouble(ratioFrames.Last()[2][buysField]) +  Convert.ToDouble(ratioFrames.Last()[2][sellsField])).ToString("n0");
-                chart.title.text = $"Sum ({TDABook.ratiosDepth})  : {sumTotal}     Sum ({TDABook.ratiosBack}) : {sumTotalBack} ";// TDAChart.LongDateString;
-
-            }
-            catch { }
 
             await Task.CompletedTask;
+
         }
 
         private static void Chart_PlotLines(float? minMark, float? maxMark)
@@ -440,7 +509,10 @@ namespace tapeStream.Client.Components.HighCharts
 
         string chartTitle()
         {
-            return TranslateChartTitle(string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1)));
+            var splitTitle = string.Join(" ", buysField.SplitCamelCase().Split(" ").Skip(1));
+            var aliasTitle = TranslateChartTitle(splitTitle);
+            if (aliasTitle == "") aliasTitle = string.Join(' ', splitTitle);
+            return aliasTitle;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿#define UsingSignalHub
-#define dev
+#undef dev
 using System;
 using System.Text;
 

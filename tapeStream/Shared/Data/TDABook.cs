@@ -18,6 +18,7 @@ namespace tapeStream.Shared.Data
 
         public static int ratiosDepth = 300;
         public static int ratiosBack = 150;
+        public static int ratiosShort = 30;
         public static bool? isCurrentEndTime = true;
         public static DateTime? startTime = DateTime.Now;
         public static DateTime? endTime = DateTime.Now;
@@ -141,14 +142,28 @@ namespace tapeStream.Shared.Data
     public class RatioFrame
     {
         public double sellsAbove { get; set; }
+        public double sellsBelow { get; set; }
+        public double sellsSummedAboveBelowLong { get; set; }
+        public double sellsSummedAboveBelowMed { get; set; }
+        public double sellsSummedAboveBelowShort { get; set; }
         public double bidsBookSizes { get; set; }
         public double buysSumSizes { get; set; }
         public double sellsSumSizes { get; set; }
         public double sellsInSpread { get; set; }
-        public double sellsBelow { get; set; }
+        public double sellsSummedInSpreadLong { get; set; }
+        public double sellsSummedInSpreadMed { get; set; }
+        public double sellsSummedInSpreadShort { get; set; }
         public double buysInSpread { get; set; }
+        public double buysSummedInSpreadLong { get; set; }
+        public double buysSummedInSpreadMed { get; set; }
+        public double buysSummedInSpreadShort { get; set; }
+
         public double buysAbove { get; set; }
         public double buysBelow { get; set; }
+
+        public double buysSummedAboveBelowLong { get; set; }
+        public double buysSummedAboveBelowMed { get; set; }
+        public double buysSummedAboveBelowShort { get; set; }
         public double asksBookSizes { get; set; }
 
         public DateTime dateTime { get; set; }

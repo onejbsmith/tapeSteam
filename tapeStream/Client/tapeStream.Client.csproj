@@ -142,6 +142,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Server Projects\JsConsole\JsConsole.csproj" />
+    <ProjectReference Include="..\..\..\Components\JSconsoleExtension\JSconsoleExtension\JSconsoleExtensionsLib.csproj" />
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>
 
@@ -149,6 +150,12 @@
     <Compile Update="Pages\Index - Copy.razor.cs">
       <DependentUpon>Index.razor.cs</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\appsettings.Production.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

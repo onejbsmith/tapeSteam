@@ -111,7 +111,7 @@
         marker: {
             enabled: false
         },
-        dashStyle: 'shortdash',
+        dashStyle: 'solid',
         tooltip: {
             valueSuffix: ''
         }
@@ -140,7 +140,7 @@
         marker: {
             enabled: false
         },
-        dashStyle: 'shortdash',
+        dashStyle: 'solid',
         tooltip: {
             valueSuffix: ''
         }

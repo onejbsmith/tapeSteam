@@ -1,4 +1,4 @@
-﻿#define dev
+﻿#undef dev
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -7,23 +7,33 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace tapeStream.Shared.Services
 {
     public class ChartService
 
     {
+        [Inject]
+        static IConfiguration Configuration { get; set; }
+
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-#if dev
-        string controllerUrl = "http://localhost:55540/api/Charts/";
-#else
-        string controllerUrl = "http://tapestreamserver.com/api/Charts/";
-#endif
+        //#if dev
+        //        string controllerUrl = "http://localhost:55540/api/Charts/";
+        //#else
+        //        string controllerUrl = "http://tapestreamserver.com/api/Charts/";
+        //#endif
+
+        string controllerUrl;
+
         public async Task<TDAChart.Bollinger> getBollingerBands()
         {
             try
             {
+                string serverUrl = Configuration["ServerUrl"];
+                controllerUrl = $"{serverUrl}api/Charts/";
+
                 await Task.Yield();
                 var x = await Http.GetFromJsonAsync<TDAChart.Bollinger>(controllerUrl);
                 return x;
@@ -38,6 +48,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData(int seconds)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/Charts/";
+
             await Task.Yield();
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
@@ -56,6 +69,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<TDAChart.Chart_Content> GetTDAChartLastCandle(int input)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/Charts/";
+
             await Task.Yield();
             var json = await Http.GetStringAsync(controllerUrl + input.ToString());
             var chartEntry = new TDAChart.Chart_Content();
@@ -71,6 +87,9 @@ namespace tapeStream.Shared.Services
         }
         public async Task<string> GetSvcDate()
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/Charts/";
+
             return await Http.GetStringAsync(controllerUrl + "getSvcDateTime");
         }
     }

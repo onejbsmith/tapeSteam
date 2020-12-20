@@ -1,5 +1,5 @@
 ﻿#define UsingSignalHub
-#define dev
+#undef dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
@@ -21,6 +21,7 @@ using TDAApiService = tapeStream.Server.Data.TDAApiService;
 using TDAConstants = tapeStream.Server.Data.TDAConstants;
 using System.Text.Json;
 using JSconsoleExtensionsLib;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -28,6 +29,8 @@ namespace tapeStream.Server.Components
 {
     public partial class TDAStreamer
     {
+        [Inject]
+        IConfiguration Configuration { get; set; }
 
         [Inject]
         IJSRuntime console { get; set; }
@@ -423,6 +426,7 @@ namespace tapeStream.Server.Components
         private void sendTimeSalesData()
         {
             console.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            console.warn($"TDAChart.svcDateTime: {TDAChart.svcDateTime}  lastSvcTime:  {lastSvcTime}");
             if (TDAChart.svcDateTime != lastSvcTime)
             {
                 //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
@@ -432,9 +436,20 @@ namespace tapeStream.Server.Components
                 //else if (TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds >= 500)
                 //{
 
+
+                //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
+                //var msg = TDAChart.svcDateTime.ToOADate().ToString();
+
+
+                sendData();
+                lastSvcTime = TDAChart.svcDateTime;
+                //Send("TimeAndSales", JsonSerializer.Serialize<Data.TimeSales_Content>(TDAStreamerData.timeAndSales));
+                // Send("TimeAndSales", msg);
+                StateHasChanged();
+                //}
                 async Task sendData()
                 {
-                    console.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    console.warn("sendData");
 
 
                     /// 3 needs to be set from client
@@ -442,17 +457,19 @@ namespace tapeStream.Server.Components
                     /// So we don't send the same frame more than once
                     if (ratioFrames[0].dateTime != prevRatioFrameDateTime)
                     {
-                        System.Diagnostics.Debug.Print(ratioFrames[0].dateTime.ToLongTimeString());
-                        prevRatioFrameDateTime = ratioFrames[0].dateTime;
+                        // System.Diagnostics.Debug.Print(ratioFrames[0].dateTime.ToLongTimeString());
                         try
                         {
+                            console.warn($"ratioFrames[0].dateTime: {ratioFrames[0].dateTime}  prevRatioFrameDateTime: {prevRatioFrameDateTime}");
                             var msg = JsonSerializer.Serialize<RatioFrame[]>(ratioFrames);
                             await Send("getIncrementalRatioFrames", msg);
+                            prevRatioFrameDateTime = ratioFrames[0].dateTime;
+                            //console.warn("sendData:" + msg, true);
 
                             /// TODO: Remove this to rebuild old AllRatioFrames files! !!!!!!!!!!!!!!!!!!!!!!!!!
                             /// 
-                            var buildAllRatioFrames = 
-                                TDAStreamerData.simulatorSettings.isSimulated == null 
+                            var buildAllRatioFrames =
+                                TDAStreamerData.simulatorSettings.isSimulated == null
                                 || !(bool)TDAStreamerData.simulatorSettings.isSimulated
                                 || TDAStreamerData.simulatorSettings.rebuildAllRatioFrames
                                 ;
@@ -469,21 +486,6 @@ namespace tapeStream.Server.Components
                         }
                     }
                 }
-
-                //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
-                //var msg = TDAChart.svcDateTime.ToOADate().ToString();
-
-
-                sendData();
-                //Send("TimeAndSales", JsonSerializer.Serialize<Data.TimeSales_Content>(TDAStreamerData.timeAndSales));
-
-
-
-
-                // Send("TimeAndSales", msg);
-                lastSvcTime = TDAChart.svcDateTime;
-                StateHasChanged();
-                //}
             }
             //Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
             //sendPrintsData();
@@ -581,18 +583,9 @@ namespace tapeStream.Server.Components
             LogText("RECEIVED: " + jsonResponse);
 
             var fieldedResponse = jsonResponse;
-            if (jsonResponse.Contains("\"data\":"))
-            {
-                await TDA_Process_Data(jsonResponse);
-            }
-            else if (jsonResponse.Contains("\"notify\":"))
-            {
-                TDA_Process_Heartbeat(jsonResponse);
-            }
-            else
-            {
-                TDA_Process_Admin(jsonResponse);
-            }
+            if (jsonResponse.Contains("\"data\":")) await TDA_Process_Data(jsonResponse);
+            else if (jsonResponse.Contains("\"notify\":")) TDA_Process_Heartbeat(jsonResponse);
+            else TDA_Process_Admin(jsonResponse);
             StateHasChanged();
         }
 
@@ -688,12 +681,16 @@ namespace tapeStream.Server.Components
 
         private async Task Init()
         {
-#if dev
-            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
-#else
-            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
-#endif
+            //#if dev
+            //            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
+            //#else
+            //            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
+            //#endif
 
+            var serverUrl =  Configuration["ServerUrl"];
+            var hubUrl = $"{serverUrl}tdahub";
+
+            hubConnection = new HubConnectionBuilder().WithUrl(hubUrl).Build();
 
             hubConnection.Closed += HubConnection_Closed;
             hubConnection.Reconnected += HubConnection_Reconnected;
@@ -730,7 +727,7 @@ namespace tapeStream.Server.Components
             /// Start a Connection to the hub
             /// 
             await hubConnection.StartAsync();
-            SetHubStatus("HubConnection  Started");
+            SetHubStatus($"HubConnection {hubUrl} Started");
 
             StateHasChanged();
 
@@ -740,8 +737,8 @@ namespace tapeStream.Server.Components
         {
             var color = IsConnected ? "green" : "red";
             quoteSymbol = symbol;
-            TDAStreamerData.hubStatus = $"./images/{color}.gif";
             TDAStreamerData.hubStatusMessage = msg;
+            TDAStreamerData.hubStatus = $"./images/{color}.gif";
         }
 
         private Task HubConnection_Reconnecting(Exception arg)
@@ -800,10 +797,10 @@ namespace tapeStream.Server.Components
         /// 
         public void Dispose()
         {
-            if (hubConnection != null)
+            if (hubConnection != null && hubConnection.State == HubConnectionState.Connected)
                 _ = hubConnection.DisposeAsync();
 
-            if (TDAStreamerData.simulatorSettings.isSimulated != null && TDAStreamerData.simulatorSettings.isSimulated == true)
+            if (TDAStreamerData.simulatorSettings != null && TDAStreamerData.simulatorSettings.isSimulated != null && TDAStreamerData.simulatorSettings.isSimulated == true)
                 Simulator_Stop();
         }
 

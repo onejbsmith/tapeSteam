@@ -1,5 +1,4 @@
-﻿#define dev
-#define tracing
+﻿#define tracing
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -13,18 +12,48 @@ using System.Timers;
 using tapeStream.Client.Components;
 using Microsoft.AspNetCore.Http.Connections;
 using tapeStream.Client.Components.HighCharts;
+using Microsoft.Extensions.Configuration;
 
 namespace tapeStream.Client.Pages
 {
     public partial class TestPage
     {
         #region Variables
+        [Inject]
+        IConfiguration Configuration { get; set; }
+
+        [Inject] Microsoft.JSInterop.IJSRuntime jsruntime { get; set; }
+
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
 
 
         string symbol = "QQQ";
+
+        string hubUrl = "";
+
+        public List<string> buyFields = new List<string>()
+        {
+            "buysTradeSizes",
+            "asksBookSizes",
+            "buysPriceCount",
+
+            "buysBelow",
+            "buysInSpread",
+            "buysAbove",
+
+            "buysSummedAboveBelowLong",
+            "buysSummedAboveBelowMed",
+            "buysSummedAboveBelowShort",
+
+            "buysSummedInSpreadLong",
+            "buysSummedInSpreadMed",
+            "buysSummedInSpreadShort"
+
+            //"buysRatio"
+        };
+
 
         [Parameter]
         public string mode { get; set; }
@@ -139,6 +168,8 @@ namespace tapeStream.Client.Pages
         }
         #endregion
 
+
+
         protected override async Task OnInitializedAsync()
         {
             foreach (var name in CONSTANTS.valuesName)
@@ -157,8 +188,8 @@ namespace tapeStream.Client.Pages
             InitializeTimers();
 
             dictTopicCounts["BookPiesData"] = TDABook.seconds;
-            
-           
+
+
             //if (mode == "simulate")
             //{ }
             //else
@@ -233,17 +264,29 @@ namespace tapeStream.Client.Pages
             /// 
             try
             {
-#if dev
-                hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
-                {
-                    //options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
-                }).Build();
-#else
-                hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
-                {
-                    options.Transports =  HttpTransportType.WebSockets;
-                }).Build();
-#endif
+
+                //                var hubUrl = "";
+                //#if dev
+                //                hubUrl ="http://localhost:55540/tdahub";
+                //                hubConnection = new HubConnectionBuilder().WithUrl(, options =>
+                //                {
+                //                    //options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
+                //                }).Build();
+                //#else
+                //                hubUrl = "http://tapestreamserver.com/tdahub";
+                //                hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
+                //                {
+                //                    //options.Transports =  HttpTransportType.WebSockets;
+                //                }).Build();
+                //#endif
+                //                hubConnection = new HubConnectionBuilder().WithUrl(hubUrl, options =>
+                //                {
+                //                    //options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
+                //                }).Build();
+
+                var serverUrl = Configuration["ServerUrl"];
+                hubUrl = $"{serverUrl}tdahub";
+                hubConnection = new HubConnectionBuilder().WithUrl(hubUrl).Build();
 
 #if tracing
                 JsConsole.JsConsole.Warn(jsruntime, $"hubConnection: {hubConnection.State}");
@@ -259,6 +302,8 @@ namespace tapeStream.Client.Pages
                 hubConnection.Reconnected += HubConnection_Reconnected;
                 hubConnection.Closed += HubConnection_Closed;
                 hubConnection.Reconnecting += HubConnection_Reconnecting;
+
+                //HubConnection_ShowStatus();
 
 
                 await HubConnection_Start();
@@ -276,7 +321,7 @@ namespace tapeStream.Client.Pages
 
             /// To fix drop outs
             if (newRatioFrames[0].markPrice == 0) return;
-                //newRatioFrames[0].markPrice = allRatioFrames.Last()[0].markPrice;
+            //newRatioFrames[0].markPrice = allRatioFrames.Last()[0].markPrice;
 
             clock = newRatioFrames[0].dateTime.ToString(clockFormat);
             var alwaysUpdate = allRatioFrames.Count < 60;
@@ -314,9 +359,15 @@ namespace tapeStream.Client.Pages
         {
             await hubConnection.StartAsync();
 
+            var msg = $"HubConnection {hubUrl} Started";
+            HubConnection_ShowStatus(msg);
+        }
+
+        private void HubConnection_ShowStatus(string msg)
+        {
             /// Show Hub Status in lamp color
             var color = IsConnected ? "green" : "red";
-            Data.TDAStreamerData.hubStatusMessage = $"HubConnection Started";
+            Data.TDAStreamerData.hubStatusMessage = msg;
             Data.TDAStreamerData.hubStatus = $"./images/{color}.gif";
         }
 

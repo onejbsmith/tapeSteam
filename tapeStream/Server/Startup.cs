@@ -68,13 +68,15 @@ namespace tapeStream.Server
 
                 options.AddPolicy("signalr",
                     builder => builder
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
 
-                    .AllowCredentials()
+                    //.AllowCredentials()
                     .SetIsOriginAllowed(hostName => true));
             });
 
+            services.AddDbContext<Models.tapeStreamDb_devContext>();
 
 
         }
@@ -102,39 +104,45 @@ namespace tapeStream.Server
             // Make sure the CORS middleware is ahead of SignalR.
             app.UseCors(builder =>
             {
-                 
-                builder.WithOrigins("http://localhost:53911")
+                builder.WithOrigins("*")
                     .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
+                    .WithMethods("GET", "HEAD", "POST");
+                    //.AllowCredentials();     
+
+                //builder.WithOrigins("http://192.168.1.108:2575")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();                    
+                //builder.WithOrigins("http://192.168.1.143")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();                 
+                
+                //builder.WithOrigins("http://localhost:53911")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();
 
 
-                builder.WithOrigins("http://localhost:59788")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
+                //builder.WithOrigins("http://localhost:59788")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();
 
-                builder.WithOrigins("http://localhost:2575")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
+                //builder.WithOrigins("http://localhost:2575")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();
 
-                builder.WithOrigins("http://192.168.1.108:2575")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
-                builder.WithOrigins("http://192.168.1.143")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();                
-                builder.WithOrigins("http://localhost:5000")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
-                builder.WithOrigins("http://tapestreamclient.com")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "HEAD", "POST")
-                    .AllowCredentials();
+
+                //builder.WithOrigins("http://localhost:5000")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();
+                //builder.WithOrigins("http://tapestreamclient.com")
+                //    .AllowAnyHeader()
+                //    .WithMethods("GET", "HEAD", "POST")
+                //    .AllowCredentials();
             });
 
             app.UseRouting();
