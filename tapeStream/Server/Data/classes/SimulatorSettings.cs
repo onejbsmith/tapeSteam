@@ -13,5 +13,16 @@ namespace tapeStream.Server.Data.classes
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
         public DateTime currentSimulatedTime { get; set; }
+
+        private DateTime myVar;
+
+        public DateTime runStartDateTime
+        {
+            get { return  runDateDate.Add(startTime.TimeOfDay); }
+        }
+
+        public bool rebuildAllRatioFrames { get; internal set; }
+        public bool buildDatabaseDuringSimulate { get; internal set; }
+        public int clockDelay { get; internal set; } = 300;
     }
 }

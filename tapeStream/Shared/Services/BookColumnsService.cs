@@ -1,5 +1,4 @@
-﻿#define dev
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,20 +6,30 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace tapeStream.Shared.Services
 {
     public class BookColumnsService
     {
+        [Inject]
+        static IConfiguration Configuration { get; set; }
+
         [Inject] HttpClient Http { get; set; } = new HttpClient();
 
-#if dev
-        string controllerUrl = "http://localhost:55540/api/BookColumns/";
-#else
-        string controllerUrl = "http://tapestreamserver.com/api/BookColumns/";
-#endif 
+        //#if dev
+        //        string controllerUrl = "http://localhost:55540/api/BookColumns/";
+        //#else
+        //        string controllerUrl = "http://tapestreamserver.com/api/BookColumns/";
+        //#endif
+
+        string controllerUrl;
+
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData()
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
@@ -37,6 +46,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<Dictionary<string, BookDataItem[]>> getBookColumnsData(int seconds)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             Dictionary<string, BookDataItem[]> values = CONSTANTS.newBookColumnsData;
             try
             {
@@ -55,12 +67,16 @@ namespace tapeStream.Shared.Services
 
         public async Task<AverageSizes> getAverages(int seconds, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
             AverageSizes values = new AverageSizes();
 
 #if tracing
             JSRuntimeExtensions.GroupTable(jSRuntime, values, "new AverageSizes");
 #endif
+
             var url = $"{controllerUrl}getLtAverages/{seconds}";
             try
             {
@@ -83,6 +99,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<AverageSizes> getLtRatios(int seconds, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
             AverageSizes values = new AverageSizes();
 
@@ -110,6 +129,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<List<RatioFrame>> getListLtRatios(int seconds, int last, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
 
             var route = $"getListLtRatios/{seconds}/{last}";
@@ -134,6 +156,9 @@ namespace tapeStream.Shared.Services
         }
         public async Task<List<RatioFrame>> getRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
 
             var route = $"getRatioFrames/{seconds}/{last}";
@@ -159,6 +184,9 @@ namespace tapeStream.Shared.Services
 
         public async Task<RatioFrame> getIncrementalRatioFrames(int seconds, int last, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
 
             var route = $"getIncrementalRatioFrames/{seconds}/{last}";
@@ -183,6 +211,9 @@ namespace tapeStream.Shared.Services
         }
         public async Task<List<RatioFrame[]>> getAllRatioFrames(string symbol, double OADate, IJSRuntime jSRuntime)
         {
+            string serverUrl = Configuration["ServerUrl"];
+            controllerUrl = $"{serverUrl}api/BookColumns/";
+
             await Task.Yield();
 
             var route = $"getAllRatioFrames/{symbol}/{OADate}";
@@ -198,7 +229,7 @@ namespace tapeStream.Shared.Services
                 values = JsonSerializer.Deserialize<List<RatioFrame[]>>(json);
             }
             catch (System.Exception ex)
-            { 
+            {
             }
 
 #if tracing

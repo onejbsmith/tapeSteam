@@ -1,7 +1,4 @@
 ﻿using CsvHelper;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -131,20 +128,20 @@ namespace tapeStream.Server.Data
         }
 
 
-        public static async Task WriteToMongoDb(string[] args)
-        {
-            var connectionString = "mongodb://localhost";
+        //public static async Task WriteToMongoDb(string[] args)
+        //{
+        //    var connectionString = "mongodb://localhost";
 
-            var client = new MongoClient(connectionString);
-            var database = client.GetDatabase("test");
+        //    var client = new MongoClient(connectionString);
+        //    var database = client.GetDatabase("test");
 
-            string text = System.IO.File.ReadAllText(@"records.JSON");
+        //    string text = System.IO.File.ReadAllText(@"records.JSON");
 
-            var document = BsonSerializer.Deserialize<BsonDocument>(text);
-            var collection = database.GetCollection<BsonDocument>("test_collection");
-            await collection.InsertOneAsync(document);
+        //    var document = BsonSerializer.Deserialize<BsonDocument>(text);
+        //    var collection = database.GetCollection<BsonDocument>("test_collection");
+        //    await collection.InsertOneAsync(document);
 
-        }
+        //}
 
         /// <summary>
         /// Create CSV file for T in the Files/{dataType}/{dataDate}/{symbol}
@@ -351,15 +348,16 @@ namespace tapeStream.Server.Data
             /// So what is the runtime -- need to add to simulator settings and pass to 
             var lstFiles = Directory.GetFiles(filePath);
 
-            if ((bool)TDAStreamerData.simulatorSettings.isSimulated)
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
             {
-                lstFiles = lstFiles.Where(file => File.GetCreationTime(file) <= TDAStreamerData.simulatorSettings.currentSimulatedTime).ToArray();
+                var runStartDateTime = TDAStreamerData.simulatorSettings.runDateDate.Add(TDAStreamerData.simulatorSettings.currentSimulatedTime.TimeOfDay);
+                lstFiles = lstFiles.Where(file => File.GetCreationTime(file) <= runStartDateTime).ToArray();
             }
 
-            if (lstFiles.Length < nCloses) nCloses = 0;
+            //if (lstFiles.Length < nCloses) nCloses = 0;
 
-            var ourFiles = lstFiles.ToList().Skip(lstFiles.Length - nCloses);
-            JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings");
+            var ourFiles = lstFiles.TakeLast(nCloses);
+            //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings, "TDAStreamerData.simulatorSettings");
             foreach (var fileName in ourFiles)
             {
                 var text = File.ReadAllText(fileName);

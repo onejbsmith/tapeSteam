@@ -8,6 +8,8 @@ using tapeStream.Server.Components;
 using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
+using JSconsoleExtensionsLib;
+using tapeStream.Server.Models;
 
 namespace tapeStream.Server.Data
 {
@@ -24,6 +26,7 @@ namespace tapeStream.Server.Data
         private static Dictionary<DateTime, double> gaugeValues = new Dictionary<DateTime, double>();
 
         private static Dictionary<string, DataItem[]> dictPies = new Dictionary<string, DataItem[]>();
+
         static public async Task<double> GetPrintsGaugeScore(string symbol)
         {
             var rand = new Random();
@@ -110,17 +113,31 @@ namespace tapeStream.Server.Data
         public static async Task Decode(string symbol, string content)
         {
             //if (TDABookManager.lstBookEntry.Count == 0) return;
-
-            if (!TDAStreamerData.timeSales.ContainsKey(symbol))
-                TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             /// Get current time and sales from streamer content
-            var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content); 
+            var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content);
             TDAChart.svcDateTime = timeAndSales.TimeDate.AddHours(-1);
+
+            if (!TDAStreamerData.timeSales.ContainsKey(symbol))
+            {
+                TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
+                /// TODO √ DB: Add Run table row and set runId static
+                /// 
+                if (TDAStreamerData.isNotSimulated())
+                {
+                    var runDate = TDAChart.svcDateTime;
+                    DatabaseManager.Runs_Add(symbol, runDate);
+                    /// Save the runId for this symbol
+                    /// 
+                }
+            }
+
 
             var prevTimeAndSales = timeAndSales;
             if (TDAStreamerData.timeSales[symbol].Count > 0)
                 prevTimeAndSales = TDAStreamerData.timeSales[symbol].Last();
+
 
             /// Combine bid/ask with time & sales and write to database
             /// Need to match time of print and time of quote to get accuarate buys/sells
@@ -142,18 +159,18 @@ namespace tapeStream.Server.Data
                 timeAndSales.bidSize = book.bidSize;
                 timeAndSales.bookTime = book.time;
 
-                var  timeNow= book.time.FromUnixTime().ToLocalTime();
-                if ((bool)TDAStreamerData.simulatorSettings.isSimulated)
+                var timeNow = book.time.FromUnixTime().ToLocalTime();
+                if (TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
 
-                { 
-                    JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, timeAndSales, "timeAndSales");
+                {
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, timeAndSales, "timeAndSales");
 
-                    TDAStreamerData.simulatorSettings.currentSimulatedTime =timeNow;
+                    TDAStreamerData.simulatorSettings.currentSimulatedTime = TDAChart.svcDateTime.AddSeconds(1);
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.isSimulated, "TDAStreamerData.simulatorSettings.isSimulated");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.runDate, "TDAStreamerData.simulatorSettings.runDate");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.startTime, "TDAStreamerData.simulatorSettings.startTime");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.endTime, "TDAStreamerData.simulatorSettings.endTime");
-                    JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.currentSimulatedTime, "TDAStreamerData.simulatorSettings.currentSimulatedTime");
+                    //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.currentSimulatedTime, "TDAStreamerData.simulatorSettings.currentSimulatedTime");
                     /// replace feed time with current time so can match book entries to time and sales
                     long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
                     timeAndSales.time = now;
@@ -184,7 +201,40 @@ namespace tapeStream.Server.Data
             // Update the Chart last close value
 
             TDAStreamerData.timeSales[symbol].Add(timeAndSales);
-
+            TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+            /// TODO √ DB: Add to Streamed table using timeAndSales time and get streamId
+            /// 
+            if (TDAStreamerData.isNotSimulated())
+            {
+                var dateTime = timeAndSales.TimeDate;
+                DatabaseManager.Streamed_Add(symbol, dateTime);
+            }
+            /// TODO √ DB: Add to Buys / Sells table
+            /// 1 & 2 = Sells (sold at bid or below bid)
+            /// 4 & 5 = Buys (bought at ask or above ask)
+            /// 3 = 1/2 Buys and 1/2 Sells (bought or sold between bid and ask)
+            /// 
+            if (TDAStreamerData.isNotSimulated())
+            {
+                switch (timeAndSales.level)
+                {
+                    case 1:
+                    case 2:
+                        var size = (int)timeAndSales.size;
+                        DatabaseManager.Sells_Add(timeAndSales, size);
+                        break;
+                    case 3:
+                        var sizeBoth = (int)timeAndSales.size / 2;
+                        DatabaseManager.Sells_Add(timeAndSales, sizeBoth);
+                        DatabaseManager.Buys_Add(timeAndSales, sizeBoth);
+                        break;
+                    case 4:
+                    case 5:
+                        var sizeBuy = (int)timeAndSales.size;
+                        DatabaseManager.Buys_Add(timeAndSales, sizeBuy);
+                        break;
+                }
+            }
             // string json = JsonSerializer.Serialize<TimeSales_Content>(timeAndSales);
             //await FilesManager.SendToMessageQueue("TimeSales", timeAndSales.TimeDate, json);
 
@@ -207,8 +257,11 @@ namespace tapeStream.Server.Data
             //}
 
             await Task.CompletedTask;
-
         }
+
+
+
+
 
         private static DataItem[] GetPieSlices(string symbol, int seconds)
         {

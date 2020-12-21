@@ -144,7 +144,9 @@
     <PackageReference Include="BlazorThemeSwitcher" Version="1.0.1" />
     <PackageReference Include="ChartJs.Blazor" Version="1.1.0" />
     <PackageReference Include="CsvHelper" Version="17.0.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="JsConsole" Version="1.0.1" />
     <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
@@ -153,8 +155,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Radzen.Blazor" Version="2.18.1" />
   </ItemGroup>
@@ -194,8 +196,7 @@
   </ItemGroup>
     
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Server Projects\JSconsoleExtension\JsConsoleExtension.csproj" />
-    <ProjectReference Include="..\..\..\..\Server Projects\JsConsole\JsConsole.csproj" />
+    <ProjectReference Include="..\..\..\Components\JSconsoleExtension\JSconsoleExtension\JSconsoleExtensionsLib.csproj" />
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>
     

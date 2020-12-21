@@ -41,6 +41,21 @@ namespace tapeStream.Shared
         public static string sellsTradeSizes = "sellsTradeSizes";
         public static string sellsR = "sellsR";
 
+        public static string buysSummedInSpreadLong = "buysSummedInSpreadLong";
+        public static string buysSummedInSpreadMed = "buysSummedInSpreadMed";
+        public static string buysSummedInSpreadShort = "buysSummedInSpreadShort";
+        public static string buysSummedAboveBelowLong = "buysSummedAboveBelowLong";
+        public static string buysSummedAboveBelowMed = "buysSummedAboveBelowMed";
+        public static string buysSummedAboveBelowShort = "buysSummedAboveBelowShort";
+
+        public static string sellsSummedInSpreadLong = "sellsSummedInSpreadLong";
+        public static string sellsSummedInSpreadMed = "sellsSummedInSpreadMed";
+        public static string sellsSummedInSpreadShort = "sellsSummedInSpreadShort";
+        public static string sellsSummedAboveBelowLong = "sellsSummedAboveBelowLong";
+        public static string sellsSummedAboveBelowMed = "sellsSummedAboveBelowMed";
+        public static string sellsSummedAboveBelowShort = "sellsSummedAboveBelowShort";
+
+
         public static DataItem newDataItem =
          new DataItem()
          {

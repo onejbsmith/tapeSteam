@@ -31,14 +31,14 @@
                 title: {
                     text: 'Mark',
                     style: {
-                        color: 'forestgreen',
+                        color: '#555',
                         fontSize: "15px"
                     }
                 },
                 labels: {
                     format: '{value}',
                     style: {
-                        color: 'forestgreen',
+                        color: '#555',
                         fontSize: "15px"
                     }
                 },
@@ -111,6 +111,7 @@
         marker: {
             enabled: false
         },
+        dashStyle: 'solid',
         tooltip: {
             valueSuffix: ''
         }
@@ -121,12 +122,11 @@
         name: 'Mark',
         type: 'spline',
         yAxis: 0,
-        color: 'forestgreen',
+        color: '#555',
         data: [],
         marker: {
             enabled: false
         },
-        dashStyle: 'shortdot',
         tooltip: {
             valueSuffix: ''
         }
@@ -140,20 +140,21 @@
         marker: {
             enabled: false
         },
+        dashStyle: 'solid',
         tooltip: {
             valueSuffix: ''
         }
     },
     {
         showInLegend: false,
-        name: 'fourth',
+        name: 'high',
         type: 'spline',
         yAxis: 2,
         data: [],
         marker: {
             enabled: false
         },
-        dashStyle: 'shortdash',
+        dashStyle: 'shortdot',
         tooltip: {
             valueSuffix: ''
         }
@@ -161,14 +162,14 @@
     },
     {
         showInLegend: false,
-        name: 'fifth',
+        name: 'mid',
         type: 'spline',
         yAxis: 2,
         data: [],
         marker: {
             enabled: false
         },
-        dashStyle: 'shortdash',
+        dashStyle: 'shortdot',
         tooltip: {
             valueSuffix: ''
         }
@@ -176,9 +177,9 @@
     },
     {
         showInLegend: false,
-        name: 'sixth',
+        name: 'low',
         type: 'spline',
-        yAxis: 0,
+        yAxis: 2,
         data: [],
         marker: {
             enabled: false

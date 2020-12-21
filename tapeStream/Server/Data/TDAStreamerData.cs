@@ -12,6 +12,7 @@ using tapeStream.Server.Components;
 using tapeStream.Server.Data.classes;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
+using JSconsoleExtensionsLib;
 
 namespace tapeStream.Server.Data
 {
@@ -20,7 +21,7 @@ namespace tapeStream.Server.Data
     /// </summary>
     public class TDAStreamerData
     {
-        
+
         //public static List<BookDataItem> lstAllAsks = new List<BookDataItem>();
         //public static List<BookDataItem> lstAllBids = new List<BookDataItem>();
         public static List<BookDataItem> lstAllSalesAtAsk = new List<BookDataItem>();
@@ -31,6 +32,15 @@ namespace tapeStream.Server.Data
 
         public static string runDate;
         public static SimulatorSettings simulatorSettings { get; set; }
+
+        public static bool isNotSimulated()
+        {
+            return
+                simulatorSettings != null
+                && simulatorSettings.isSimulated != null
+                && simulatorSettings.isSimulated == false
+                || simulatorSettings.buildDatabaseDuringSimulate == true;
+        }
 
         public static string quoteSymbol;
 
@@ -44,7 +54,12 @@ namespace tapeStream.Server.Data
         static public event Action OnBookStatusChanged;
         private static void StatusChanged() => OnStatusesChanged?.Invoke();
         private static void ActiveStatusChanged() => OnActiveStatusChanged?.Invoke();
-        private static void TimeSalesStatusChanged() => OnTimeSalesStatusChanged?.Invoke();
+        private static void TimeSalesStatusChanged()
+        {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            OnTimeSalesStatusChanged?.Invoke();
+        }
+
         private static void HubStatusChanged() => OnHubStatusChanged?.Invoke();
         private static void BookStatusChanged() => OnBookStatusChanged?.Invoke();
         static private string _hubStatus = "./images/yellow.gif";
@@ -58,7 +73,7 @@ namespace tapeStream.Server.Data
                 HubStatusChanged();
             }
         }
-
+        internal static string hubStatusMessage;
         /// <summary>
         /// These can be seeeded form the database in case of resume or backtesting
         /// </summary>
@@ -667,6 +682,7 @@ namespace tapeStream.Server.Data
         }
         public static async Task captureTdaServiceData(string svcFieldedJson)
         {
+            TDAStreamerData.jSRuntime.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var svcJsonObject = JObject.Parse(svcFieldedJson);
             var svcName = svcJsonObject["service"].ToString();
             var contents = svcJsonObject["content"];

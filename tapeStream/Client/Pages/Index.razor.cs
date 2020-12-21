@@ -1,6 +1,5 @@
 ﻿#undef tracing
 #define UsingSignalHub
-#define dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -12,12 +11,14 @@ using tapeStream.Client.Components;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace tapeStream.Client.Pages
 {
     public partial class Index
     {
-
+        [Inject]
+        IConfiguration Configuration { get; set; }
         //[Inject] SignalRBase signalRBase { get; set; }
         [Inject] BlazorTimer Timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
@@ -122,17 +123,22 @@ namespace tapeStream.Client.Pages
             /// 
             try
             {
-#if dev
-                hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
-                {
-                    options.Transports = HttpTransportType.WebSockets;
-                }).Build();
-#else
-                hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
-                {
-                    options.Transports =  HttpTransportType.WebSockets;
-                }).Build();
-#endif
+//#if dev
+//                hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub", options =>
+//                {
+//                    options.Transports = HttpTransportType.WebSockets;
+//                }).Build();
+//#else
+//                hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub", options =>
+//                {
+//                    options.Transports =  HttpTransportType.WebSockets;
+//                }).Build();
+//#endif
+
+                var serverUrl = Configuration["ServerUrl"];
+                var hubUrl = $"{serverUrl}tdahub";
+                hubConnection = new HubConnectionBuilder().WithUrl(hubUrl).Build();
+
                 /// Set up Hub Subscriptions -- Don't really need any anymore
                 /// Perhaps get messages of counts? or ,essage to refresh to avoid using a timer 
                 hubConnection.On("getIncrementalRatioFrames", (Action<string, string>)((topic, message) =>

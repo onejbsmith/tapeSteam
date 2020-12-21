@@ -1,0 +1,179 @@
+﻿@page "/database"
+
+@using Models
+
+<h3>Database</h3>
+
+@*<h5>Runs</h5>
+    <table>
+        <tr>
+            <th>Run Date</th>
+            <th>Symbol</th>
+        </tr>
+        @foreach (var run in runs)
+        {
+            <tr>
+                <td>@run.RunDate</td>
+                <td>@run.Symbol</td>
+            </tr>
+        }
+    </table>*@
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h5>Runs (@(runs.Count().ToString("n0"))) </h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@runs" TItem="Runs">
+                <Columns>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="RunDate" Title="Run Date">
+                        <Template Context="data">
+                            @String.Format("{0:d}", data.RunDate)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="Symbol" Title="Symbol" Sortable="true" Filterable="true" />
+                </Columns>
+            </RadzenGrid>
+        </div>
+
+        <div class="col-6">
+            <h5>Streamed (@(streams.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@streams" TItem="Streamed">
+                <Columns>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="StreamId" Title="Stream Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="StreamTime" Title="Stream Time">
+                        <Template Context="data">
+                            @String.Format("{0:d}", data.StreamTime)
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h5>Buys (@(buys.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@buys" TItem="Buys">
+                <Columns>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="Id" Title="Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="StreamId" Title="Stream Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="Price" Title="Price">
+                        <Template Context="data">
+                            @String.Format("{0:c}", data.Price)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="Size" Title="Size">
+                        <Template Context="data">
+                            @String.Format("{0:n0}", data.Size)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="PriceLevel" Title="Level" Sortable="true" Filterable="true" />
+                </Columns>
+            </RadzenGrid>
+        </div>
+        <div class="col-6">
+            <h5>Sells (@(sells.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@sells" TItem="Sells">
+                <Columns>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="Id" Title="Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="StreamId" Title="Stream Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="Price" Title="Price">
+                        <Template Context="data">
+                            @String.Format("{0:c}", data.Price)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="Size" Title="Size">
+                        <Template Context="data">
+                            @String.Format("{0:n0}", data.Size)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="PriceLevel" Title="Level" Sortable="true" Filterable="true" />
+                </Columns>
+            </RadzenGrid>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <h5>Bids (@(bids.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@bids" TItem="Bids">
+
+                <Columns>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Bids" Property="Id" Title="Id" Sortable="true" Filterable="true" Width="20%" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Bids" Property="StreamId" Title="S Id" Sortable="true" Filterable="true" Width="25%" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Bids" Property="Price" Title="Price">
+                        <Template Context="data">
+                            @String.Format("{0:c}", data.Price)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Bids" Property="Size" Title="Size">
+                        <Template Context="data">
+                            @String.Format("{0:n0}", data.Size)
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </div>
+        <div class="col-4">
+            <h5>Marks (@(marks.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@marks" TItem="Marks">
+                <Columns>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Marks" Property="Id" Title="Id" Sortable="true" Filterable="true" Width="20%" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Marks" Property="StreamId" Title="S Id" Sortable="true" Filterable="true" Width="25%" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Marks" Property="Price" Title="Price">
+                        <Template Context="data">
+                            @String.Format("{0:c}", data.Price)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Marks" Property="Size" Title="Size">
+                        <Template Context="data">
+                            @String.Format("{0:n0}", data.Size)
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </div>
+        <div class="col-4">
+            <h5>Asks (@(asks.Count().ToString("n0")))</h5>
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@asks" TItem="Asks">
+                <Columns>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Asks" Property="Id" Title="Id" Sortable="true" Filterable="true" />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Asks" Property="StreamId" Title="S Id" Sortable="true" Filterable="true"  />
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Asks" Property="Price" Title="Price">
+                        <Template Context="data">
+                            @String.Format("{0:c}", data.Price)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Asks" Property="Size" Title="Size">
+                        <Template Context="data">
+                            @String.Format("{0:n0}", data.Size)
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </div>
+    </div>
+</div>
+<style>
+    h5 {
+        margin-top: 10px;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+</style>
+@code {
+
+
+
+}

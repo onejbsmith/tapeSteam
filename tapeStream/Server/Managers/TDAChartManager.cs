@@ -32,8 +32,8 @@ namespace tapeStream.Server.Managers
             return TDAChart.svcDateTime;
         }
 
-     
-        
+
+
         /// <summary>
         /// This happens once per minute.
         /// The charts[] will already have a last entry added by TDAPrintsManager
@@ -59,19 +59,18 @@ namespace tapeStream.Server.Managers
             /// Add entry for TDAPrintsManager to update until next minute entry arrives
             closes.Add(chartEntry.close);
 
-            periods = Math.Min(20, closes.Count());
-
 
             /// This should be called by the Charts controller when it needs BBs
-            if (periods > 1)
-                GetBollingerBands(closes.ToArray(), periods);
+
+            GetBollingerBands(closes.ToArray(), periods);
 
             await Task.CompletedTask;
         }
 
 
         public static void SeedCloses(string symbol)
-        { var chartEntry = new TDAChart.Chart_Content();
+        {
+            var chartEntry = new TDAChart.Chart_Content();
             closes.Clear();
             /// Read the last 25 chart entries from CHART_EQUITY Inputs
             var files = FilesManager.GetChartEntries(symbol, 25);
@@ -120,30 +119,33 @@ namespace tapeStream.Server.Managers
 
         public static void GetBollingerBands(double[] closes, int periods)
         {
-            double total_average = 0;
-            double total_squares = 0;
 
-            for (int i = 0; i < closes.Skip(closes.Length - periods - 2).ToArray().Length; i++)
+            periods = Math.Min(20, closes.Count());
+            if (periods <= 1) return;
+
+            double average = 0, stdev = 0, total_average = 0, total_squares = 0;
+
+            for (int i = 0; i < closes.TakeLast(periods).Count(); i++)
             {
                 total_average += closes[i];
                 total_squares += Math.Pow(closes[i], 2);
 
                 if (i >= periods - 1)
                 {
-                    double average = total_average / periods;
+                    average = total_average / periods;
+                    stdev = Math.Sqrt((total_squares - Math.Pow(total_average, 2) / periods) / periods);
 
-                    double stdev = Math.Sqrt((total_squares - Math.Pow(total_average, 2) / periods) / periods);
-                    bollingerBands.mid = average;
-                    bollingerBands.high = average + 2 * stdev;
-                    bollingerBands.low = average - 2 * stdev;
-                    bollingerBands.midhigh = average + stdev;
-                    bollingerBands.midlow = average - stdev;
                     //Console.WriteLine("TDA Server closes count=" + closes.Length);
                     total_average -= closes[i - periods + 1];
                     total_squares -= Math.Pow(closes[i - periods + 1], 2);
-                    bollingerBands.Dump();
                 }
             }
+            bollingerBands.mid = average;
+            bollingerBands.high = average + 2 * stdev;
+            bollingerBands.low = average - 2 * stdev;
+            bollingerBands.midhigh = average + stdev;
+            bollingerBands.midlow = average - stdev;
+            bollingerBands.Dump();
         }
 
         internal static TDAChart.Chart_Content getLastCandle()

@@ -1,5 +1,6 @@
 ﻿@page "/"
-@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+@page "/{mode}"
+
 @using tapeStream.Client.Components
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Shared.Data
@@ -53,30 +54,54 @@ Enter your name
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
 
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysTradeSizes" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" showBollinger="true" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="asksBookSizes" />
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>>
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
         </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysRatio" />
-        </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysPriceCount" />
-        </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysBelow" />
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5 rightside">
-            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" buysField="buysAbove" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
         </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart7" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart8" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart9" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart10" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart11" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart12" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+        </div>
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+
     </div>
 </div>
 
@@ -93,7 +118,7 @@ Enter your name
             <div>
                 <h4 style="margin-top: 40px">Regression Curves</h4>
                 <RadzenCheckBox TValue="bool" Change=@(args => OnChange(args, "Regression Curves", "")) />
-            </div>            
+            </div>
             <div style="zoom:0.90">
                 <h4 style="display:inline-block;color:blueviolet">Ticks</h4>
                 <Radzen.Blazor.RadzenNumeric TValue="int" Min="50" Max="1000" Step="10" @bind-Value="@ratiosDepth" />

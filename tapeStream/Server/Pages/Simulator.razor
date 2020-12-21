@@ -3,8 +3,8 @@
 @using tapeStream.Server.Components
 @using tapeStream.Server.Data.classes
 
-<div class="flex-container">
 
+<div class="flex-container">
 
 
     <RadzenAccordion Style="background-color:transparent;width:100%">
@@ -41,6 +41,17 @@
                                             Change="@(args => EndTimeChange(args, "DropDown"))"
                                             Disabled="@(simulatorSettings.runDateDate.Date == new DateTime().Date)" />
 
+                            <span>Rebuild AllRatioFrames: </span>
+                            <RadzenCheckBox TValue="bool"
+                                            @bind-Value="@simulatorSettings.rebuildAllRatioFrames" />
+
+                            <span>Build Database: </span>
+                            <RadzenCheckBox TValue="bool"
+                                            @bind-Value="@simulatorSettings.buildDatabaseDuringSimulate" />
+
+                            <span>Clock Delay: </span>
+                            <RadzenNumeric TValue="int"
+                                           @bind-Value="@simulatorSettings.clockDelay" Min="10" Max="10000" />
                         </div>
 
                     </RadzenCard>
@@ -83,5 +94,16 @@
     .material-icons-label {
         font-weight: normal;
         font-size: 1.25rem;
+    }
+
+    .ui-spinner input[type='number'], .ui-spinner input[type='text'] {
+        /*-moz-appearance: textfield;
+        width: 100%;
+        border: none;*/
+        /* background-color: transparent; */
+        /*line-height: 1.5rem;
+        text-align: inherit;
+        padding: 1px 12px 1px 1px;*/
+        color: black;
     }
 </style>

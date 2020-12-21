@@ -1,5 +1,5 @@
 ﻿#define UsingSignalHub
-#define dev
+#undef dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
@@ -19,14 +19,21 @@ using tapeStream.Shared.Data;
 using FilesManager = tapeStream.Server.Data.FilesManager;
 using TDAApiService = tapeStream.Server.Data.TDAApiService;
 using TDAConstants = tapeStream.Server.Data.TDAConstants;
-using JsConsole;
 using System.Text.Json;
+using JSconsoleExtensionsLib;
+using Microsoft.Extensions.Configuration;
+
 
 
 namespace tapeStream.Server.Components
 {
     public partial class TDAStreamer
     {
+        [Inject]
+        IConfiguration Configuration { get; set; }
+
+        [Inject]
+        IJSRuntime console { get; set; }
 
         [Inject]
         BrowserService browserService { get; set; }
@@ -150,7 +157,8 @@ namespace tapeStream.Server.Components
 
             TDAStreamerData.runDate = TDAStreamerData.simulatorSettings.runDate;
 
-            if (TDAStreamerData.simulatorSettings.isSimulated == false)
+            TDAStreamerData.simulatorSettings.currentSimulatedTime = TDAStreamerData.simulatorSettings.runDateDate.Add(TDAStreamerData.simulatorSettings.startTime.TimeOfDay);
+            if (TDAStreamerData.simulatorSettings.isSimulated != null && TDAStreamerData.simulatorSettings.isSimulated == false)
             /// means the simulator was stopped so need to reset counts
             {
                 DictTopicCounts_Initialize();
@@ -163,16 +171,20 @@ namespace tapeStream.Server.Components
             foreach (var feedFile in feedFilesList)
             {
                 /// Get the next feed file and make it a json Array 
+                //await Task.Yield();
 
                 var fileJson = FilesManager.GetFeedFile(feedFile.Value);
                 var feedJson = $"{{ \"data\":[{fileJson}] }}";
 
+                //await Task.Yield();
                 /// Process file
                 await TDAStreamerOnMessage(feedJson);
 
+                //await Task.Yield();
                 /// Wait for next file
-                int delayMilliSecs = 300;
+                int delayMilliSecs = TDAStreamerData.simulatorSettings.clockDelay;
                 await Task.Delay(delayMilliSecs);
+                //await Task.Yield();
 
                 /// Pause the simulator
                 while (simulatorPaused)
@@ -208,6 +220,8 @@ namespace tapeStream.Server.Components
         #region Page Event Handlers   
         protected override async Task OnInitializedAsync()
         {
+            console.warn("OnInitializedAsync");
+            JSconsoleExtensions.enabled = true;
             DictTopicCounts_Initialize();
 
             /// Connect to the web socket, passing it a ref to this page, so it can call methods from javascript
@@ -253,7 +267,7 @@ namespace tapeStream.Server.Components
 
             TDAStreamerData.simulatorSettings = new SimulatorSettings(); ;
 
-            JsConsole.JsConsole.Warn(TDAStreamerJs, $"tapeStream.Server.Components TDAStreamer OnInitializedAsync {TDAStreamerData.runDate}");
+            TDAStreamerJs.warn($"tapeStream.Server.Components TDAStreamer OnInitializedAsync {TDAStreamerData.runDate}");
 
             SetBookDataSeconds(TDABook.seconds.ToString());
 
@@ -364,6 +378,7 @@ namespace tapeStream.Server.Components
             /// 
             try
             {
+                console.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
                 //var bookColsData = TDAPrintsManager.getBookColumnsData();
                 //Send("BookColsData", JsonSerializer.Serialize<Dictionary<string, BookDataItem[]>>(bookColsData));
                 dictTopicCounts["BookColsData"] += 1;
@@ -410,6 +425,8 @@ namespace tapeStream.Server.Components
         static DateTime prevRatioFrameDateTime = DateTime.Now;
         private void sendTimeSalesData()
         {
+            console.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            console.warn($"TDAChart.svcDateTime: {TDAChart.svcDateTime}  lastSvcTime:  {lastSvcTime}");
             if (TDAChart.svcDateTime != lastSvcTime)
             {
                 //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
@@ -419,22 +436,45 @@ namespace tapeStream.Server.Components
                 //else if (TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds >= 500)
                 //{
 
+
+                //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
+                //var msg = TDAChart.svcDateTime.ToOADate().ToString();
+
+
+                sendData();
+                lastSvcTime = TDAChart.svcDateTime;
+                //Send("TimeAndSales", JsonSerializer.Serialize<Data.TimeSales_Content>(TDAStreamerData.timeAndSales));
+                // Send("TimeAndSales", msg);
+                StateHasChanged();
+                //}
                 async Task sendData()
                 {
+                    console.warn("sendData");
+
+
                     /// 3 needs to be set from client
                     var ratioFrames = await TDABookManager.getIncrementalRatioFrames(TDABook.seconds);
                     /// So we don't send the same frame more than once
                     if (ratioFrames[0].dateTime != prevRatioFrameDateTime)
                     {
-                        System.Diagnostics.Debug.Print(ratioFrames[0].dateTime.ToLongTimeString());
+                        // System.Diagnostics.Debug.Print(ratioFrames[0].dateTime.ToLongTimeString());
                         prevRatioFrameDateTime = ratioFrames[0].dateTime;
                         try
                         {
+                            console.warn($"ratioFrames[0].dateTime: {ratioFrames[0].dateTime}  prevRatioFrameDateTime: {prevRatioFrameDateTime}");
                             var msg = JsonSerializer.Serialize<RatioFrame[]>(ratioFrames);
                             await Send("getIncrementalRatioFrames", msg);
+                            //console.warn("sendData:" + msg, true);
 
                             /// TODO: Remove this to rebuild old AllRatioFrames files! !!!!!!!!!!!!!!!!!!!!!!!!!
-                            if (!(bool)TDAStreamerData.simulatorSettings.isSimulated)
+                            /// 
+                            var buildAllRatioFrames =
+                                TDAStreamerData.simulatorSettings.isSimulated == null
+                                || !(bool)TDAStreamerData.simulatorSettings.isSimulated
+                                || TDAStreamerData.simulatorSettings.rebuildAllRatioFrames
+                                ;
+
+                            if (buildAllRatioFrames)
                             {
                                 await FilesManager.AppendToMessageQueue(symbol, "AllRatioFrames", svcDateTime, msg);
                             }
@@ -446,21 +486,6 @@ namespace tapeStream.Server.Components
                         }
                     }
                 }
-
-                //JsConsole.JsConsole.Warn(TDAStreamerJs, TDAChart.svcDateTime.Subtract(lastSvcTime).Milliseconds);
-                //var msg = TDAChart.svcDateTime.ToOADate().ToString();
-
-
-                sendData();
-                //Send("TimeAndSales", JsonSerializer.Serialize<Data.TimeSales_Content>(TDAStreamerData.timeAndSales));
-
-
-
-
-                // Send("TimeAndSales", msg);
-                lastSvcTime = TDAChart.svcDateTime;
-                StateHasChanged();
-                //}
             }
             //Send("TimeAndSales", JsonSerializer.Serialize<TimeSales_Content>(TDAStreamerData.timeAndSales));
             //sendPrintsData();
@@ -558,18 +583,9 @@ namespace tapeStream.Server.Components
             LogText("RECEIVED: " + jsonResponse);
 
             var fieldedResponse = jsonResponse;
-            if (jsonResponse.Contains("\"data\":"))
-            {
-                await TDA_Process_Data(jsonResponse);
-            }
-            else if (jsonResponse.Contains("\"notify\":"))
-            {
-                TDA_Process_Heartbeat(jsonResponse);
-            }
-            else
-            {
-                TDA_Process_Admin(jsonResponse);
-            }
+            if (jsonResponse.Contains("\"data\":")) await TDA_Process_Data(jsonResponse);
+            else if (jsonResponse.Contains("\"notify\":")) TDA_Process_Heartbeat(jsonResponse);
+            else TDA_Process_Admin(jsonResponse);
             StateHasChanged();
         }
 
@@ -665,11 +681,20 @@ namespace tapeStream.Server.Components
 
         private async Task Init()
         {
-#if dev
-            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
-#else
-            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
-#endif
+            //#if dev
+            //            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:55540/tdahub").Build();
+            //#else
+            //            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
+            //#endif
+
+            var serverUrl = Configuration["ServerUrl"];
+            var hubUrl = $"{serverUrl}tdahub";
+
+            hubConnection = new HubConnectionBuilder().WithUrl(hubUrl).Build();
+
+            hubConnection.Closed += HubConnection_Closed;
+            hubConnection.Reconnected += HubConnection_Reconnected;
+            hubConnection.Reconnecting += HubConnection_Reconnecting;
 
             hubConnection.On("ReceiveMessage", (Action<string, string>)((user, message) =>
             {
@@ -683,6 +708,7 @@ namespace tapeStream.Server.Components
             {
                 Receive(topic, message);
             }));
+
             hubConnection.On("TIMESALE_EQUITY", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("CHART_EQUITY", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
             hubConnection.On("OPTION", (Action<string, string>)((topic, message) => { Receive(topic, message); }));
@@ -701,20 +727,46 @@ namespace tapeStream.Server.Components
             /// Start a Connection to the hub
             /// 
             await hubConnection.StartAsync();
+            SetHubStatus($"HubConnection {hubUrl} Started");
 
-
-            var color = IsConnected ? "green" : "red";
-            quoteSymbol = symbol;
-            TDAStreamerData.hubStatus = $"./images/{color}.gif";
             StateHasChanged();
 
+        }
+
+        private void SetHubStatus(string msg)
+        {
+            var color = IsConnected ? "green" : "red";
+            quoteSymbol = symbol;
+            TDAStreamerData.hubStatusMessage = msg;
+            TDAStreamerData.hubStatus = $"./images/{color}.gif";
+        }
+
+        private Task HubConnection_Reconnecting(Exception arg)
+        {
+            SetHubStatus("HubConnection Reconnecting");
+            return Task.CompletedTask;
+        }
+
+        private Task HubConnection_Reconnected(string arg)
+        {
+            SetHubStatus("HubConnection Reconnected");
+
+            return Task.CompletedTask;
+        }
+
+        private Task HubConnection_Closed(Exception arg)
+        {
+            SetHubStatus("HubConnection Closed");
+            hubConnection.StartAsync();
+            SetHubStatus("HubConnection  Restarted");
+            return Task.CompletedTask;
         }
 
         private void SetBookDataSeconds(string message)
         {
             TDABook.seconds = Convert.ToInt32(message);
             dictTopicCounts["BookPiesData"] = TDABook.seconds;
-            JsConsole.JsConsole.Confirm(TDAStreamerJs, "Changed seconds to " + message);
+            // TDAStreamerJs.confirm("Changed seconds to " + message);
         }
 
         private void Receive(string user, string message)
@@ -745,9 +797,10 @@ namespace tapeStream.Server.Components
         /// 
         public void Dispose()
         {
-            _ = hubConnection.DisposeAsync();
+            if (hubConnection != null && hubConnection.State == HubConnectionState.Connected)
+                _ = hubConnection.DisposeAsync();
 
-            if (TDAStreamerData.simulatorSettings.isSimulated == true)
+            if (TDAStreamerData.simulatorSettings != null && TDAStreamerData.simulatorSettings.isSimulated != null && TDAStreamerData.simulatorSettings.isSimulated == true)
                 Simulator_Stop();
         }
 
