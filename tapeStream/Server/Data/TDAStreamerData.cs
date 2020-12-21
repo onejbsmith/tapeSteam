@@ -33,6 +33,15 @@ namespace tapeStream.Server.Data
         public static string runDate;
         public static SimulatorSettings simulatorSettings { get; set; }
 
+        public static bool isNotSimulated()
+        {
+            return
+                simulatorSettings != null
+                && simulatorSettings.isSimulated != null
+                && simulatorSettings.isSimulated == false
+                || simulatorSettings.buildDatabaseDuringSimulate == true;
+        }
+
         public static string quoteSymbol;
 
         //static public Components.PrintsDashboard Dashboard = null;

@@ -22,6 +22,7 @@ namespace tapeStream.Server.Data.classes
         }
 
         public bool rebuildAllRatioFrames { get; internal set; }
+        public bool buildDatabaseDuringSimulate { get; internal set; }
         public int clockDelay { get; internal set; } = 300;
     }
 }

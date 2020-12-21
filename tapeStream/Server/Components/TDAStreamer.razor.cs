@@ -458,12 +458,12 @@ namespace tapeStream.Server.Components
                     if (ratioFrames[0].dateTime != prevRatioFrameDateTime)
                     {
                         // System.Diagnostics.Debug.Print(ratioFrames[0].dateTime.ToLongTimeString());
+                        prevRatioFrameDateTime = ratioFrames[0].dateTime;
                         try
                         {
                             console.warn($"ratioFrames[0].dateTime: {ratioFrames[0].dateTime}  prevRatioFrameDateTime: {prevRatioFrameDateTime}");
                             var msg = JsonSerializer.Serialize<RatioFrame[]>(ratioFrames);
                             await Send("getIncrementalRatioFrames", msg);
-                            prevRatioFrameDateTime = ratioFrames[0].dateTime;
                             //console.warn("sendData:" + msg, true);
 
                             /// TODO: Remove this to rebuild old AllRatioFrames files! !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -687,7 +687,7 @@ namespace tapeStream.Server.Components
             //            hubConnection = new HubConnectionBuilder().WithUrl("http://tapestreamserver.com/tdahub").Build();
             //#endif
 
-            var serverUrl =  Configuration["ServerUrl"];
+            var serverUrl = Configuration["ServerUrl"];
             var hubUrl = $"{serverUrl}tdahub";
 
             hubConnection = new HubConnectionBuilder().WithUrl(hubUrl).Build();

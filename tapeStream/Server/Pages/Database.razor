@@ -21,9 +21,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col-6">
             <h5>Runs (@(runs.Count().ToString("n0"))) </h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@runs" TItem="Runs">
                 <Columns>
                     <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
@@ -37,9 +37,9 @@
             </RadzenGrid>
         </div>
 
-        <div class="col-8">
+        <div class="col-6">
             <h5>Streamed (@(streams.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@streams" TItem="Streamed">
                 <Columns>
                     <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
@@ -56,7 +56,7 @@
     <div class="row">
         <div class="col-6">
             <h5>Buys (@(buys.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@buys" TItem="Buys">
                 <Columns>
                     <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Buys" Property="Id" Title="Id" Sortable="true" Filterable="true" />
@@ -77,7 +77,7 @@
         </div>
         <div class="col-6">
             <h5>Sells (@(sells.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@sells" TItem="Sells">
                 <Columns>
                     <RadzenGridColumn HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Sells" Property="Id" Title="Id" Sortable="true" Filterable="true" />
@@ -101,7 +101,7 @@
     <div class="row">
         <div class="col-4">
             <h5>Bids (@(bids.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@bids" TItem="Bids">
 
                 <Columns>
@@ -122,7 +122,7 @@
         </div>
         <div class="col-4">
             <h5>Marks (@(marks.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@marks" TItem="Marks">
                 <Columns>
                     <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Marks" Property="Id" Title="Id" Sortable="true" Filterable="true" Width="20%" />
@@ -142,7 +142,7 @@
         </div>
         <div class="col-4">
             <h5>Asks (@(asks.Count().ToString("n0")))</h5>
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
                         AllowSorting="true" Data="@asks" TItem="Asks">
                 <Columns>
                     <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Asks" Property="Id" Title="Id" Sortable="true" Filterable="true" />
@@ -170,6 +170,7 @@
     .right {
         text-align: right;
     }
+
 </style>
 @code {
 

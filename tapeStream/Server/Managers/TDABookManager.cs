@@ -995,11 +995,21 @@ namespace tapeStream.Server.Data
             /// do same for asks
             /// Add bids then asks to display set
             /// 
+
             var n = bids.Count();
 
             if (n == 0) return;
             //now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
             long now = (long)((Newtonsoft.Json.Linq.JValue)bids.Root["1"]).Value;
+            /// TODO √ DB: Add to Streamed table & get streamId
+            if (TDAStreamerData.isNotSimulated())
+            {
+                var dateTime = now.FromUnixTime().ToLocalTime();
+                if (!DatabaseManager.dictRunIds.ContainsKey(symbol))
+                    DatabaseManager.Runs_Add(symbol, dateTime);
+
+                DatabaseManager.Streamed_Add(symbol, dateTime);
+            }
 
             var baseBidPrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
             for (int i = 0; i < n; i++)
@@ -1015,7 +1025,12 @@ namespace tapeStream.Server.Data
                     var bid = new BookDataItem() { Price = price, Size = size, time = now, dateTime = now.FromUnixTime().ToLocalTime() };
 
                     /// Collect the bid
+                    /// TODO √ DB: Add to Bids table
                     lstBids.Add(bid);
+                    if (TDAStreamerData.isNotSimulated())
+                    {
+                        DatabaseManager.Bids_Add(symbol, bid);
+                    }
                     TDAStreamerData.lstAllBids.Add(bid);
                     TDAStreamerData.lstALLBids.Add(bid);
                     //sumBidSize += size;
@@ -1034,7 +1049,12 @@ namespace tapeStream.Server.Data
                     var ask = new BookDataItem() { Price = price, Size = size, time = now, dateTime = now.FromUnixTime().ToLocalTime() };
 
                     /// Collect the ask
+                    /// TODO √ DB: Add to Asks table
                     lstAsks.Add(ask);
+                    if (TDAStreamerData.isNotSimulated())
+                    {
+                        DatabaseManager.Asks_Add(symbol, ask);
+                    }
                     TDAStreamerData.lstAllAsks.Add(ask);
                     TDAStreamerData.lstALLAsks.Add(ask);
                     //lstSalesAtAsk(sales)
@@ -1051,6 +1071,20 @@ namespace tapeStream.Server.Data
                 //var minAsk = lstAsks.Min(asks => asks.Price);
                 var askEntry = lstAsks.First();
 
+                /// TODO DB: Add to Marks Table
+                /// 
+
+                if (TDAStreamerData.isNotSimulated())
+                {
+                    var mark = new BookDataItem()
+                    {
+                        Price = (bidEntry.Price + askEntry.Price) / 2,
+                        Size = bidEntry.Size - askEntry.Size,
+                        dateTime = bidEntry.dateTime,
+                        time = bidEntry.time
+                    };
+                    DatabaseManager.Marks_Add(symbol, mark);
+                }
                 var lastTime = 0d;
                 var lastSale = TDAStreamerData.timeSales[symbol].Last();
 

@@ -51,6 +51,7 @@ namespace tapeStream.Server.Pages
             //{ ask1, ask2 };
 
             //db.Asks.AddRange(asks2);
+
             //db.SaveChanges();
 
 
