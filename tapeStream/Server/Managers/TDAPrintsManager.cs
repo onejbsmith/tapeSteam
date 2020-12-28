@@ -1,15 +1,12 @@
-﻿using Microsoft.JSInterop;
+﻿using JSconsoleExtensionsLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using tapeStream.Server.Components;
 using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
-using JSconsoleExtensionsLib;
-using tapeStream.Server.Models;
 
 namespace tapeStream.Server.Data
 {
@@ -117,25 +114,11 @@ namespace tapeStream.Server.Data
 
             /// Get current time and sales from streamer content
             var timeAndSales = JsonSerializer.Deserialize<TimeSales_Content>(content);
-            TDAChart.svcDateTime = timeAndSales.TimeDate.AddHours(-1);
-
-            if (!TDAStreamerData.timeSales.ContainsKey(symbol))
-            {
-                TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
-                /// TODO √ DB: Add Run table row and set runId static
-                /// 
-                if (TDAStreamerData.isNotSimulated())
-                {
-                    var runDate = TDAChart.svcDateTime;
-                    DatabaseManager.Runs_Add(symbol, runDate);
-                    /// Save the runId for this symbol
-                    /// 
-                }
-            }
+            TDAChart.svcDateTime = timeAndSales.TimeDate;
 
 
             var prevTimeAndSales = timeAndSales;
-            if (TDAStreamerData.timeSales[symbol].Count > 0)
+            if (TDAStreamerData.timeSales.ContainsKey(symbol) && TDAStreamerData.timeSales[symbol].Count > 0)
                 prevTimeAndSales = TDAStreamerData.timeSales[symbol].Last();
 
 
@@ -172,8 +155,12 @@ namespace tapeStream.Server.Data
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.endTime, "TDAStreamerData.simulatorSettings.endTime");
                     //JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.simulatorSettings.currentSimulatedTime, "TDAStreamerData.simulatorSettings.currentSimulatedTime");
                     /// replace feed time with current time so can match book entries to time and sales
-                    long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
-                    timeAndSales.time = now;
+
+                    if (!TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
+                    {
+                        long now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+                        timeAndSales.time = now;
+                    }
                 }
 
                 timeAndSales.bidIncr = timeAndSales.bid - prevTimeAndSales.bid;
@@ -198,17 +185,29 @@ namespace tapeStream.Server.Data
             }
             catch { }
 
+            if (!TDAStreamerData.timeSales.ContainsKey(symbol))
+            {
+                TDAStreamerData.timeSales.Add(symbol, new List<TimeSales_Content>());
+                ///// TODO √ DB: Add Run table row and set runId static
+                ///// 
+                //if (TDAStreamerData.isNotSimulated())
+                //{
+                //    var runDate = TDAChart.svcDateTime;
+                //    DatabaseManager.Runs_Add(symbol, runDate);
+                //    /// Save the runId for this symbol
+                //    /// 
+                //}
+            }
             // Update the Chart last close value
-
             TDAStreamerData.timeSales[symbol].Add(timeAndSales);
-            TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+            //TDAStreamerData.timeSales[symbol].Add(timeAndSales);
             /// TODO √ DB: Add to Streamed table using timeAndSales time and get streamId
             /// 
-            if (TDAStreamerData.isNotSimulated())
-            {
-                var dateTime = timeAndSales.TimeDate;
-                DatabaseManager.Streamed_Add(symbol, dateTime);
-            }
+            //if (TDAStreamerData.isNotSimulated())
+            //{
+            //    var dateTime = timeAndSales.TimeDate;
+            //    DatabaseManager.Streamed_Add(symbol, dateTime);
+            //}
             /// TODO √ DB: Add to Buys / Sells table
             /// 1 & 2 = Sells (sold at bid or below bid)
             /// 4 & 5 = Buys (bought at ask or above ask)

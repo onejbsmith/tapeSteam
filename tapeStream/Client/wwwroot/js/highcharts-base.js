@@ -1,9 +1,12 @@
 ﻿"use strict";
 
 window.chartInDiv = {};
-window.chartObj = {}
-window.chart = {}
-window.dotNetObject = {}
+window.chartObj = {};
+window.chart = {};
+window.dotNetObject = {};
+window.chartDataUrls = {};
+window.chartColNames = {};
+window.dataRequests = {};
 
 window.tracing = false;
 
@@ -158,6 +161,310 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                 function () { })
         },
         function () { })
+}
+//window.loadHighchartRequestData = function (chartDivName, chartJson, chartDataUrl, redrawChart) {
+
+//}
+
+window.loadHighchartRequestData = function (chartDivName, chartJson, chartDataUrl, redrawChart) {
+    loadScript("https://code.highcharts.com/highcharts.js").then(
+        function () {
+            loadScript("https://code.highcharts.com/modules/annotations.js").then(
+                function () {
+                    loadScript("https://code.highcharts.com/highcharts-more.js").then(
+                        function () {
+                            loadScript("https://code.highcharts.com/modules/data.js").then(
+                                function () {
+                                    loadScript("https://code.highcharts.com/highcharts-3d.js").then(
+                                        function () {
+                                            waitForGlobal("Highcharts", function () {
+                                                /// if window.chartObj is empty it's our first time rendering the chart
+                                                //window.tracing = chartDivName == "LinesChart";
+                                                //if (chartDivName =="LinesChart")
+                                                //    debugger;
+                                                if (window.tracing) {
+                                                    console.warn(`0. ${chartDivName} window.loadHighchart`);
+                                                    //if (chartDivName == "ClockGauge")
+                                                    //    debugger;
+                                                    console.warn(chartJson);
+                                                }
+
+                                                /// if window.chartObj is empty it's our first time rendering the chart
+                                                var isFirstTime = window.chartObj[chartDivName] == undefined;
+                                                //console.debug("window.loadHighchart => " + chartJson);
+
+                                                /// turn json to js object (deserialize)
+                                                window.chartObj[chartDivName] = looseJsonParse(chartJson);
+
+                                                if (isFirstTime && window.tracing) {
+                                                    console.log(`1. ${chartDivName} window.loadHighchart`);
+                                                    console.table(window.chartObj[chartDivName]);
+                                                }
+
+
+                                                if (redrawChart == false || isFirstTime == true) {
+                                                    //console.table(window.chart);
+                                                    /// render the chart
+                                                    window.chart[chartDivName] = Highcharts.chart(chartDivName, window.chartObj[chartDivName]);
+
+                                                    //debugger;
+                                                    window.chartDataUrls[chartDivName] = chartDataUrl;
+
+                                                    // get the column names from the Url
+                                                    const urlParts = chartDataUrl.split("=");
+                                                    const colNamesString = urlParts[urlParts.length - 1];
+                                                    const colNames = colNamesString.split(",");
+                                                    window.chartColNames[chartDivName] = colNames;
+
+                                                    //SetLanguage();
+                                                    window.requestData(chartDivName);
+                                                    //window.addEventListener('load', function () {
+                                                    //    chartInDiv = $("#" + chartDivName).highcharts();
+                                                    //}
+
+                                                    /// if more than one 3d on page, only first gets this
+                                                    $(window.chart[chartDivName].container).on('load', function (eStart) {
+                                                        eStart = chart[chartDivName].pointer.normalize(eStart);
+
+                                                        var posX = eStart.pageX,
+                                                            posY = eStart.pageY,
+                                                            alpha = chart[chartDivName].options.chart.options3d.alpha,
+                                                            beta = chart[chartDivName].options.chart.options3d.beta,
+                                                            newAlpha,
+                                                            newBeta,
+                                                            sensitivity = 5; // lower is more sensitive
+
+                                                        $(document).on({
+                                                            'mousemove.hc touchdrag.hc': function (e) {
+                                                                // Run beta
+                                                                newBeta = beta + (posX - e.pageX) / sensitivity;
+                                                                chart[chartDivName].options.chart.options3d.beta = newBeta;
+
+                                                                // Run alpha
+                                                                newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                                                chart[chartDivName].options.chart.options3d.alpha = newAlpha;
+
+                                                                chart[chartDivName].redraw(false);
+                                                            },
+                                                            'mouseup touchend': function () {
+                                                                $(document).off('.hc');
+                                                            }
+                                                        });
+                                                    });
+
+                                                }
+                                                else {
+                                                    chartInDiv = $("#" + chartDivName).highcharts();
+
+
+                                                    //if (chartDivName == "Surface3D") {
+                                                    //    for (var i = 0; i < chart["Surface3D"].series.length; i++) {
+                                                    //        chartInDiv.series[i].data.options = window.chartObj["Surface3D"].series[i].data;
+                                                    //    }
+                                                    //    chartInDiv.redraw();
+                                                    //    //chartInDiv.redraw();
+                                                    //    //chart["Surface3D"] = chartInDiv;
+                                                    //    //chart["Surface3D"].redraw();
+
+                                                    //}
+                                                    //else {
+                                                    //debugger;
+                                                    //var series = window.chartObj.series;
+                                                    //for (var i = 0; i < series.length; i++)
+                                                    //{
+                                                    //    chartInDiv.series[i].setData(series[i].data, false);
+                                                    //};
+                                                    //chartInDiv.redraw();
+                                                    if (window.tracing) {
+                                                        console.log(`2. ${chartDivName} chartInDiv`);
+                                                        console.table(chartInDiv);
+                                                    }
+
+                                                    //var axes = chartInDiv.axes;
+
+                                                    chartInDiv.update(window.chartObj[chartDivName]);
+
+                                                    if (window.tracing) {
+                                                        console.log(`3. ${chartDivName} chartInDiv`);
+                                                        console.table(chartInDiv);
+                                                    }
+
+
+                                                    //chartInDiv.axes = axes;
+
+                                                    //chartInDiv.series = window.chartObj.series;
+
+                                                    //chartInDiv.series.update(window.chartObj.series);
+                                                    //chart.series = (window.chartObj);
+                                                    //chart.series = 
+                                                    //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
+                                                    // debugger;
+
+                                                    //chartInDiv.redraw();
+                                                    ////}
+                                                    //chartInDiv.reflow();
+                                                    //chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
+
+
+                                                }
+
+
+                                                /// send the chart object back to the server
+                                                /// (this should only be done once to initialize the cs chart object)
+                                                //if (isFirstTime)
+                                                if (isFirstTime) {
+                                                    var json = JSON.stringify(window.chartObj[chartDivName]);
+                                                    if (window.tracing)
+                                                        console.log(json);
+                                                    window.getChartJson(chartDivName, json, window.tracing);
+                                                    return json;
+                                                }
+
+                                            }
+                                            )
+                                        }, function () { })
+                                }, function () { })
+                        }, function () { })
+                },
+                function () { })
+        },
+        function () { })
+}
+
+function successCallback(result) {
+    return result;
+}
+
+function failureCallback(error) {
+    return error;
+}
+
+
+
+
+//const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json');
+
+// 'url' looks like this
+//https://localhost:44363/api/Frames/getFramesWholeColumns/QQQ/30?dateTime=2020-12-01-1200-00%20&columnNames=Id,DateTime,Symbol,Seconds,BuysTradeSizes,SellsTradeSizes,MarkPrice,BollingerLow,BollingerMid,BollingerHigh
+
+
+// 'data' looks like this
+//[
+//    {
+//0        Id: 341207,
+//1        DateTime: "2020-12-01T12:00:00.223",
+//2        Symbol: "QQQ",
+//3        Seconds: 30,
+//4        BuysTradeSizes: 34836,
+//        SellsTradeSizes: 26151,
+//        MarkPrice: 303.585,
+//        BollingerLow: 308.51486809647747,
+//        BollingerMid: 309.0557,
+//        BollingerHigh: 309.59653190352253
+//    }
+//]
+window.requestData = async function (chartDivName) {
+
+    const url = window.chartDataUrls[chartDivName];
+
+    const fetchPromise = fetch(url);
+    fetchPromise.then(response => {
+        return response.json();
+    }).then(dataArray => {
+        AddPoints(chartDivName, dataArray);
+        //console.log(people);
+        //debugger;
+    });
+    //console.log(fetchPromise);
+
+    // call it again after one second
+    //setTimeout(requestData, 1000);
+}
+
+function AddPoints(chartDivName, dataArray) {
+
+    const nFrames = dataArray.length;
+    const series = chart[chartDivName].series;
+    if (nFrames > 1 && series[0].data.length == 0) {
+        SetPoints(chartDivName, dataArray);
+    }
+    else {
+        AddPoint(chartDivName, dataArray);
+    }
+}
+
+
+function AddPoint(chartDivName, dataArray) {
+    const firstCol = 4;
+    const colNames = window.chartColNames[chartDivName];
+
+    for (var n = 0; n < nFrames; n++) {
+        const data = dataArray[n];
+        const date = data["DateTime"]
+        const x = new Date(date).getTime();
+
+
+        var redraw = true;
+        var shift = false;
+        if (series != undefined && series[0].data != undefined)
+            shift = series[0].data.length > 300; // shift if the series is longer than 20
+
+        //debugger;
+        // Skip the first 4 column names, they are key data
+        // Values start in column 5
+        for (var iCol = firstCol; iCol < colNames.length; iCol++) {
+            var iSeries = iCol - firstCol;
+            const y = Number.parseFloat(data[colNames[iCol]]);
+            const point = [x, y];
+            //debugger;
+            try {
+                if (series[iSeries].data.length == 0)
+                    series[iSeries].setData(point);
+                else
+                    series[iSeries].addPoint(point, redraw, shift);
+            }
+            catch (err) {
+                // debugger;
+
+            }
+        }
+    }
+}
+
+function SetPoints(chartDivName, dataArray) {
+    const firstCol = 4;
+    const colNames = window.chartColNames[chartDivName];
+    const series = chart[chartDivName].series;
+
+
+    const nSeries = colNames.length - firstCol;
+    var points = [];
+    for (var i = 0; i < nSeries; i++)  points[i] = [];
+
+    const nFrames = dataArray.length;
+
+    for (var n = 0; n < nFrames; n++) {
+        const data = dataArray[n];
+        const date = data["DateTime"];
+        const x = new Date(date).getTime();
+
+        for (var iCol = firstCol; iCol < colNames.length; iCol++) {
+            var iSeries = iCol - firstCol;
+            const y = Number.parseFloat(data[colNames[iCol]]);
+            const point = [x, y];
+            points[iSeries].push(point);
+        }
+    }
+
+
+    for (var k = 0; k < nSeries; k++) {
+        try {
+            chart[chartDivName].series[k].setData(points[k]);
+        }
+        catch (err) {
+            //debugger;
+        }
+    }
 }
 
 window.setCsvDataContent = function (pre_Id, text) {

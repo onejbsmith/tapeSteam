@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using tapeStream.Server.Models;
 
 namespace tapeStream.Server.Pages
@@ -11,8 +9,7 @@ namespace tapeStream.Server.Pages
 
         tapeStreamDb_devContext db = new tapeStreamDb_devContext();
 
-        private List<Runs> runs;
-        private List<Streamed> streams;
+
         private List<Asks> asks;
 
         private List<Bids> bids;
@@ -23,8 +20,7 @@ namespace tapeStream.Server.Pages
 
         protected override void OnInitialized()
         {
-            runs = db.Runs.ToList();
-            streams = db.Streamed.ToList();
+
             buys = db.Buys.ToList();
 
             sells = db.Sells.ToList();

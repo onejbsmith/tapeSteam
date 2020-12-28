@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @page "/{mode}"
 
 @using tapeStream.Client.Components
@@ -55,50 +55,63 @@ Enter your name
     <div class="mat-layout-grid-inner">
 
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" showBollinger="true" />
+            <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysTradeSizes,MarkPrice,SellsTradeSizes,BollingerLow,BollingerMid,BollingerHigh" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="AsksBookSizes,MarkPrice,BidsBookSizes" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysPriceCount,MarkPrice,SellsPriceCount" />
+        </div>
+
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysBelow,MarkPrice,SellsBelow" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysInSpread,MarkPrice,SellsInSpread" />
+        </div>>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysAbove,MarkPrice,SellsAbove" />
+        </div>
+
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart7" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedAboveBelowLong,MarkPrice,SellsSummedAboveBelowLong" />
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart8" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedAboveBelowMed,MarkPrice,SellsSummedAboveBelowMed" />
+        </div>>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+            <LinesChart id="LinesChart9" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedAboveBelowShort,MarkPrice,SellsSummedAboveBelowShort" />
+        </div>
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <LinesChart id="LinesChart10" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedInSpreadLong,MarkPrice,SellsSummedInSpreadLong" />
         </div>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
 
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>>
-
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart5" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+            <LinesChart id="LinesChart11" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedInSpreadMed,MarkPrice,SellsSummedInSpreadMed" />
         </div>>
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            <LinesChart id="LinesChart7" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart8" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart9" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            <LinesChart id="LinesChart10" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart11" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
-        </div>>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
-            <LinesChart id="LinesChart12" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this" />
+            <LinesChart id="LinesChart12" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
+                        columnNames="BuysSummedInSpreadShort,MarkPrice,SellsSummedInSpreadShort" />
         </div>
         @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
 

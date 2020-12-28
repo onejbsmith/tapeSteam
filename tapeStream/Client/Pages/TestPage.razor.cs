@@ -193,8 +193,8 @@ namespace tapeStream.Client.Pages
             //if (mode == "simulate")
             //{ }
             //else
-
-            allRatioFrames = await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
+            var frames =await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
+            allRatioFrames = frames.Where(frame => frame[0].markPrice > 0).ToList();
 
 
             //await jsruntime.InvokeAsync<string>("BlazorSetTitle", new object[] { "Hello Dali!" });

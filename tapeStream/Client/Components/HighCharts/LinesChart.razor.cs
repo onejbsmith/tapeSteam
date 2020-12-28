@@ -22,6 +22,10 @@ namespace tapeStream.Client.Components.HighCharts
     {
         [Inject] Microsoft.JSInterop.IJSRuntime console { get; set; }
 
+
+        [Parameter]
+        public string columnNames { get; set; }  // s/b a csv of line y column names e.g. BuysTradeSizes,MarkPrice,SellsTradeSizes,BollingerLow,BollingerMid,BollingerHigh
+
         [Parameter]
         public bool showBollinger { get; set; } = false;
 
@@ -65,7 +69,8 @@ namespace tapeStream.Client.Components.HighCharts
         [Parameter]
         public tapeStream.Client.Pages.TestPage parent { get; set; }
 
-
+        public string settingsStyle { get; set; } = "color:#e7934c;position: relative;top:5px;right:5px";
+        public float diff { get; set; } = 0f;
         public string buysField
         {
             get
@@ -89,6 +94,10 @@ namespace tapeStream.Client.Components.HighCharts
             }
         }
         private string _buysField;
+
+
+        private static string chartDataUrlBase = "https://localhost:44363/api/Frames/getFramesWholeColumns/QQQ/30?fromDateTime=2020-12-01-0930-00&toDateTime=2020-12-01-0935-00&columnNames=Id,DateTime,Symbol,Seconds,";
+        private static string chartDataUrl;
 
         private string newBuysField;
         private string newSellsField;
@@ -116,6 +125,8 @@ namespace tapeStream.Client.Components.HighCharts
         {
             var dotNetReference = DotNetObjectReference.Create(this);
             await jsruntime.InvokeVoidAsync("Initialize", dotNetReference, id);
+
+            chartDataUrl = chartDataUrlBase + columnNames;
 
             //ChartConfigure.seconds = 3;
             await Task.CompletedTask;
@@ -146,10 +157,10 @@ namespace tapeStream.Client.Components.HighCharts
         {
             chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
 
-            chart.subtitle.text = ratioFrames.First()[0].dateTime.ToLongDateString();// TDAChart.LongDateString;
+            //chart.subtitle.text = ratioFrames.First()[0].dateTime.ToLongDateString();// TDAChart.LongDateString;
 
-            chart.yAxis[0].title.text = "";
-            chart.yAxis[0].title.style.color = "black";
+            //chart.yAxis[0].title.text = "";
+            //chart.yAxis[0].title.style.color = "black";
 
 
 
@@ -372,6 +383,15 @@ namespace tapeStream.Client.Components.HighCharts
             //chart.series[4].data = lstSellsRs.ToArray();
             chart.series[0].color = "forestgreen";// CONSTANTS.buysColor;
             chart.series[2].color = CONSTANTS.sellsColor;
+
+            string color = "#e7934c";
+            diff = lstBuys.Last().Value - lstSells.Last().Value;
+            if (diff<0)
+                color = "red";
+            else if (diff>0)
+                color = "forestgreen";
+            settingsStyle = $"color:{color};position: relative;top:5px;right:5px";
+            
             //chart.series[3].color = CONSTANTS.buysColor;
             //chart.series[4].color = CONSTANTS.sellsColor;
 
@@ -434,8 +454,10 @@ namespace tapeStream.Client.Components.HighCharts
             chart.yAxis[2].gridLineWidth = 1;
             chart.xAxis[0].gridLineWidth = 1;
             if (lstMarks != null && lstMarks.Count > 0)
-                chart.yAxis[0].title.text = ((float)(lstMarks.LastOrDefault())).ToString("n2");
-
+            {
+                var mark = (float)lstMarks.LastOrDefault();
+                //chart.yAxis[0].title.text = mark.ToString("n2");
+            }
 
             Chart_PlotLines(minMark, maxMark);
 

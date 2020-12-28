@@ -1,4 +1,4 @@
-﻿@*<h3>LinesChart</h3>*@
+@*<h3>LinesChart</h3>*@
 
 
 @using tapeStream.Client.Components.HighCharts.Base
@@ -11,7 +11,8 @@
 
 <div>
     <h6 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@Dialog_Open"> @(chartTitle())</h6>
-    <MatIconButton Icon="settings" OnClick="@Dialog_Open" Raised="true" Style="color:#e7934c;position: relative;top:5px;right:5px"> </MatIconButton>
+    <MatIconButton Icon="settings" OnClick="@Dialog_Open" Raised="true" Style="@settingsStyle"> </MatIconButton>
+    <h6 style="display:inline-block;color:#e7934c;cursor:pointer">@(diff.ToString("n0"))</h6>
 </div>
 <figure class="highcharts-figure">
     <div id="container" style="zoom:0.8">
@@ -21,6 +22,9 @@
 
                    updateMode="@HighChart.DataUpdateMode.Append"
                    chartJsFilename="@chartJsFilename"
+
+                   chartType="@HighChart.ChartType.DataDriven"
+                   chartDataUrl= "@chartDataUrl"
 
                    redrawChart="@redraw" />
     </div>

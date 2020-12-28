@@ -10,10 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using tapeStream.Shared;
 using tapeStream.Server.Data;
 using tapeStream.Server.Hubs;
-using Microsoft.AspNetCore.Http.Connections;
+using tapeStream.Shared;
 
 namespace tapeStream.Server
 {
