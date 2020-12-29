@@ -17,12 +17,16 @@
   <ItemGroup>
     <Compile Remove="LostAndFound\**" />
     <Compile Remove="Migrations\**" />
+    <Compile Remove="xModels\**" />
     <Content Remove="LostAndFound\**" />
     <Content Remove="Migrations\**" />
+    <Content Remove="xModels\**" />
     <EmbeddedResource Remove="LostAndFound\**" />
     <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="xModels\**" />
     <None Remove="LostAndFound\**" />
     <None Remove="Migrations\**" />
+    <None Remove="xModels\**" />
   </ItemGroup>
 
   <ItemGroup>

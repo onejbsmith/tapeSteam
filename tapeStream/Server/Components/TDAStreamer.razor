@@ -1,94 +1,96 @@
-﻿@using tapeStream.Server.Data;
+@using tapeStream.Server.Data;
+@using tapeStream.Shared.Data;
 @using tapeStream.Server.Components;
 @using System.Diagnostics;
 @using System.Text;
 @using Newtonsoft.Json.Linq;
 @using System.Globalization;
 @implements IDisposable
-
 @* Page Header *@
 @if (simulate)
 {
 
-    <RadzenCard Visible="@simulatorStarted">
-        <RadzenClock date="@svcDateTime" />
-    </RadzenCard>
-    @* Simulator Buttons *@
-    <div class="flex-container;margin:20 auto;padding:0 20">
+<RadzenCard Visible="@simulatorStarted">
+    <RadzenClock date="@svcDateTime" />
+</RadzenCard>
+@* Simulator Buttons *@
+<div class="flex-container;margin:20 auto;padding:0 20">
 
-        <RadzenButton Text="Start"
-                      Size="Radzen.ButtonSize.Small"
-                      Icon="play_arrow"
-                      Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date || simulatorStarted)"
-                      Click="@((args) => Click(args, "Start"))" />
-        <RadzenButton Disabled="@(!simulatorStarted || simulatorPaused)"
-                      Click="@((args) => Click(args,"Pause"))"
-                      Icon="pause"
-                      Text="Pause" Size="Radzen.ButtonSize.Small" />
-        <RadzenButton Disabled="@(!simulatorPaused)"
-                      Click="@((args) => Click(args, "Resume"))"
-                      Icon="play_arrow"
-                      Text="Resume" Size="Radzen.ButtonSize.Small" />
-        <RadzenButton Disabled="@(!simulatorStarted)"
-                      Icon="stop"
-                      Click="@((args) => Click(args, "Stop"))"
-                      Text="Stop" Size="Radzen.ButtonSize.Small" />
-    </div>
-    <hr />
+    <RadzenButton Text="Start"
+                  Size="Radzen.ButtonSize.Small"
+                  Icon="play_arrow"
+                  Disabled="@(simulatorSettings.runDateDate.Date==new DateTime().Date || simulatorStarted)"
+                  Click="@((args) => Click(args, "Start"))" />
+    <RadzenButton Disabled="@(!simulatorStarted || simulatorPaused)"
+                  Click="@((args) => Click(args,"Pause"))"
+                  Icon="pause"
+                  Text="Pause" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Disabled="@(!simulatorPaused)"
+                  Click="@((args) => Click(args, "Resume"))"
+                  Icon="play_arrow"
+                  Text="Resume" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Disabled="@(!simulatorStarted)"
+                  Icon="stop"
+                  Click="@((args) => Click(args, "Stop"))"
+                  Text="Stop" Size="Radzen.ButtonSize.Small" />
+</div>
+<hr />
 }
 else
 {
-    @* Streamer Header *@
-    <div class="flex-container">
-        <RadzenLabel Text="@symbol" Style="font-weight:600;font-size:larger;position:relative;top:0px" />
-        &nbsp;&nbsp;&nbsp;
-        <img src="images/TickerTapeIcon.png" style="height:32px" />
-        <h3 style="display:inline;margin-right:20px">
-            <RadzenLink Text="TDA Streaming Hub" Path="https://developer.tdameritrade.com/content/streaming-data" target="_blank" />
 
-        </h3>
-        <br />
-        <BSBadge IsPill="true" class="alert-primary" style="max-height:24px;position:relative;top:5px">@dateTimeNow</BSBadge>
-        <BSBadge IsPill="true" class="alert-secondary" style="max-height:24px;position:relative;top:5px;">@elapsed</BSBadge>
-    </div>
-    @* Streamer Buttons *@
-    <div class="flex-container">
-        <RadzenButton Text="Log In" ButtonStyle="ButtonStyle.Primary" Disabled="false" Click="Login" Size="Radzen.ButtonSize.Small" />
-        <RadzenButton Text="Send" ButtonStyle="ButtonStyle.Success" Disabled="false" Click="Sends" Size="Radzen.ButtonSize.Small" />
-        <RadzenButton Text="Log Out" ButtonStyle="ButtonStyle.Warning" Disabled="false" Click="Logout" Size="Radzen.ButtonSize.Small" />
-        <RadzenButton Text="Request" ButtonStyle="ButtonStyle.Secondary" Disabled="false" Click="Requested" Size="Radzen.ButtonSize.Small" />
-    </div>
-    <div class="flex-container" style="zoom:0.6">
-        @* Feed Check List *@
-        <RadzenCheckBoxList @bind-Value="values" TValue="int" Change="@((args) => Change(args, "CheckBoxList with horizontal orientation"))">
-            <Items>
-                <RadzenCheckBoxListItem Text="Listed Book" Value="1" />
-                <RadzenCheckBoxListItem Text="Time & Sales" Value="2" />
-                <RadzenCheckBoxListItem Text="Chart" Value="3" />
+@* Streamer Header *@
+<div class="flex-container">
+    <RadzenLabel Text="@symbol" Style="font-weight:600;font-size:larger;position:relative;top:0px" />
+    &nbsp;&nbsp;&nbsp;
+    <img src="images/TickerTapeIcon.png" style="height:32px" />
+    <h3 style="display:inline;margin-right:20px">
+        <RadzenLink Text="TDA Streaming Hub" Path="https://developer.tdameritrade.com/content/streaming-data" target="_blank" />
 
-                <RadzenCheckBoxListItem Text="Quotes" Value="5" />
-                <RadzenCheckBoxListItem Text="Actives" Value="6" />
-                <RadzenCheckBoxListItem Text="Options" Value="4" />
-            </Items>
-        </RadzenCheckBoxList>
-        @* Configure Options Feed *@
-        <RadzenAccordion Style="background-color:transparent;width:100%">
-            <Items>
-                <RadzenAccordionItem Text="Options" Icon="add_shopping_cart" Style="width:100%">
-                    <RadzenCard>
-                        <div>
-                            <RadzenLabel Text="Strike:" />
-                            <RadzenNumeric Value="@strike" Max="1000" Min="200" Step="1" />
-                            <br />
-                            <RadzenLabel Text="Option Expiry:" />
-                            <RadzenDatePicker Name="dtpExpiryDate" DateFormat="dddd MMM d, yyyy" Value="@optionExpDate" TValue="DateTime" />
-                        </div>
-                    </RadzenCard>
+    </h3>
+    <br />
+    <BSBadge IsPill="true" class="alert-primary" style="max-height:24px;position:relative;top:5px">@dateTimeNow</BSBadge>
+    <BSBadge IsPill="true" class="alert-secondary" style="max-height:24px;position:relative;top:5px;">@elapsed</BSBadge>
+</div>
+@* Streamer Buttons *@
+<div class="flex-container">
+    <RadzenButton Text="Log In" ButtonStyle="ButtonStyle.Primary" Disabled="false" Click="Login" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Send" ButtonStyle="ButtonStyle.Success" Disabled="false" Click="Sends" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Log Out" ButtonStyle="ButtonStyle.Warning" Disabled="false" Click="Logout" Size="Radzen.ButtonSize.Small" />
+    <RadzenButton Text="Request" ButtonStyle="ButtonStyle.Secondary" Disabled="false" Click="Requested" Size="Radzen.ButtonSize.Small" />
+</div>
+<div class="flex-container" style="zoom:0.6">
+    @* Feed Check List *@
+    <RadzenCheckBoxList @bind-Value="values" TValue="int" Change="@((args) => Change(args, "CheckBoxList with horizontal orientation"))">
+        <Items>
+            <RadzenCheckBoxListItem Text="Listed Book" Value="1" />
+            <RadzenCheckBoxListItem Text="Time & Sales" Value="2" />
+            <RadzenCheckBoxListItem Text="Chart" Value="3" />
 
-                </RadzenAccordionItem>
-            </Items>
-        </RadzenAccordion>
-    </div>
+            <RadzenCheckBoxListItem Text="Quotes" Value="5" />
+            <RadzenCheckBoxListItem Text="Actives" Value="6" />
+            <RadzenCheckBoxListItem Text="Options" Value="4" />
+        </Items>
+    </RadzenCheckBoxList>
+    @* Configure Options Feed *@
+    <RadzenAccordion Style="background-color:transparent;width:100%">
+        <Items>
+            <RadzenAccordionItem Text="Options" Icon="add_shopping_cart" Style="width:100%">
+                <RadzenCard>
+                    <div>
+                        <RadzenLabel Text="Strike:" />
+                        <RadzenNumeric Value="@strike" Max="1000" Min="200" Step="1" />
+                        <br />
+                        <RadzenLabel Text="Option Expiry:" />
+                        <RadzenDatePicker Name="dtpExpiryDate" DateFormat="dddd MMM d, yyyy" Value="@optionExpDate" TValue="DateTime" />
+                    </div>
+                </RadzenCard>
+
+            </RadzenAccordionItem>
+        </Items>
+    </RadzenAccordion>
+</div>
+<RadzenClock date="@TDAChart.svcDateTime" />
 
 }
 
@@ -102,8 +104,8 @@ else
             <BSBadge IsPill="true" class="alert-dark" title="Time elapsed since last data received">@sinceLastData</BSBadge>
             @if (!simulate)
             {
-                <BSBadge IsPill="true" class="@statusClass" style="max-height:24px;" title="TDA Streamer Connection Status">@status</BSBadge>
-                <BSBadge IsPill="true" class="alert-black" style="max-height:24px;" title="@admCode">@admStatus</BSBadge>
+            <BSBadge IsPill="true" class="@statusClass" style="max-height:24px;" title="TDA Streamer Connection Status">@status</BSBadge>
+            <BSBadge IsPill="true" class="alert-black" style="max-height:24px;" title="@admCode">@admStatus</BSBadge>
             }
             <RadzenTextArea Visible="@((bool)logStreamer)" Style="width:100%;height:100px;margin-top:10px;font:bold 8pt calibri" Value="@logText" />
         </div>
@@ -116,6 +118,7 @@ else
 
     </div>
     <br />
+
 </div>
 
 <style>

@@ -1,9 +1,8 @@
 ﻿#undef tracing
-using Microsoft.CodeAnalysis.FindSymbols;
+using JSconsoleExtensionsLib;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,10 +10,6 @@ using tapeStream.Server.Managers;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Managers;
-using MathNet.Numerics;
-using static tapeStream.Shared.Data.TDAChart;
-
-using JSconsoleExtensionsLib;
 
 
 
@@ -114,6 +109,7 @@ namespace tapeStream.Server.Data
 
             var salesAtBidData = TDAStreamerData.lstALLSalesAtBid.ToArray();
 
+            // Get all raw data for last n seconds
             if (seconds > 0)
             {
                 asksData = TDAStreamerData.lstALLAsks.Where(t => t.dateTime >= timeNow.AddSeconds(-seconds)).ToArray();
@@ -371,11 +367,21 @@ namespace tapeStream.Server.Data
                 var buysTradeSizes = dictBookDataItem["salesAtAsk"].Sum(t => t.Size);
                 var sellsTradeSizes = dictBookDataItem["salesAtBid"].Sum(t => t.Size);
 
-                var buysRatio = 100 * buysTradeSizes / asks;
-                var sellsRatio = 100 * sellsTradeSizes / bids;
+                var buysRatio = 0d;
+                if (asks > 0)
+                    buysRatio = 100 * buysTradeSizes / asks;
 
-                var buysAltRatio = 100 * buysTradeSizes / bids;
-                var sellsAltRatio = 100 * sellsTradeSizes / asks;
+                var sellsRatio = 0d;
+                if (bids > 0)
+                    sellsRatio = 100 * sellsTradeSizes / bids;
+
+                var buysAltRatio = 0d;
+                if (bids > 0)
+                    buysAltRatio = 100 * buysTradeSizes / bids;
+
+                var sellsAltRatio = 0d;
+                if (asks > 0)
+                    sellsAltRatio = 100 * sellsTradeSizes / asks;
 
 
                 var buysInSpread = dictBookDataItem["salesAtAsk"].Where(r => r.Price > highBidPrice && r.Price < lowAskPrice).Sum(t => t.Size);
@@ -490,6 +496,7 @@ namespace tapeStream.Server.Data
 
                         };
                         TDABook.lstRatioFrames.Add(ratioFrame);
+                        TDABook.lstRatioFrames = TDABook.lstRatioFrames.TakeLast(1000).ToList();
 
 
                         coefficientFrame = new RatioFrame()
@@ -1002,14 +1009,14 @@ namespace tapeStream.Server.Data
             //now = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
             long now = (long)((Newtonsoft.Json.Linq.JValue)bids.Root["1"]).Value;
             /// TODO √ DB: Add to Streamed table & get streamId
-            if (TDAStreamerData.isNotSimulated())
-            {
-                var dateTime = now.FromUnixTime().ToLocalTime();
-                if (!DatabaseManager.dictRunIds.ContainsKey(symbol))
-                    DatabaseManager.Runs_Add(symbol, dateTime);
+            //if (TDAStreamerData.isNotSimulated())
+            //{
+            //    var dateTime = now.FromUnixTime().ToLocalTime();
+            //    if (!DatabaseManager.dictRunIds.ContainsKey(symbol))
+            //        DatabaseManager.Runs_Add(symbol, dateTime);
 
-                DatabaseManager.Streamed_Add(symbol, dateTime);
-            }
+            //    DatabaseManager.Streamed_Add(symbol, dateTime);
+            //}
 
             var baseBidPrice = Convert.ToDecimal(((Newtonsoft.Json.Linq.JValue)bids[0]["0"]).Value);
             for (int i = 0; i < n; i++)
@@ -1027,14 +1034,23 @@ namespace tapeStream.Server.Data
                     /// Collect the bid
                     /// TODO √ DB: Add to Bids table
                     lstBids.Add(bid);
-                    if (TDAStreamerData.isNotSimulated())
+
+                    if (TDAStreamerData.simulatorSettings != null && !TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
                     {
-                        DatabaseManager.Bids_Add(symbol, bid);
+                        TDAStreamerData.lstAllBids.Add(bid);
+                        TDAStreamerData.lstALLBids.Add(bid);
                     }
-                    TDAStreamerData.lstAllBids.Add(bid);
-                    TDAStreamerData.lstALLBids.Add(bid);
                     //sumBidSize += size;
                 }
+            }
+
+
+            TDAStreamerData.lstAllBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+            TDAStreamerData.lstALLBids.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+
+            if (TDAStreamerData.isNotSimulated())
+            {
+                DatabaseManager.Bids_Add(symbol, lstBids);
             }
 
             n = asks.Count();
@@ -1051,15 +1067,23 @@ namespace tapeStream.Server.Data
                     /// Collect the ask
                     /// TODO √ DB: Add to Asks table
                     lstAsks.Add(ask);
-                    if (TDAStreamerData.isNotSimulated())
+
+                    if (TDAStreamerData.simulatorSettings != null && !TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
                     {
-                        DatabaseManager.Asks_Add(symbol, ask);
+                        TDAStreamerData.lstAllAsks.Add(ask);
+                        TDAStreamerData.lstALLAsks.Add(ask);
+
                     }
-                    TDAStreamerData.lstAllAsks.Add(ask);
-                    TDAStreamerData.lstALLAsks.Add(ask);
                     //lstSalesAtAsk(sales)
                     //sumAskSize += size;
                 }
+            }
+            TDAStreamerData.lstAllAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+            TDAStreamerData.lstALLAsks.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+
+            if (TDAStreamerData.isNotSimulated())
+            {
+                DatabaseManager.Asks_Add(symbol, lstAsks);
             }
 
             try
@@ -1085,8 +1109,10 @@ namespace tapeStream.Server.Data
                     };
                     DatabaseManager.Marks_Add(symbol, mark);
                 }
+
                 var lastTime = 0d;
                 var lastSale = TDAStreamerData.timeSales[symbol].Last();
+
 
                 try
                 {
@@ -1149,6 +1175,10 @@ namespace tapeStream.Server.Data
                 TDAStreamerData.lstAllSalesAtBid.AddRange(lstSalesAtBid);
                 TDAStreamerData.lstALLSalesAtBid.AddRange(lstSalesAtBid);
 
+                TDAStreamerData.lstAllSalesAtBid.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+                TDAStreamerData.lstALLSalesAtBid.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+
+
                 var salesAtAskByPriceAtLevel = printsByPriceAtLevel.Where(sale => sale.level == 4 || sale.level == 5);
                 foreach (var sale in salesAtAskByPriceAtLevel)
                 {
@@ -1165,6 +1195,9 @@ namespace tapeStream.Server.Data
                 }).ToList();
                 TDAStreamerData.lstAllSalesAtAsk.AddRange(lstSalesAtAsk);
                 TDAStreamerData.lstALLSalesAtAsk.AddRange(lstSalesAtAsk);
+
+                TDAStreamerData.lstAllSalesAtAsk.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+                TDAStreamerData.lstALLSalesAtAsk.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
 
 #if tracing
                 JsConsole.JsConsole.GroupTable(TDAStreamerData.jSRuntime, TDAStreamerData.lstAllAsks, $"lstAllAsks", false);
@@ -1190,6 +1223,8 @@ namespace tapeStream.Server.Data
                     printsSize = printsSizes
                 };
                 lstALLBookEntry.Add(newBookEntry);
+                lstALLBookEntry.RemoveAll(t => t.dateTime < DateTime.Now.AddSeconds(-600));
+
 
                 if (!TDAStreamerData.simulatorSettings.isSimulated != null && (bool)TDAStreamerData.simulatorSettings.isSimulated)
                 {

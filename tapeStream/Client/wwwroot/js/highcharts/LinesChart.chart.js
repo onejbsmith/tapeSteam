@@ -2,6 +2,9 @@
     chart: {
         zoomType: 'xy',
             animation: false,
+                events: {
+                    load: requestData('{id}')
+        }
 
     },
     title: {
@@ -13,7 +16,7 @@
             align: 'left'
     },
     xAxis: [{
-        categories: [],
+        //categories: [],
         gridLineWidth: 1,
         crosshair: true,
         labels: {
@@ -22,7 +25,7 @@
             }
         },
         type: "datetime",
-        
+
     }],
         yAxis: [
 
@@ -71,19 +74,19 @@
 
             },
             { // Secondary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: null,
-                style: {
-                    color: Highcharts.getOptions().colors[1]
+                gridLineWidth: 0,
+                title: {
+                    text: null,
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
                 }
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            }
 
             },
 
@@ -104,91 +107,91 @@
     series: [
 
         {
-        name: 'Buys',
-        type: 'spline',
-        yAxis: 1,
-        data: [],
-        marker: {
-            enabled: false
-        },
-        dashStyle: 'solid',
-        tooltip: {
-            valueSuffix: ''
-        }
+            name: 'Buys',
+            type: 'spline',
+            yAxis: 1,
+            data: [],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'solid',
+            tooltip: {
+                valueSuffix: ''
+            }
 
-    },
-    {
-        //showInLegend: false,
-        name: 'Mark',
-        type: 'spline',
-        yAxis: 0,
-        color: '#555',
-        data: [],
-        marker: {
-            enabled: false
         },
-        tooltip: {
-            valueSuffix: ''
-        }
+        {
+            //showInLegend: false,
+            name: 'Mark',
+            type: 'spline',
+            yAxis: 0,
+            color: '#555',
+            data: [],
+            marker: {
+                enabled: false
+            },
+            tooltip: {
+                valueSuffix: ''
+            }
 
-    }
+        }
         , {
-        name: 'Sells',
-        type: 'spline',
-        data: [],
-        yAxis: 1,
-        marker: {
-            enabled: false
+            name: 'Sells',
+            type: 'spline',
+            data: [],
+            yAxis: 1,
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'solid',
+            tooltip: {
+                valueSuffix: ''
+            }
         },
-        dashStyle: 'solid',
-        tooltip: {
-            valueSuffix: ''
-        }
-    },
-    {
-        showInLegend: false,
-        name: 'high',
-        type: 'spline',
-        yAxis: 2,
-        data: [],
-        marker: {
-            enabled: false
-        },
-        dashStyle: 'shortdot',
-        tooltip: {
-            valueSuffix: ''
-        }
+        {
+            showInLegend: false,
+            name: 'high',
+            type: 'spline',
+            yAxis: 2,
+            data: [],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
 
-    },
-    {
-        showInLegend: false,
-        name: 'mid',
-        type: 'spline',
-        yAxis: 2,
-        data: [],
-        marker: {
-            enabled: false
         },
-        dashStyle: 'shortdot',
-        tooltip: {
-            valueSuffix: ''
-        }
+        {
+            showInLegend: false,
+            name: 'mid',
+            type: 'spline',
+            yAxis: 2,
+            data: [],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
 
-    },
-    {
-        showInLegend: false,
-        name: 'low',
-        type: 'spline',
-        yAxis: 2,
-        data: [],
-        marker: {
-            enabled: false
         },
-        dashStyle: 'shortdot',
-        tooltip: {
-            valueSuffix: ''
+        {
+            showInLegend: false,
+            name: 'low',
+            type: 'spline',
+            yAxis: 2,
+            data: [],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
         }
-    }
     ],
         plotOptions: {
         series: {

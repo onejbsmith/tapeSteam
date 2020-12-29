@@ -1,4 +1,4 @@
-﻿@page "/database"
+@page "/database"
 
 @using Models
 
@@ -20,39 +20,7 @@
     </table>*@
 
 <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <h5>Runs (@(runs.Count().ToString("n0"))) </h5>
-            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
-                        AllowSorting="true" Data="@runs" TItem="Runs">
-                <Columns>
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="RunDate" Title="Run Date">
-                        <Template Context="data">
-                            @String.Format("{0:d}", data.RunDate)
-                        </Template>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Runs" Property="Symbol" Title="Symbol" Sortable="true" Filterable="true" />
-                </Columns>
-            </RadzenGrid>
-        </div>
-
-        <div class="col-6">
-            <h5>Streamed (@(streams.Count().ToString("n0")))</h5>
-            <RadzenGrid  Style="font-size:small"AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
-                        AllowSorting="true" Data="@streams" TItem="Streamed">
-                <Columns>
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="RunId" Title="Run Id" Sortable="true" Filterable="true" />
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="StreamId" Title="Stream Id" Sortable="true" Filterable="true" />
-                    <RadzenGridColumn  HeaderCssClass="right" TextAlign="TextAlign.Right" TItem="Streamed" Property="StreamTime" Title="Stream Time">
-                        <Template Context="data">
-                            @String.Format("{0:d}", data.StreamTime)
-                        </Template>
-                    </RadzenGridColumn>
-                </Columns>
-            </RadzenGrid>
-        </div>
-    </div>
+ 
     <div class="row">
         <div class="col-6">
             <h5>Buys (@(buys.Count().ToString("n0")))</h5>

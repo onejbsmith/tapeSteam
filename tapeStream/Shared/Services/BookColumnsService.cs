@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -6,7 +7,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using tapeStream.Shared.Data;
-using Microsoft.Extensions.Configuration;
 
 namespace tapeStream.Shared.Services
 {
@@ -211,7 +211,8 @@ namespace tapeStream.Shared.Services
         }
         public async Task<List<RatioFrame[]>> getAllRatioFrames(string symbol, double OADate, IJSRuntime jSRuntime)
         {
-            string serverUrl = Configuration["ServerUrl"];
+            //string serverUrl = Configuration["ServerUrl"];
+            string serverUrl = "http://localhost:55540/";
             controllerUrl = $"{serverUrl}api/BookColumns/";
 
             await Task.Yield();

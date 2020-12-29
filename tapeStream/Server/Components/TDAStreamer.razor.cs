@@ -1,7 +1,10 @@
 ﻿#define UsingSignalHub
 #undef dev
+using JSconsoleExtensionsLib;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
 using Radzen.Blazor;
@@ -9,19 +12,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
-using tapeStream.Shared;
 using tapeStream.Server.Data;
 using tapeStream.Server.Data.classes;
-using Microsoft.AspNetCore.Components.Web;
+using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using FilesManager = tapeStream.Server.Data.FilesManager;
 using TDAApiService = tapeStream.Server.Data.TDAApiService;
 using TDAConstants = tapeStream.Server.Data.TDAConstants;
-using System.Text.Json;
-using JSconsoleExtensionsLib;
-using Microsoft.Extensions.Configuration;
 
 
 
@@ -224,6 +224,8 @@ namespace tapeStream.Server.Components
             JSconsoleExtensions.enabled = true;
             DictTopicCounts_Initialize();
 
+            JSconsoleExtensions.enabled = false;
+
             /// Connect to the web socket, passing it a ref to this page, so it can call methods from javascript
             var dotNetReference = DotNetObjectReference.Create(this);
             var dud = await TDAStreamerJs.InvokeAsync<string>("Initialize", dotNetReference);
@@ -425,6 +427,7 @@ namespace tapeStream.Server.Components
         static DateTime prevRatioFrameDateTime = DateTime.Now;
         private void sendTimeSalesData()
         {
+            if (TDAStreamerData.simulatorSettings != null && TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate) return;
             console.warn(System.Reflection.MethodBase.GetCurrentMethod().Name);
             console.warn($"TDAChart.svcDateTime: {TDAChart.svcDateTime}  lastSvcTime:  {lastSvcTime}");
             if (TDAChart.svcDateTime != lastSvcTime)
@@ -578,9 +581,13 @@ namespace tapeStream.Server.Components
         [JSInvokable("TDAStreamerOnMessage")]
         public async Task TDAStreamerOnMessage(string jsonResponse)
         {
-            await Task.Yield();
 
-            LogText("RECEIVED: " + jsonResponse);
+            if (TDAStreamerData.simulatorSettings != null && !TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
+            {
+                await Task.Yield();
+
+                LogText("RECEIVED: " + jsonResponse);
+            }
 
             var fieldedResponse = jsonResponse;
             if (jsonResponse.Contains("\"data\":")) await TDA_Process_Data(jsonResponse);
@@ -611,10 +618,11 @@ namespace tapeStream.Server.Components
                     svcFieldedJson = svcFieldedJson.Replace(sIndex, $" \"{svcFields[i]}\":");
                 }
 
-                LogText("DECODED: " + svcFieldedJson);
+                if (TDAStreamerData.simulatorSettings != null && !TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
+                    LogText("DECODED: " + svcFieldedJson);
 
                 var svcJsonObjectDecoded = JObject.Parse(svcFieldedJson);
-                var contents = svcJsonObjectDecoded["content"].ToString();
+                //var contents = svcJsonObjectDecoded["content"].ToString();
 
                 /// Send to connected hub
                 /// 

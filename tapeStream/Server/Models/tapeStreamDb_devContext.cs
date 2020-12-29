@@ -19,9 +19,7 @@ namespace tapeStream.Server.Models
         public virtual DbSet<Bids> Bids { get; set; }
         public virtual DbSet<Buys> Buys { get; set; }
         public virtual DbSet<Marks> Marks { get; set; }
-        public virtual DbSet<Runs> Runs { get; set; }
         public virtual DbSet<Sells> Sells { get; set; }
-        public virtual DbSet<Streamed> Streamed { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,15 +40,17 @@ namespace tapeStream.Server.Models
                     .HasColumnName("price")
                     .HasColumnType("money");
 
+                entity.Property(e => e.RunDateTime)
+                    .HasColumnName("runDateTime")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Size).HasColumnName("size");
 
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
-
-                entity.HasOne(d => d.Stream)
-                    .WithMany(p => p.Asks)
-                    .HasForeignKey(d => d.StreamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Asks_Streamed");
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasColumnName("symbol")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Bids>(entity =>
@@ -61,15 +61,17 @@ namespace tapeStream.Server.Models
                     .HasColumnName("price")
                     .HasColumnType("money");
 
+                entity.Property(e => e.RunDateTime)
+                    .HasColumnName("runDateTime")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Size).HasColumnName("size");
 
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
-
-                entity.HasOne(d => d.Stream)
-                    .WithMany(p => p.Bids)
-                    .HasForeignKey(d => d.StreamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Bids_Streamed");
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasColumnName("symbol")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Buys>(entity =>
@@ -80,16 +82,19 @@ namespace tapeStream.Server.Models
                     .HasColumnName("price")
                     .HasColumnType("money");
 
-                entity.Property(e => e.Size).HasColumnName("size");
                 entity.Property(e => e.PriceLevel).HasColumnName("priceLevel");
 
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
+                entity.Property(e => e.RunDateTime)
+                    .HasColumnName("runDateTime")
+                    .HasColumnType("datetime");
 
-                entity.HasOne(d => d.Stream)
-                    .WithMany(p => p.Buys)
-                    .HasForeignKey(d => d.StreamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Buys_Streamed");
+                entity.Property(e => e.Size).HasColumnName("size");
+
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasColumnName("symbol")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Marks>(entity =>
@@ -100,30 +105,16 @@ namespace tapeStream.Server.Models
                     .HasColumnName("price")
                     .HasColumnType("money");
 
+                entity.Property(e => e.RunDateTime)
+                    .HasColumnName("runDateTime")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Size).HasColumnName("size");
 
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
-
-                entity.HasOne(d => d.Stream)
-                    .WithMany(p => p.Marks)
-                    .HasForeignKey(d => d.StreamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Marks_Streamed");
-            });
-
-            modelBuilder.Entity<Runs>(entity =>
-            {
-                entity.HasKey(e => e.RunId);
-
-                entity.Property(e => e.RunId).HasColumnName("runId");
-
-                entity.Property(e => e.RunDate)
-                    .HasColumnName("runDate")
-                    .HasColumnType("date");
-
                 entity.Property(e => e.Symbol)
+                    .IsRequired()
                     .HasColumnName("symbol")
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
@@ -135,34 +126,19 @@ namespace tapeStream.Server.Models
                     .HasColumnName("price")
                     .HasColumnType("money");
 
-                entity.Property(e => e.Size).HasColumnName("size");
                 entity.Property(e => e.PriceLevel).HasColumnName("priceLevel");
 
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
-
-                entity.HasOne(d => d.Stream)
-                    .WithMany(p => p.Sells)
-                    .HasForeignKey(d => d.StreamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Sells_Streamed");
-            });
-
-            modelBuilder.Entity<Streamed>(entity =>
-            {
-                entity.HasKey(e => e.StreamId);
-
-                entity.Property(e => e.StreamId).HasColumnName("streamId");
-
-                entity.Property(e => e.RunId).HasColumnName("runId");
-
-                entity.Property(e => e.StreamTime)
-                    .HasColumnName("streamTime")
+                entity.Property(e => e.RunDateTime)
+                    .HasColumnName("runDateTime")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.Run)
-                    .WithMany(p => p.Streamed)
-                    .HasForeignKey(d => d.RunId)
-                    .HasConstraintName("FK_Streamed_Runs");
+                entity.Property(e => e.Size).HasColumnName("size");
+
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasColumnName("symbol")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

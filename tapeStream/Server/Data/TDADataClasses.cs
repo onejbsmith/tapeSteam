@@ -905,7 +905,7 @@ namespace tapeStream.Server.Data
 
         public DateTime TimeDate
         {
-            get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(time).AddHours(-4); }
+            get { return TDAConstants._epoch.AddDays(0).AddMilliseconds(time).ToLocalTime(); }
         }
         //public DateTime TradeDate
         //{

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 using tapeStream.Server.Data;
 using tapeStream.Server.Data.classes;
-using Microsoft.AspNetCore.Components;
 
 namespace tapeStream.Server.Pages
 {

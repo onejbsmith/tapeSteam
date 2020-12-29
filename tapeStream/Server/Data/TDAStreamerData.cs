@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.Diagnostics;
+﻿using JSconsoleExtensionsLib;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,11 +8,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using tapeStream.Server.Components;
 using tapeStream.Server.Data.classes;
 using tapeStream.Shared;
 using tapeStream.Shared.Data;
-using JSconsoleExtensionsLib;
 
 namespace tapeStream.Server.Data
 {
@@ -35,11 +33,11 @@ namespace tapeStream.Server.Data
 
         public static bool isNotSimulated()
         {
-            return
-                simulatorSettings != null
-                && simulatorSettings.isSimulated != null
-                && simulatorSettings.isSimulated == false
-                || simulatorSettings.buildDatabaseDuringSimulate == true;
+            return false;
+            //return simulatorSettings.isSimulated == null ||
+            //    (simulatorSettings.isSimulated != null
+            //    && simulatorSettings.isSimulated == false)
+            //    || simulatorSettings.buildDatabaseDuringSimulate == true;
         }
 
         public static string quoteSymbol;
@@ -709,7 +707,8 @@ namespace tapeStream.Server.Data
                         break;
 
                     case "CHART_EQUITY":
-                        await Decode_Chart(content, symbol);
+                        if (TDAStreamerData.simulatorSettings != null && !TDAStreamerData.simulatorSettings.buildDatabaseDuringSimulate)
+                            await Decode_Chart(content, symbol);
                         break;
 
                     case "ACTIVES_NASDAQ":
@@ -1103,6 +1102,9 @@ namespace tapeStream.Server.Data
             /// Add current time & sales to list for symbol
 
             TDAStreamerData.timeSales[symbol].Add(timeAndSales);
+
+            TDAStreamerData.timeSales[symbol].RemoveAll(t => t.TimeDate < DateTime.Now.AddSeconds(-600));
+
 
             //TDAStreamerData.timeSales[symbol].RemoveAll(t => t.TimeDate < DateTime.Now.AddSeconds(-300));
             /// save to csv
