@@ -50,10 +50,8 @@ namespace tapeStream.Client.Components.HighCharts.Base
             get { return seriesJson; }
             set
             {
-                if (value != seriesJson)
-                {
-                    seriesJson = value;
-                }
+                seriesJson = value;
+                //appendHighchartSeries();
             }
         }
         private string seriesJson;
@@ -131,7 +129,8 @@ namespace tapeStream.Client.Components.HighCharts.Base
             if (!string.IsNullOrEmpty(seriesJson))
             {
                 /// Display the chart with new series data
-                await jsruntime.InvokeAsync<string>("appendHighchartSeries", new object[] { id, seriesJson, redrawChart });
+                //await jsruntime.InvokeAsync<string>("appendHighchartSeries", new object[] { id, seriesJson, redrawChart });
+                await jsruntime.InvokeAsync<string>("window.requestData", new object[] { id });
             }
         }
         private async Task updateHighchartSeries()

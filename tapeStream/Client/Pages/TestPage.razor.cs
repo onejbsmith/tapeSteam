@@ -13,6 +13,7 @@ using tapeStream.Client.Components;
 using Microsoft.AspNetCore.Http.Connections;
 using tapeStream.Client.Components.HighCharts;
 using Microsoft.Extensions.Configuration;
+using JSconsoleExtensionsLib;
 
 namespace tapeStream.Client.Pages
 {
@@ -24,10 +25,9 @@ namespace tapeStream.Client.Pages
 
         [Inject] Microsoft.JSInterop.IJSRuntime jsruntime { get; set; }
 
-        [Inject] BlazorTimer Timer { get; set; }
+        [Inject] BlazorTimer timer { get; set; }
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-
 
         string symbol = "QQQ";
 
@@ -175,6 +175,7 @@ namespace tapeStream.Client.Pages
             foreach (var name in CONSTANTS.valuesName)
                 dictTopicCounts.Add(name, 0);
 
+            //jsruntime.title("Hello");
 
             //bookColData = await bookColumnsService.getBookColumnsData(ChartConfigure.seconds);
 
@@ -215,7 +216,11 @@ namespace tapeStream.Client.Pages
         /// </summary>
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
+
+
             //JsConsole.JsConsole.Error(jsruntime, $"TimerBookColumnsCharts_Elapsed");
+
+           
             //Data.TDAStreamerData.hubStatus = $"./images/blue.png";
             //if (TDAChart.isActive == true)
             {

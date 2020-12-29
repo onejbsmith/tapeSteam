@@ -14,12 +14,27 @@ using tapeStream.Shared.Managers;
 using static tapeStream.Client.Data.LinesChartData;
 using MathNet.Numerics;
 using JSconsoleExtensionsLib;
-
+using System.Timers;
 
 namespace tapeStream.Client.Components.HighCharts
 {
     public partial class LinesChart
     {
+        static string dateFormat = "yyyy-MM-dd-HHmm-ss";
+
+        Timer timer = new Timer(1000);
+
+        private static string chartDataServerUrl = "http://tda2tapestream.io/api/Frames/";
+        //private static string chartDataServerUrl = "https://localhost:44363/api/Frames/";
+        private static string symbol = "QQQ";
+        private static int seconds = 30;
+        private static string fromDateTime = DateTime.Now.AddMinutes(-10).ToString(dateFormat); //  "2020-12-29-0825-00";
+        private static string toDateTime = DateTime.Now.ToString(dateFormat); // "2020-12-28-1600-00";
+        private static string chartDataUrlBase = $"{chartDataServerUrl}getFramesWholeColumns/{symbol}/{seconds}?fromDateTime={{0}}&toDateTime={{1}}&columnNames=Id,DateTime,Symbol,Seconds,";
+        // 
+        private static string chartInitialDataUrl;
+
+
         [Inject] Microsoft.JSInterop.IJSRuntime console { get; set; }
 
 
@@ -96,8 +111,6 @@ namespace tapeStream.Client.Components.HighCharts
         private string _buysField;
 
 
-        private static string chartDataUrlBase = "https://localhost:44363/api/Frames/getFramesWholeColumns/QQQ/30?fromDateTime=2020-12-01-0930-00&toDateTime=2020-12-01-0935-00&columnNames=Id,DateTime,Symbol,Seconds,";
-        private static string chartDataUrl;
 
         private string newBuysField;
         private string newSellsField;
@@ -126,10 +139,28 @@ namespace tapeStream.Client.Components.HighCharts
             var dotNetReference = DotNetObjectReference.Create(this);
             await jsruntime.InvokeVoidAsync("Initialize", dotNetReference, id);
 
-            chartDataUrl = chartDataUrlBase + columnNames;
+            chartInitialDataUrl = string.Format(chartDataUrlBase, fromDateTime, toDateTime) + columnNames;
+
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+            timeStarted = DateTime.Now;
 
             //ChartConfigure.seconds = 3;
             await Task.CompletedTask;
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            var secondsElapsed = DateTime.Now.Subtract(timeStarted).TotalSeconds;
+            /// Start at endTime 
+            var startDateTime = DateTime.ParseExact(toDateTime, dateFormat, null).AddSeconds(secondsElapsed);
+            var endDateTime = DateTime.ParseExact(toDateTime, dateFormat, null).AddSeconds(secondsElapsed + 1);
+
+            var fromTime = startDateTime.ToString(dateFormat);
+            var toTime = endDateTime.ToString(dateFormat);
+            var chartDataUrl = string.Format(chartDataUrlBase, fromTime, toTime) + columnNames;
+
+            jsruntime.InvokeAsync<string>("window.requestData", new object[] { id, chartDataUrl });
         }
 
         [JSInvokable("getChartJson")]
@@ -151,17 +182,55 @@ namespace tapeStream.Client.Components.HighCharts
             //            Console.WriteLine(chartJson); /// to capture the chart object's json from js
             //#endif
             await Task.Yield();
+            
         }
 
         private void Chart_Initialize(string jsonResponse)
         {
-            chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
+            try
+            {
+                chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
+                //
 
-            //chart.subtitle.text = ratioFrames.First()[0].dateTime.ToLongDateString();// TDAChart.LongDateString;
+                var data0 = chart.series[0].data;
+                console.log(data0);
+                chart.subtitle.text = "Hello"; // chart.series[0].data dateTime.ToLongDateString();// TDAChart.LongDateString;
 
-            //chart.yAxis[0].title.text = "";
-            //chart.yAxis[0].title.style.color = "black";
+                //chart.yAxis[0].title.text = "";
+                //chart.yAxis[0].title.style.color = "black";
+                chart.series[0].color = "forestgreen";// CONSTANTS.buysColor;
+                chart.series[2].color = CONSTANTS.sellsColor;
+                chart.series[3].color = "red";
+                chart.series[4].color = "teal";
+                chart.series[5].color = "magenta";
 
+                if (buysField.StartsWith("asks") || buysField == "buysPriceCount" || buysField.EndsWith("Ratio"))
+                {
+                    chart.series[0].color = CONSTANTS.asksColor;
+                    chart.series[2].color = CONSTANTS.bidsColor;
+
+                    chart.series[0].name = "Asks";
+                    chart.series[2].name = "Bids";
+                    //chart.series[3].color = CONSTANTS.asksColor;
+                    //chart.series[4].color = CONSTANTS.bidsColor;
+                    chart.series[0].type = "spline";
+                    chart.series[2].type = "spline";
+                }
+                else if (buysField.Contains("Above") || buysField.Contains("Below") || buysField.Contains("Sprread"))
+                {
+                    chart.series[0].type = "spline";
+                    chart.series[2].type = "spline";
+                    chart.series[0].name = "Below";
+                    chart.series[2].name = "Above";
+                }
+                else
+                {
+                    chart.series[0].name = "Buys";
+                    chart.series[2].name = "Sells";
+
+                    chart.series[0].type = "spline";
+                    chart.series[2].type = "spline";
+                }
 
 
 #if tracing
@@ -170,10 +239,15 @@ namespace tapeStream.Client.Components.HighCharts
             JsConsole.JsConsole.GroupEnd(jsruntime);
 #endif
 
-            /// We set some static chart Properties here and pass back to js
+                /// We set some static chart Properties here and pass back to js
 
-            redraw = true;
-            chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
+                redraw = true;
+                chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private async Task Chart_Update(List<RatioFrame[]> ratioFrames)
@@ -386,12 +460,12 @@ namespace tapeStream.Client.Components.HighCharts
 
             string color = "#e7934c";
             diff = lstBuys.Last().Value - lstSells.Last().Value;
-            if (diff<0)
+            if (diff < 0)
                 color = "red";
-            else if (diff>0)
+            else if (diff > 0)
                 color = "forestgreen";
             settingsStyle = $"color:{color};position: relative;top:5px;right:5px";
-            
+
             //chart.series[3].color = CONSTANTS.buysColor;
             //chart.series[4].color = CONSTANTS.sellsColor;
 
@@ -527,7 +601,7 @@ namespace tapeStream.Client.Components.HighCharts
 
         MatChip[] selectedSellsChips = null;
         MatChip selectedSellChip = null;
-
+        private DateTime timeStarted;
 
         string chartTitle()
         {
