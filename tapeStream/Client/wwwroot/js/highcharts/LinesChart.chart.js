@@ -12,7 +12,7 @@
             align: 'left'
     },
     subtitle: {
-        text: '!',
+        text: null,
             align: 'left'
     },
     xAxis: [{

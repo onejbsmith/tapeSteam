@@ -77,7 +77,7 @@ namespace tapeStream.Client.Components.HighCharts
 
             chart = JsonSerializer.Deserialize<LinesChartData.Rootobject>(jsonResponse);
 
-            chart.subtitle.text = "Hello";// TDAChart.LongDateString;
+            //chart.subtitle.text = "Hello";// TDAChart.LongDateString;
 
 #if tracing
             JsConsole.JsConsole.GroupCollapsed(jsruntime, $"0.2 {id} getChartJson");

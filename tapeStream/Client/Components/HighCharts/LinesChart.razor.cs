@@ -20,7 +20,7 @@ namespace tapeStream.Client.Components.HighCharts
 {
     public partial class LinesChart
     {
-        static string dateFormat = "yyyy-MM-dd-HHmm-ss";
+       public static string dateFormat = "yyyy-MM-dd-HHmm-ss";
 
         Timer timer = new Timer(1000);
 
@@ -28,8 +28,13 @@ namespace tapeStream.Client.Components.HighCharts
         //private static string chartDataServerUrl = "https://localhost:44363/api/Frames/";
         private static string symbol = "QQQ";
         private static int seconds = 30;
-        private static string fromDateTime = DateTime.Now.AddMinutes(-10).ToString(dateFormat); //  "2020-12-29-0825-00";
-        private static string toDateTime = DateTime.Now.ToString(dateFormat); // "2020-12-28-1600-00";
+        //private static string fromDateTime = DateTime.Now.AddMinutes(-10).ToString(dateFormat); //  "2020-12-29-0825-00";
+        //private static string toDateTime = DateTime.Now.ToString(dateFormat); // "2020-12-28-1600-00";
+        //private static string fromDateTime =  "2020-12-31-0930-00";
+        public static string toDateTime;
+        private static DateTime toDate; // = DateTime.ParseExact(toDateTime, dateFormat, null);
+        public static string fromDateTime; // = toDate.AddMinutes(-10).ToString(dateFormat);
+
         private static string chartDataUrlBase = $"{chartDataServerUrl}getFramesWholeColumns/{symbol}/{seconds}?fromDateTime={{0}}&toDateTime={{1}}&columnNames=Id,DateTime,Symbol,Seconds,";
         // 
         private static string chartInitialDataUrl;
@@ -151,6 +156,8 @@ namespace tapeStream.Client.Components.HighCharts
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (parent.isPaused) return;
+
             var secondsElapsed = DateTime.Now.Subtract(timeStarted).TotalSeconds;
             /// Start at endTime 
             var startDateTime = DateTime.ParseExact(toDateTime, dateFormat, null).AddSeconds(secondsElapsed);
@@ -159,6 +166,8 @@ namespace tapeStream.Client.Components.HighCharts
             var fromTime = startDateTime.ToString(dateFormat);
             var toTime = endDateTime.ToString(dateFormat);
             var chartDataUrl = string.Format(chartDataUrlBase, fromTime, toTime) + columnNames;
+
+            parent.toTime = toTime;
 
             jsruntime.InvokeAsync<string>("window.requestData", new object[] { id, chartDataUrl });
         }
@@ -193,8 +202,8 @@ namespace tapeStream.Client.Components.HighCharts
                 //
 
                 var data0 = chart.series[0].data;
-                console.log(data0);
-                chart.subtitle.text = "Hello"; // chart.series[0].data dateTime.ToLongDateString();// TDAChart.LongDateString;
+                //console.log(data0);
+                //chart.subtitle.text = "Hello"; // chart.series[0].data dateTime.ToLongDateString();// TDAChart.LongDateString;
 
                 //chart.yAxis[0].title.text = "";
                 //chart.yAxis[0].title.style.color = "black";

@@ -368,7 +368,7 @@ function AddPoints(chartDivName, dataArray) {
     else {
         AddPoint(chartDivName, dataArray);
     }
-    //ResetPlotBands(chartDivName, dataArray);
+    ResetPlotBands(chartDivName, dataArray);
     //ResetYAxisMax(chartDivName, dataArray);
 }
 
@@ -377,6 +377,18 @@ function AddPoint(chartDivName, dataArray) {
     const colNames = window.chartColNames[chartDivName];
     const nFrames = dataArray.length;
     const series = chart[chartDivName].series;
+
+    // Get the mark from the last point
+    //const lastMark = series[1].data
+    // Put mark in subtitle
+    // debugger;
+    //chart[chartDivName].options.subtitle.text = series[1].data[series[1].data.length - 1].y;
+
+
+
+    chart[chartDivName].yAxis[0].setTitle({ text: series[1].data[series[1].data.length - 1].y }, false);
+    //debugger;
+    //alert("Check");
 
     var shift = false;
     if (series != undefined && series[0].data != undefined)
@@ -412,6 +424,8 @@ function AddPoint(chartDivName, dataArray) {
         //console.log("-----------------------------------------------------------")
         //chart[chartDivName].redraw();
     }
+
+    
 
 }
 
@@ -562,7 +576,7 @@ function ResetPlotBands(chartDivName, dataArray) {
                 // starting an even minute
                 startTimes.push(x);
             }
-            else { // new odd minute (ends prev even minute)
+            else if (startTimes.length>0) { // new odd minute (ends prev even minute)
                 endTimes.push(prevX);
             }
 
@@ -583,7 +597,7 @@ function ResetPlotBands(chartDivName, dataArray) {
         chart[chartDivName].xAxis[0].addPlotBand({
             from: startTimes[i],
             to: endTimes[i],
-            color: 'lavender',
+            color: '#f7f9fa',
             id: 'plot-band ' + i
         });
     }

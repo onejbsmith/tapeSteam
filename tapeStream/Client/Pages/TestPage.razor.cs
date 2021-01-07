@@ -29,6 +29,10 @@ namespace tapeStream.Client.Pages
         [Inject] BookColumnsService bookColumnsService { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
 
+        Radzen.Blazor.RadzenGrid<Trade> radzenGrid;
+
+        List<Trade> currentTrades = new List<Trade>();
+        public bool isPaused;
         string symbol = "QQQ";
 
         string hubUrl = "";
@@ -36,20 +40,20 @@ namespace tapeStream.Client.Pages
         public List<string> buyFields = new List<string>()
         {
             "buysTradeSizes",
+             "buysSummedAboveBelowShort",
+           "buysPriceCount",
+
             "asksBookSizes",
-            "buysPriceCount",
+            "buysSummedAboveBelowMed",
+            "buysSummedAboveBelowLong",
 
             "buysBelow",
             "buysInSpread",
             "buysAbove",
 
-            "buysSummedAboveBelowLong",
-            "buysSummedAboveBelowMed",
-            "buysSummedAboveBelowShort",
-
-            "buysSummedInSpreadLong",
+            "buysSummedInSpreadShort",
             "buysSummedInSpreadMed",
-            "buysSummedInSpreadShort"
+            "buysSummedInSpreadLong"
 
             //"buysRatio"
         };
@@ -169,6 +173,13 @@ namespace tapeStream.Client.Pages
         #endregion
 
 
+        void OnClick(string buttonName)
+        {
+            // jsruntime.log($"{buttonName} clicked");
+        }
+
+        DateTime toDate;
+        internal string toTime;
 
         protected override async Task OnInitializedAsync()
         {
@@ -179,10 +190,44 @@ namespace tapeStream.Client.Pages
 
             //bookColData = await bookColumnsService.getBookColumnsData(ChartConfigure.seconds);
 
+
             /// TODO: Get symbol and date derived
             /// 
             var todaysDate = Math.Floor(DateTime.Now.ToOADate());
 
+            LinesChart.toDateTime = DateTime.Now.ToString(LinesChart.dateFormat); //  "2020-12-31-0940-00";
+
+            var userEnteredDateTime = await jsruntime.prompt("To Date Time:", LinesChart.toDateTime);
+            LinesChart.toDateTime = userEnteredDateTime;
+            toDate = DateTime.ParseExact(userEnteredDateTime, LinesChart.dateFormat, null);
+            LinesChart.fromDateTime = toDate.AddMinutes(-10).ToString(LinesChart.dateFormat);
+
+
+            TradesService.jsruntime = jsruntime;
+
+
+            currentTrades = await TradesService.getTrades(toDate.ToString("yyyy-MM-dd"), 0);
+
+            // just get trades up to start time
+            currentTrades = currentTrades.Where(trade => trade.DateTime <= toDate).ToList();
+
+            if (currentTrades.Count > 1)
+            {
+                var lastTrade = currentTrades.First();
+
+                var nextTrade = new Trade()
+                {
+                    Trades = currentTrades.Count + 1,
+                    Symbol = lastTrade.Symbol,
+                    TimeStart = lastTrade.TimeEnd,
+                    Type = lastTrade.Type == "C" ? "P" : "C",
+                    PrevMark = lastTrade.MarkPrice
+                };
+                currentTrades.Insert(0, nextTrade);
+            }
+
+            // get the last trade number to check in timer loop
+            //jsruntime.alert(currentTrades.Count.ToString());
 
             await HubConnection_Initialize();
 
@@ -194,11 +239,11 @@ namespace tapeStream.Client.Pages
             //if (mode == "simulate")
             //{ }
             //else
-            var frames =await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
+            var frames = await bookColumnsService.getAllRatioFrames(symbol, todaysDate, jsruntime);
             allRatioFrames = frames.Where(frame => frame[0].markPrice > 0).ToList();
 
 
-            //await jsruntime.InvokeAsync<string>("BlazorSetTitle", new object[] { "Hello Dali!" });
+            //await jsruntime.InvokeAsync<string>("BlazorSetTitle", new object[] { ]o Dali!" });
         }
 
         private void InitializeTimers()
@@ -211,16 +256,50 @@ namespace tapeStream.Client.Pages
             timerBookColumnsCharts.Start();
         }
 
+        Trade nextTrade = new Trade();
         /// <summary>
         /// This makes the UI responsive. Events picked up every half second
         /// </summary>
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
 
+            // instead of relading every second, should check 
+            try
+            {
+                var latestTrades = await TradesService.getTrades(toTime);
+                //jsruntime.error ( $"{toTime} = { latestTrades.Count}:{currentTrades.Count -1 }" );
+
+                if (latestTrades.Count > currentTrades.Count - 1)
+                {
+
+                    //jsruntime.warn(latestTrades.Count);
+
+                    var lastTrade = latestTrades.First();
+
+                    var nextTrade = new Trade()
+                    {
+                        Trades = latestTrades.Count + 1,
+                        Symbol = lastTrade.Symbol,
+                        TimeStart = lastTrade.TimeEnd,
+                        Type = lastTrade.Type == "C" ? "P" : "C",
+                        PrevMark = lastTrade.MarkPrice
+                    };
+                    latestTrades.Insert(0, nextTrade);
+                    currentTrades.Clear();
+                    currentTrades.AddRange(latestTrades);
+
+                    await radzenGrid.Reload();
+                    //await InvokeAsync(() => StateHasChanged());
+                    //jsruntime.alert(currentTrades.Count.ToString());
+                }
+            }
+            catch
+            {
+            }
 
             //JsConsole.JsConsole.Error(jsruntime, $"TimerBookColumnsCharts_Elapsed");
 
-           
+
             //Data.TDAStreamerData.hubStatus = $"./images/blue.png";
             //if (TDAChart.isActive == true)
             {

@@ -5,6 +5,7 @@
 @using tapeStream.Client.Components.HighCharts
 @using tapeStream.Shared.Data
 @using tapeStream.Shared
+
 @*"#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"*@
 
 
@@ -51,26 +52,86 @@ Enter your name
     <MatIconButton Icon="settings" OnClick="@OpenPriceDialog" Raised="true" Style="color:darkmagenta" />
     <h6 class="float-right" style="padding:0 20px; position:relative;top:20px; color:darkmagenta">@(allRatioFrames.Count.ToString("n0")):@(TDABook.ratiosDepth.ToString())</h6>
 </div>
+<MatCheckbox @bind-Value=@isPaused TValue="bool"></MatCheckbox>
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
 
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-11">
             <LinesChart id="LinesChart1" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
-                        columnNames="BuysTradeSizes,MarkPrice,SellsTradeSizes,BollingerLow,BollingerMid,BollingerHigh" />
+                        columnNames="BuysTradeSizes,MarkPrice,SellsTradeSizes" />
+            @*columnNames="BuysTradeSizes,MarkPrice,SellsTradeSizes,BollingerLow,BollingerMid,BollingerHigh" />*@
         </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
+        @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />*@
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-11 ">
             <LinesChart id="LinesChart2" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
-                        columnNames="AsksBookSizes,MarkPrice,BidsBookSizes" />
+                        columnNames="BuysSummedAboveBelowShort,MarkPrice,SellsSummedAboveBelowShort" />
         </div>
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
+
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-11">
+            <h5>Trades </h5>
+
+            <RadzenGrid @ref="radzenGrid" Style="font-size:medium" AllowFiltering="false" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+                        AllowSorting="true" Data="@currentTrades" TItem="Trade">
+                <Columns>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="Trades" Title="Trades" Sortable="true" Filterable="true" Width="70px" />
+                    <RadzenGridColumn TItem="Trade" Property="Symbol" Title="Symbol" Sortable="true" Filterable="true" Width="90px" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="TimeStart" Title="Start Time" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:d}", data.TimeStart)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="timeEnd" Title="End Time" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:d}", data.TimeEnd)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn TItem="Trade" Property="Dur" Title="Dur" Sortable="true" Filterable="true" Width="60px" />
+                    <RadzenGridColumn TItem="Trade" Property="Type" Title="Type" Sortable="true" Filterable="true" Width="60px" />
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="MarkPrice" Title="Mark" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:n2}", data.MarkPrice)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="PrevMark" Title="Prev" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:n2}", data.PrevMark)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="Profit" Title="Profit" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:n2}", data.Profit)
+                        </Template>
+                    </RadzenGridColumn>                    
+                    <RadzenGridColumn HeaderCssClass="right" TextAlign="Radzen.TextAlign.Right" TItem="Trade" Property="Total" Title="Total" Width="80px">
+                        <Template Context="data">
+                            @String.Format("{0:n2}", data.Total)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn TItem="Trade" Property="ProfPerHr" Title="Prof/Hr" Sortable="true" Filterable="true" Width="80px" />
+                    <RadzenGridColumn TItem="Trade" Property="AvgProfit" Title="AvgProfit" Sortable="true" Filterable="true" Width="80px" />
+                    <RadzenGridColumn TItem="Trade" Property="AvgDur" Title="AvgDur" Sortable="true" Filterable="true" Width="80px" />
+
+                    <RadzenGridColumn TItem="Trade" Property="BatAvg" Title="BatAvg" Sortable="true" Filterable="true" Width="80px" />
+                    <RadzenGridColumn TItem="Trade" Property="AvgLoss" Title="AvgLoss" Sortable="true" Filterable="true" Width="80px" />
+                    <RadzenGridColumn TItem="Trade" Property="AvgWin" Title="AvgWin" Sortable="true" Filterable="true" Width="80px" />
+                    <RadzenGridColumn TItem="Trade" Title="Run Date" Sortable="true" Filterable="true">
+                        <Template Context="data">
+                            @(data.DateTime.ToString("MM-d-yyyy HH:mm:ss.ff"))
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+
+        </div>
+
+        <!--<div class="mat-layout-grid-cell mat-layout-grid-cell-span-1" />
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
             <LinesChart id="LinesChart3" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysPriceCount,MarkPrice,SellsPriceCount" />
-        </div>
-
+        </div>-->
         @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <!--<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
             <LinesChart id="LinesChart4" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysBelow,MarkPrice,SellsBelow" />
         </div>
@@ -82,10 +143,9 @@ Enter your name
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
             <LinesChart id="LinesChart6" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysAbove,MarkPrice,SellsAbove" />
-        </div>
-
+        </div>-->
         @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <!--<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
             <LinesChart id="LinesChart7" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysSummedAboveBelowLong,MarkPrice,SellsSummedAboveBelowLong" />
         </div>
@@ -97,9 +157,9 @@ Enter your name
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
             <LinesChart id="LinesChart9" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysSummedAboveBelowShort,MarkPrice,SellsSummedAboveBelowShort" />
-        </div>
+        </div>-->
         @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+        <!--<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
             <LinesChart id="LinesChart10" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysSummedInSpreadLong,MarkPrice,SellsSummedInSpreadLong" />
         </div>
@@ -112,7 +172,7 @@ Enter your name
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3 rightside">
             <LinesChart id="LinesChart12" ratioFrames="@ratioFrames" allRatioFrames="@allRatioFrames" parent="@this"
                         columnNames="BuysSummedInSpreadShort,MarkPrice,SellsSummedInSpreadShort" />
-        </div>
+        </div>-->
         @*<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12" />*@
 
     </div>
