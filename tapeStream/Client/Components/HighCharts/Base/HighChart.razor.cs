@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using JSconsoleExtensionsLib;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tapeStream.Client.Pages;
 
 namespace tapeStream.Client.Components.HighCharts.Base
 {
@@ -67,10 +69,11 @@ namespace tapeStream.Client.Components.HighCharts.Base
             set
             {
                 _redrawChart = value;
-                redrawChart2 = value;
+                if (redrawChart2 == true)
+                    redrawChart2 = value;
             }
         }
-        private bool _redrawChart;
+        private bool _redrawChart = true;
         public static bool redrawChart2 { get; set; }
 
         [Parameter]
@@ -118,10 +121,18 @@ namespace tapeStream.Client.Components.HighCharts.Base
             //    chartSeriesJson = "";
             //}
             //else
+
+           // jsruntime.alert($"DrawChart: {id} {ChartType.DataDriven} {TestPage.redraw}");
+
+            if (TestPage.redraw == false) return;
+
             if (chartType == ChartType.DataDriven)
-                await jsruntime.InvokeAsync<string>("loadHighchartRequestData", new object[] { id, chartJson, chartDataUrl, redrawChart });
+                await jsruntime.InvokeAsync<string>("loadHighchartRequestData", new object[] { id, chartJson, chartDataUrl, redrawChart2 });
             else
-                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart });
+                await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, chartJson, redrawChart2 });
+
+            redrawChart2 = false;
+
         }
 
         private async Task appendHighchartSeries()

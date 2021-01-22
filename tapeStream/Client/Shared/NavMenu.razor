@@ -3,24 +3,48 @@
 @using System.Timers
 @using tapeStream.Shared.Data
 @using tapeStream.Shared
+@using Blazorise
+@using tapeStream.Client.Pages
 
 <div class="top-row pl-4 navbar navbar-dark">
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="" @onclick="ToggleNavMenu">
-        <img src="favicon.ico" style="width:16px;" /> &nbsp;<i style="color:@CONSTANTS.bidsColor"><b>tape</b></i><b style="color:@CONSTANTS.asksColor">Stream</b> 
+        <img src="favicon.ico" style="width:16px;" /> &nbsp;<i style="color:@CONSTANTS.bidsColor"><b>tape</b></i><b style="color:@CONSTANTS.asksColor">Stream</b>
         <img src="@hubStatus" style="width:16px;" title="@hubStatusMessage" />
     </a>
 
     @*<p class="bidsColor">Hello</p>*@
 
-    <MatChip Label="@(Convert.ToDateTime(timeOfDay).ToString("dddd, MMMM d"))" Class="bidsColor" ></MatChip>
-    @*<MatChip Label="@(Convert.ToDateTime(timeOfDay).ToLongTimeString())" Style="margin-right:10px;font-size:smaller"></MatChip>*@
-    <div style="position:relative;bottom:5px">
-        <tapeStream.Client.Components.HighCharts.ClockGauge clockDateTime="@(_clockDateTime)" />
-        <tapeStream.Client.Components.HighCharts.ClockGauge clockDateTime="@(TDAChart.svcDateTime)" />
+    <MatChip Label="@(Convert.ToDateTime(timeOfDay).ToString("dddd, MMMM d"))" Class="bidsColor"></MatChip>
+    <MatChip Label="@(Convert.ToDateTime(timeOfDay).ToLongTimeString())" Style="margin-right:10px;font-size:smaller"></MatChip>
+    <div class="margin-10">
+        <span style=" color:wheat">Use Alpaca</span>&nbsp;<MatSlideToggle TValue="bool" @bind-Value="@useAlpaca"></MatSlideToggle>
     </div>
+    <div class="margin-10">
+        <span style=" color:wheat">Trading</span>&nbsp;<MatSlideToggle TValue="bool" Style="color:red" Disabled="@(!useAlpaca)" @bind-Value="@isTradingOn"></MatSlideToggle>
+    </div>
+    <div class="margin-10">
+        <span style=" color:wheat">Trade On Client</span>&nbsp;<MatSlideToggle TValue="bool" Style="color:red" Disabled="@(!useAlpaca)" @bind-Value="@isTradingOnClient"></MatSlideToggle>
+    </div>
+    <div class="margin-10">
+        <span style=" color:wheat">Trades From Hub</span>&nbsp;<MatSlideToggle TValue="bool" Style="color:red" Disabled="@(!useAlpaca)" @bind-Value="@tradesFromHub"></MatSlideToggle>
+    </div>
+    <div class="margin-10">
+        <span style=" color:white">Simulator On</span>&nbsp; <MatSlideToggle TValue="bool" Disabled="true" @bind-Value="@(TestPage.isSimulated)"></MatSlideToggle>
+    </div>
+    <div class="margin-10">
+        <span style=" color:white">Pause Simulator</span><MatSlideToggle TValue="bool" Disabled="@(!TestPage.isSimulated)" @bind-Value="@(TestPage.isPaused)"></MatSlideToggle>
+    </div>
+    <div class="margin-10">
+        <span style=" color:yellow">Chart from Hub</span><MatSlideToggle TValue="bool"  @bind-Value="@(TestPage.isChartFromHub)"></MatSlideToggle>
+    </div>
+    <!--<span></span>
+    <div style="position:relative;bottom:5px">
+        <tapeStream.Client.Components.HighCharts.ClockGauge clockDateTime="@(_clockDateTime)" />-->
+    @*<tapeStream.Client.Components.HighCharts.ClockGauge clockDateTime="@(TDAChart.svcDateTime)" />*@
+    <!--</div>-->
 
 </div>
 
@@ -79,9 +103,11 @@
         font-weight: 500;
     }
 
-    .oi {
-        margin-right: 10px;
+    .mdc-chip, .margin-10  {
+        margin: 5px;
     }
+
+
     .bidsColor
     {
         @*color:@CONSTANTS.bidsColor;*@

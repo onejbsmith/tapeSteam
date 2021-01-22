@@ -1,4 +1,4 @@
-﻿#undef dev
+﻿#define dev
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -30,14 +30,31 @@ namespace tapeStream.Shared.Services
 
         static string controllerUrl;
 
+        public static async Task<Trade[]> getLastTrades()
+        {
+#if dev
+            string serverUrl = "https://localhost:44363/";
+#else
+            string serverUrl = "http://tda2tapeStream.io/";
+#endif
+            controllerUrl = $"{serverUrl}api/Trades";
+            var json = await Http.GetFromJsonAsync<string>(controllerUrl);
+
+            var trades = JsonSerializer.Deserialize<Trade[]>(json);
+
+            return trades;
+        }
+
         public static async Task<List<Trade>> getTrades(string svcDate, int? lastTradeNumber = null)
         {
             try
             {
                 //string serverUrl = Configuration["ServerUrl"];
-               string serverUrl = "https://localhost:44363/";
-//               string serverUrl = "http://tda2tapeStream.io/";
-
+#if dev
+                string serverUrl = "https://localhost:44363/";
+#else               
+                string serverUrl = "http://tda2tapeStream.io/";
+#endif
 
                 if (lastTradeNumber == null)
                     controllerUrl = $"{serverUrl}api/Trades/getTrades/{svcDate}";
@@ -53,7 +70,7 @@ namespace tapeStream.Shared.Services
             }
             catch (System.Exception ex)
             {
-                jsruntime.error(controllerUrl + ":" + ex.ToString());
+               // jsruntime.error(controllerUrl + ":" + ex.ToString());
                 return new List<Trade>();
             }
         }

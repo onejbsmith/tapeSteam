@@ -1,4 +1,5 @@
 ﻿#undef tracing
+#define dev
 using MatBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -15,17 +16,24 @@ using static tapeStream.Client.Data.LinesChartData;
 using MathNet.Numerics;
 using JSconsoleExtensionsLib;
 using System.Timers;
+using tapeStream.Client.Pages;
+using tapeStream.Client.Models;
 
 namespace tapeStream.Client.Components.HighCharts
 {
     public partial class LinesChart
     {
-       public static string dateFormat = "yyyy-MM-dd-HHmm-ss";
+
+        ElementReference headerNumber;
+        public static string dateFormat = "yyyy-MM-dd-HHmm-ss";
 
         Timer timer = new Timer(1000);
 
+#if dev
+        private static string chartDataServerUrl = "https://localhost:44363/api/Frames/";
+#else
         private static string chartDataServerUrl = "http://tda2tapestream.io/api/Frames/";
-        //private static string chartDataServerUrl = "https://localhost:44363/api/Frames/";
+#endif 
         private static string symbol = "QQQ";
         private static int seconds = 30;
         //private static string fromDateTime = DateTime.Now.AddMinutes(-10).ToString(dateFormat); //  "2020-12-29-0825-00";
@@ -130,12 +138,13 @@ namespace tapeStream.Client.Components.HighCharts
         public string svcDate { get; set; }
 
         public List<float?> lstMarkPrices { get; set; }
+        public static FrameWhole newFrame { get; internal set; }
 
         string chartJson = "";
         string chartSeriesJson = "";
         string idName = "LinesChart";
         string chartJsFilename = $"js/highcharts/LinesChart.chart.js?id={DateTime.Now.ToOADate()}";
-        bool redraw = true;
+        bool redraw = TestPage.redraw;
 
         static LinesChartData.Rootobject chart = new LinesChartData.Rootobject();
 
@@ -156,7 +165,11 @@ namespace tapeStream.Client.Components.HighCharts
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (parent.isPaused) return;
+            if (TestPage.isPaused)
+            {
+                timeStarted = timeStarted.AddSeconds(1);
+                return;
+            }
 
             var secondsElapsed = DateTime.Now.Subtract(timeStarted).TotalSeconds;
             /// Start at endTime 
@@ -169,7 +182,8 @@ namespace tapeStream.Client.Components.HighCharts
 
             parent.toTime = toTime;
 
-            jsruntime.InvokeAsync<string>("window.requestData", new object[] { id, chartDataUrl });
+            if (!TestPage.isChartFromHub)
+                jsruntime.InvokeAsync<string>("window.requestData", new object[] { id, chartDataUrl, headerNumber });
         }
 
         [JSInvokable("getChartJson")]
@@ -191,7 +205,7 @@ namespace tapeStream.Client.Components.HighCharts
             //            Console.WriteLine(chartJson); /// to capture the chart object's json from js
             //#endif
             await Task.Yield();
-            
+
         }
 
         private void Chart_Initialize(string jsonResponse)
@@ -250,7 +264,7 @@ namespace tapeStream.Client.Components.HighCharts
 
                 /// We set some static chart Properties here and pass back to js
 
-                redraw = true;
+                //redraw = true;
                 chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
             }
             catch (Exception ex)
@@ -272,7 +286,7 @@ namespace tapeStream.Client.Components.HighCharts
                 //  Chart_SetTitle(ratioFrames);
 
 
-                redraw = true;
+                //redraw = true;
                 chartJson = JsonSerializer.Serialize<LinesChartData.Rootobject>(chart);
             }
             catch (Exception ex)

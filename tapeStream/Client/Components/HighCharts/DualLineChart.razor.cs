@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using JSconsoleExtensionsLib;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -106,7 +107,7 @@ namespace tapeStream.Client.Components.HighCharts
             }
             catch (Exception ex)
             {
-                JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
+                jsruntime.confirm( ex.ToString());
             }
         }
 

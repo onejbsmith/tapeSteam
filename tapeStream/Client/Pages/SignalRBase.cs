@@ -1,5 +1,5 @@
 ﻿#define UsingSignalHub
-#undef dev
+#define dev
 using System;
 using System.Text;
 
@@ -296,7 +296,7 @@ namespace tapeStream.Client.Pages
             }
             catch (System.Exception ex)
             {
-                JsConsole.JsConsole.Confirm(jsruntime, ex.ToString());
+               //jsruntime.confirm( ex.ToString());
             }
         }
 
@@ -346,7 +346,7 @@ namespace tapeStream.Client.Pages
 
                 /// The message is the TDAStreamerData.timeAndSales.time.ToString()
                 /// 
-                JsConsole.JsConsole.Log(jsruntime, message);
+             //   jsruntime.log(message);
 
 
 

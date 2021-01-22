@@ -29,10 +29,10 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
                                                 //if (chartDivName =="LinesChart")
                                                 //    debugger;
                                                 if (window.tracing) {
-                                                    console.warn(`0. ${chartDivName} window.loadHighchart`);
+                                                    /// console.warn(`0. ${chartDivName} window.loadHighchart`);
                                                     //if (chartDivName == "ClockGauge")
                                                     //    debugger;
-                                                    console.warn(chartJson);
+                                                    /// console.warn(chartJson);
                                                 }
 
                                                 /// if window.chartObj is empty it's our first time rendering the chart
@@ -88,56 +88,56 @@ window.loadHighchart = function (chartDivName, chartJson, redrawChart) {
 
                                                 }
                                                 else {
-                                                    chartInDiv = $("#" + chartDivName).highcharts();
+                                                    //chartInDiv = $("#" + chartDivName).highcharts();
 
 
-                                                    //if (chartDivName == "Surface3D") {
-                                                    //    for (var i = 0; i < chart["Surface3D"].series.length; i++) {
-                                                    //        chartInDiv.series[i].data.options = window.chartObj["Surface3D"].series[i].data;
-                                                    //    }
-                                                    //    chartInDiv.redraw();
-                                                    //    //chartInDiv.redraw();
-                                                    //    //chart["Surface3D"] = chartInDiv;
-                                                    //    //chart["Surface3D"].redraw();
+                                                    ////if (chartDivName == "Surface3D") {
+                                                    ////    for (var i = 0; i < chart["Surface3D"].series.length; i++) {
+                                                    ////        chartInDiv.series[i].data.options = window.chartObj["Surface3D"].series[i].data;
+                                                    ////    }
+                                                    ////    chartInDiv.redraw();
+                                                    ////    //chartInDiv.redraw();
+                                                    ////    //chart["Surface3D"] = chartInDiv;
+                                                    ////    //chart["Surface3D"].redraw();
 
-                                                    //}
-                                                    //else {
-                                                    //debugger;
-                                                    //var series = window.chartObj.series;
-                                                    //for (var i = 0; i < series.length; i++)
-                                                    //{
-                                                    //    chartInDiv.series[i].setData(series[i].data, false);
-                                                    //};
-                                                    //chartInDiv.redraw();
-                                                    if (window.tracing) {
-                                                        console.log(`2. ${chartDivName} chartInDiv`);
-                                                        console.table(chartInDiv);
-                                                    }
-
-                                                    //var axes = chartInDiv.axes;
-
-                                                    chartInDiv.update(window.chartObj[chartDivName]);
-
-                                                    if (window.tracing) {
-                                                        console.log(`3. ${chartDivName} chartInDiv`);
-                                                        console.table(chartInDiv);
-                                                    }
-
-
-                                                    //chartInDiv.axes = axes;
-
-                                                    //chartInDiv.series = window.chartObj.series;
-
-                                                    //chartInDiv.series.update(window.chartObj.series);
-                                                    //chart.series = (window.chartObj);
-                                                    //chart.series = 
-                                                    //window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
-                                                    // debugger;
-
-                                                    //chartInDiv.redraw();
                                                     ////}
-                                                    //chartInDiv.reflow();
-                                                    //chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
+                                                    ////else {
+                                                    ////debugger;
+                                                    ////var series = window.chartObj.series;
+                                                    ////for (var i = 0; i < series.length; i++)
+                                                    ////{
+                                                    ////    chartInDiv.series[i].setData(series[i].data, false);
+                                                    ////};
+                                                    ////chartInDiv.redraw();
+                                                    //if (window.tracing) {
+                                                    //    console.log(`2. ${chartDivName} chartInDiv`);
+                                                    //    console.table(chartInDiv);
+                                                    //}
+
+                                                    ////var axes = chartInDiv.axes;
+
+                                                    //chartInDiv.update(window.chartObj[chartDivName]);
+
+                                                    //if (window.tracing) {
+                                                    //    console.log(`3. ${chartDivName} chartInDiv`);
+                                                    //    console.table(chartInDiv);
+                                                    //}
+
+
+                                                    ////chartInDiv.axes = axes;
+
+                                                    ////chartInDiv.series = window.chartObj.series;
+
+                                                    ////chartInDiv.series.update(window.chartObj.series);
+                                                    ////chart.series = (window.chartObj);
+                                                    ////chart.series = 
+                                                    ////window.updateHighchartSeries(Json.stringify(window.chartObj["series"]))
+                                                    //// debugger;
+
+                                                    ////chartInDiv.redraw();
+                                                    //////}
+                                                    ////chartInDiv.reflow();
+                                                    ////chartInDiv.xAxis[0].setExtremes(0, chartInDiv.xAxis[0].categories.length);
 
 
                                                 }
@@ -185,10 +185,10 @@ window.loadHighchartRequestData = function (chartDivName, chartJson, chartDataUr
                                                 //if (chartDivName =="LinesChart")
                                                 //    debugger;
                                                 if (window.tracing) {
-                                                    console.warn(`0. ${chartDivName} window.loadHighchart`);
+                                                    /// console.warn(`0. ${chartDivName} window.loadHighchart`);
                                                     //if (chartDivName == "ClockGauge")
                                                     //    debugger;
-                                                    console.warn(chartJson);
+                                                    /// console.warn(chartJson);
                                                 }
 
                                                 /// if window.chartObj is empty it's our first time rendering the chart
@@ -215,8 +215,8 @@ window.loadHighchartRequestData = function (chartDivName, chartJson, chartDataUr
                                                     // get the column names from the Url
                                                     const urlParts = chartDataUrl.split("=");
                                                     const colNamesString = urlParts[urlParts.length - 1];
-                                                    const colNames = colNamesString.split(",");
-                                                    window.chartColNames[chartDivName] = colNames;
+                                                    const columnNames = colNamesString.split(",");
+                                                    window.chartColNames[chartDivName] = columnNames;
 
                                                     //SetLanguage();
                                                     window.requestData(chartDivName);
@@ -334,12 +334,14 @@ window.loadHighchartRequestData = function (chartDivName, chartJson, chartDataUr
 }
 
 
-window.requestData = async function (chartDivName, chartDataUrl = "") {
+window.requestData = async function (chartDivName, chartDataUrl = "", headerNumber = "") {
 
     if (chartDataUrl.length > 0)
         window.chartDataUrls[chartDivName] = chartDataUrl;
 
     const url = window.chartDataUrls[chartDivName];
+
+    /// console.warn(url);
 
     const fetchPromise = fetch(url);
 
@@ -348,7 +350,7 @@ window.requestData = async function (chartDivName, chartDataUrl = "") {
     }).then(dataArray => {
 
         if (dataArray.length > 0)
-            AddPoints(chartDivName, dataArray);
+            AddPoints(chartDivName, headerNumber, dataArray);
         //console.log(dataArray);
         //debugger;
     });
@@ -358,21 +360,22 @@ window.requestData = async function (chartDivName, chartDataUrl = "") {
     // setTimeout(window.requestData, 1000);
 }
 
-function AddPoints(chartDivName, dataArray) {
+
+function AddPoints(chartDivName, headerNumber, dataArray) {
     //debugger;
     const nFrames = dataArray.length;
     const series = chart[chartDivName].series;
     if (series[0].data.length == 0) {
-        SetPoints(chartDivName, dataArray);
+        SetPoints(chartDivName, headerNumber, dataArray);
     }
     else {
-        AddPoint(chartDivName, dataArray);
+        AddPoint(chartDivName, headerNumber, dataArray);
     }
-    ResetPlotBands(chartDivName, dataArray);
-    //ResetYAxisMax(chartDivName, dataArray);
+    ResetPlotBands(chartDivName, headerNumber, dataArray);
+    //ResetYAxisMax(chartDivName, headerNumber, dataArray);
 }
 
-function AddPoint(chartDivName, dataArray) {
+function AddPoint(chartDivName, headerNumber, dataArray) {
     const firstCol = 4;
     const colNames = window.chartColNames[chartDivName];
     const nFrames = dataArray.length;
@@ -384,10 +387,11 @@ function AddPoint(chartDivName, dataArray) {
     // debugger;
     //chart[chartDivName].options.subtitle.text = series[1].data[series[1].data.length - 1].y;
 
+    /// console.warn(chartDivName);
+    /// console.warn(colNames);
 
 
-    chart[chartDivName].yAxis[0].setTitle({ text: series[1].data[series[1].data.length - 1].y }, false);
-    //debugger;
+    //chart[chartDivName].yAxis[0].setTitle({ text: series[1].data[series[1].data.length - 1].y }, false);
     //alert("Check");
 
     var shift = false;
@@ -397,6 +401,8 @@ function AddPoint(chartDivName, dataArray) {
     for (var n = 0; n < nFrames; n++) {
 
         const data = dataArray[n];
+
+
         const date = data["DateTime"]
         const x = new Date(date).getTime();
 
@@ -405,9 +411,13 @@ function AddPoint(chartDivName, dataArray) {
         for (var iCol = firstCol; iCol < colNames.length; iCol++) {
             var iSeries = iCol - firstCol;
 
-            // console.log(chartDivName + `.series[${iSeries}].data.length=${series[iSeries].data.length}`);
-
+             /// console.warn(iCol);
+           // console.log(chartDivName + `.series[${iSeries}].data.length=${series[iSeries].data.length}`);
+            /// console.warn(colNames[iCol]);
+            /// console.warn(data[colNames[iCol]]);
             const y = Number.parseFloat(data[colNames[iCol]]);
+            /// console.warn(y);
+
             const point = [x, y];
             //debugger;
             try {
@@ -415,6 +425,15 @@ function AddPoint(chartDivName, dataArray) {
                     series[iSeries].setData(point);
                 else
                     series[iSeries].addPoint(point, true, shift);
+
+                if (iSeries == 1 && nFrames < 5) {
+                    //debugger;
+                    var time1 = date.split('T')[1];
+                    var time = time1.split('.')[0];
+                    var it = time + "—" + y;
+                    headerNumber.innerHTML = time;
+                    chart[chartDivName].yAxis[0].setTitle({ text: y }, false);
+                }
             }
             catch (err) {
                 // debugger;
@@ -425,11 +444,11 @@ function AddPoint(chartDivName, dataArray) {
         //chart[chartDivName].redraw();
     }
 
-    
+
 
 }
 
-function NewAddPoint(chartDivName, dataArray) {
+function NewAddPoint(chartDivName, headerNumber, dataArray) {
     const firstCol = 4;
     const colNames = window.chartColNames[chartDivName];
     const series = chart[chartDivName].series;
@@ -473,7 +492,7 @@ function NewAddPoint(chartDivName, dataArray) {
 
 }
 
-function SetPoints(chartDivName, dataArray) {
+function SetPoints(chartDivName, headerNumber, dataArray) {
 
 
     const firstCol = 4;
@@ -546,12 +565,13 @@ function UpdateChartDataUrl(chartDivName) {
 
     // update the url
     window.chartDataUrls[chartDivName] = sUrl;
+    console.log("sUrl=" + sUrl);
 }
 
 /// Note that all the charts get the same plotBands so
 /// should only calc once per request
 /// BUT charts are not aware of one another!!!
-function ResetPlotBands(chartDivName, dataArray) {
+function ResetPlotBands(chartDivName, headerNumber, dataArray) {
 
     /// Gather arrays of even minute start and end times
     const startTimes = [];
@@ -576,7 +596,7 @@ function ResetPlotBands(chartDivName, dataArray) {
                 // starting an even minute
                 startTimes.push(x);
             }
-            else if (startTimes.length>0) { // new odd minute (ends prev even minute)
+            else if (startTimes.length > 0) { // new odd minute (ends prev even minute)
                 endTimes.push(prevX);
             }
 
@@ -609,7 +629,7 @@ function ResetPlotBands(chartDivName, dataArray) {
 window.syncedCharts = {};
 window.yMax = 0;
 /// Keep Y-Axis max in sync for PrintsBelow and PrintsAbove
-function ResetYAxisMax(chartDivName, dataArray) {
+function ResetYAxisMax(chartDivName, headerNumber, dataArray) {
     /// Get the buysField name, (first column name)
     const firstCol = 4;
     const colNames = window.chartColNames[chartDivName];

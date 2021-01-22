@@ -5,15 +5,17 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Client", "tapeStream\Client\tapeStream.Client.csproj", "{99904DE7-B222-4347-AA13-32B352E70372}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsConsole", "..\..\Server Projects\JsConsole\JsConsole.csproj", "{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Shared", "tapeStream\Shared\tapeStream.Shared.csproj", "{7FFBD3A4-499C-49E5-BFCC-9B086B5D12E0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tapeStream.Host", "tapeStream\Host\tapeStream.Host.csproj", "{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSconsoleExtensionsLib", "..\Components\JSconsoleExtension\JSconsoleExtension\JSconsoleExtensionsLib.csproj", "{14EEBDA4-31FC-43ED-B129-A246C5A36BCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets", "..\..\..\alpaca-trade-api-csharp\Alpaca.Markets\Alpaca.Markets.csproj", "{411E9ADB-995B-4AFD-8494-D74BF6204EC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tapeStreamTA", "..\..\..\AspDotNet\tapeStreamTA\tapeStreamTA.csproj", "{A308BE8B-828A-4CA9-9F1E-EB06D4112383}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpaca.Markets.Extensions", "..\..\..\alpaca-trade-api-csharp\Alpaca.Markets.Extensions\Alpaca.Markets.Extensions.csproj", "{667454B3-3349-4AF4-80DC-523F7588A14F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsageExamples", "..\..\..\alpaca-trade-api-csharp\UsageExamples\UsageExamples.csproj", "{631B4401-6C60-4245-95BC-BFC47A41FA81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSconsoleExtensionsLib", "..\Components\JSconsoleExtension\JSconsoleExtension\JSconsoleExtensionsLib.csproj", "{A808E7D9-EB7F-4744-BC1E-BC5C7DDAB360}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +27,6 @@ Global
 		{99904DE7-B222-4347-AA13-32B352E70372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99904DE7-B222-4347-AA13-32B352E70372}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC63E143-AFB7-43A6-9C1A-9D248E9C8F04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FFBD3A4-499C-49E5-BFCC-9B086B5D12E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7FFBD3A4-499C-49E5-BFCC-9B086B5D12E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FFBD3A4-499C-49E5-BFCC-9B086B5D12E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,14 +35,17 @@ Global
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E4E81F2-115D-4EC0-8BF7-EC7EF5E613A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14EEBDA4-31FC-43ED-B129-A246C5A36BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14EEBDA4-31FC-43ED-B129-A246C5A36BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14EEBDA4-31FC-43ED-B129-A246C5A36BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14EEBDA4-31FC-43ED-B129-A246C5A36BCE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A308BE8B-828A-4CA9-9F1E-EB06D4112383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A308BE8B-828A-4CA9-9F1E-EB06D4112383}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A308BE8B-828A-4CA9-9F1E-EB06D4112383}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A308BE8B-828A-4CA9-9F1E-EB06D4112383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{411E9ADB-995B-4AFD-8494-D74BF6204EC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{411E9ADB-995B-4AFD-8494-D74BF6204EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{411E9ADB-995B-4AFD-8494-D74BF6204EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667454B3-3349-4AF4-80DC-523F7588A14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667454B3-3349-4AF4-80DC-523F7588A14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667454B3-3349-4AF4-80DC-523F7588A14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{631B4401-6C60-4245-95BC-BFC47A41FA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{631B4401-6C60-4245-95BC-BFC47A41FA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A808E7D9-EB7F-4744-BC1E-BC5C7DDAB360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A808E7D9-EB7F-4744-BC1E-BC5C7DDAB360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A808E7D9-EB7F-4744-BC1E-BC5C7DDAB360}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,6 +27,9 @@ namespace tapeStream.Client.Data
         static public event Action OnActiveStatusChanged;
         static public event Action OnTimeSalesStatusChanged;
         static public event Action OnHubStatusChanged;
+
+
+
         private static void StatusChanged() => OnStatusesChanged?.Invoke();
         private static void ActiveStatusChanged() => OnActiveStatusChanged?.Invoke();
         public static void TimeSalesStatusChanged() => OnTimeSalesStatusChanged?.Invoke();

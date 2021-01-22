@@ -34,4 +34,9 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\alpaca-trade-api-csharp\Alpaca.Markets.Extensions\Alpaca.Markets.Extensions.csproj" />
+    <ProjectReference Include="..\..\..\..\..\alpaca-trade-api-csharp\Alpaca.Markets\Alpaca.Markets.csproj" />
+  </ItemGroup>
+
 </Project>

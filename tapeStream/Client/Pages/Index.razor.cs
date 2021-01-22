@@ -12,6 +12,7 @@ using tapeStream.Shared;
 using tapeStream.Shared.Data;
 using tapeStream.Shared.Services;
 using Microsoft.Extensions.Configuration;
+using JSconsoleExtensionsLib;
 
 namespace tapeStream.Client.Pages
 {
@@ -81,7 +82,7 @@ namespace tapeStream.Client.Pages
 #endif
         protected override async Task OnInitializedAsync()
         {
-            JsConsole.JsConsole.Error(jsruntime, $"OnInitializedAsync: ");
+            jsruntime.error( $"OnInitializedAsync: ");
 
             /// Init parameters so don't get "null" error
             await InitializeData();
@@ -236,7 +237,7 @@ namespace tapeStream.Client.Pages
 #endif
         private void InitializeTimers()
         {
-            JsConsole.JsConsole.Error(jsruntime, $"InitializeTimers");
+            jsruntime.error( $"InitializeTimers");
 
             timerBookColumnsCharts.Elapsed += async (sender, e) => await TimerBookColumnsCharts_Elapsed(sender, e);
             timerBookColumnsCharts.Start();
@@ -245,7 +246,7 @@ namespace tapeStream.Client.Pages
         }
         private async Task InitializeData()
         {
-            JsConsole.JsConsole.Error(jsruntime, $"InitializeData");
+            jsruntime.error( $"InitializeData");
 
             bookColData = CONSTANTS.newBookColumnsData;
 
@@ -255,15 +256,15 @@ namespace tapeStream.Client.Pages
 
         private async Task TimerBookColumnsCharts_Elapsed(object sender, ElapsedEventArgs e)
         {
-            JsConsole.JsConsole.Error(jsruntime, $"TimerBookColumnsCharts_Elapsed");
+            jsruntime.error( $"TimerBookColumnsCharts_Elapsed");
             //Data.TDAStreamerData.hubStatus = $"./images/blue.png";
             //if (TDAChart.isActive == true)
             {
-                JsConsole.JsConsole.Time(jsruntime, "TimerBookColumnsCharts_Elapsed");
+                jsruntime.time("TimerBookColumnsCharts_Elapsed");
                 timerBookColumnsCharts.Stop();
                 await GetBookColumnsData(ChartConfigure.seconds);
                 timerBookColumnsCharts.Start();
-                JsConsole.JsConsole.TimeEnd(jsruntime, "TimerBookColumnsCharts_Elapsed");
+                jsruntime.timeEnd("TimerBookColumnsCharts_Elapsed");
                 //         TDAChart.isActive = false;
             }
         }
@@ -317,54 +318,54 @@ namespace tapeStream.Client.Pages
 
         private async Task xGetBookColumnsData(int seconds)
         {
-            JsConsole.JsConsole.Error(jsruntime, $"GetBookColumnsData");
+            jsruntime.error( $"GetBookColumnsData");
 
 #if tracing
             JsConsole.JsConsole.GroupTable(jsruntime, seconds, $"0. Index GetBookColumnsData seconds");
 #endif
 
-            JsConsole.JsConsole.Time(jsruntime, "GetBookColumnsData");
+            jsruntime.time("GetBookColumnsData");
 
-            ///JsConsole.JsConsole.Time(jsruntime, "timerBookColumnsCharts.Stop()");
+            ///jsruntime.time("timerBookColumnsCharts.Stop()");
            // timerBookColumnsCharts.Stop();
-            ///JsConsole.JsConsole.TimeEnd(jsruntime, "timerBookColumnsCharts.Stop()");
+            ///jsruntime.timeEnd("timerBookColumnsCharts.Stop()");
 
-            JsConsole.JsConsole.GroupCollapsed(jsruntime, "GetBookColumnsData");
+            jsruntime.groupCollapsed("GetBookColumnsData");
 
             try
             {
                 await Task.Yield();
-                ///JsConsole.JsConsole.Time(jsruntime, "getBookColumnsData");
+                ///jsruntime.time("getBookColumnsData");
                 bookColData = await bookColumnsService.getBookColumnsData(seconds);
                 await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "getBookColumnsData");
-                ///JsConsole.JsConsole.Time(jsruntime, "getBookColumnsData");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "getBookColumnsData");
+                ///jsruntime.timeEnd("getBookColumnsData");
+                ///jsruntime.time("getBookColumnsData");
+                ///jsruntime.timeEnd("getBookColumnsData");
 
-                ///JsConsole.JsConsole.Time(jsruntime, $"getAverages {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getAverages {SurfaceChartConfigurator.longSeconds}");
                 //var avgSizes = await bookColumnsService.getAverages(SurfaceChartConfigurator.longSeconds, jsruntime);
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getAverages {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getAverages {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getAverages {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getAverages {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getAverages {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getAverages {SurfaceChartConfigurator.longSeconds}");
 
-                ///JsConsole.JsConsole.Time(jsruntime, $"getAverages {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.time($"getAverages {SurfaceChartConfigurator.shortSeconds}");
                 //var avgStSizes = await bookColumnsService.getAverages(SurfaceChartConfigurator.shortSeconds, jsruntime);
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getAverages {SurfaceChartConfigurator.shortSeconds}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getAverages {SurfaceChartConfigurator.shortSeconds}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getAverages {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.timeEnd($"getAverages {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.time($"getAverages {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.timeEnd($"getAverages {SurfaceChartConfigurator.shortSeconds}");
 
-                ///JsConsole.JsConsole.Time(jsruntime, $"getAverages {0}");
+                ///jsruntime.time($"getAverages {0}");
                 //var avgLtSizes = await bookColumnsService.getAverages(0, jsruntime);
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getAverages {0}");
+                ///jsruntime.timeEnd($"getAverages {0}");
 
                 /// This will update http://tapestreamserver.com/files/ratioFrames{seconds}.txt
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
                 await Task.Yield();
                 //var ratioFrames = await bookColumnsService.getRatioFrames(SurfaceChartConfigurator.longSeconds, TDABook.ratiosDepth, jsruntime);
                 await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getRatioFrames {SurfaceChartConfigurator.longSeconds}");
 
 
                 var ratioFrame = await bookColumnsService.getIncrementalRatioFrames(SurfaceChartConfigurator.longSeconds, TDABook.ratiosDepth, jsruntime);
@@ -373,65 +374,65 @@ namespace tapeStream.Client.Pages
 
                 StateHasChanged();
 
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getRatios {SurfaceChartConfigurator.longSeconds}");
                 //await Task.Yield();
                 //var avgRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.longSeconds, jsruntime);
                 //await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {SurfaceChartConfigurator.longSeconds}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getRatios {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.time($"getRatios {SurfaceChartConfigurator.longSeconds}");
+                ///jsruntime.timeEnd($"getRatios {SurfaceChartConfigurator.longSeconds}");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgRatios, "1. Index avgRatios");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.time($"getRatios {SurfaceChartConfigurator.shortSeconds}");
                 //await Task.Yield();
                 //var avgStRatios = await bookColumnsService.getRatios(SurfaceChartConfigurator.shortSeconds, jsruntime);
                 //await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {SurfaceChartConfigurator.shortSeconds}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {SurfaceChartConfigurator.shortSeconds}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.timeEnd($"getRatios {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.time($"getRatios {SurfaceChartConfigurator.shortSeconds}");
+                ///jsruntime.timeEnd($"getRatios {SurfaceChartConfigurator.shortSeconds}");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgStRatios, "2. Index avgStRatios");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {0}");
+                ///jsruntime.time($"getRatios {0}");
                 //await Task.Yield();
                 //var avgLtRatios = await bookColumnsService.getRatios(0, jsruntime);
                 //await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {0}");
-                ///JsConsole.JsConsole.Time(jsruntime, $"getRatios {0}");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, $"getRatios {0}");
+                ///jsruntime.timeEnd($"getRatios {0}");
+                ///jsruntime.time($"getRatios {0}");
+                ///jsruntime.timeEnd($"getRatios {0}");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, avgLtRatios, "3. Index avgLtRatios");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, "getBollingerBands");
+                ///jsruntime.time("getBollingerBands");
                 //TDAChart.bollingerBands = await chartService.getBollingerBands();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "getBollingerBands");
-                ///JsConsole.JsConsole.Time(jsruntime, "getBollingerBands");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "getBollingerBands");
+                ///jsruntime.timeEnd("getBollingerBands");
+                ///jsruntime.time("getBollingerBands");
+                ///jsruntime.timeEnd("getBollingerBands");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, TDAChart.bollingerBands, "3a. Index TDAChart.bollingerBands");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, "GetTDAChartLastCandle 0");
+                ///jsruntime.time("GetTDAChartLastCandle 0");
                 //await Task.Yield();
                 //TDAChart.lastCandle = await chartService.GetTDAChartLastCandle(0);
                 //await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "GetTDAChartLastCandle 0");
-                ///JsConsole.JsConsole.Time(jsruntime, "GetTDAChartLastCandle 0");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "GetTDAChartLastCandle 0");
+                ///jsruntime.timeEnd("GetTDAChartLastCandle 0");
+                ///jsruntime.time("GetTDAChartLastCandle 0");
+                ///jsruntime.timeEnd("GetTDAChartLastCandle 0");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, TDAChart.lastCandle, "3b. Index TDAChart.bollingerBands");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, "GetSvcDate");
+                ///jsruntime.time("GetSvcDate");
                 await Task.Yield();
                 TDAChart.svcDateTimeRaw = await chartService.GetSvcDate();
                 await Task.Yield();
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "GetSvcDate");
-                ///JsConsole.JsConsole.Time(jsruntime, "GetSvcDate");
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "GetSvcDate");
+                ///jsruntime.timeEnd("GetSvcDate");
+                ///jsruntime.time("GetSvcDate");
+                ///jsruntime.timeEnd("GetSvcDate");
 #if tracing
             await JsConsole.JsConsole.GroupTableAsync(jsruntime, TDAChart.svcDateTimeRaw, "3c. Index TDAChart.svcDateTimeRaw");
 #endif
-                ///JsConsole.JsConsole.Time(jsruntime, "Calcs");
+                ///jsruntime.time("Calcs");
                 await Task.Yield();
                 TDAChart.svcDateTimeRaw = TDAChart.svcDateTimeRaw.Replace("\"", "");
                 await Task.Yield();
@@ -520,9 +521,9 @@ namespace tapeStream.Client.Pages
 #endif
                 //TDAChart.countBuysRatioUp += avgBuys > avgSells ? 1 : 0;
                 //TDAChart.countSellsRatioUp += avgSells > avgBuys ? 1 : 0;
-                ///JsConsole.JsConsole.TimeEnd(jsruntime, "Calcs");
+                ///jsruntime.timeEnd("Calcs");
 
-                JsConsole.JsConsole.GroupEnd(jsruntime);
+                jsruntime.groupEnd();
                 //TDAChart.lastCandles = await chartService.getLastCandles(2);
                 //await Task.Delay(100);
 
@@ -544,11 +545,11 @@ namespace tapeStream.Client.Pages
             }
 
 
-            ///JsConsole.JsConsole.Time(jsruntime, "timerBookColumnsCharts.Start()");
+            ///jsruntime.time("timerBookColumnsCharts.Start()");
             //timerBookColumnsCharts.Start();
-            ///JsConsole.JsConsole.TimeEnd(jsruntime, "timerBookColumnsCharts.Start()");
+            ///jsruntime.timeEnd("timerBookColumnsCharts.Start()");
 
-            JsConsole.JsConsole.TimeEnd(jsruntime, "GetBookColumnsData");
+            jsruntime.timeEnd("GetBookColumnsData");
             await Task.CompletedTask;
         }
     }

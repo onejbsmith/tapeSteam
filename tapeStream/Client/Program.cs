@@ -57,7 +57,6 @@ namespace tapeStream.Client
             });
 
 
-
             builder.RootComponents.Add<App>("app");
             var host = builder.Build();
 

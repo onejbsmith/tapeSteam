@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tapeStream.Shared.Data;
 
 namespace tapeStream.Client.Shared
 {
@@ -13,6 +14,50 @@ namespace tapeStream.Client.Shared
 
     public partial class NavMenu
     {
+
+
+        public  bool useAlpaca
+        {
+            get { return AlpacaClient.useAlpaca; }
+            set
+            {
+                tapeStream.Client.Pages.TestPage.isLoadingAlpaca = true;
+                AlpacaClient.useAlpaca = value;
+                StateHasChanged();
+            }
+        }
+
+        public bool isTradingOn
+        {
+            get { return AlpacaClient.isTradingOn; }
+            set
+            {
+                tapeStream.Client.Pages.TestPage.isTradingOn = value;
+                AlpacaClient.isTradingOn = value;
+                StateHasChanged();
+            }
+        }
+
+        public bool isTradingOnClient
+        {
+            get { return AlpacaClient.isTradingOnClient; }
+            set
+            {
+                tapeStream.Client.Pages.TestPage.isTradingOnClient = value;
+                AlpacaClient.isTradingOnClient = value;
+                StateHasChanged();
+            }
+        }
+        public bool tradesFromHub
+        {
+            get { return AlpacaClient.tradesFromHub; }
+            set
+            {
+                tapeStream.Client.Pages.TestPage.tradesFromHub = value;
+                AlpacaClient.tradesFromHub = value;
+                StateHasChanged();
+            }
+        }
         private bool collapseNavMenu = true;
 
         private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -22,7 +67,7 @@ namespace tapeStream.Client.Shared
 
         public string timeOfDay;
 
-        public  DateTime _clockDateTime;
+        public DateTime _clockDateTime;
 
         Timer timerClock = new Timer(1000);
 
@@ -42,7 +87,7 @@ namespace tapeStream.Client.Shared
         public void HubStatusChanged()
         {
             hubStatus = TDAStreamerData.hubStatus;
-            hubStatusMessage =  TDAStreamerData.hubStatusMessage;
+            hubStatusMessage = TDAStreamerData.hubStatusMessage;
 
             StateChangedAsync();
         }

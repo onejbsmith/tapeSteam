@@ -5,6 +5,7 @@
     <RazorLangVersion>3.0</RazorLangVersion>
     <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
     <OutputType>Exe</OutputType>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -141,7 +142,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Server Projects\JsConsole\JsConsole.csproj" />
+    <ProjectReference Include="..\..\..\..\..\alpaca-trade-api-csharp\Alpaca.Markets.Extensions\Alpaca.Markets.Extensions.csproj" />
+    <ProjectReference Include="..\..\..\..\..\alpaca-trade-api-csharp\Alpaca.Markets\Alpaca.Markets.csproj" />
     <ProjectReference Include="..\..\..\Components\JSconsoleExtension\JSconsoleExtension\JSconsoleExtensionsLib.csproj" />
     <ProjectReference Include="..\Shared\tapeStream.Shared.csproj" />
   </ItemGroup>

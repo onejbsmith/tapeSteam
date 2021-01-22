@@ -11,7 +11,7 @@ namespace tapeStream.Client.Services
     public class WeatherForecastService
     {
         [Inject] HttpClient Http { get; set; }
-        [Inject] protected IMatToaster Toaster { get; set; }
+        //[Inject] protected IMatToaster Toaster { get; set; }
 
         public async Task<WeatherForecast[]> RefreshAsync()
         {
@@ -23,7 +23,7 @@ namespace tapeStream.Client.Services
             catch (Exception ex)
             {
                 var method = System.Reflection.MethodBase.GetCurrentMethod().Name;
-                Toaster.Add(ex.ToString(), MatToastType.Primary, method);
+                //Toaster.Add(ex.ToString(), MatToastType.Primary, method);
 
                 return new WeatherForecast[5];
             }

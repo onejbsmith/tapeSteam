@@ -12,10 +12,10 @@
 <div>
     <h6 style="display:inline-block;color:#e7934c;cursor:pointer" @onclick="@Dialog_Open"> @(chartTitle())</h6>
     <MatIconButton Icon="settings" OnClick="@Dialog_Open" Raised="true" Style="@settingsStyle"> </MatIconButton>
-    <h6 style="display:inline-block;color:#e7934c;cursor:pointer">@(diff.ToString("n0"))</h6>
+    <h6  @ref=headerNumber style="display:inline-block;color:#e7934c;cursor:pointer;float:right;position:relative;top:30px">@(diff.ToString("n0"))</h6>
 </div>
 <figure class="highcharts-figure">
-    <div id="container" style="zoom:0.8">
+    <div id="container" style="zoom:1.0">
         <HighChart id="@id"
                    chartJson="@chartJson"
                    chartSeriesJson="@chartSeriesJson"
@@ -90,5 +90,4 @@
     }
 </style>
 @code {
-
 }
